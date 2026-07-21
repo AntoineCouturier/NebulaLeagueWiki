@@ -1,0 +1,599 @@
+/* -------------------- Reset -------------------- */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: #000;
+    color: #dddddd;
+}
+
+/* Effet d'étoiles subtiles */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+        radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+        radial-gradient(1px 1px at 90px 40px, #ddd, transparent),
+        radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+        radial-gradient(2px 2px at 160px 120px, #eee, transparent),
+        radial-gradient(1px 1px at 200px 160px, #fff, transparent),
+        radial-gradient(3px 3px at 240px 200px, rgba(180, 28, 255, 0.5), transparent),
+        radial-gradient(2px 2px at 280px 240px, rgba(100, 0, 255, 0.4), transparent);
+    background-repeat: repeat;
+    background-size: 300px 300px;
+    z-index: -1;
+    opacity: 0.4;
+}
+
+/* -------- Header / Navbar -------- */
+header {
+    background: rgba(10, 10, 10, 0.75);
+    padding: 15px 20px;
+    border-bottom: 2px solid #6f00ff;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 0 10px #6f00ff80;
+    text-align: center;
+}
+
+.header-container h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: #d89aff;
+    text-shadow: 0 0 6px #000;
+}
+
+/* NAVIGATION (identique à index.html) */
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0 0 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    padding: 6px 14px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+    color: #e6e6e6;
+    font-weight: bold;
+    transition: 0.25s;
+    border: 1px solid transparent;
+}
+
+nav ul li a:hover,
+nav ul li a.active {
+    background: linear-gradient(135deg, #a600ff, #b41ce6);
+    border-color: #b41ce6;
+    color: white;
+    box-shadow: 0 0 10px #b41ce6;
+}
+
+.clubs-title {
+    text-align: center;
+    font-size: 2.4rem;
+    margin: 40px 0 25px;
+    color: #d89aff;
+    font-weight: bold;
+    text-shadow: 0 0 10px #6f00ff, 0 0 25px #b41cff;
+    letter-spacing: 1px;
+}
+
+.discord-btn {
+    display: flex;
+    align-items: right;
+    gap: 8px;
+    background: #ffffff;
+    /* Couleur Discord */
+    padding: 6px 14px;
+    border-radius: 6px;
+    color: #4752C4 !important;
+    font-weight: bold;
+    transition: 0.25s ease-in-out;
+}
+
+.discord-btn:hover {
+    background: #4752C4;
+    /* Hover Discord */
+    transform: scale(1.07);
+    box-shadow: 0 0 12px #5865F2aa;
+    color: white !important;
+}
+
+.discord-logo {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+}
+
+
+/* --------- BANDE D'ACCENT PAR CLUB (identité visuelle en un coup d'oeil) --------- */
+.club {
+    position: relative;
+}
+
+.club::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    z-index: 1;
+}
+
+.club[data-club-accent="bastard"]::before {
+    background: linear-gradient(90deg, transparent, #ff3b3b, transparent);
+}
+
+.club[data-club-accent="pxg"]::before {
+    background: linear-gradient(90deg, transparent, #3b7bff, transparent);
+}
+
+.club[data-club-accent="ubers"]::before {
+    background: linear-gradient(90deg, transparent, #3bff5c, transparent);
+}
+
+.club[data-club-accent="barcha"]::before {
+    background: linear-gradient(90deg, transparent, #ffe100, transparent);
+}
+
+.club[data-club-accent="manshine"]::before {
+    background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+}
+
+/* --------- CONTENEUR CLUBS --------- */
+.clubs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+}
+
+/* --------- CARTE CLUB --------- */
+.club {
+    width: 90%;
+    max-width: 750px;
+    background: rgba(15, 15, 15, 0.55);
+    border-radius: 18px;
+    border: 2px solid #b41cff60;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 0 18px #b41cff30;
+    transition: 0.3s ease;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(25px);
+}
+
+/* --------- SCROLL REVEAL --------- */
+.club.reveal {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --------- HOVER --------- */
+.club:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 25px #b41cff80;
+}
+
+/* --------- GLOW PAR CLUB --------- */
+.bastardglow {
+    border-color: #ff000060;
+    box-shadow: 0 0 15px #ff000030;
+}
+
+.pxgglow {
+    border-color: #0033ff60;
+    box-shadow: 0 0 15px #0033ff30;
+}
+
+.ubersglow {
+    border-color: #00ff1160;
+    box-shadow: 0 0 15px #00ff1130;
+}
+
+.barchaglow {
+    border-color: #ffd90060;
+    box-shadow: 0 0 15px #ffd90030;
+}
+
+.manshineglow {
+    border-color: #00eaff60;
+    box-shadow: 0 0 15px #00eaff30;
+}
+
+.bastardglow:hover {
+    border-color: #ff000060;
+    box-shadow: 0 0 15px #ff00008d;
+}
+
+.pxgglow:hover {
+    border-color: #0033ff60;
+    box-shadow: 0 0 15px #0000ff8d;
+}
+
+.ubersglow:hover {
+    border-color: #00ff0060;
+    box-shadow: 0 0 15px #00ff008d;
+}
+
+.barchaglow:hover {
+    border-color: #ffd90060;
+    box-shadow: 0 0 15px #ffd9008d;
+}
+
+.manshineglow:hover {
+    border-color: #00eaff60;
+    box-shadow: 0 0 15px #00eaff8d;
+}
+
+/* --------- BOUTON CLUB --------- */
+.dropdown-btn {
+    width: 100%;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: none;
+    background: linear-gradient(135deg, #1a1a1a, #320947);
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: left;
+}
+
+.bastard-btn:hover,
+.bastard-btn.active {
+    background: linear-gradient(135deg, #be0000, #000000);
+}
+
+.pxg-btn:hover,
+.pxg-btn.active {
+    background: linear-gradient(135deg, #0009ab, #c50d00);
+}
+
+.ubers-btn:hover,
+.ubers-btn.active {
+    background: linear-gradient(135deg, #29ce00, #ffffff);
+}
+
+.barcha-btn:hover,
+.barcha-btn.active {
+    background: linear-gradient(135deg, #ffe100, #56007a);
+}
+
+.manshine-btn:hover,
+.manshine-btn.active {
+    background: linear-gradient(135deg, #00b3ff, #a1ffff);
+}
+
+/* Nom + petites infos du club, empilés à côté de l'icône */
+.club-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.club-name {
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.club-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #d3c3ff;
+    opacity: 0.85;
+}
+
+.meta-dot {
+    opacity: 0.5;
+}
+
+/* Petite flèche qui indique l'état ouvert/fermé */
+.chevron {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+    opacity: 0.8;
+}
+
+.dropdown-btn.active .chevron {
+    transform: rotate(180deg);
+}
+
+/* --------- ICÔNE & HALO --------- */
+.club-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 12px;
+    object-fit: contain;
+    transition: 0.3s;
+    filter: drop-shadow(0 0 10px transparent);
+    flex-shrink: 0;
+}
+
+.dropdown-btn:hover .club-icon {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 6px #b41cff);
+}
+
+.dropdown-btn.active .club-icon {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 6px #b41cff);
+}
+
+/* --------- ACCORDÉON --------- */
+.dropdown-content {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 25px;
+    background: rgba(0, 0, 0, 0.45);
+    transition: max-height 0.4s ease, padding 0.3s ease;
+}
+
+.dropdown-content.open {
+    padding: 20px 25px;
+    max-height: 400px;
+}
+
+
+.bastard {
+    color: rgb(200, 0, 0);
+    text-decoration: none;
+}
+
+.bastard:hover {
+    color: rgb(255, 0, 0);
+    text-decoration: none;
+    text-shadow:
+        0 0 4px #ff0000,
+        0 0 8px #a00000,
+        0 0 12px #650000;
+}
+
+.pxg {
+    color: rgb(0, 0, 200);
+    text-decoration: none;
+}
+
+.pxg:hover {
+    color: rgb(0, 0, 255);
+    text-decoration: none;
+    text-shadow:
+        0 0 4px #001aff,
+        0 0 8px #0008a0,
+        0 0 12px #000265;
+}
+
+.ubers {
+    color: rgb(0, 200, 0);
+    text-decoration: none;
+}
+
+.ubers:hover {
+    color: rgb(0, 255, 0);
+    text-decoration: none;
+    text-shadow:
+        0 0 4px #26ff00,
+        0 0 8px #1ba000,
+        0 0 12px #0d6500;
+}
+
+.barcha {
+    color: rgb(200, 200, 0);
+    text-decoration: none;
+}
+
+.barcha:hover {
+    color: rgb(255, 255, 0);
+    text-decoration: none;
+    text-shadow:
+        0 0 4px #ffdd00,
+        0 0 8px #a08d00,
+        0 0 12px #656300;
+}
+
+.manshine {
+    color: rgb(0, 100, 200);
+    text-decoration: none;
+}
+
+.manshine:hover {
+    color: rgb(0, 155, 255);
+    text-decoration: none;
+    text-shadow:
+        0 0 4px #0088ff,
+        0 0 8px #005da0,
+        0 0 12px #003865;
+}
+
+/* --------- RESPONSIVE --------- */
+@media (max-width: 600px) {
+    .dropdown-btn {
+        font-size: 1.2rem;
+        padding: 15px;
+    }
+
+    .club-icon {
+        width: 55px;
+        height: 55px;
+    }
+}
+
+.dropdown-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    /* aligne les colonnes au début */
+    gap: 30px;
+    /* espace entre joueurs et style */
+    max-height: 0;
+    overflow: hidden;
+    padding: 20px 25px;
+    /* padding interne pour éviter que ça touche les bords */
+    background: rgba(0, 0, 0, 0.45);
+    transition: max-height 0.4s ease, opacity 0.4s ease;
+    opacity: 0;
+}
+
+.dropdown-content.open {
+    max-height: 500px;
+    opacity: 1;
+}
+
+.dropdown-left {
+    flex: 0 0 350px;
+    /* largeur pour joueurs + valeur */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dropdown-right {
+    flex: 0 0 220px;
+    /* largeur pour le texte style de jeu */
+    color: #f0f0f0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    padding-left: 15px;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Responsive : sur petit écran, texte passe sous la liste */
+@media (max-width: 700px) {
+    .dropdown-content {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .dropdown-right {
+        border-left: none;
+        padding-left: 0;
+        margin-top: 10px;
+        max-width: 100%;
+    }
+}
+
+.dropdown-left h4 {
+    margin-bottom: 4px;
+    /* au lieu de margin par défaut */
+}
+
+.dropdown-left p {
+    margin-top: 0;
+}
+
+/* ================================================
+   EFFECTIF ENRICHI : rôles colorés + postes vacants
+   ================================================ */
+
+.roster-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.roster-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.roster-row:hover {
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.roster-row a {
+    font-weight: bold;
+}
+
+.role-badge {
+    flex-shrink: 0;
+    width: 34px;
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    padding: 3px 0;
+    border-radius: 6px;
+    color: #0a0a0a;
+}
+
+.role-badge.role-cf {
+    background: #ff0000;
+}
+
+.role-badge.role-lw {
+    background: #0066ff;
+}
+
+.role-badge.role-rw {
+    background: #ffd51a;
+}
+
+.role-badge.role-cm {
+    background: #5cff6a;
+}
+
+.empty-slot {
+    font-style: italic;
+    color: #8a8a8a;
+    font-size: 0.9rem;
+}
+
+/* ---- Lien croisé vers la page Joueurs, filtré sur ce club ---- */
+.view-roster-link {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #d89aff;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.view-roster-link:hover {
+    color: #fff;
+    text-shadow: 0 0 8px #b41cff;
+    transform: translateX(3px);
+}
+
+/* ---- Style de jeu, présenté comme une citation ---- */
+.dropdown-right h4 {
+    margin: 0 0 10px;
+}
+
+.style-quote {
+    margin: 0;
+    padding-left: 14px;
+    border-left: 3px solid rgba(180, 28, 255, 0.5);
+    font-style: italic;
+    color: #e6dcff;
+    line-height: 1.5;
+}

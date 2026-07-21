@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/logos/nebula.png">
+    <title>Nebula League - Accueil</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="CSS/style.css">
+
+    <style>
+        /* Hero Section Styles */
+        .hero-section {
+            text-align: center;
+            padding: 80px 20px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(180, 28, 230, 0.3) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: translateX(-50%) scale(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: translateX(-50%) scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #b41cff 0%, #d89aff 50%, #b41cff 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0 0 20px 0;
+            animation: shimmer 3s linear infinite;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 40px rgba(180, 28, 255, 0.5);
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 0% center;
+            }
+
+            100% {
+                background-position: 200% center;
+            }
+        }
+
+        .hero-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.3rem;
+            color: #e0d6ff;
+            font-weight: 300;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+            opacity: 0.9;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-item {
+            background: rgba(180, 28, 255, 0.1);
+            border: 1px solid rgba(180, 28, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(180, 28, 255, 0.6);
+            box-shadow: 0 10px 30px rgba(180, 28, 255, 0.3);
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #b41cff, #d89aff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+
+        .stat-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            color: #c8b3ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            font-size: 2.5rem;
+            color: #d89aff;
+            margin: 0 0 50px 0;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #b41cff, transparent);
+        }
+
+        /* Enhanced Cards */
+        .cards-wrapper {
+            padding: 20px 20px 60px;
+        }
+
+        .card-A {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .card-A::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(180, 28, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .card-A:hover::before {
+            opacity: 1;
+            animation: shine 1.5s ease-in-out;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
+
+        .card-A h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .card-A p {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .stat-item {
+                padding: 15px 25px;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-container">
+            <!-- Hamburger Menu Button -->
+            <div class="hamburger-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <h1>Nebula League - Accueil</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html" class="active">Accueil</a></li>
+                    <li><a href="title.html">Persos et Titres</a></li>
+                    <li><a href="club.html">Clubs</a></li>
+                    <li><a href="players.html">Joueurs</a></li>
+                    <li><a href="valeur.html">Valeurs</a></li>
+                    <li><a href="rules.html">Règles Matchs</a></li>
+                    <li><a href="stats.html">Records</a></li>
+                    <li><a href="matchs.html">Historique de Matchs</a></li>
+                    <li><a href="saison.html">Historique des Saisons</a></li>
+                    <li>
+                        <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
+                            <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
+                            Discord
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="nav-mobile-overlay">
+        <button class="nav-close-btn" aria-label="Close menu">&times;</button>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Accueil</a></li>
+                <li><a href="title.html">Persos et Titres</a></li>
+                <li><a href="club.html">Clubs</a></li>
+                <li><a href="players.html">Joueurs</a></li>
+                <li><a href="valeur.html">Valeurs</a></li>
+                <li><a href="rules.html">Règles Matchs</a></li>
+                <li><a href="stats.html">Records</a></li>
+                <li><a href="matchs.html">Historique de Matchs</a></li>
+                <li><a href="saison.html">Historique des Saisons</a></li>
+                <li>
+                    <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
+                        <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
+                        Discord
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Backdrop for click-outside-to-close -->
+    <div class="nav-backdrop"></div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <h1 class="hero-title">NEBULA LEAGUE</h1>
+        <p class="hero-subtitle">
+            Bienvenue sur ce site dedié au Jeu Azure Latch, avec des matchs entre potes et des titres obtenables dans
+            les matchs scrims.
+        </p>
+    </section>
+
+    <div class="cards-wrapper">
+
+        <main class="cards-container">
+            <div class="card card-A" data-link="title.html">
+                <h3>🏆 Persos et Titres</h3>
+                <p>Découvrez tous les titres que vous pouvez débloquer ainsi que les persos dispo.</p>
+            </div>
+
+            <div class="card card-A" data-link="players.html">
+                <h3>👤 Joueurs</h3>
+                <p>Consultez la carte du joueur que vous voulez.</p>
+            </div>
+
+            <div class="card card-A" data-link="club.html">
+                <h3>⚽ Clubs</h3>
+                <p>Chaque joueur appartient à un club. Soyez performant pour avoir une place dans le XI titulaire.</p>
+            </div>
+
+            <div class="card card-A" data-link="valeur.html">
+                <h3>💎 Valeur</h3>
+                <p>Selon vos actions durant un match, vous gagnez de la Valeur. Plus votre Valeur est élevée, plus vous
+                    êtes reconnu dans le serveur.</p>
+            </div>
+
+            <div class="card card-A" data-link="rules.html">
+                <h3>📜 Règles</h3>
+                <p>Consultez toutes les règles des matchs pour comprendre comment progresser et maximiser votre Valeur.
+                </p>
+            </div>
+
+            <div class="card card-A" data-link="stats.html">
+                <h3>🏅 Records</h3>
+                <p>Les records du serveur sont ici, buts, passes, meilleur match etc, tout est la.</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="JavaScript/script.js"></script>
+</body>
+
+</html>

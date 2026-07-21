@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="../images/logos/nebula.png">
+<title>Nebula League - Titres</title>
+<link rel="stylesheet" href="test.css">
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <h1>Nebula League - Titres</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="title.html" class="active">Persos et Titres</a></li>
+                <li><a href="club.html">Clubs</a></li>
+                <li><a href="players.html">Joueurs</a></li>
+                <li><a href="valeur.html">Valeurs</a></li>
+                <li><a href="rules.html">Règles Matchs</a></li>
+                <li><a href="stats.html">Records</a></li>
+                <li><a href="matchs.html">Historique de Matchs</a></li>
+                <li><a href="saison.html">Historique des Saisons</a></li>
+                <li>
+    <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
+        <img src="images/logos/discord.png" 
+             alt="Discord Logo" class="discord-logo">
+        Discord
+    </a>
+</li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="characters-page">
+  <!-- Liste horizontale des personnages -->
+  <div class="character-tabs">
+    <button class="char-btn global active" data-target="global">Global</button>
+    <button class="char-btn isagi" data-target="isagi">Isagi</button>
+    <button class="char-btn nagi" data-target="nagi">Nagi</button>
+    <button class="char-btn chigiri" data-target="chigiri">Chigiri</button>
+    <button class="char-btn bachira" data-target="bachira">Bachira</button>
+    <button class="char-btn shidou" data-target="shidou">Shidou</button>
+    <button class="char-btn kurona" data-target="kurona">Kurona</button>
+    <button class="char-btn reo" data-target="reo">Reo</button>
+    <button class="char-btn kunigami" data-target="kunigami">Kunigami</button>
+    <button class="char-btn yukimiya" data-target="yukimiya">Yukimiya</button>
+    <button class="char-btn aiku" data-target="aiku">Aiku</button>
+    <button class="char-btn barou" data-target="barou">Barou</button>
+    <button class="char-btn sae" data-target="sae">Sae</button>
+    <button class="char-btn kaiser" data-target="kaiser">Kaiser</button>
+    <button class="char-btn lorenzo" data-target="lorenzo">Lorenzo</button>
+    <button class="char-btn rin" data-target="rin">Rin</button>
+    <button class="char-btn nel-isagi" data-target="nel-isagi">NEL Isagi</button>
+    <!-- Ajoute les autres personnages ici -->
+  </div>
+
+  <!-- Contenu des pages perso -->
+  <div class="character-content">
+    <div class="char-page" id="global">
+      <h2>Global</h2>
+      <ul>
+                <li style="color: rgb(13, 197, 0);">The Final Wall - <span class="desc"> Avoir "Defense" au dessus de 95</span></li>
+                <li style="color: rgb(241, 230, 15);">Butterfly Dribbling - <span class="desc"> Avoir "Dribbles" au dessus de 95</span></li>
+                <li style="color: rgb(2, 62, 142);">Meta-Vision - <span class="desc"> Avoir "Positionement" au dessus de 95</span></li>
+                <li style="color: rgb(128, 3, 3);">Predator Eyes - <span class="desc"> Avoir "Tirs" au dessus de 95</span></li>
+                <li style="color: rgb(126, 199, 255);">Genius of Adaptation - <span class="desc"> Avoir "Offense" au dessus de 95</span></li>
+                <li style="color: rgb(93, 122, 225);">Impossible Pass - <span class="desc">Avoir "Passes" au dessus de 95</span></li>
+                <li><span class="machinery" data-text="Rang Ultime">The Machinery. - </span><span class="desc"> Avoir une note global au dessus de 95</span></li>
+                
+                <li style="color: #ff0000;">Ace Striker - <span class="desc">Avoir 10+ Buts</span></li>
+                <li style="color: #c50000;">Elite Striker - <span class="desc">Avoir 25+ Buts</span></li>
+                <li style="color: #870000;">New Gen XI Striker - <span class="desc">Avoir 50+ Buts</span></li>
+                <li style="color: #5b0000;">World Class Striker - <span class="desc">Avoir 100+ Buts</span></li>
+                <li><span class="striker" data-text="Rang Ultime">World's Greatest Striker - </span><span class="desc"> Avoir 200+ Buts</span></li>
+                
+                <li style="color: #0000ff;">Ace Passer - <span class="desc">Avoir 10+ Passes D</span></li>
+                <li style="color: #0000c5;">Elite Passer - <span class="desc">Avoir 25+ Passes D</span></li>
+                <li style="color: #000087;">New Gen XI Passer - <span class="desc">Avoir 50+ Passes D</span></li>
+                <li style="color: #00005b;">World Class Passer - <span class="desc">Avoir 100+ Passes D</span></li>
+                <li><span class="passer" data-text="Rang Ultime">World's Greatest Passer - </span><span class="desc"> Avoir 200+ Passes D</span></li>
+                
+                <li style="color: #00ff00;">Ace Defender - <span class="desc">Avoir 20+ Sauvetage Defensifs</span></li>
+                <li style="color: #00c500;">Elite Defender - <span class="desc">Avoir 50+ Sauvetage Defensifs</span></li>
+                <li style="color: #008700;">New Gen XI Defender - <span class="desc">Avoir 100+ Sauvetage Defensifs</span></li>
+                <li style="color: #005b00;">World Class Defender - <span class="desc">Avoir 200+ Sauvetage Defensifs</span></li>
+                <li><span class="defender" data-text="Rang Ultime">World's Greatest Defender - </span><span class="desc"> Avoir 400+ Sauvetages Defensifs</span></li>
+                
+                <li style="color: gold;">Riche - <span class="desc">Avoir une Prime de 100,000,000¥</span></li>
+                <li style="color: gold;">Extra Riche - <span class="desc">Avoir une Prime de 500,000,000¥</span></li>
+                <li style="color: gold;">Milliardaire - <span class="desc">Avoir une Prime de 1,000,000,000¥</span></li>
+                <li style="color: rgb(219, 169, 89);">Golden Shoe - <span class="desc">Gagner le soulier d'or (etre le meilleur buteur de la saison) 1 fois</span></li>
+                <li style="color: goldenrod;">Champion de la Ligue - <span class="desc">Gagner Le Championnat de la Ligue 1 fois</span></li>
+                <li style="color: rgb(208, 173, 0);">Trophée de la NCL - <span class="desc">Gagner la NCL (Nebula Champions League) 1 fois</span></li>
+                <li style="color: goldenrod;">Ballon d'or - <span class="desc">Gagner un Ballon d'or (etre le meilleur Joueur de la saison)</span></li>
+                <li><span class="goat" data-text="Rang Ultime">★GOAT★ - </span><span class="desc"> Gagner 1 Championnat, 1 NCL, 1 Ballon d'or et 1 soulier d'or dans la meme Saison</span></li>
+            </ul>
+    </div>
+
+       <!-- ===================================  =================================== -->
+    <!-- =================================== Isagi =================================== -->
+       <!-- ===================================  =================================== -->
+
+    <div class="char-page" id="isagi">
+        <h2>Isagi</h2>
+
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+            <img src="images/icons/isagi.png" alt="Yoichi Isagi">
+            <div class="info-text">
+                <p><strong>Difficulté:</strong> ⭐⭐⭐</p>
+                <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+                <p><strong>Titres:</strong>
+                    <ul>
+                        <li class="title-link" 
+                            data-video="https://drive.google.com/file/d/ID/preview" 
+                            data-desc="Voler la balle d'un mate avec 'MOVE IT' puis marquer avec 'MY DIRECT SHOT'">
+                            Heart of Blue Lock
+                        </li>
+                        <li class="title-link luck" 
+                            data-video="https://drive.google.com/file/d/ID/preview" 
+                            data-desc="Voler la balle d'un mate avec 'MOVE IT' puis marquer avec 'MY DIRECT SHOT'">
+                            LUCK
+                        </li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+            <p>Isagi est un personnage pour les Débutants avec un moveset qui peut devenir complexe selon les situations.</p>
+        </div>
+
+        <!-- Contenu détaillé des titres -->
+        <div class="titles-details">
+            <!-- Les vidéos seront générées au clic -->
+        </div>
+    </div>
+
+       <!-- ===================================  =================================== -->
+    <!-- =================================== Nagi =================================== -->
+       <!-- ===================================  =================================== -->
+
+   <div class="char-page" id="isagi">
+        <h2>Isagi</h2>
+
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+            <img src="images/icons/isagi.png" alt="Yoichi Isagi">
+            <div class="info-text">
+                <p><strong>Difficulté:</strong> ⭐⭐⭐</p>
+                <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+                <p><strong>Titres:</strong>
+                    <ul>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">Heart of Blue Lock</li>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">LUCK</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+            <p>Isagi est un personnage pour les Débutants avec un moveset qui peut devenir complexe selon les situations.</p>
+        </div>
+
+        <!-- Contenu détaillé des titres -->
+        <div class="titles-details">
+            <!-- Les vidéos seront générées au clic -->
+        </div>
+    </div>
+
+
+<!-- ===================================  =================================== -->
+    <!-- =================================== Chigiri =================================== -->
+       <!-- ===================================  =================================== -->
+
+    <div class="char-page" id="isagi">
+        <h2>Isagi</h2>
+
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+            <img src="images/icons/isagi.png" alt="Yoichi Isagi">
+            <div class="info-text">
+                <p><strong>Difficulté:</strong> ⭐⭐⭐</p>
+                <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+                <p><strong>Titres:</strong>
+                    <ul>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">Heart of Blue Lock</li>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">LUCK</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+            <p>Isagi est un personnage pour les Débutants avec un moveset qui peut devenir complexe selon les situations.</p>
+        </div>
+
+        <!-- Contenu détaillé des titres -->
+        <div class="titles-details">
+            <!-- Les vidéos seront générées au clic -->
+        </div>
+    </div>
+
+
+<!-- ===================================  =================================== -->
+    <!-- =================================== Bachira =================================== -->
+       <!-- ===================================  =================================== -->
+
+    <div class="char-page" id="isagi">
+        <h2>Isagi</h2>
+
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+            <img src="images/icons/isagi.png" alt="Yoichi Isagi">
+            <div class="info-text">
+                <p><strong>Difficulté:</strong> ⭐⭐⭐</p>
+                <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+                <p><strong>Titres:</strong>
+                    <ul>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">Heart of Blue Lock</li>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">LUCK</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+            <p>Isagi est un personnage pour les Débutants avec un moveset qui peut devenir complexe selon les situations.</p>
+        </div>
+
+        <!-- Contenu détaillé des titres -->
+        <div class="titles-details">
+            <!-- Les vidéos seront générées au clic -->
+        </div>
+    </div>
+
+
+<!-- ===================================  =================================== -->
+    <!-- =================================== Shidou =================================== -->
+       <!-- ===================================  =================================== -->
+
+    <div class="char-page" id="isagi">
+        <h2>Isagi</h2>
+
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+            <img src="images/icons/isagi.png" alt="Yoichi Isagi">
+            <div class="info-text">
+                <p><strong>Difficulté:</strong> ⭐⭐⭐</p>
+                <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+                <p><strong>Titres:</strong>
+                    <ul>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">Heart of Blue Lock</li>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">LUCK</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+            <p>Isagi est un personnage pour les Débutants avec un moveset qui peut devenir complexe selon les situations.</p>
+        </div>
+
+        <!-- Contenu détaillé des titres -->
+        <div class="titles-details">
+            <!-- Les vidéos seront générées au clic -->
+        </div>
+    </div>
+
+
+<!-- ===================================  =================================== -->
+    <!-- =================================== Kurona =================================== -->
+       <!-- ===================================  =================================== -->
+
+    <div class="char-page" id="isagi">
+        <h2>Isagi</h2>
+
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+            <img src="images/icons/isagi.png" alt="Yoichi Isagi">
+            <div class="info-text">
+                <p><strong>Difficulté:</strong> ⭐⭐⭐</p>
+                <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+                <p><strong>Titres:</strong>
+                    <ul>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">Heart of Blue Lock</li>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">LUCK</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+            <p>Isagi est un personnage pour les Débutants avec un moveset qui peut devenir complexe selon les situations.</p>
+        </div>
+
+        <!-- Contenu détaillé des titres -->
+        <div class="titles-details">
+            <!-- Les vidéos seront générées au clic -->
+        </div>
+    </div>
+
+
+<!-- ===================================  =================================== -->
+    <!-- =================================== Reo =================================== -->
+       <!-- ===================================  =================================== -->
+
+    <div class="char-page" id="isagi">
+        <h2>Isagi</h2>
+
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+            <img src="images/icons/isagi.png" alt="Yoichi Isagi">
+            <div class="info-text">
+                <p><strong>Difficulté:</strong> ⭐⭐⭐</p>
+                <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+                <p><strong>Titres:</strong>
+                    <ul>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">Heart of Blue Lock</li>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">LUCK</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+            <p>Isagi est un personnage pour les Débutants avec un moveset qui peut devenir complexe selon les situations.</p>
+        </div>
+
+        <!-- Contenu détaillé des titres -->
+        <div class="titles-details">
+            <!-- Les vidéos seront générées au clic -->
+        </div>
+    </div>
+
+
+<!-- ===================================  =================================== -->
+    <!-- =================================== Kunigami =================================== -->
+       <!-- ===================================  =================================== -->
+
+   <div class="char-page" id="isagi">
+        <h2>Isagi</h2>
+
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+            <img src="images/icons/isagi.png" alt="Yoichi Isagi">
+            <div class="info-text">
+                <p><strong>Difficulté:</strong> ⭐⭐⭐</p>
+                <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+                <p><strong>Titres:</strong>
+                    <ul>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">Heart of Blue Lock</li>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">LUCK</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+            <p>Isagi est un personnage pour les Débutants avec un moveset qui peut devenir complexe selon les situations.</p>
+        </div>
+
+        <!-- Contenu détaillé des titres -->
+        <div class="titles-details">
+            <!-- Les vidéos seront générées au clic -->
+        </div>
+    </div>
+
+<!-- ===================================  =================================== -->
+    <!-- =================================== Yukimiya =================================== -->
+       <!-- ===================================  =================================== -->
+
+    <div class="char-page" id="isagi">
+        <h2>Isagi</h2>
+
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+            <img src="images/icons/isagi.png" alt="Yoichi Isagi">
+            <div class="info-text">
+                <p><strong>Difficulté:</strong> ⭐⭐⭐</p>
+                <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+                <p><strong>Titres:</strong>
+                    <ul>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">Heart of Blue Lock</li>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">LUCK</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+            <p>Isagi est un personnage pour les Débutants avec un moveset qui peut devenir complexe selon les situations.</p>
+        </div>
+
+        <!-- Contenu détaillé des titres -->
+        <div class="titles-details">
+            <!-- Les vidéos seront générées au clic -->
+        </div>
+    </div>
+
+
+<!-- ===================================  =================================== -->
+    <!-- =================================== Aiku =================================== -->
+       <!-- ===================================  =================================== -->
+
+   <div class="char-page" id="isagi">
+        <h2>Isagi</h2>
+
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+            <img src="images/icons/isagi.png" alt="Yoichi Isagi">
+            <div class="info-text">
+                <p><strong>Difficulté:</strong> ⭐⭐⭐</p>
+                <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+                <p><strong>Titres:</strong>
+                    <ul>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">Heart of Blue Lock</li>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">LUCK</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+            <p>Isagi est un personnage pour les Débutants avec un moveset qui peut devenir complexe selon les situations.</p>
+        </div>
+
+        <!-- Contenu détaillé des titres -->
+        <div class="titles-details">
+            <!-- Les vidéos seront générées au clic -->
+        </div>
+    </div>
+
+
+<!-- ===================================  =================================== -->
+    <!-- =================================== Barou =================================== -->
+       <!-- ===================================  =================================== -->
+
+    <div class="char-page" id="isagi">
+        <h2>Isagi</h2>
+
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+            <img src="images/icons/isagi.png" alt="Yoichi Isagi">
+            <div class="info-text">
+                <p><strong>Difficulté:</strong> ⭐⭐⭐</p>
+                <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+                <p><strong>Titres:</strong>
+                    <ul>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">Heart of Blue Lock</li>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">LUCK</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+            <p>Isagi est un personnage pour les Débutants avec un moveset qui peut devenir complexe selon les situations.</p>
+        </div>
+
+        <!-- Contenu détaillé des titres -->
+        <div class="titles-details">
+            <!-- Les vidéos seront générées au clic -->
+        </div>
+    </div>
+
+
+<!-- ===================================  =================================== -->
+    <!-- =================================== Sae =================================== -->
+       <!-- ===================================  =================================== -->
+
+    <div class="char-page" id="isagi">
+        <h2>Isagi</h2>
+
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+            <img src="images/icons/isagi.png" alt="Yoichi Isagi">
+            <div class="info-text">
+                <p><strong>Difficulté:</strong> ⭐⭐⭐</p>
+                <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+                <p><strong>Titres:</strong>
+                    <ul>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">Heart of Blue Lock</li>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">LUCK</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+            <p>Isagi est un personnage pour les Débutants avec un moveset qui peut devenir complexe selon les situations.</p>
+        </div>
+
+        <!-- Contenu détaillé des titres -->
+        <div class="titles-details">
+            <!-- Les vidéos seront générées au clic -->
+        </div>
+    </div>
+
+
+<!-- ===================================  =================================== -->
+    <!-- =================================== Kaiser =================================== -->
+       <!-- ===================================  =================================== -->
+
+    <div class="char-page" id="isagi">
+        <h2>Isagi</h2>
+
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+            <img src="images/icons/isagi.png" alt="Yoichi Isagi">
+            <div class="info-text">
+                <p><strong>Difficulté:</strong> ⭐⭐⭐</p>
+                <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+                <p><strong>Titres:</strong>
+                    <ul>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">Heart of Blue Lock</li>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">LUCK</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+            <p>Isagi est un personnage pour les Débutants avec un moveset qui peut devenir complexe selon les situations.</p>
+        </div>
+
+        <!-- Contenu détaillé des titres -->
+        <div class="titles-details">
+            <!-- Les vidéos seront générées au clic -->
+        </div>
+    </div>
+
+
+<!-- ===================================  =================================== -->
+    <!-- =================================== Lorenzo =================================== -->
+       <!-- ===================================  =================================== -->
+
+    <div class="char-page" id="isagi">
+        <h2>Isagi</h2>
+
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+            <img src="images/icons/isagi.png" alt="Yoichi Isagi">
+            <div class="info-text">
+                <p><strong>Difficulté:</strong> ⭐⭐⭐</p>
+                <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+                <p><strong>Titres:</strong>
+                    <ul>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">Heart of Blue Lock</li>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">LUCK</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+            <p>Isagi est un personnage pour les Débutants avec un moveset qui peut devenir complexe selon les situations.</p>
+        </div>
+
+        <!-- Contenu détaillé des titres -->
+        <div class="titles-details">
+            <!-- Les vidéos seront générées au clic -->
+        </div>
+    </div>
+
+
+<!-- ===================================  =================================== -->
+    <!-- =================================== Rin =================================== -->
+       <!-- ===================================  =================================== -->
+
+    <div class="char-page" id="isagi">
+        <h2>Isagi</h2>
+
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+            <img src="images/icons/isagi.png" alt="Yoichi Isagi">
+            <div class="info-text">
+                <p><strong>Difficulté:</strong> ⭐⭐⭐</p>
+                <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+                <p><strong>Titres:</strong>
+                    <ul>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">Heart of Blue Lock</li>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">LUCK</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+            <p>Isagi est un personnage pour les Débutants avec un moveset qui peut devenir complexe selon les situations.</p>
+        </div>
+
+        <!-- Contenu détaillé des titres -->
+        <div class="titles-details">
+            <!-- Les vidéos seront générées au clic -->
+        </div>
+    </div>
+
+
+<!-- ===================================  =================================== -->
+    <!-- =================================== NEL Isagi =================================== -->
+       <!-- ===================================  =================================== -->
+
+    <div class="char-page" id="isagi">
+        <h2>Isagi</h2>
+
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+            <img src="images/icons/isagi.png" alt="Yoichi Isagi">
+            <div class="info-text">
+                <p><strong>Difficulté:</strong> ⭐⭐⭐</p>
+                <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+                <p><strong>Titres:</strong>
+                    <ul>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">Heart of Blue Lock</li>
+                        <li class="title-link" data-video="https://drive.google.com/file/d/1mQU0q5KXhw3i2tvTPCxr9XfmYyVt0xES/preview">LUCK</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+            <p>Isagi est un personnage pour les Débutants avec un moveset qui peut devenir complexe selon les situations.</p>
+        </div>
+
+        <!-- Contenu détaillé des titres -->
+        <div class="titles-details">
+            <!-- Les vidéos seront générées au clic -->
+        </div>
+    </div>
+
+ <!-- perso -->
+
+  </div>
+</main>
+
+
+
+<script src="test.js"></script>
+</body>
+</html>

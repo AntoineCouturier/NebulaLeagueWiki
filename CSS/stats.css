@@ -1,0 +1,179 @@
+/* CONTENEUR PAGE */
+.stats-page {
+    max-width: 1250px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+/* CARDS */
+.stat-cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: rgba(20, 20, 20, 0.7);
+    border: 1px solid #b41cff55;
+    padding: 18px;
+    border-radius: 14px;
+    text-align: center;
+    flex: 1;
+    min-width: 220px;
+    box-shadow: 0 0 10px #b41cff33;
+}
+
+.stat-card h4 {
+    margin: 0;
+    color: #ffdbff;
+    font-size: 0.95rem;
+}
+
+.stat-card p {
+    margin: 10px 0 0;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* GRID 2 COL */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 25px;
+}
+
+@media(max-width: 950px) {
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* TABLES */
+.table-section {
+    background: rgba(15, 15, 15, 0.6);
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #b41cff33;
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+}
+
+.stats-table th,
+.stats-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #ffffff10;
+}
+
+.stats-table th {
+    color: #fff;
+}
+
+.records-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.records-list li {
+    padding: 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid #ffffff08;
+    border-radius: 8px;
+    margin-bottom: 6px;
+}
+
+/* COLONNE DROITE — CLUBS */
+.clubs-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    position: sticky;
+    top: 30px; /* distance par rapport au haut de la page */
+    align-self: start; /* pour que le sticky fonctionne dans une grid */
+}
+
+.club-mini {
+    background: rgba(20,20,20,0.6);
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ffffff15;
+}
+
+.club-mini h4 {
+    margin: 0 0 6px;
+    color: #ffe9ff;
+}
+
+/* MINI-BARRE (HORIZONTALE) */
+.mini-bar-container {
+    background: rgba(255,255,255,0.07);
+    border-radius: 6px;
+    height: 14px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.mini-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 6px;
+    transition: width 0.4s ease;
+}
+
+.club-icon {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;   /* NE DÉFORME PAS */
+    object-position: center;
+    margin-right: 6px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.record-btn {
+    display: inline-block;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, #a600ff, #b41ce6);
+    color: #fff;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.2s;
+    margin-left: 10px;
+}
+
+.record-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #b41cff;
+}
+
+.records-toggle {
+    margin-bottom: 10px;
+}
+
+.records-toggle .record-btn.active {
+    box-shadow: 0 0 15px #b41cff;
+}
+
+.stat-card {
+    position: relative; /* pour placer l'image facilement */
+    text-align: center;
+}
+
+.stat-card-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #b41cff;
+    position: absolute;
+    top: 10px;
+    right: 10px; /* tu peux changer selon où tu veux l'image */
+}

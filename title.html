@@ -1,0 +1,2178 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="images/logos/nebula.png">
+  <title>Nebula League - Titres</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="CSS/title.css">
+  <link rel="stylesheet" href="CSS/colors.css">
+  <link rel="stylesheet" href="CSS/hamburger.css">
+</head>
+
+<body>
+
+  <header>
+    <div class="header-container">
+      <!-- Hamburger Menu Button -->
+      <div class="hamburger-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <h1>Nebula League - Titres</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="title.html" class="active">Persos et Titres</a></li>
+          <li><a href="club.html">Clubs</a></li>
+          <li><a href="players.html">Joueurs</a></li>
+          <li><a href="valeur.html">Valeurs</a></li>
+          <li><a href="rules.html">Règles Matchs</a></li>
+          <li><a href="stats.html">Records</a></li>
+          <li><a href="matchs.html">Historique de Matchs</a></li>
+          <li><a href="saison.html">Historique des Saisons</a></li>
+          <li>
+            <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
+              <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
+              Discord
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Overlay -->
+  <div class="nav-mobile-overlay">
+    <button class="nav-close-btn" aria-label="Close menu">&times;</button>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="title.html" class="active">Persos et Titres</a></li>
+        <li><a href="club.html">Clubs</a></li>
+        <li><a href="players.html">Joueurs</a></li>
+        <li><a href="valeur.html">Valeurs</a></li>
+        <li><a href="rules.html">Règles Matchs</a></li>
+        <li><a href="stats.html">Records</a></li>
+        <li><a href="matchs.html">Historique de Matchs</a></li>
+        <li><a href="saison.html">Historique des Saisons</a></li>
+        <li>
+          <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
+            <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
+            Discord
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Backdrop for click-outside-to-close -->
+  <div class="nav-backdrop"></div>
+
+  <main class="characters-page">
+    <!-- Liste horizontale des personnages -->
+    <div class="tabs-hover-zone"></div>
+    <button class="tabs-toggle" aria-label="Ouvrir la liste des personnages">▶</button>
+    <div class="character-tabs">
+      <button class="char-btn global active" data-target="global">Global</button>
+
+
+      <!-- Communs -->
+      <button class="char-btn isagi" data-target="isagi">Isagi</button>
+      <button class="char-btn gagamaru" data-target="gagamaru">Gagamaru</button>
+
+      <!-- Rares -->
+      <button class="char-btn nagi" data-target="nagi">Nagi</button>
+      <button class="char-btn chigiri" data-target="chigiri">Chigiri</button>
+      <button class="char-btn bachira" data-target="bachira">Bachira</button>
+      <button class="char-btn shidou" data-target="shidou">Shidou</button>
+      <!-- <button class="char-btn niko" data-target="niko">Niko</button> -->
+
+      <!-- Legendaires -->
+      <button class="char-btn kurona" data-target="kurona">Kurona</button>
+      <!-- <button class="char-btn ness" data-target="ness">Ness</button> -->
+
+      <!-- Mythiques -->
+      <button class="char-btn kunigami" data-target="kunigami">Kunigami</button>
+      <button class="char-btn yukimiya" data-target="yukimiya">Yukimiya</button>
+      <button class="char-btn aiku" data-target="aiku">Aiku</button>
+      <button class="char-btn barou" data-target="barou">Barou</button>
+      <!-- <button class="char-btn charles" data-target="charles">Charles</button> -->
+      <button class="char-btn sae" data-target="sae">Sae</button>
+      <button class="char-btn kiyora" data-target="kiyora">Kiyora</button>
+      <button class="char-btn karasu" data-target="karasu">Karasu</button>
+      <button class="char-btn otoya" data-target="otoya">Otoya</button>
+
+      <!-- World Classes -->
+      <button class="char-btn kaiser" data-target="kaiser">Kaiser</button>
+      <button class="char-btn lorenzo" data-target="lorenzo">Lorenzo</button>
+      <button class="char-btn rin" data-target="rin">Rin</button>
+      <button class="char-btn reo" data-target="reo">Reo</button>
+
+      <!-- Masteries -->
+      <button class="char-btn nel-isagi" data-target="nel-isagi">NEL Isagi</button>
+      <button class="char-btn lorenzo2" data-target="lorenzo2">Lorenzo Mastery</button>
+      <button class="char-btn hiori" data-target="hiori">Hiori</button>
+      <button class="char-btn aiku2" data-target="aiku2">Aiku Mastery</button>
+
+      <!-- Ajoute les autres personnages ici -->
+    </div>
+
+    <!-- Contenu des pages perso -->
+    <div class="character-content">
+      <div class="char-page" id="global">
+        <div class="global-hero">
+          <h2 class="global-hero-title">🏆 Salle des Titres</h2>
+          <p class="global-subtitle global-hero-sub">Des titres transversaux, valables pour n'importe quel personnage —
+            à débloquer en jouant, en progressant, ou en dominant la ligue.</p>
+        </div>
+
+        <div class="global-categories">
+          <!-- Catégorie Stats -->
+          <div class="category-card stats-card">
+            <div class="category-header">
+              <div class="category-icon">📊</div>
+              <h3>Stats Supérieures</h3>
+            </div>
+            <div class="titles-list">
+              <div class="title-item crown">
+                <span class="title-name">Crown Messenger</span>
+                <span class="title-req">Défense > 95</span>
+              </div>
+              <div class="title-item rainbow">
+                <span class="title-name">Rainbow Passes</span>
+                <span class="title-req">Passes > 95</span>
+              </div>
+              <div class="title-item butterfly">
+                <span class="title-name">Butterfly Dribbling</span>
+                <span class="title-req">Dribbles > 95</span>
+              </div>
+              <div class="title-item predator">
+                <span class="title-name">Predator Eyes</span>
+                <span class="title-req">Tirs > 95</span>
+              </div>
+              <div class="title-item godspeed">
+                <span class="title-name">God Speed</span>
+                <span class="title-req">Offense > 95</span>
+              </div>
+              <div class="title-item metavision">
+                <span class="title-name">Meta-Vision</span>
+                <span class="title-req">Positionnement > 95</span>
+              </div>
+              <div class="title-item machinery-item">
+                <span class="title-name machinery" data-text="Rang Ultime">The Machinery.</span>
+                <span class="title-req">Note globale > 95</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Catégorie Buteur -->
+          <div class="category-card track-card striker-card">
+            <div class="category-header">
+              <div class="category-icon">⚽</div>
+              <h3>Progression Buteur</h3>
+            </div>
+            <div class="rank-track">
+              <div class="rank-node" style="--tier-color:#ff6b6b;">
+                <div class="rank-icon">🥉</div>
+                <div class="rank-info"><span class="rank-name">Ace Striker</span><span class="rank-req">10+ Buts</span>
+                </div>
+              </div>
+              <div class="rank-node" style="--tier-color:#ff2e2e;">
+                <div class="rank-icon">🥈</div>
+                <div class="rank-info"><span class="rank-name">Elite Striker</span><span class="rank-req">25+
+                    Buts</span></div>
+              </div>
+              <div class="rank-node" style="--tier-color:#c50000;">
+                <div class="rank-icon">🥇</div>
+                <div class="rank-info"><span class="rank-name">New Gen XI Striker</span><span class="rank-req">50+
+                    Buts</span></div>
+              </div>
+              <div class="rank-node" style="--tier-color:#870000;">
+                <div class="rank-icon">💎</div>
+                <div class="rank-info"><span class="rank-name">World Class Striker</span><span class="rank-req">100+
+                    Buts</span></div>
+              </div>
+              <div class="rank-node ultimate" style="--tier-color:#ff3838;">
+                <div class="rank-icon">🌟</div>
+                <div class="rank-info"><span class="rank-name striker" data-text="Rang Ultime">World's Greatest
+                    Striker</span><span class="rank-req">200+ Buts</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Catégorie Passeur -->
+          <div class="category-card track-card passer-card">
+            <div class="category-header">
+              <div class="category-icon">🎯</div>
+              <h3>Progression Passeur</h3>
+            </div>
+            <div class="rank-track">
+              <div class="rank-node" style="--tier-color:#6b9bff;">
+                <div class="rank-icon">🥉</div>
+                <div class="rank-info"><span class="rank-name">Ace Passer</span><span class="rank-req">10+ Passes
+                    D</span></div>
+              </div>
+              <div class="rank-node" style="--tier-color:#2e5eff;">
+                <div class="rank-icon">🥈</div>
+                <div class="rank-info"><span class="rank-name">Elite Passer</span><span class="rank-req">25+ Passes
+                    D</span></div>
+              </div>
+              <div class="rank-node" style="--tier-color:#0000c5;">
+                <div class="rank-icon">🥇</div>
+                <div class="rank-info"><span class="rank-name">New Gen XI Passer</span><span class="rank-req">50+ Passes
+                    D</span></div>
+              </div>
+              <div class="rank-node" style="--tier-color:#000087;">
+                <div class="rank-icon">💎</div>
+                <div class="rank-info"><span class="rank-name">World Class Passer</span><span class="rank-req">100+
+                    Passes D</span></div>
+              </div>
+              <div class="rank-node ultimate" style="--tier-color:#3b82f6;">
+                <div class="rank-icon">🌟</div>
+                <div class="rank-info"><span class="rank-name passer" data-text="Rang Ultime">World's Greatest
+                    Passer</span><span class="rank-req">200+ Passes D</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Catégorie Défenseur -->
+          <div class="category-card track-card defender-card">
+            <div class="category-header">
+              <div class="category-icon">🛡️</div>
+              <h3>Progression Défenseur</h3>
+            </div>
+            <div class="rank-track">
+              <div class="rank-node" style="--tier-color:#6bff8f;">
+                <div class="rank-icon">🥉</div>
+                <div class="rank-info"><span class="rank-name">Ace Defender</span><span class="rank-req">20+
+                    Sauvetages</span></div>
+              </div>
+              <div class="rank-node" style="--tier-color:#2eff5e;">
+                <div class="rank-icon">🥈</div>
+                <div class="rank-info"><span class="rank-name">Elite Defender</span><span class="rank-req">50+
+                    Sauvetages</span></div>
+              </div>
+              <div class="rank-node" style="--tier-color:#00c500;">
+                <div class="rank-icon">🥇</div>
+                <div class="rank-info"><span class="rank-name">New Gen XI Defender</span><span class="rank-req">100+
+                    Sauvetages</span></div>
+              </div>
+              <div class="rank-node" style="--tier-color:#008700;">
+                <div class="rank-icon">💎</div>
+                <div class="rank-info"><span class="rank-name">World Class Defender</span><span class="rank-req">200+
+                    Sauvetages</span></div>
+              </div>
+              <div class="rank-node ultimate" style="--tier-color:#22c55e;">
+                <div class="rank-icon">🌟</div>
+                <div class="rank-info"><span class="rank-name defender" data-text="Rang Ultime">World's Greatest
+                    Defender</span><span class="rank-req">400+ Sauvetages</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Catégorie Richesse -->
+          <div class="category-card track-card wealth-card">
+            <div class="category-header">
+              <div class="category-icon">💰</div>
+              <h3>Richesse</h3>
+            </div>
+            <div class="rank-track rank-track-short">
+              <div class="rank-node" style="--tier-color:#ffe066;">
+                <div class="rank-icon">💵</div>
+                <div class="rank-info"><span class="rank-name">Riche</span><span class="rank-req">100,000,000¥</span>
+                </div>
+              </div>
+              <div class="rank-node" style="--tier-color:#ffc400;">
+                <div class="rank-icon">💰</div>
+                <div class="rank-info"><span class="rank-name">Extra Riche</span><span
+                    class="rank-req">500,000,000¥</span></div>
+              </div>
+              <div class="rank-node" style="--tier-color:gold;">
+                <div class="rank-icon">👑</div>
+                <div class="rank-info"><span class="rank-name">Milliardaire</span><span
+                    class="rank-req">1,000,000,000¥</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Catégorie Trophées -->
+          <div class="category-card trophy-card">
+            <div class="category-header">
+              <div class="category-icon">🏆</div>
+              <h3>Trophées & Honneurs</h3>
+            </div>
+            <div class="trophy-showcase">
+              <div class="trophy-crown">
+                <span class="title-name goat" data-text="Rang Ultime">★GOAT★</span>
+                <span class="title-req">Tout gagner en 1 saison</span>
+              </div>
+              <div class="titles-list">
+                <div class="title-item" style="color: rgb(219, 169, 89);">
+                  <span class="title-name">Golden Shoe</span>
+                  <span class="title-req">Meilleur buteur saison</span>
+                </div>
+                <div class="title-item" style="color: rgb(184, 134, 224);">
+                  <span class="title-name">Prix Puskás</span>
+                  <span class="title-req">Plus beau but de la saison</span>
+                </div>
+                <div class="title-item" style="color: goldenrod;">
+                  <span class="title-name">Champion de la Ligue</span>
+                  <span class="title-req">Gagner le Championnat</span>
+                </div>
+                <div class="title-item" style="color: rgb(208, 173, 0);">
+                  <span class="title-name">Trophée de la NCL</span>
+                  <span class="title-req">Gagner la NCL</span>
+                </div>
+                <div class="title-item" style="color: goldenrod;">
+                  <span class="title-name">Ballon d'or</span>
+                  <span class="title-req">Meilleur joueur saison</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Isagi =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="isagi">
+        <h2>Isagi</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/isagi.png" alt="Yoichi Isagi">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★★☆☆</span></p>
+            <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Isagi est un personnage idéal pour les débutants, mais son moveset peut devenir très stratégique selon les
+            situations.</p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">Heart of Blue Lock</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-isagi">
+            <div class="checklist-header">
+              <h3>Heart of Blue Lock</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/4 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 Fois avec Direct Shot</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 Fois avec My Direct Shot</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 Fois avec Reflex Shot</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Voler 5 Fois la balle d'un Mate avec "Move It"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 50,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Gagamaru =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="gagamaru">
+        <h2>Gagamaru</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/gagamaru.png" alt="Gagamaru Gin">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★★★★</span></p>
+            <p><strong>Rareté:</strong> <span class="commun">Commun (85.1%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Pourquoi tu jouerais un Gardien sur le Terrain?</p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">The Overseer</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-gagamaru">
+            <div class="checklist-header">
+              <h3>The Overseer</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/4 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 5 Fois avec Scorpion</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 5 Fois avec Scorpion</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Sauver 5 balles avec Diving Header</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Sauver 5 balles avec Scorpion</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 70,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Nagi =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="nagi">
+        <h2>Nagi</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/nagi.png" alt="nagi">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★☆☆☆</span></p>
+            <p><strong>Rareté:</strong> <span class="rare">Rare (8.5%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Nagi est un personnage relativement facile à maîtriser, et son moveset est théoriquement l’un des meilleurs
+            du jeu.</p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">The Fallen Genius</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-nagi">
+            <div class="checklist-header">
+              <h3>The Fallen Genius</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/6 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Heavy"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Utiliser "Control" quand la balle est en l'air puis marquer 3 fois</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le Auto Goal de "Control"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec Jumping Turn</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer avec "Heavy" en Ulti</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le "Five Stage Revolver Shoot"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 100,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Chigiri =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="chigiri">
+        <h2>Chigiri</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/chigiri.png" alt="chigiri">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★☆☆☆</span></p>
+            <p><strong>Rareté:</strong> <span class="rare">Rare (8.5%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Chigiri est un personnage très rapide, avec un moveset simple à prendre en main. Son ulti est surpuissant,
+            probablement le meilleur du jeu.</p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">The Red Panther</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-chigiri">
+            <div class="checklist-header">
+              <h3>The Red Panther</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/3 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Mach Cut-In"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec la Golden Zone</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Voler 5 fois la balle avec "Non-Stop Dribble" en Ulti</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 50,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Bachira =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="bachira">
+        <h2>Bachira</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/bachira.png" alt="Bachira">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★☆☆☆☆</span></p>
+            <p><strong>Rareté:</strong> <span class="rare">Rare (8.5%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Bachira est un personnage facile à jouer, avec trois dribbles et un tir qui ne demande pas une visée
+            exceptionel.</p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">The Monster</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-bachira">
+            <div class="checklist-header">
+              <h3>The Red Panther</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/6 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Bon!" (peu importe la variante)</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 5 fois avec Monster Leap</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec "Bee Shot"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec "Monster Trance"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Reussir 5 Fois le Counter</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">en Ulti, Dribbler une Equipe Entiere en utilisant au moins 1 fois Ginga X
+                  Monster puis reussir à Marquer</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 125,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Shidou =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="shidou">
+        <h2>Shidou</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/shidou.png" alt="shidou">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★★★★</span></p>
+            <p><strong>Rareté:</strong> <span class="rare">Rare (8.5%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Shidou est très difficile à maîtriser pour les débutants. Sans coéquipiers pour lui faire des passes, il
+            devient presque impossible à jouer.</p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name shidou">The Devil</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-shidou">
+            <div class="checklist-header">
+              <h3>The Devil</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/6 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Formless"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Réussir 5 "Diving Header"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec "Big Bang Drive"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec "Dragon Drive"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 5 fois avec "Backheel Shot Pivot"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec le Auto-Goal</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 150,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Otoya =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="otoya">
+        <h2>Otoya</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/otoya.png" alt="Otoya">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★★★★</span></p>
+            <p><strong>Rareté:</strong> <span class="mythical">Mythique (1.7%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Otoya est un personnage très polyvalent, mais malheureusement pas assez bon dans tout les points qu'il est
+            censé controler</p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">Stealthy Ninja</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-otoya">
+            <div class="checklist-header">
+              <h3>Stealthy Ninja</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/6 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Shuriken Shot"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec "Kusarigama Slash" sur la passe d'un Mate</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec "Center of The World"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec "Extraordinary Combo"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Reprendre la balle d'un Ennemi avec "Not Gonna Happen"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 70,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Niko =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="niko">
+        <h2>Niko</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/niko.png" alt="Niko">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★★☆☆</span></p>
+            <p><strong>Rareté:</strong> <span class="rare">Rare (8.5%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Niko n'est pas encore sortie</p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">The Watchtower</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-niko">
+            <div class="checklist-header">
+              <h3>The Watchtower</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/6 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Heavy"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Utiliser "Control" quand la balle est en l'air puis marquer 3 fois</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le Auto Goal de "Control"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec Jumping Turn</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer avec "Heavy" en Ulti</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le "Five Stage Revolver Shoot"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 120,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Kiyora =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="kiyora">
+        <h2>Kiyora</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/kiyora.png" alt="kiyora">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★★★☆</span></p>
+            <p><strong>Rareté:</strong> <span class="mythical">Mythique (1.7%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Kiyora est un tres bon dribbleur et passeur, mais n'a pas assez de controle sur les dribbles qui peuvent se
+            transformer en passes, donc perte de balle augmenté</p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">God's Unknown Plan</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-kiyora">
+            <div class="checklist-header">
+              <h3>God's Unknown Plan</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/5 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Windmill Shot"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire 1 Passe avec "Twister Pass" en Ulti</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire 1 Passe Avec "Borderline"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec "Borderline"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Reussir la Chemical Reaction avec Kaiser</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 120,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Ness =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="ness">
+        <h2>Ness</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/ness.png" alt="ness">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★★☆☆</span></p>
+            <p><strong>Rareté:</strong> <span class="mythical">Mythique (1.7%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Ness n'est pas encore sortie</p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">The Magician</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-ness">
+            <div class="checklist-header">
+              <h3>The Magician</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/6 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Heavy"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Utiliser "Control" quand la balle est en l'air puis marquer 3 fois</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le Auto Goal de "Control"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec Jumping Turn</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer avec "Heavy" en Ulti</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le "Five Stage Revolver Shoot"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 120,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Kurona =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="kurona">
+        <h2>Kurona</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/kurona.png" alt="kurona">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★★★☆</span></p>
+            <p><strong>Rareté:</strong> <span class="legendary">Légendaire (4.3%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Kurona est un excellent passeur, mais son efficacité dépend beaucoup du niveau de ses coéquipiers.</p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">Planet Hotline</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-kurona">
+            <div class="checklist-header">
+              <h3>Planet Hotline</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/3 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Voler 10 Balles avec "Guard Dog"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Voler 5 Fois la balle avec "Close Quarter Dribble" en Ulti</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Reussi le Auto Goal de "Orbital Resonance"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 50,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Karasu =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="karasu">
+        <h2>Karasu</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/karasu.png" alt="karasu">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★☆☆☆</span></p>
+            <p><strong>Rareté:</strong> <span class="mythical">Mythique (1.7%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Karasu est Exceptionel en Defense, un tres bon moveset pour stun et passer les Ennemies, un Ulti Incroyable
+            pour Defendre et briser les lignes defensives.</p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">The Crow</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-karasu">
+            <div class="checklist-header">
+              <h3>The Crow</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/5 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Reussir à stun 2 Ennemies avec "Wing-Arm Block" puis passer la balle</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Reussir à voler la balle 10 fois avec "Silent Steal" (peu Importe la
+                  variante)</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Voler la balle avec "Silent Steal" en Ulti</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire une Passe Decisive avec "New Goal Method"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec "Talon's Grasp"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 70,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Kunigami =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="kunigami">
+        <h2>Kunigami</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/kunigami.png" alt="kunigami">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★★☆☆</span></p>
+            <p><strong>Rareté:</strong> <span class="mythical">Mythique (1.7%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Kunigami est un personnage dont les moves peuvent énormément stuns, tres bon en defense et en attaque.</p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">The Wild Card</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-kunigami">
+            <div class="checklist-header">
+              <h3>The Wild Card</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/6 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Lefty Shot"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 5 Fois avec "Justice Header"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Reprendre la balle 10 fois avec "Hero's Instinct"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Voler la balle 5 fois avec Heroic Clash</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 Fois avec "Demon's Contract" en Ulti</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 Fois avec le Auto Goal</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 100,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Yukimiya =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="yukimiya">
+        <h2>Yukimiya</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/yukimiya.png" alt="yukimiya">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★★☆☆</span></p>
+            <p><strong>Rareté:</strong> <span class="mythical">Mythique (1.7%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Yukimiya est un personnage qui à un panel de Dribble aussi interessant que Bachira, avec l'ajout du
+            Predator Eye, les tirs deviennent presque certains à Aim</p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">The 1-on-1 Emperor</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-yukimiya">
+            <div class="checklist-header">
+              <h3>The 1-on-1 Emperor</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/4 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Gyro Shot" (en SwordScrew ou pas)</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire un Counter "Street Tag" Parfait</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer avec "Pacifist Gyro Shot" en Ulti</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Quand Street-Style Dribbling est activer, Reussir à Dribbler toute la team
+                  Adverse puis marquer avec le Tir d'Ulti</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 150,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Aiku =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="aiku">
+        <h2>Aiku</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/aiku.png" alt="aiku">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★★☆☆</span></p>
+            <p><strong>Rareté:</strong> <span class="mythical">Mythique (1.7%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Aiku est un personnage SEULEMENT défensif, mais peut devenir une véritable menace lorsqu’il est bien joué.
+          </p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">The Snake</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-aiku">
+            <div class="checklist-header">
+              <h3>The Final Wall</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/4 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Voler 15 Balles avec "Reflex Tackle"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Intercepter 10 Balles avec "Venom Trap" (ne compte pas sur toi meme)</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Intercepter 3 Balles avec "Ultimate Defense"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec "Former Striker"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 120,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Barou =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="barou">
+        <h2>Barou</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/barou.png" alt="barou">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★☆☆☆</span></p>
+            <p><strong>Rareté:</strong> <span class="mythical">Mythique (1.7%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Barou est un tres bon tireur, ses Dribbles vont droit au buts, son stealth shot quand derriere un allié est
+            surpuissant egalement, Juste une machine à buts
+          </p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">The KING</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-barou">
+            <div class="checklist-header">
+              <h3>The KING</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/4 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 Fois avec "Long Shot"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 5 fois avec "Stealth Shot : Apex Predator"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Voler 3 Balles avec "Predator Eye"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Reussir le Auto Goal de "DEVOUR."</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 100,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Sae =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="sae">
+        <h2>Sae</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/sae.png" alt="sae">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★☆☆☆☆</span></p>
+            <p><strong>Rareté:</strong> <span class="mythical">Mythique (1.7%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Sae est un personnage très facile et puissant : tous ses dribbles offrent de l’I-Frame, et même avec un
+            minimum de précision sur son tir tu marques assez facilement.
+          </p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">Japan's Greatest Treasure</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-sae">
+            <div class="checklist-header">
+              <h3>Japan's Greatest Treasure</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/5 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Drive Shot" (Peu Importe la variante)</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Reussir 3 fois le combo: "Rabona Nutmeg" into "Magic Pass"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le Auto Goal de "Control"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire 5 Passes avec "Magic Pass : Calculated"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 Fois avec "Cross Elastico"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 110,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Charles =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="charles">
+        <h2>Charles</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/charles.png" alt="charles">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★★☆☆</span></p>
+            <p><strong>Rareté:</strong> <span class="mythical">Mythique (1.7%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Charles n'est pas encore sortie
+          </p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">The Imp</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-charles">
+            <div class="checklist-header">
+              <h3>The Imp</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/6 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Heavy"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Utiliser "Control" quand la balle est en l'air puis marquer 3 fois</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le Auto Goal de "Control"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec Jumping Turn</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer avec "Heavy" en Ulti</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le "Five Stage Revolver Shoot"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 120,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Kaiser =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="kaiser">
+        <h2>Kaiser</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/kaiser.png" alt="kaiser">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★☆☆☆</span></p>
+            <p><strong>Rareté:</strong> <span class="worldclass">World Class (0.4%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Kaiser est très facile à jouer, le seul aspect demandant de la technique étant son Magnus.
+          </p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">Emperor's Chosen One</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-kaiser">
+            <div class="checklist-header">
+              <h3>Emperor's Chosen One</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/6 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Heavy"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Utiliser "Control" quand la balle est en l'air puis marquer 3 fois</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le Auto Goal de "Control"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec Jumping Turn</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer avec "Heavy" en Ulti</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le "Five Stage Revolver Shoot"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 120,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Lorenzo =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="lorenzo">
+        <h2>Lorenzo</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/lorenzo.png" alt="lorenzo">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★★★☆</span></p>
+            <p><strong>Rareté:</strong> <span class="worldclass">World Class (0.4%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Lorenzo est un personnage défensif qui peut devenir dangereux uniquement s’il est bien joué. Son ulti
+            permet de voler la balle très facilement. (Mais entre nous pourquoi tu joues la V1 quand la Mastery Existe?)
+          </p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">The Zombie</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-lorenzo">
+            <div class="checklist-header">
+              <h3>The Zombie</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/6 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Heavy"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Utiliser "Control" quand la balle est en l'air puis marquer 3 fois</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le Auto Goal de "Control"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec Jumping Turn</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer avec "Heavy" en Ulti</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le "Five Stage Revolver Shoot"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 120,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Rin =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="rin">
+        <h2>Rin</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/rin.png" alt="rin">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★☆☆☆☆</span></p>
+            <p><strong>Rareté:</strong> <span class="worldclass">World Class (0.4%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Rin est un personnage avec un nombre incroyable d’I-Frames, une courbe extrêmement puissante, et un ulti
+            offrant des possibilités presque abusives.
+          </p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">The Berserker</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-rin">
+            <div class="checklist-header">
+              <h3>The Berserker</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/6 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Heavy"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Utiliser "Control" quand la balle est en l'air puis marquer 3 fois</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le Auto Goal de "Control"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec Jumping Turn</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer avec "Heavy" en Ulti</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le "Five Stage Revolver Shoot"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 120,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Reo =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="reo">
+        <h2>Reo</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/reo.png" alt="reo">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★★★☆</span></p>
+            <p><strong>Rareté:</strong> <span class="worldclass">World Class (0.4%)</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Reo est un personnage très polyvalent et puissant, mais difficile à maîtriser à cause de son nombre de
+            variantes possibles.
+          </p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">Master of All Trades</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-reo">
+            <div class="checklist-header">
+              <h3>Master of All Trades</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/6 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Heavy"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Utiliser "Control" quand la balle est en l'air puis marquer 3 fois</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le Auto Goal de "Control"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec Jumping Turn</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer avec "Heavy" en Ulti</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le "Five Stage Revolver Shoot"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 120,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== NEL Isagi =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="nel-isagi">
+        <h2>NEL Isagi</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/nel-isagi.png" alt="nel-isagi">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★☆☆☆</span></p>
+            <p><strong>Rareté:</strong> <span class="mastery">Mastery</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>NEL Isagi peut être extrêmement dangereux quand on s’y attend le moins. Son Raumdeuter le rend presque
+            invisible, et il possède probablement le meilleur tir du jeu.
+          </p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">Genius of Adaptation</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-nel-isagi">
+            <div class="checklist-header">
+              <h3>Genius of Adaptation</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/6 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Heavy"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Utiliser "Control" quand la balle est en l'air puis marquer 3 fois</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le Auto Goal de "Control"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec Jumping Turn</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer avec "Heavy" en Ulti</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le "Five Stage Revolver Shoot"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 120,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Hiori =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="hiori">
+        <h2>Hiori</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/hiori.png" alt="hiori">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★★★☆</span></p>
+            <p><strong>Rareté:</strong> <span class="mastery">Mastery</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Hiori est un tres bon personnage de soutien, il peut etre tres bon si bien jouer
+          </p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">Ultra Sadist</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-hiori">
+            <div class="checklist-header">
+              <h3>Ultra Sadist</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/6 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Heavy"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Utiliser "Control" quand la balle est en l'air puis marquer 3 fois</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le Auto Goal de "Control"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec Jumping Turn</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer avec "Heavy" en Ulti</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le "Five Stage Revolver Shoot"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 120,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Lorenzo Mastery =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="lorenzo2">
+        <h2>Lorenzo</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/lorenzo2.png" alt="lorenzo2">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★★★☆</span></p>
+            <p><strong>Rareté:</strong> <span class="mastery">Mastery</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Lorenzo Mastery est au moins 2 fois plus dangereux que sa V1, 2 fois plus de possibilités sur chaque move
+          </p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">The Ace Eater</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-lorenzo2">
+            <div class="checklist-header">
+              <h3>The Ace Eater</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/6 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Heavy"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Utiliser "Control" quand la balle est en l'air puis marquer 3 fois</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le Auto Goal de "Control"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec Jumping Turn</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer avec "Heavy" en Ulti</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le "Five Stage Revolver Shoot"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 120,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================  =================================== -->
+      <!-- =================================== Aiku Mastery =================================== -->
+      <!-- ===================================  =================================== -->
+
+      <div class="char-page" id="aiku2">
+        <h2>Aiku</h2>
+        <!-- Photo et infos principales -->
+        <div class="char-info">
+          <img src="images/icons/aiku2.png" alt="aiku2">
+          <div class="info-text">
+            <p><strong>Difficulté:</strong><span class="star"> ★★★☆☆</span></p>
+            <p><strong>Rareté:</strong> <span class="mastery">Mastery</span></p>
+          </div>
+        </div>
+
+        <!-- Description sous la photo et infos -->
+        <div class="char-description">
+          <p>Aiku Mastery n'est pas encore sortie
+          </p>
+        </div>
+
+        <!-- Titre ultime unique + checklist des conditions -->
+        <div class="prestige-title-wrap">
+          <button type="button" class="prestige-title" aria-expanded="false">
+            <span class="prestige-title-eyebrow">🏆 Titre Ultime</span>
+            <span class="prestige-title-name">The Final Wall</span>
+            <span class="prestige-title-hint">Voir les conditions ▾</span>
+          </button>
+
+          <div class="prestige-checklist" id="checklist-lorenzo2">
+            <div class="checklist-header">
+              <h3>The Ace Eater</h3>
+              <button class="checklist-close" aria-label="Fermer">×</button>
+            </div>
+
+            <div class="checklist-progress-track">
+              <div class="checklist-progress-bar"></div>
+            </div>
+            <p class="checklist-progress-label">0/6 conditions remplies</p>
+
+            <ul class="checklist-items">
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 10 fois avec "Heavy"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Utiliser "Control" quand la balle est en l'air puis marquer 3 fois</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le Auto Goal de "Control"</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer 1 fois avec Jumping Turn</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Marquer avec "Heavy" en Ulti</span>
+              </li>
+              <li class="checklist-item">
+                <span class="checklist-box"></span>
+                <span class="checklist-text">Faire le "Five Stage Revolver Shoot"</span>
+              </li>
+            </ul>
+
+            <p class="checklist-unlocked">🎉 Titre débloqué !</p>
+            <p class="checklist-reward">Récompense: 120,000,000¥💎</p>
+          </div>
+        </div>
+      </div>
+      <!-- perso -->
+
+
+    </div>
+  </main>
+
+
+  <script src="JavaScript/titles.js"></script>
+  <script src="JavaScript/hamburger.js"></script>
+</body>
+
+
+</html>

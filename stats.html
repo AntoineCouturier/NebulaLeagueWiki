@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="images/logos/nebula.png">
+    <title>Nebula League – Records</title>
+
+    <link rel="stylesheet" href="CSS/style.css"> <!-- ton style principal -->
+    <link rel="stylesheet" href="CSS/stats.css"> <!-- style spécifique -->
+
+</head>
+
+<body>
+
+    <header>
+        <div class="header-container">
+            <!-- Hamburger Menu Button -->
+            <div class="hamburger-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <h1>Nebula League - Records</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="title.html">Persos et Titres</a></li>
+                    <li><a href="club.html">Clubs</a></li>
+                    <li><a href="players.html">Joueurs</a></li>
+                    <li><a href="valeur.html">Valeurs</a></li>
+                    <li><a href="rules.html">Règles Matchs</a></li>
+                    <li><a class="active" href="stats.html">Records</a></li>
+                    <li><a href="matchs.html">Historique de Matchs</a></li>
+                    <li><a href="saison.html">Historique des Saisons</a></li>
+                    <li>
+                        <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
+                            <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
+                            Discord
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="nav-mobile-overlay">
+        <button class="nav-close-btn" aria-label="Close menu">&times;</button>
+        <nav>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="title.html">Persos et Titres</a></li>
+                <li><a href="club.html">Clubs</a></li>
+                <li><a href="players.html">Joueurs</a></li>
+                <li><a href="valeur.html">Valeurs</a></li>
+                <li><a href="rules.html">Règles Matchs</a></li>
+                <li><a class="active" href="stats.html">Records</a></li>
+                <li><a href="matchs.html">Historique de Matchs</a></li>
+                <li><a href="saison.html">Historique des Saisons</a></li>
+                <li>
+                    <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
+                        <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
+                        Discord
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Backdrop for click-outside-to-close -->
+    <div class="nav-backdrop"></div>
+
+    <main class="stats-page">
+
+        <!-- Résumé (stat-cards) -->
+        <div class="stat-cards">
+            <div class="stat-card">
+                <h4>Meilleur Buteur</h4>
+                <p id="topScorer">—</p>
+            </div>
+            <div class="stat-card">
+                <h4>Meilleur Passeur</h4>
+                <p id="topPasser">—</p>
+            </div>
+            <div class="stat-card">
+                <h4>Meilleur Defenseur</h4>
+                <p id="topDefender">—</p>
+            </div>
+            <div class="stat-card">
+                <h4>Joueur le plus cher</h4>
+                <p id="topPrice">—</p>
+            </div>
+            <div class="stat-card">
+                <h4>Club le plus titré</h4>
+                <p id="topClub">—</p>
+            </div>
+        </div>
+
+        <div class="grid-2">
+
+            <!-- SECTION GAUCHE -->
+            <section class="table-section">
+                <h3>🏆 Classement All-Time des Clubs</h3>
+
+                <table class="stats-table" id="alltime-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Club</th>
+                            <th>Points</th>
+                            <th>Titres</th>
+                            <th>Win %</th>
+                            <th>Diff</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <div class="table-section" style="margin-top:15px;">
+                    <h3>🔥 Meilleurs Buteurs</h3>
+                    <table class="stats-table" id="scorers-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Joueur</th>
+                                <th>Club</th>
+                                <th>Buts</th>
+                                <th>Moy.</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <div class="table-section" style="margin-top:15px;">
+                    <h3>📜 Records</h3>
+                    <div class="records-toggle">
+                        <button class="record-btn active" data-target="alltime">All-Time</button>
+                    </div>
+                    <ul class="records-list" id="records-alltime"></ul>
+                    <ul class="records-list" id="records-season" style="display:none;"></ul>
+                </div>
+
+
+
+            </section>
+
+            <!-- SECTION DROITE -->
+            <aside class="clubs-column" id="clubsPerfs">
+                <h1>Taux de Victoire</h1>
+                <!-- rempli par JS -->
+            </aside>
+
+        </div>
+    </main>
+
+    <script src="JavaScript/stats.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../../images/logos/nebula.png">
+    <title>Carte Joueur - Antoine</title>
+    <link rel="stylesheet" href="../player-card.css">
+    <link rel="stylesheet" href="../../CSS/colors.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- -------------------- Barre de Navigation -------------------- -->
+<header>
+    <div class="nav-container">
+        <h1>Nebula League - Joueurs - Antoine</h1>
+        <nav>
+            <ul>
+                <li><a href="../../club.html">Retour au Clubs</a></li>
+                <li><a href="../../players.html">Retour au Joueurs</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- -------------------- Carte Joueur -------------------- -->
+<div class="player-card-wrapper">
+
+    <!-- Carte principale -->
+    <div class="player-card-main">
+        <div class="player-header-bastard">
+            <img src="../images-joueurs/anto.png" alt="@Sell">
+            <h2>Antoine</h2>
+        </div>
+
+        <div class="player-club-logo-bastard">
+            <img src="../../images/clubs_icon/Bastard_Munchen.png" alt="BM Club Logo">
+        </div>
+
+        <div class="player-info">
+            <p><strong class="info-bastard">Pseudo :</strong> Antoine</p>
+            <p><strong class="info-bastard">Club :</strong> Bastard Munchen</p>
+            <p><strong class="info-bastard">Position :</strong> CM</p>
+            <p><strong class="info-bastard">Personnage :</strong> Kurona</p>
+            <p><strong class="info-bastard">Valeur :</strong> 0¥💎</p>
+        </div>
+    </div>
+
+    <!-- Cube Stats FIFA -->
+    <div class="player-card-fifa-stats">
+        <h3>Stats techniques</h3>
+        <p><strong class="stats">🛡️ Defense :</strong> 91 | <span class="ss">SS</span></p>
+        <p><strong class="stats">⭐ Passe :</strong> 100 | <span class="sss" data-text="Rang Ultime">SSS</span></p>
+        <p><strong class="stats">🌟 Dribble :</strong> 96 | <span class="sss">SSS</span></p>
+        <p><strong class="stats">⚽ Tir :</strong> 89 | <span class="s">S</span></p>
+        <p><strong class="stats">💥 Offense :</strong> 89 | <span class="ss">SS</span></p>
+        <p><strong class="stats">👋 Positionement :</strong> 93  | <span class="ss">SS</span></p>
+        <br>
+        <br>
+        <p><strong class="stats">👤 Global :</strong> 93 | <span class="ss">Rang SS</span></p>
+        <br>
+        <button class="radar-btn bastard-season" id="openRadarPopup">
+    📊 Voir graphique radar
+</button>
+        
+    </div>
+
+    <!-- Cube Stats matchs -->
+    <div class="player-card-match-stats">
+        <h3>Stats de Matchs Total</h3>
+        <p><strong class="matchs">Matchs :</strong> 0</p>
+        <p><strong class="matchs">Buts :</strong> 0</p>
+        <p><strong class="matchs">Assists :</strong> 0</p>
+        <p><strong class="matchs">Contribution Defensive :</strong> 0</p>
+        <p><strong class="matchs">Dribbles :</strong> 0</p>
+        <p><strong class="matchs">MVP :</strong> 0</p>
+        <p><strong class="matchs">Victoire :</strong> 0</p>
+        <p><strong class="matchs">Défaite :</strong> 0</p>
+            <!-- 🔵 Bouton -->
+            <button class="season-btn bastard-season" id="openSeasonPopup">Voir les Stats par Saisons</button>
+    </div>
+
+    <!-- Cube Titres / Trophées -->
+    <div class="player-card-trophies">
+        <h3>Trophées:</h3>
+        <ul>
+            <li><strong class="goldenshoe">Golden Shoe :</strong> 0</li>
+            <li><strong class="ncl">NCL Cup :</strong> 0</li>
+            <li><strong class="ballonor">Ballon d'Or :</strong> 0</li>
+        </ul>
+        <h3>Titres</h3>
+        <ul>
+            <li><strong class="rainbow">Rainbow Passes</strong></li>
+            <li><strong class="butterfly">Butterfly Dribbling</strong></li>
+        </ul>
+    </div>
+
+</div>
+
+<div class="popup-overlay" id="popupSeason">
+    <div class="popup-box bastard-box">
+        <h2>Stats par Saison</h2>
+
+        <label for="seasonSelect">Choisir une saison :</label>
+        <select id="seasonSelect">
+            <option value="1">Saison 1</option>
+        </select>
+
+        <!-- <-- ZONE D'AFFICHAGE (obligatoire !) -->
+        <div id="seasonStatsDisplay" class="popup-stats">
+            <!-- Le script injectera les stats ici -->
+        </div>
+
+        <!-- 🔒 Stats cachées (propres au joueur) -->
+        <div id="hidden-season-stats" style="display:none;">
+
+            <div class="season"
+                data-season="1"
+                data-matchs="0"
+                data-buts="0"
+                data-assists="0"
+                data-saves="0"
+                data-dribbles="0"
+                data-mvp="0"
+                data-win="0"
+                data-lose="0">
+            </div>
+
+        </div>
+
+        <button class="close-btn" id="closeSeasonPopup">Fermer</button>
+    </div>
+</div>
+
+<!-- 🔥 POPUP SECRET PAR MATCHS -->
+<div class="popup-overlay" id="popupMatch">
+    <div class="popup-box bastard-box">
+        <h2>Stats par Match</h2>
+
+        <label for="matchSelect">Choisir un match :</label>
+        <select id="matchSelect">
+            <option value="1">Match 1</option>
+            <option value="2">Match 2</option>
+            <option value="3">Match 3</option>
+            <option value="4">Match 4</option>
+            <option value="5">Match 5</option>
+            <option value="6">Match 6</option>
+            <option value="7">Match 7</option>
+            <option value="8">Match 8</option>
+            <option value="9">Match 9</option>
+            <option value="10">Match 10</option>
+            <option value="11">Match 11</option>
+            <option value="12">Match 12</option>
+            <option value="13">Match 13</option>
+            <option value="14">Match 14</option>
+            <option value="15">Match 15</option>
+            <option value="16">Match 16</option>
+        </select>
+
+        <div id="matchStatsDisplay" class="popup-stats"></div>
+
+        <!-- 🔒 Stats cachées par match -->
+        <div id="hidden-match-stats" style="display:none;">
+
+            <div class="match"
+                data-match="1"
+                data-title="Manshine City vs PXG | 01/04/2022"
+                data-buts="5"
+                data-pass="7"
+                data-saves="6"
+                data-dribbles="18">
+            </div>
+
+            <div class="match"
+                data-match="1"
+                data-title="PXG vs Manshine City| 01/04/2022"
+                data-buts="0"
+                data-pass="0"
+                data-saves="0"
+                data-dribbles="0">
+            </div>
+
+        </div>
+
+        <button class="close-btn" id="closeMatchPopup">Fermer</button>
+    </div>
+</div>
+
+<!-- POPUP RADAR AGRANDI -->
+<div class="popup-overlay" id="popupRadar">
+    <div class="popup-box bastard-box" id="radarPopupBox">
+        <h2>📊 Graphique Radar - Antoine</h2>
+        
+        <div class="radar-container">
+            <canvas id="skillsRadarChart"></canvas>
+        </div>
+        
+        <!-- Infos additionnelles -->
+        <div class="radar-info" style="text-align: center; margin: 20px 0;">
+            <p style="color: #fff; font-size: 1.1rem; margin-bottom: 5px;">
+                <strong>Note Globale : 93 | SS</strong>
+            </p>
+            <p style="color: #aaa; font-size: 0.9rem;">
+                Statistiques techniques
+            </p>
+        </div>
+        
+        <button class="close-btn" id="closeRadarPopup">Fermer</button>
+    </div>
+</div>
+
+<script src="../player-card.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/logos/nebula.png">
+    <title>Nebula League - Clubs</title>
+    <link rel="stylesheet" href="CSS/club.css">
+    <link rel="stylesheet" href="CSS/hamburger.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-container">
+            <!-- Hamburger Menu Button -->
+            <div class="hamburger-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <h1>Nebula League - Clubs</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="title.html">Persos et Titres</a></li>
+                    <li><a href="club.html" class="active">Clubs</a></li>
+                    <li><a href="players.html">Joueurs</a></li>
+                    <li><a href="valeur.html">Valeurs</a></li>
+                    <li><a href="rules.html">Règles Matchs</a></li>
+                    <li><a href="stats.html">Records</a></li>
+                    <li><a href="matchs.html">Historique de Matchs</a></li>
+                    <li><a href="saison.html">Historique des Saisons</a></li>
+                    <li>
+                        <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
+                            <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
+                            Discord
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="nav-mobile-overlay">
+        <button class="nav-close-btn" aria-label="Close menu">&times;</button>
+        <nav>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="title.html">Persos et Titres</a></li>
+                <li><a href="club.html" class="active">Clubs</a></li>
+                <li><a href="players.html">Joueurs</a></li>
+                <li><a href="valeur.html">Valeurs</a></li>
+                <li><a href="rules.html">Règles Matchs</a></li>
+                <li><a href="stats.html">Records</a></li>
+                <li><a href="matchs.html">Historique de Matchs</a></li>
+                <li><a href="saison.html">Historique des Saisons</a></li>
+                <li>
+                    <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
+                        <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
+                        Discord
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Backdrop for click-outside-to-close -->
+    <div class="nav-backdrop"></div>
+
+    <main class="container">
+        <h2 class="clubs-title">Clubs du serveur</h2>
+
+        <div class="clubs-container">
+            <div class="club bastardglow" data-club-accent="bastard">
+                <button class="dropdown-btn bastard-btn">
+                    <img src="images/clubs_icon/Bastard_Munchen.png" class="club-icon">
+                    <span class="club-heading">
+                        <span class="club-name">Bastard Munchen</span>
+                        <span class="club-meta">
+                            <span class="meta-count"></span>
+                            <span class="meta-dot">•</span>
+                            <span class="meta-value">0¥💎</span>
+                        </span>
+                    </span>
+                    <span class="chevron">▾</span>
+                </button>
+                <div class="dropdown-content">
+                    <div class="dropdown-left">
+                        <h4>Effectif</h4>
+                        <ul class="roster-list">
+                            <li class="roster-row"><span class="role-badge role-cf">CF</span><a class="bastard" href="Joueurs/bm/alessio.html">Alessio</a></li>
+                            <li class="roster-row"><span class="role-badge role-lw">LW</span><span class="empty-slot">Poste vacant</span></li>
+                            <li class="roster-row"><span class="role-badge role-rw">RW</span><a class="bastard" href="Joueurs/bm/dylan.html">Dylan</a></li>
+                            <li class="roster-row"><span class="role-badge role-cm">CM</span><a class="bastard" href="Joueurs/bm/antoine.html">Antoine</a></li>
+                        </ul>
+                        <a class="view-roster-link" href="players.html?club=bastard">Voir l'effectif complet →</a>
+                    </div>
+
+                    <div class="dropdown-right">
+                        <h4>Style de jeu</h4>
+                        <blockquote class="style-quote">Le Bastard Munchen utilise Antoine en pivot pendant que les 2 autres attaquants font confiance pour recevoir la passe au moment décisif.</blockquote>
+                    </div>
+                </div>
+            </div>
+
+            <div class="club pxgglow" data-club-accent="pxg">
+                <button class="dropdown-btn pxg-btn">
+                    <img src="images/clubs_icon/PXG.png" class="club-icon">
+                    <span class="club-heading">
+                        <span class="club-name">Paris X Gen</span>
+                        <span class="club-meta">
+                            <span class="meta-count"></span>
+                            <span class="meta-dot">•</span>
+                            <span class="meta-value">0¥💎</span>
+                        </span>
+                    </span>
+                    <span class="chevron">▾</span>
+                </button>
+                <div class="dropdown-content">
+                    <div class="dropdown-left">
+                        <h4>Effectif</h4>
+                        <ul class="roster-list">
+                            <li class="roster-row"><span class="role-badge role-cf">CF</span><a class="pxg" href="Joueurs/pxg/jason.html">Jason</a></li>
+                            <li class="roster-row"><span class="role-badge role-lw">LW</span><span class="empty-slot">Poste vacant</span></li>
+                            <li class="roster-row"><span class="role-badge role-rw">RW</span><span class="empty-slot">Poste vacant</span></li>
+                            <li class="roster-row"><span class="role-badge role-cm">CM</span><a class="pxg" href="Joueurs/pxg/enzo.html">Enzo</a></li>
+                        </ul>
+                        <a class="view-roster-link" href="players.html?club=pxg">Voir l'effectif complet →</a>
+                    </div>
+
+                    <div class="dropdown-right">
+                        <h4>Style de jeu</h4>
+                        <blockquote class="style-quote">Le PXG n'a pas encore de style de jeu fixe.</blockquote>
+                    </div>
+                </div>
+            </div>
+
+            <div class="club ubersglow" data-club-accent="ubers">
+                <button class="dropdown-btn ubers-btn">
+                    <img src="images/clubs_icon/Ubers.png" class="club-icon">
+                    <span class="club-heading">
+                        <span class="club-name">Ubers</span>
+                        <span class="club-meta">
+                            <span class="meta-count"></span>
+                            <span class="meta-dot">•</span>
+                            <span class="meta-value">0¥💎</span>
+                        </span>
+                    </span>
+                    <span class="chevron">▾</span>
+                </button>
+                <div class="dropdown-content">
+                    <div class="dropdown-left">
+                        <h4>Effectif</h4>
+                        <ul class="roster-list">
+                            <li class="roster-row"><span class="role-badge role-cf">CF</span><span class="empty-slot">Poste vacant</span></li>
+                            <li class="roster-row"><span class="role-badge role-lw">LW</span><span class="empty-slot">Poste vacant</span></li>
+                            <li class="roster-row"><span class="role-badge role-rw">RW</span><span class="empty-slot">Poste vacant</span></li>
+                            <li class="roster-row"><span class="role-badge role-cm">CM</span><span class="empty-slot">Poste vacant</span></li>
+                        </ul>
+                        <a class="view-roster-link" href="players.html?club=ubers">Voir l'effectif complet →</a>
+                    </div>
+                    <div class="dropdown-right">
+                        <h4>Style de jeu</h4>
+                        <blockquote class="style-quote">Les Ubers n'ont pas encore de style de jeu fixe.</blockquote>
+                    </div>
+                </div>
+            </div>
+
+            <div class="club barchaglow" data-club-accent="barcha">
+                <button class="dropdown-btn barcha-btn">
+                    <img src="images/clubs_icon/Barcha.png" class="club-icon">
+                    <span class="club-heading">
+                        <span class="club-name">Barcha</span>
+                        <span class="club-meta">
+                            <span class="meta-count"></span>
+                            <span class="meta-dot">•</span>
+                            <span class="meta-value">0¥💎</span>
+                        </span>
+                    </span>
+                    <span class="chevron">▾</span>
+                </button>
+                <div class="dropdown-content">
+                    <div class="dropdown-left">
+                        <h4>Effectif</h4>
+                        <ul class="roster-list">
+                            <li class="roster-row"><span class="role-badge role-cf">CF</span><span class="empty-slot">Poste vacant</span></li>
+                            <li class="roster-row"><span class="role-badge role-lw">LW</span><span class="empty-slot">Poste vacant</span></li>
+                            <li class="roster-row"><span class="role-badge role-rw">RW</span><span class="empty-slot">Poste vacant</span></li>
+                            <li class="roster-row"><span class="role-badge role-cm">CM</span><span class="empty-slot">Poste vacant</span></li>
+                        </ul>
+                        <a class="view-roster-link" href="players.html?club=barcha">Voir l'effectif complet →</a>
+                    </div>
+                    <div class="dropdown-right">
+                        <h4>Style de jeu</h4>
+                        <blockquote class="style-quote">Le Barcha n'a pas encore de style de jeu fixe.</blockquote>
+                    </div>
+                </div>
+            </div>
+
+            <div class="club manshineglow" data-club-accent="manshine">
+                <button class="dropdown-btn manshine-btn">
+                    <img src="images/clubs_icon/Manshine_City.png" class="club-icon">
+                    <span class="club-heading">
+                        <span class="club-name">Manshine City</span>
+                        <span class="club-meta">
+                            <span class="meta-count"></span>
+                            <span class="meta-dot">•</span>
+                            <span class="meta-value">0¥💎</span>
+                        </span>
+                    </span>
+                    <span class="chevron">▾</span>
+                </button>
+                <div class="dropdown-content">
+                    <div class="dropdown-left">
+                        <h4>Effectif</h4>
+                        <ul class="roster-list">
+                            <li class="roster-row"><span class="role-badge role-cf">CF</span><a class="manshine" href="Joueurs/manshine/william.html">William</a></li>
+                            <li class="roster-row"><span class="role-badge role-lw">LW</span><a class="manshine" href="Joueurs/manshine/imrane.html">Imrane</a></li>
+                            <li class="roster-row"><span class="role-badge role-rw">RW</span><a class="manshine" href="Joueurs/manshine/elijah.html">Elijah</a></li>
+                            <li class="roster-row"><span class="role-badge role-cm">CM</span><span class="empty-slot">Poste vacant</span></li>
+                        </ul>
+                        <a class="view-roster-link" href="players.html?club=manshine">Voir l'effectif complet →</a>
+                    </div>
+                    <div class="dropdown-right">
+                        <h4>Style de jeu</h4>
+                        <blockquote class="style-quote">Le Manshine City mise sur une attaque à 3, un vrai danger pour les défenseurs adverses, avec une équipe agressive.</blockquote>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="JavaScript/club.js"></script>
+    <script src="JavaScript/hamburger.js"></script>
+</body>
+
+</html>

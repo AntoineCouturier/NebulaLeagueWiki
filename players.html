@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="images/logos/nebula.png">
+  <title>Nebula League – Joueurs</title>
+  <link rel="stylesheet" href="CSS/style.css">
+  <link rel="stylesheet" href="CSS/players.css">
+  <link rel="stylesheet" href="CSS/hamburger.css">
+</head>
+
+<body>
+
+  <header>
+    <div class="header-container">
+      <!-- Hamburger Menu Button -->
+      <div class="hamburger-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <h1>Nebula League – Joueurs</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="title.html">Persos et Titres</a></li>
+          <li><a href="club.html">Clubs</a></li>
+          <li><a href="players.html" class="active">Joueurs</a></li>
+          <li><a href="valeur.html">Valeurs</a></li>
+          <li><a href="rules.html">Règles Matchs</a></li>
+          <li><a href="stats.html">Records</a></li>
+          <li><a href="matchs.html">Historique de Matchs</a></li>
+          <li><a href="saison.html">Historique des Saisons</a></li>
+          <li>
+            <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
+              <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
+              Discord
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Overlay -->
+  <div class="nav-mobile-overlay">
+    <button class="nav-close-btn" aria-label="Close menu">&times;</button>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="title.html">Persos et Titres</a></li>
+        <li><a href="club.html">Clubs</a></li>
+        <li><a href="players.html" class="active">Joueurs</a></li>
+        <li><a href="valeur.html">Valeurs</a></li>
+        <li><a href="rules.html">Règles Matchs</a></li>
+        <li><a href="stats.html">Records</a></li>
+        <li><a href="matchs.html">Historique de Matchs</a></li>
+        <li><a href="saison.html">Historique des Saisons</a></li>
+        <li>
+          <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
+            <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
+            Discord
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Backdrop for click-outside-to-close -->
+  <div class="nav-backdrop"></div>
+
+  <div class="players-toolbar">
+    <div class="club-dropdown" id="clubDropdown">
+      <button class="dropdown-current" id="dropdownCurrent" type="button">
+        <span class="dropdown-current-content">
+          <span class="dropdown-current-label">Tous les clubs</span>
+        </span>
+        <span class="dropdown-caret">▾</span>
+      </button>
+      <ul class="dropdown-menu" id="dropdownMenu">
+        <li class="dropdown-option active" data-club="all" data-label="Tous les clubs">
+          Tous les clubs
+        </li>
+        <li class="dropdown-option" data-club="bastard" data-label="Bastard Munchen">
+          <img src="images/clubs_icon/Bastard_Munchen.png" class="filter-icon" onerror="this.style.display='none'">
+          Bastard Munchen
+        </li>
+        <li class="dropdown-option" data-club="pxg" data-label="PXG">
+          <img src="images/clubs_icon/PXG.png" class="filter-icon" onerror="this.style.display='none'">
+          PXG
+        </li>
+        <li class="dropdown-option" data-club="ubers" data-label="Ubers">
+          <img src="images/clubs_icon/Ubers.png" class="filter-icon" onerror="this.style.display='none'">
+          Ubers
+        </li>
+        <li class="dropdown-option" data-club="barcha" data-label="Barcha">
+          <img src="images/clubs_icon/Barcha.png" class="filter-icon" onerror="this.style.display='none'">
+          Barcha
+        </li>
+        <li class="dropdown-option" data-club="manshine" data-label="Manshine City">
+          <img src="images/clubs_icon/Manshine_City.png" class="filter-icon" onerror="this.style.display='none'">
+          Manshine City
+        </li>
+        <li class="dropdown-option" data-club="retraite" data-label="Retraite">
+          Retraite
+        </li>
+      </ul>
+    </div>
+
+    <button class="sort-toggle" id="sortToggle" data-order="desc" aria-label="Trier par valeur">
+      <span class="sort-label">Valeur</span>
+      <span class="sort-arrow">↓</span>
+    </button>
+  </div>
+
+  <p class="players-count" id="playersCount"></p>
+
+  <main class="cards-container" id="playersContainer"></main>
+
+
+
+  <script src="JavaScript/players.js"></script>
+  <script src="JavaScript/hamburger.js"></script>
+
+</body>
+
+</html>

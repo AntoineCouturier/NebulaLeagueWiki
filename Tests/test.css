@@ -1,0 +1,713 @@
+/* Base similaire à club.css */
+body {
+    background: #000;
+    color: white;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background: rgba(10, 10, 10, 0.75);
+    padding: 15px 20px;
+    border-bottom: 2px solid #6f00ff;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 0 10px #6f00ff80;
+    text-align: center;
+}
+
+.header-container h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: #d89aff;
+    text-shadow: 0 0 6px #000;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0 0 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    padding: 6px 14px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+    color: #e6e6e6;
+    font-weight: bold;
+    transition: 0.25s;
+    border: 1px solid transparent;
+}
+
+nav ul li a:hover,
+nav ul li a.active {
+    background: linear-gradient(135deg, #a600ff, #b41ce6);
+    border-color: #b41ce6;
+    color: white;
+    box-shadow: 0 0 10px #b41ce6;
+}
+
+.discord-btn {
+    display: flex;
+    align-items: right;
+    gap: 8px;
+    background: #ffffff; /* Couleur Discord */
+    padding: 6px 14px;
+    border-radius: 6px;
+    color: #4752C4 !important;
+    font-weight: bold;
+    transition: 0.25s ease-in-out;
+}
+
+.discord-btn:hover {
+    background: #4752C4; /* Hover Discord */
+    transform: scale(1.07);
+    box-shadow: 0 0 12px #5865F2aa;
+    color: white !important;
+}
+
+.discord-logo {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+}
+
+.clubs-title {
+    text-align: center;
+    font-size: 2.4rem;
+    margin: 40px 0 25px;
+    color: #d89aff; 
+    font-weight: bold;
+    text-shadow: 0 0 10px #6f00ff, 0 0 25px #b41cff;
+    letter-spacing: 1px;
+}
+
+.clubs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+}
+
+.category {
+    width: 90%;
+    max-width: 750px;
+    border-radius: 18px;
+    border: 2px solid #b41cff60;
+    overflow: hidden;
+    transition: 0.3s ease;
+    opacity: 0;
+    transform: translateY(25px);
+    box-shadow: 0 0 15px #b41cff30;
+}
+
+.category.reveal {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dropdown-btn {
+    width: 100%;
+    padding: 22px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    border: none;
+    background: linear-gradient(135deg, #1a1a1a, #320947);
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.desc {color:white;}
+
+.dropdown-content {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 25px;
+    background: rgba(0,0,0,0.45);
+    transition: max-height 0.4s ease, padding 0.3s ease, opacity 0.4s ease;
+    opacity: 0;
+}
+
+.dropdown-content.open {
+    padding: 20px 25px;
+    max-height: 400px;
+    opacity: 1;
+}
+
+.striker {
+    position: relative;
+    display: inline-block;
+
+    background: linear-gradient(90deg,rgb(255, 96, 96), rgb(255, 0, 0), rgb(197, 0, 0), rgb(135, 0, 0), rgb(91, 0, 0));
+    background-size: 300%;
+    animation: shine 3s linear infinite;
+
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.striker::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+
+    background: inherit;
+    background-size: inherit;
+    animation: inherit;
+    -webkit-background-clip: text;
+    color: transparent;
+
+    filter: blur(16px);
+    opacity: 1;
+    pointer-events: none;
+
+    /* 💡 Correction du glow vertical */
+    transform: scaleY (1) translateY(-2px);
+    transform-origin: center;
+}
+
+.passer {
+    position: relative;
+    display: inline-block;
+
+        background: linear-gradient(90deg,rgb(96, 117, 255), rgb(0, 8, 255), rgb(0, 39, 197), rgb(0, 18, 135), rgb(0, 12, 91));
+    background-size: 300%;
+    animation: shine 3s linear infinite;
+
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.passer::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+
+    background: inherit;
+    background-size: inherit;
+    animation: inherit;
+    -webkit-background-clip: text;
+    color: transparent;
+
+    filter: blur(16px);
+    opacity: 1;
+    pointer-events: none;
+
+    /* 💡 Correction du glow vertical */
+    transform: scaleY (1) translateY(-2px);
+    transform-origin: center;
+}
+
+.defender {
+    position: relative;
+    display: inline-block;
+
+    background: linear-gradient(90deg,rgb(96, 255, 112), rgb(34, 255, 0), rgb(0, 197, 7), rgb(31, 135, 0), rgb(21, 91, 0));
+    background-size: 300%;
+    animation: shine 3s linear infinite;
+
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.defender::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+
+    background: inherit;
+    background-size: inherit;
+    animation: inherit;
+    -webkit-background-clip: text;
+    color: transparent;
+
+    filter: blur(16px);
+    opacity: 1;
+    pointer-events: none;
+
+    /* 💡 Correction du glow vertical */
+    transform: scaleY (1) translateY(-2px);
+    transform-origin: center;
+}
+
+.goat {
+    position: relative;
+    display: inline-block;
+
+    background: linear-gradient(90deg, #ff0000, #ffff00, #2fff00, #00ffee, #0037ff, #9d00ff, #ff00a2);
+    background-size: 300%;
+    animation: shine 3s linear infinite;
+
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.goat::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+
+    background: inherit;
+    background-size: inherit;
+    animation: inherit;
+    -webkit-background-clip: text;
+    color: transparent;
+
+    filter: blur(16px);
+    opacity: 1;
+    pointer-events: none;
+
+    /* 💡 Correction du glow vertical */
+    transform: scaleY (1) translateY(-2px);
+    transform-origin: center;
+}
+
+@keyframes shine {
+    0% { background-position: 0%; }
+    100% { background-position: 300%; }
+}
+
+.machinery {
+    position: relative;
+    display: inline-block;
+
+    background: linear-gradient(90deg, rgb(255, 255, 255), rgb(192, 182, 0), rgb(255, 255, 255), rgb(2, 72, 142));
+    background-size: 300%;
+    animation: shine 3s linear infinite;
+
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.machinery::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+
+    background: inherit;
+    background-size: inherit;
+    animation: inherit;
+    -webkit-background-clip: text;
+    color: transparent;
+
+    filter: blur(16px);
+    opacity: 1;
+    pointer-events: none;
+
+    /* 💡 Correction du glow vertical */
+    transform: scaleY (1) translateY(-2px);
+    transform-origin: center;
+}
+
+@keyframes shine {
+    0% { background-position: 0%; }
+    100% { background-position: 300%; }
+}
+
+.title-link {
+    color:inherit;
+    text-decoration: none;
+}
+
+.title-link:hover {
+    opacity: 0.8;
+}
+
+.character-tabs {
+  display: flex;
+  justify-content: center; /* tout centré */
+  gap: 10px;
+  overflow-x: auto;
+  padding: 15px 20px;
+  background: #111; /* couleur de fond comme le header */
+  border-bottom: 2px solid #6f00ff;
+  scroll-snap-type: x mandatory;
+}
+
+.character-tabs .char-btn {
+  background: rgba(0,0,0,0.8); /* couleur des boutons comme avant */
+  color: #e6e6e6;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  white-space: nowrap;
+  scroll-snap-align: center; /* pour effet carousel */
+  transition: 0.25s;
+}
+
+.character-content {
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.char-page {
+  display: none;
+  width: 90%;
+  max-width: 800px;
+  animation: fadeIn 0.4s ease;
+}
+
+.char-page.active {
+  display: block;
+}
+
+.char-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center; /* contenu centré */
+  align-items: center;
+}
+
+.char-info img {
+  width: 250px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.info-text {
+  max-width: 500px;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(15px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+
+.character-tabs {
+  display: flex;
+  justify-content: center; /* centre les boutons */
+  gap: 10px;
+  overflow-x: auto;
+  padding: 15px 20px;
+  scroll-snap-type: x mandatory; /* effet carousel */
+  background: #111; /* fond similaire à ton style header */
+  border-bottom: 2px solid #6f00ff;
+}
+
+.character-tabs .char-btn {
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  white-space: nowrap;
+  scroll-snap-align: center; /* centrage type carousel */
+  transition: 0.25s;
+  /* Couleurs d’origine par type */
+}
+
+.char-btn.global:hover, .char-btn.global.active { background: linear-gradient(5deg, #000000, #8f00cc); color: #ffffff; box-shadow: 0 0 10px #c940ff;}
+.char-btn.isagi:hover, .char-btn.isagi.active { background: linear-gradient(5deg, #1cfc6a, #0300cc); color: #000000; box-shadow: 0 0 10px #89ff72;}
+.char-btn.nagi:hover, .char-btn.nagi.active { background: linear-gradient(5deg, #abd6ff,#23566f); color: #000000; box-shadow: 0 0 10px #80fffb;}
+.char-btn.chigiri:hover, .char-btn.chigiri.active { background: linear-gradient(5deg, #e00c41, #f700ff); color: #030303; box-shadow: 0 0 10px #ff3ab7;}
+.char-btn.bachira:hover, .char-btn.bachira.active { background: linear-gradient(5deg, #adb004, #3f3400); color: #000000; box-shadow: 0 0 10px #fff700;}
+.char-btn.shidou:hover, .char-btn.shidou.active { background: linear-gradient(135deg, #9d00a2, #8f00cc); color: #000000; box-shadow: 0 0 10px #f201ff;}
+.char-btn.kurona:hover, .char-btn.kurona.active { background: linear-gradient(5deg, #9f0447, #70a2ff); color: #000000; box-shadow: 0 0 10px #a90074;}
+.char-btn.reo:hover, .char-btn.reo.active { background: linear-gradient(5deg, #6e00ad, #c9a8f6); color: #000000; box-shadow: 0 0 10px #9900ff;}
+.char-btn.kunigami:hover, .char-btn.kunigami.active { background: linear-gradient(5deg, #5f2e00, #cc0000); color: #000000; box-shadow: 0 0 10px #b26b00;}
+.char-btn.yukimiya:hover, .char-btn.yukimiya.active { background: linear-gradient(5deg, #ffa200, #8f00cc); color: #000000; box-shadow: 0 0 10px #ff810a;}
+.char-btn.aiku:hover, .char-btn.aiku.active { background: linear-gradient(5deg, #21a403, #8f00cc); color: #000000; box-shadow: 0 0 10px #44ff00;}
+.char-btn.barou:hover, .char-btn.barou.active { background: linear-gradient(5deg, #7f0000, #000000); color: #000000; box-shadow: 0 0 10px #820000;}
+.char-btn.sae:hover, .char-btn.sae.active { background: linear-gradient(60deg, #ed0973, #1cff6f); color: #000000; box-shadow: 0 0 10px #ff42d3;}
+.char-btn.kaiser:hover, .char-btn.kaiser.active { background: linear-gradient(5deg, #385fc0, #ffed61); color: #000000; box-shadow: 0 0 10px #0039ac;}
+.char-btn.lorenzo:hover, .char-btn.lorenzo.active { background: linear-gradient(135deg, #3a0053,#0a6901); color: #000000; box-shadow: 0 0 10px #6900a5;}
+.char-btn.rin:hover, .char-btn.rin.active { background: linear-gradient(5deg, #00825d, #00bbcc); color: #000000; box-shadow: 0 0 10px #008b6b;}
+.char-btn.nel-isagi:hover, .char-btn.nel-isagi.active { background: linear-gradient(-5deg, #003d73, #ffffff); color: #000000; box-shadow: 0 0 10px #ffffff;}
+/* Ajoute toutes les autres couleurs comme dans ton ancien fichier */
+
+.char-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+/* Titres : curseur en pointeur et couleurs conservées */
+.char-info ul li {
+    cursor: pointer; /* montre que c’est cliquable */
+}
+
+/* Optionnel : conserve exactement les couleurs déjà définies dans le HTML */
+.char-info ul li span.desc {
+    cursor: default; /* Description texte normal, pas cliquable */
+}
+
+/* Si tu veux ajouter un effet au survol pour les titres */
+.char-info ul li:hover {
+    opacity: 0.8;
+}
+
+
+.char-info img {
+  width: 250px;
+  border-radius: 12px;
+}
+
+.info-text {
+  max-width: 500px;
+}
+
+.char-description {
+  margin-top: 20px; /* sous la photo et infos */
+  padding: 15px;
+  background: rgba(20,20,20,0.5);
+  border-radius: 12px;
+}
+
+.titles-details {
+  margin-top: 20px;
+}
+
+.title-detail {
+  display: none;
+  margin-top: 15px;
+  padding: 15px;
+  background: rgba(30,30,30,0.5);
+  border-radius: 12px;
+}
+
+.title-detail video {
+  width: 100%;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+.title-detail iframe {
+  width: 100%;
+  max-width: 560px;
+  height: 315px;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+.titles-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* tout centré */
+  gap: 25px;
+}
+
+.title-detail {
+    display: none; /* déjà caché par défaut */
+    text-align: center;
+    max-width: 900px;  /* plus large que 700px précédent */
+    width: 100%;
+    padding: 20px;
+}
+
+.title-detail video {
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+
+.title-detail h3 {
+    font-size: 2.2rem;   /* titre plus grand */
+    margin-bottom: 15px;
+    color: #df9fff;
+}
+
+.title-desc {
+    font-size: 1.3rem;   /* description plus grande */
+    margin-bottom: 25px;
+    line-height: 1.6;
+    color: #fff;
+}
+
+.video-container {
+    width: 100%;
+    max-width: 800px;  /* plus grande largeur */
+    aspect-ratio: 16/9;
+    margin-bottom: 30px;
+}
+
+.video-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 12px;
+}
+
+
+
+
+/* Rareté */
+.commun {color: rgb(150, 255, 150);}
+.rare {color: rgb(150, 201, 255);}
+.legendary {color: rgb(255, 238, 86);}
+.mythical {color: rgb(255, 0, 251);}
+.worldclass {color: rgb(97, 97, 97);}
+.evo {color: rgb(174, 54, 255);}
+
+/* Isagi */
+.heartofblk{color: #2731f0;}
+.luck{color: #ffda80;}
+
+/* Nagi */
+.lazy{color: #dfdede;;}
+.awoken{color: #73d5ff;}
+.fallen{color: #a7a7a7;}
+
+/* Chigiri */
+.speedster{color: #af0482;}
+.panther{color: #e91e63;}
+
+/* Bachira */
+.monster{color: #776b00;}
+.ginga{color: #c9ba00;;}
+
+/* Shidou */
+.zesty{color: #b700ff;}
+.formless{color: #ef75ff;}
+.devil{color: #9b59b6;}
+
+/* Kurona */
+.hotline{color: #e91e63;}
+.reliable{color: #b40062;}
+
+/* Reo */
+.copycat{color: #7700ff;}
+.chameleon{color: #be90ff;}
+
+/* Kunigami */
+.wildcard{color: #ca6100;}
+.joker{color: #743600;}
+
+/* Yukimiya */
+.oneonone{color: #ff9900;}
+.street{color: #ffaa50;}
+.swordscrew{color: #a84300;}
+
+/* Aiku */
+.ultimate{color: #19d400;}
+.godsnake{color: #c20000;}
+
+/* Barou */
+.king{color: #9e0000;}
+.blkjoker{color: #4e0000;}
+
+/* Sae */
+.japantreasure{color: #e2006d;}
+.prodigy{color: #00ff5f;}
+.beautifuldestruction{color: #ad1457;}
+
+/* Kaiser */
+.emperor{color: #2900d4;}
+.superstar{color: #7185b6;}
+
+/* Lorenzo */
+.aceeater{color: #4700aa;}
+.zombie{color: #006623;}
+
+/* Rin */
+.puppet{color: #0d0094;}
+.berserk{color: #11806a;}
+.disgustingdestruction{color: #091264;}
+
+/* NEL Isagi */
+.neoegoist{color: #00053a;}
+.demonking{color: #463679;}
+
+
+
+
+
+
+
+/* Isagi */
+.title-detail h3.heartofblk{color: #2731f0;}
+.title-detail h3.luck{color: #ffda80;}
+
+/* Nagi */
+.title-detail h3.lazy{color: #dfdede;;}
+.title-detail h3.awoken{color: #73d5ff;}
+.title-detail h3.fallen{color: #a7a7a7;}
+
+/* Chigiri */
+.title-detail h3.speedster{color: #af0482;}
+.title-detail h3.panther{color: #e91e63;}
+
+/* Bachira */
+.title-detail h3.monster{color: #776b00;}
+.title-detail h3.ginga{color: #c9ba00;;}
+
+/* Shidou */
+.title-detail h3.zesty{color: #b700ff;}
+.title-detail h3.formless{color: #ef75ff;}
+.title-detail h3.devil{color: #9b59b6;}
+
+/* Kurona */
+.title-detail h3.hotline{color: #e91e63;}
+.title-detail h3.reliable{color: #b40062;}
+
+/* Reo */
+.title-detail h3.copycat{color: #7700ff;}
+.title-detail h3.chameleon{color: #be90ff;}
+
+/* Kunigami */
+.title-detail h3.wildcard{color: #ca6100;}
+.title-detail h3.joker{color: #743600;}
+
+/* Yukimiya */
+.title-detail h3.oneonone{color: #ff9900;}
+.title-detail h3.street{color: #ffaa50;}
+.title-detail h3.swordscrew{color: #a84300;}
+
+/* Aiku */
+.title-detail h3.ultimate{color: #19d400;}
+.title-detail h3.godsnake{color: #c20000;}
+
+/* Barou */
+.title-detail h3.king{color: #9e0000;}
+.title-detail h3.blkjoker{color: #4e0000;}
+
+/* Sae */
+.title-detail h3.japantreasure{color: #e2006d;}
+.title-detail h3.prodigy{color: #00ff5f;}
+.title-detail h3.beautifuldestruction{color: #ad1457;}
+
+/* Kaiser */
+.title-detail h3.emperor{color: #2900d4;}
+.title-detail h3.superstar{color: #7185b6;}
+
+/* Lorenzo */
+.title-detail h3.aceeater{color: #4700aa;}
+.title-detail h3.zombie{color: #006623;}
+
+/* Rin */
+.title-detail h3.puppet{color: #0d0094;}
+.title-detail h3.berserk{color: #11806a;}
+.title-detail h3.disgustingdestruction{color: #091264;}
+
+/* NEL Isagi */
+.title-detail h3.neoegoist{color: #00053a;}
+.title-detail h3.demonking{color: #463679;}
+
+@media (max-width: 768px) {
+    .character-tabs {
+        justify-content: flex-start !important; /* IMPORTANT */
+    }
+}
+
+@media (min-width: 769px) {
+    .character-tabs {
+        justify-content: center !important;
+    }
+}
