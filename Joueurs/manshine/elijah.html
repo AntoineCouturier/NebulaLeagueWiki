@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,193 +8,179 @@
     <title>Carte Joueur - Elijah</title>
     <link rel="stylesheet" href="../player-card.css">
     <link rel="stylesheet" href="../../CSS/colors.css">
+    <link rel="stylesheet" href="../../CSS/global-theme.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
 
-<!-- -------------------- Barre de Navigation -------------------- -->
-<header>
-    <div class="nav-container">
-        <h1>Nebula League - Joueurs - Elijah</h1>
-        <nav>
-            <ul>
-                <li><a href="../../club.html">Retour au Clubs</a></li>
-                <li><a href="../../players.html">Retour au Joueurs</a></li>
-            </ul>
-        </nav>
-    </div>
-</header>
+    <!-- -------------------- Barre de Navigation -------------------- -->
+    <header>
+        <div class="nav-container">
+            <h1>Nebula League - Joueurs - Elijah</h1>
+            <nav>
+                <ul>
+                    <li><a href="../../club.html">Retour au Clubs</a></li>
+                    <li><a href="../../players.html">Retour au Joueurs</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-<!-- -------------------- Carte Joueur -------------------- -->
-<div class="player-card-wrapper">
+    <!-- -------------------- Carte Joueur -------------------- -->
+    <div class="player-card-wrapper">
 
-    <!-- Carte principale -->
-    <div class="player-card-main">
-        <div class="player-header-manshine">
-            <img src="../images-joueurs/elijah.png" alt="@Sell">
-            <h2>Elijah</h2>
+        <!-- Carte principale -->
+        <div class="player-card-main">
+            <div class="player-header-manshine">
+                <img src="../images-joueurs/elijah.png" alt="@Sell">
+                <h2>Elijah</h2>
+            </div>
+
+            <div class="player-club-logo-manshine">
+                <img src="../../images/clubs_icon/Manshine_City.png" alt="BM Club Logo">
+            </div>
+
+            <div class="player-info">
+                <p><strong class="info-manshine">Pseudo :</strong> Elijah</p>
+                <p><strong class="info-manshine">Club :</strong> Manshine City</p>
+                <p><strong class="info-manshine">Position :</strong> RW</p>
+                <p><strong class="info-manshine">Personnage :</strong> Shidou</p>
+                <p><strong class="info-manshine">Valeur :</strong> 0¥💎</p>
+            </div>
         </div>
 
-        <div class="player-club-logo-manshine">
-            <img src="../../images/clubs_icon/Manshine_City.png" alt="BM Club Logo">
+        <!-- Cube Stats FIFA -->
+        <div class="player-card-fifa-stats">
+            <h3>Stats techniques</h3>
+            <p><strong class="stats">🛡️ Defense :</strong> 72 | <span class="c">C</span></p>
+            <p><strong class="stats">⭐ Passe :</strong> 74 | <span class="c">C</span></p>
+            <p><strong class="stats">🌟 Dribble :</strong> 83 | <span class="a">A</span></p>
+            <p><strong class="stats">⚽ Tir :</strong> 82 | <span class="a">A</span></p>
+            <p><strong class="stats">💥 Offense :</strong> 77 | <span class="b">B</span></p>
+            <p><strong class="stats">👋 Positionement :</strong> 78 | <span class="b">B</span></p>
+            <br>
+            <br>
+            <p><strong class="stats">👤 Global :</strong> 78 | <span class="b">Rang B</span></p>
+            <button class="radar-btn manshine-season" id="openRadarPopup">
+                📊 Voir graphique radar
+            </button>
         </div>
 
-        <div class="player-info">
-            <p><strong class="info-manshine">Pseudo :</strong> Elijah</p>
-            <p><strong class="info-manshine">Club :</strong> Manshine City</p>
-            <p><strong class="info-manshine">Position :</strong> RW</p>
-            <p><strong class="info-manshine">Personnage :</strong> Shidou</p>
-            <p><strong class="info-manshine">Valeur :</strong> 0¥💎</p>
-        </div>
-    </div>
-
-    <!-- Cube Stats FIFA -->
-    <div class="player-card-fifa-stats">
-        <h3>Stats techniques</h3>
-        <p><strong class="stats">🛡️ Defense :</strong> 72 | <span class="c">C</span></p>
-        <p><strong class="stats">⭐ Passe :</strong> 74 | <span class="c">C</span></p>
-        <p><strong class="stats">🌟 Dribble :</strong> 83 | <span class="a">A</span></p>
-        <p><strong class="stats">⚽ Tir :</strong> 76 | <span class="b">B</span></p>
-        <p><strong class="stats">💥 Offense :</strong> 77 | <span class="b">B</span></p>
-        <p><strong class="stats">👋 Positionement :</strong> 78  | <span class="b">B</span></p>
-        <br>
-        <br>
-        <p><strong class="stats">👤 Global :</strong> 77 | <span class="b">Rang B</span></p>
-        <button class="radar-btn manshine-season" id="openRadarPopup">
-    📊 Voir graphique radar
-</button>
-    </div>
-
-    <!-- Cube Stats matchs -->
-    <div class="player-card-match-stats">
-        <h3>Stats de Matchs Total</h3>
-        <p><strong class="matchs">Matchs :</strong> 0</p>
-        <p><strong class="matchs">Buts :</strong> 0</p>
-        <p><strong class="matchs">Assists :</strong> 0</p>
-        <p><strong class="matchs">Contribution Defensive :</strong> 0</p>
-        <p><strong class="matchs">Dribbles :</strong> 0</p>
-        <p><strong class="matchs">MVP :</strong> 0</p>
-        <p><strong class="matchs">Victoire :</strong> 0</p>
-        <p><strong class="matchs">Défaite :</strong> 0</p>
-        <!-- 🔵 Bouton -->
+        <!-- Cube Stats matchs -->
+        <div class="player-card-match-stats">
+            <h3>Stats de Matchs Total</h3>
+            <p><strong class="matchs">Matchs :</strong> 0</p>
+            <p><strong class="matchs">Buts :</strong> 0</p>
+            <p><strong class="matchs">Assists :</strong> 0</p>
+            <p><strong class="matchs">Contribution Defensive :</strong> 0</p>
+            <p><strong class="matchs">Dribbles :</strong> 0</p>
+            <p><strong class="matchs">MVP :</strong> 0</p>
+            <p><strong class="matchs">Victoire :</strong> 0</p>
+            <p><strong class="matchs">Défaite :</strong> 0</p>
+            <!-- 🔵 Bouton -->
             <button class="season-btn manshine-season" id="openSeasonPopup">Voir les Stats par Saisons</button>
-    </div>
-
-    <!-- Cube Titres / Trophées -->
-    <div class="player-card-trophies">
-        <h3>Trophées:</h3>
-        <ul>
-            <li><strong class="goldenshoe">Golden Shoe :</strong> 0</li>
-            <li><strong class="ncl">NCL Cup :</strong> 0</li>
-            <li><strong class="ballonor">Ballon d'Or :</strong> 0</li>
-        </ul>
-        <h3>Titres</h3>
-        <ul>
-            <!-- Titres à mettre quand debloquer -->
-        </ul>
-    </div>
-
-</div>
-
-<!-- 🔵 POPUP SAISONS (CORRIGÉ - min) -->
-<div class="popup-overlay" id="popupSeason">
-    <div class="popup-box manshine-box">
-        <h2>Stats par Saison</h2>
-
-        <label for="seasonSelect">Choisir une saison :</label>
-        <select id="seasonSelect">
-            <option value="1">Saison 1 (Actuel)</option>
-        </select>
-
-        <!-- <-- ZONE D'AFFICHAGE (obligatoire !) -->
-        <div id="seasonStatsDisplay" class="popup-stats">
-            <!-- Le script injectera les stats ici -->
         </div>
 
-        <!-- 🔒 Stats cachées (propres au joueur) -->
-        <div id="hidden-season-stats" style="display:none;">
+        <!-- Cube Titres / Trophées -->
+        <div class="player-card-trophies">
+            <h3>Trophées:</h3>
+            <ul>
+                <li><strong class="puskas">Prix Puskas :</strong> 0</li>
+                <li><strong class="ncl">NCL Cup :</strong> 0</li>
+                <li><strong class="goldenshoe">Golden Shoe :</strong> 0</li>
+                <li><strong class="ballonor">Ballon d'Or :</strong> 0</li>
+            </ul>
+            <h3>Titres</h3>
+            <ul>
+                <!-- Titres à mettre quand debloquer -->
+            </ul>
+        </div>
 
-            <div class="season"
-                data-season="1"
-                data-matchs="0"
-                data-buts="0"
-                data-assists="0"
-                data-saves="0"
-                data-dribbles="0"
-                data-mvp="0"
-                data-win="0"
-                data-lose="0">
+    </div>
+
+    <!-- 🔵 POPUP SAISONS (CORRIGÉ - min) -->
+    <div class="popup-overlay" id="popupSeason">
+        <div class="popup-box manshine-box">
+            <h2>Stats par Saison</h2>
+
+            <label for="seasonSelect">Choisir une saison :</label>
+            <select id="seasonSelect">
+                <option value="1">Saison 1 (Actuel)</option>
+            </select>
+
+            <!-- <-- ZONE D'AFFICHAGE (obligatoire !) -->
+            <div id="seasonStatsDisplay" class="popup-stats">
+                <!-- Le script injectera les stats ici -->
             </div>
 
-        </div>
+            <!-- 🔒 Stats cachées (propres au joueur) -->
+            <div id="hidden-season-stats" style="display:none;">
 
-        <button class="close-btn" id="closeSeasonPopup">Fermer</button>
-    </div>
-</div>
+                <div class="season" data-season="1" data-matchs="0" data-buts="0" data-assists="0" data-saves="0"
+                    data-dribbles="0" data-mvp="0" data-win="0" data-lose="0">
+                </div>
 
-<!-- 🔥 POPUP SECRET PAR MATCHS -->
-<div class="popup-overlay" id="popupMatch">
-    <div class="popup-box manshine-box">
-        <h2>Stats par Match</h2>
-
-        <label for="matchSelect">Choisir un match :</label>
-        <select id="matchSelect">
-            <option value="1">Match 1</option>
-            <option value="2">Match 2</option>
-        </select>
-
-        <div id="matchStatsDisplay" class="popup-stats"></div>
-
-        <!-- 🔒 Stats cachées par match -->
-        <div id="hidden-match-stats" style="display:none;">
-
-            <div class="match"
-                data-match="1"
-                data-title="Barcha vs PXG | 01/04/2022"
-                data-buts="2"
-                data-pass="1"
-                data-saves="0"
-                data-dribbles="3">
             </div>
 
-            <div class="match"
-                data-match="2"
-                data-title="Barcha vs Manshine"
-                data-buts="0"
-                data-pass="0"
-                data-saves="0"
-                data-dribbles="0">
+            <button class="close-btn" id="closeSeasonPopup">Fermer</button>
+        </div>
+    </div>
+
+    <!-- 🔥 POPUP SECRET PAR MATCHS -->
+    <div class="popup-overlay" id="popupMatch">
+        <div class="popup-box manshine-box">
+            <h2>Stats par Match</h2>
+
+            <label for="matchSelect">Choisir un match :</label>
+            <select id="matchSelect">
+                <option value="1">Match 1</option>
+                <option value="2">Match 2</option>
+            </select>
+
+            <div id="matchStatsDisplay" class="popup-stats"></div>
+
+            <!-- 🔒 Stats cachées par match -->
+            <div id="hidden-match-stats" style="display:none;">
+
+                <div class="match" data-match="1" data-title="Barcha vs PXG | 01/04/2022" data-buts="2" data-pass="1"
+                    data-saves="0" data-dribbles="3">
+                </div>
+
+                <div class="match" data-match="2" data-title="Barcha vs Manshine" data-buts="0" data-pass="0"
+                    data-saves="0" data-dribbles="0">
+                </div>
+
             </div>
 
+            <button class="close-btn" id="closeMatchPopup">Fermer</button>
         </div>
-
-        <button class="close-btn" id="closeMatchPopup">Fermer</button>
     </div>
-</div>
 
-<!-- POPUP RADAR AGRANDI -->
-<div class="popup-overlay" id="popupRadar">
-    <div class="popup-box manshine-box" id="radarPopupBox">
-        <h2>📊 Graphique Radar - Elijah</h2>
-        
-        <div class="radar-container">
-            <canvas id="skillsRadarChart"></canvas>
+    <!-- POPUP RADAR AGRANDI -->
+    <div class="popup-overlay" id="popupRadar">
+        <div class="popup-box manshine-box" id="radarPopupBox">
+            <h2>📊 Graphique Radar - Elijah</h2>
+
+            <div class="radar-container">
+                <canvas id="skillsRadarChart"></canvas>
+            </div>
+
+            <!-- Infos additionnelles -->
+            <div class="radar-info" style="text-align: center; margin: 20px 0;">
+                <p style="color: #fff; font-size: 1.1rem; margin-bottom: 5px;">
+                    <strong>Note Globale : 77 | B</strong>
+                </p>
+                <p style="color: #aaa; font-size: 0.9rem;">
+                    Statistiques techniques
+                </p>
+            </div>
+
+            <button class="close-btn" id="closeRadarPopup">Fermer</button>
         </div>
-        
-        <!-- Infos additionnelles -->
-        <div class="radar-info" style="text-align: center; margin: 20px 0;">
-            <p style="color: #fff; font-size: 1.1rem; margin-bottom: 5px;">
-                <strong>Note Globale : 77 | B</strong>
-            </p>
-            <p style="color: #aaa; font-size: 0.9rem;">
-                Statistiques techniques
-            </p>
-        </div>
-        
-        <button class="close-btn" id="closeRadarPopup">Fermer</button>
     </div>
-</div> 
 
-<script src="../player-card.js"></script>
+    <script src="../player-card.js"></script>
 </body>
+
 </html>

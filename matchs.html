@@ -7,6 +7,7 @@
     <link rel="icon" type="image/png" href="images/logos/nebula.png">
     <title>Historique des Matchs</title>
     <link rel="stylesheet" href="CSS/match.css">
+    <link rel="stylesheet" href="CSS/global-theme.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet">
@@ -35,6 +36,7 @@
                     <li><a href="stats.html">Records</a></li>
                     <li><a href="matchs.html" class="active">Historique de Matchs</a></li>
                     <li><a href="saison.html">Historique des Saisons</a></li>
+                    <li><a href="fixtures.html">Calendrier des Matchs</a></li>
                     <li>
                         <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
                             <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
@@ -60,6 +62,7 @@
                 <li><a href="stats.html">Records</a></li>
                 <li><a href="matchs.html" class="active">Historique de Matchs</a></li>
                 <li><a href="saison.html">Historique des Saisons</a></li>
+                <li><a href="fixtures.html">Calendrier des Matchs</a></li>
                 <li>
                     <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
                         <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
@@ -72,150 +75,51 @@
 
     <!-- Backdrop for click-outside-to-close -->
     <div class="nav-backdrop"></div>
+
+    <!-- ============ HERO ============ -->
+    <section class="matches-hero">
+        <h2 class="matches-hero-title">HISTORIQUE DES MATCHS</h2>
+        <p class="matches-hero-subtitle">Tous les matchs joués dans la Nebula League : scores, buteurs, notes des
+            joueurs et vidéos, filtrables par compétition, équipe et date.</p>
+    </section>
+
+    <!-- ============ STAT CARDS ============ -->
+    <div class="matches-stat-cards" id="matchesStatCards"></div>
+
+    <!-- ============ CONTROLS BAR ============ -->
     <div class="match-filter-bar">
-        <span class="filter-label">Filtrer :</span>
-        <div class="filter-group">
-            <button class="category-btn all-top active" data-cat="all">Tous</button>
-            <button class="category-btn ligue-top" data-cat="ligue">Ligue</button>
-            <button class="category-btn ncl-top" data-cat="ncl">NCL</button>
-            <button class="category-btn amical-top" data-cat="amical">Amical</button>
+        <div class="filter-category">
+            <span class="filter-label">Catégorie :</span>
+            <div class="filter-group" id="categoryFilterGroup">
+                <button class="category-btn all-top active" data-cat="all">Tous</button>
+                <button class="category-btn ligue-top" data-cat="ligue">Ligue</button>
+                <button class="category-btn ncl-top" data-cat="ncl">NCL</button>
+                <button class="category-btn amical-top" data-cat="amical">Amical</button>
+            </div>
         </div>
+
+        <div class="filter-club">
+            <span class="filter-label">Équipe :</span>
+            <div class="club-dropdown" id="clubDropdown">
+                <button class="dropdown-current" id="dropdownCurrent" type="button">
+                    <span class="dropdown-current-content">
+                        <span class="dropdown-current-label">Toutes les équipes</span>
+                    </span>
+                    <span class="dropdown-caret">▾</span>
+                </button>
+                <ul class="dropdown-menu" id="dropdownMenu"></ul>
+            </div>
+        </div>
+
+        <button class="sort-toggle" id="sortToggle" data-order="desc">
+            <span class="sort-label">Date</span>
+            <span class="sort-arrow">↓</span>
+        </button>
     </div>
 
-    <main class="match-list">
-        <!-- ================================================================== ======= ================================================================== -->
-        <!-- ================================================================== MATCH 1 ================================================================== -->
-        <!-- ================================================================== ======= ================================================================== -->
-        <div class="match-card ligue-card" data-cat="ligue" data-date="2022-04-01">
-            <div class="match-header">
-                <div class="team">
-                    <img src="images/clubs_icon/Manshine_City.png" class="team-logo">
-                    <span>Manshine City</span>
-                </div>
+    <main class="match-list" id="matchList"></main>
 
-                <div class="score-block">
-                    <span class="match-date">01/04/2022</span>
-                    <span class="score-ligue">13 - 2</span>
-                </div>
-
-                <div class="team">
-                    <img src="images/clubs_icon/PXG.png" class="team-logo">
-                    <span>PXG</span>
-                </div>
-            </div>
-
-            <div class="match-details">
-                <div class="buteurs">
-                    <ul class="buteurs-left">
-                        <li>Dylan (x6)</li>
-                        <li>Antoine (x5)</li>
-                        <li>Theo (x2)</li>
-                    </ul>
-                    <ul class="buteurs-right">
-                        <li>(x1) Jason</li>
-                        <li>(x1) Enzo</li>
-                    </ul>
-                </div>
-                <p><strong>MVP : </strong> Antoine</p>
-            </div>
-
-
-            <button class="details-btn ligue" data-popup="popup1">Détails du match</button>
-            <button class="video-btn" onclick="window.open('https://www.youtube.com/watch?v=IUGts4iKlz4', '_blank')">
-                Vidéo du match ▶
-            </button>
-
-        </div>
-
-    </main>
-
-
-    <div class="popup-bg" id="popup1">
-        <div class="popup-box ligue-box">
-            <h3>Manshine City - PXG (01/04/2023)</h3>
-
-            <div class="details-container">
-
-                <div class="team-details ligue-details">
-                    <h4>Manshine City</h4>
-                    <ul>
-                        <li><strong>0'43"</strong> — Dylan ⚽ | Antoine 👟</li>
-                        <li><strong>1'21"</strong> — Dylan ⚽ | Theo 👟</li>
-                        <li><strong>2'48"</strong> — Antoine ⚽ | Dylan 👟</li>
-                        <li><strong>3'21"</strong> — Theo ⚽ | Antoine 👟</li>
-                        <li><strong>4'05"</strong> — Dylan ⚽ | Antoine 👟</li>
-                        <li><strong>4'51"</strong> — Antoine ⚽ | Theo 👟</li>
-                        <li><strong>5'56"</strong> — Dylan ⚽ | Antoine 👟</li>
-                        <li><strong>6'21"</strong> — Dylan ⚽ | Antoine 👟</li>
-                        <li><strong>7'12"</strong> — Antoine ⚽ | Theo 👟</li>
-                        <li><strong>8'45"</strong> — Antoine ⚽ | Theo 👟</li>
-                        <li><strong>9'29"</strong> — Dylan ⚽ | Antoine 👟</li>
-                        <li><strong>10'57"</strong> — Antoine ⚽ | Solo Dribble🌟</li>
-                        <li><strong>11'52"</strong> — Theo ⚽ | Antoine 👟</li>
-                    </ul>
-                </div>
-
-                <div class="team-details ligue-details">
-                    <h4>PXG</h4>
-                    <ul>
-                        <li><strong>7'56"</strong> — Enzo ⚽ | Jason 👟</li>
-                        <li><strong>10'07"</strong> — Jason ⚽ | Amar 👟</li>
-                    </ul>
-                </div>
-
-            </div>
-
-
-            <div class="notes-section ligue-section">
-                <h4>Notes des Joueurs</h4>
-
-                <div class="notes-columns">
-
-
-                    <div class="notes-team">
-                        <h5 class="note-titre">Manshine City</h5>
-                        <div class="note-item">
-                            <span class="note-name">Dylan: 9.5</span>
-                            <div class="note-bar" data-note="9.5"></div>
-                        </div>
-
-                        <div class="note-item">
-                            <span class="note-name">Antoine: 10.0</span>
-                            <div class="note-bar" data-note="10.0"></div>
-                        </div>
-
-                        <div class="note-item">
-                            <span class="note-name">Theo: 8.0</span>
-                            <div class="note-bar" data-note="8.0"></div>
-                        </div>
-                    </div>
-
-
-                    <div class="notes-team">
-                        <h5 class="note-titre">PXG</h5>
-                        <div class="note-item">
-                            <span class="note-name">Enzo: 4.5</span>
-                            <div class="note-bar" data-note="4.5"></div>
-                        </div>
-
-                        <div class="note-item">
-                            <span class="note-name">Jason: 5.0</span>
-                            <div class="note-bar" data-note="5.0"></div>
-                        </div>
-
-                        <div class="note-item">
-                            <span class="note-name">Amar: 3.5</span>
-                            <div class="note-bar" data-note="3.5"></div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-
-            <button class="close-btn">Fermer</button>
-        </div>
-    </div>
+    <div id="matchPopupsContainer"></div>
 
     <script src="JavaScript/match.js"></script>
     <script src="JavaScript/hamburger.js"></script>

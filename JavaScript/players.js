@@ -1,40 +1,51 @@
+// ============================================================
+// SOURCE UNIQUE DE VÉRITÉ : liste des joueurs (nom, club, valeur...)
+// Déclarée en dehors du DOMContentLoaded pour être réutilisable
+// par d'autres pages (ex: club.js calcule la valeur totale d'un club
+// à partir de ce même tableau, au lieu d'en garder une copie séparée).
+// ============================================================
+const PLAYERS = [
+    /* Bastard Munchen */
+    { name: "Dylan", club: "bastard", folder: "bm", clubName: "Bastard Munchen", position: "RW", value: 9300000, avatar: "Joueurs/images-joueurs/dylan.jpeg" },
+    { name: "Antoine", club: "bastard", folder: "bm", clubName: "Bastard Munchen", position: "CM", value: 18250000, avatar: "Joueurs/images-joueurs/anto.png" },
+    { name: "Alessio", club: "bastard", folder: "bm", clubName: "Bastard Munchen", position: "CF", value: 0, avatar: "Joueurs/images-joueurs/alessio.png" },
+
+    /* PXG */
+    { name: "Jason", club: "pxg", folder: "pxg", clubName: "PXG", position: "CF", value: 2450000, avatar: "Joueurs/images-joueurs/Jason.png" },
+    { name: "Enzo", club: "pxg", folder: "pxg", clubName: "PXG", position: "CM", value: 2150000, avatar: "Joueurs/images-joueurs/enzo.png" },
+
+    /* Manshine */
+    { name: "William", club: "manshine", folder: "manshine", clubName: "Manshine City", position: "CF", value: 0, avatar: "Joueurs/images-joueurs/william.png" },
+    { name: "Imrane", club: "manshine", folder: "manshine", clubName: "Manshine City", position: "LW", value: 0, avatar: "Joueurs/images-joueurs/imrane.png" },
+    { name: "Elijah", club: "manshine", folder: "manshine", clubName: "Manshine City", position: "RW", value: 0, avatar: "Joueurs/images-joueurs/elijah.png" },
+
+    /* Ubers */
+
+    /* Barcha */
+
+    /* Retraite */
+    { name: "Matheo", club: "retraite", folder: "retraite", clubName: "Retraite", position: "CM", value: 0, avatar: "Joueurs/images-joueurs/matheo.png" },
+    { name: "Theo", club: "retraite", folder: "retraite", clubName: "Retraite", position: "RW", value: 7500000, avatar: "Joueurs/images-joueurs/theo.png" }
+];
+
+// Logo de club associé à chaque valeur de filtre (utilisé pour le badge en filigrane sur la carte)
+const CLUB_LOGOS = {
+    bastard: "images/clubs_icon/Bastard_Munchen.png",
+    pxg: "images/clubs_icon/PXG.png",
+    ubers: "images/clubs_icon/Ubers.png",
+    barcha: "images/clubs_icon/Barcha.png",
+    manshine: "images/clubs_icon/Manshine_City.png",
+    retraite: null // pas de logo pour Retraite
+};
+
 document.addEventListener("DOMContentLoaded", () => {
 
-    const PLAYERS = [
-        /* Bastard Munchen */
-        { name: "Dylan", club: "bastard", folder: "bm", clubName: "Bastard Munchen", position: "RW", value: 0, avatar: "Joueurs/images-joueurs/dylan.jpeg" },
-        { name: "Antoine", club: "bastard", folder: "bm", clubName: "Bastard Munchen", position: "CM", value: 0, avatar: "Joueurs/images-joueurs/anto.png" },
-        { name: "Alessio", club: "bastard", folder: "bm", clubName: "Bastard Munchen", position: "CF", value: 0, avatar: "Joueurs/images-joueurs/alessio.png" },
-
-        /* PXG */
-        { name: "Jason", club: "pxg", folder: "pxg", clubName: "PXG", position: "CF", value: 0, avatar: "Joueurs/images-joueurs/Jason.png" },
-        { name: "Enzo", club: "pxg", folder: "pxg", clubName: "PXG", position: "CM", value: 0, avatar: "Joueurs/images-joueurs/enzo.png" },
-
-        /* Manshine */
-        { name: "William", club: "manshine", folder: "manshine", clubName: "Manshine City", position: "CF", value: 0, avatar: "Joueurs/images-joueurs/william.png" },
-        { name: "Imrane", club: "manshine", folder: "manshine", clubName: "Manshine City", position: "LW", value: 0, avatar: "Joueurs/images-joueurs/imrane.png" },
-        { name: "Elijah", club: "manshine", folder: "manshine", clubName: "Manshine City", position: "RW", value: 0, avatar: "Joueurs/images-joueurs/elijah.png" },
-
-        /* Ubers */
-
-        /* Barcha */
-
-        /* Retraite */
-        { name: "Matheo", club: "retraite", folder: "retraite", clubName: "Retraite", position: "CM", value: 0, avatar: "Joueurs/images-joueurs/matheo.png" },
-        { name: "Theo", club: "retraite", folder: "retraite", clubName: "Retraite", position: "RW", value: 0, avatar: "Joueurs/images-joueurs/theo.png" }
-    ];
-
-    // Logo de club associé à chaque valeur de filtre (utilisé pour le badge en filigrane sur la carte)
-    const CLUB_LOGOS = {
-        bastard: "images/clubs_icon/Bastard_Munchen.png",
-        pxg: "images/clubs_icon/PXG.png",
-        ubers: "images/clubs_icon/Ubers.png",
-        barcha: "images/clubs_icon/Barcha.png",
-        manshine: "images/clubs_icon/Manshine_City.png",
-        retraite: null // pas de logo pour Retraite
-    };
-
+    // Le reste de ce fichier ne concerne que la page players.html.
+    // On ne l'exécute que si ses éléments existent (ex: club.js charge aussi
+    // ce fichier juste pour le tableau PLAYERS, sans avoir cette page).
     const container = document.getElementById("playersContainer");
+    if (!container) return;
+
     const countEl = document.getElementById("playersCount");
     const clubDropdown = document.getElementById("clubDropdown");
     const dropdownCurrent = document.getElementById("dropdownCurrent");
@@ -64,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
             card.classList.add("player-card", p.club);
             card.href = `Joueurs/${p.folder}/${p.name.toLowerCase()}.html`;
 
-            const formattedValue = p.value.toLocaleString();
+            const formattedValue = p.value.toLocaleString("en-US");
             const priceHTML = p.value === 0
                 ? `<span class="price-number zero-value">${formattedValue}</span>¥💎`
                 : `<span class="price-number">${formattedValue}</span>¥💎`;

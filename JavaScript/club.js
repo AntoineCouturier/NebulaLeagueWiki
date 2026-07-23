@@ -47,3 +47,21 @@ document.querySelectorAll(".club").forEach(club => {
         countEl.textContent = `${filled} joueur${filled > 1 ? "s" : ""}`;
     }
 });
+
+// -------- VALEUR TOTALE DU CLUB (AUTOMATIQUE) --------
+// Utilise directement le tableau PLAYERS déclaré dans players.js (chargé avant
+// ce script sur club.html) : une seule source de vérité pour les valeurs joueurs,
+// plus besoin de dupliquer les chiffres à la main ici.
+if (typeof PLAYERS !== "undefined") {
+    document.querySelectorAll(".club").forEach(club => {
+        const accent = club.dataset.clubAccent; // bastard / pxg / ubers / barcha / manshine
+        const valueEl = club.querySelector(".meta-value");
+        if (!valueEl) return;
+
+        const total = PLAYERS
+            .filter(p => p.club === accent)
+            .reduce((sum, p) => sum + p.value, 0);
+
+        valueEl.textContent = `${total.toLocaleString("en-US")}¥💎`;
+    });
+}

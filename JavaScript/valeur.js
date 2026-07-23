@@ -4,7 +4,7 @@ function calculValeur() {
     const victoire = Number(document.getElementById("victoire").value); // 0 ou 1
     const buts = Number(document.getElementById("buts").value);
     const passes = Number(document.getElementById("passes").value);
-    const inter = Number(document.getElementById("inter").value);
+    const def = Number(document.getElementById("def").value);
     const dribbles = Number(document.getElementById("dribbles").value);
     const mvp = Number(document.getElementById("mvp").value);
 
@@ -12,25 +12,25 @@ function calculValeur() {
     const base = {
         but: 1500000,
         passe: 1000000,
-        inter: 250000,
-        dribbles: 250000,
-        mvp: 12500000
+        def: 200000,
+        dribbles: 200000,
+        mvp: 10000000
     };
 
     // Gains de victoire fixes selon type (ne pas confondre avec multiplicateur)
     // On respecte le tableau : Amical 5M, Compétitif 10M, NCL 15M, Finale 25M
     const victoireGainByType = {
+        0.5: 2500000,
         1: 5000000,
         2: 10000000,
         3: 15000000,
-        4: 20000000,
-        5: 25000000
+        4: 20000000
     };
 
     let total =
         (buts * base.but * type) +
         (passes * base.passe * type) +
-        (inter * base.inter * type) +
+        (def * base.def * type) +
         (dribbles * base.dribbles * type) +
         (mvp * base.mvp * type);
 
@@ -41,5 +41,19 @@ function calculValeur() {
     }
 
     document.getElementById("resultValeur").textContent =
-        total.toLocaleString("fr-FR") + "¥";
+        total.toLocaleString("en-US") + "¥";
 }
+
+document.querySelectorAll(".stepper-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const input = document.getElementById(btn.dataset.target);
+        if (!input) return;
+
+        const min = Number(input.min) || 0;
+        let value = Number(input.value) || 0;
+
+        value = btn.classList.contains("stepper-plus") ? value + 1 : Math.max(min, value - 1);
+
+        input.value = value;
+    });
+});

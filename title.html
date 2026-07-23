@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="CSS/title.css">
   <link rel="stylesheet" href="CSS/colors.css">
   <link rel="stylesheet" href="CSS/hamburger.css">
+  <link rel="stylesheet" href="CSS/global-theme.css">
 </head>
 
 <body>
@@ -37,6 +38,7 @@
           <li><a href="stats.html">Records</a></li>
           <li><a href="matchs.html">Historique de Matchs</a></li>
           <li><a href="saison.html">Historique des Saisons</a></li>
+          <li><a href="fixtures.html">Calendrier des Matchs</a></li>
           <li>
             <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
               <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
@@ -62,6 +64,7 @@
         <li><a href="stats.html">Records</a></li>
         <li><a href="matchs.html">Historique de Matchs</a></li>
         <li><a href="saison.html">Historique des Saisons</a></li>
+        <li><a href="fixtures.html">Calendrier des Matchs</a></li>
         <li>
           <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
             <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
@@ -80,6 +83,9 @@
     <div class="tabs-hover-zone"></div>
     <button class="tabs-toggle" aria-label="Ouvrir la liste des personnages">▶</button>
     <div class="character-tabs">
+      <div class="char-search-box">
+        <input type="text" id="charSearchInput" placeholder="🔍 Rechercher un perso..." autocomplete="off">
+      </div>
       <button class="char-btn global active" data-target="global">Global</button>
 
 
@@ -314,23 +320,23 @@
                 <span class="title-req">Tout gagner en 1 saison</span>
               </div>
               <div class="titles-list">
-                <div class="title-item" style="color: rgb(219, 169, 89);">
+                <div class="title-item" style="color: #D1B878;">
                   <span class="title-name">Golden Shoe</span>
                   <span class="title-req">Meilleur buteur saison</span>
                 </div>
-                <div class="title-item" style="color: rgb(184, 134, 224);">
+                <div class="title-item" style="color: #AFAFBB;">
                   <span class="title-name">Prix Puskás</span>
                   <span class="title-req">Plus beau but de la saison</span>
                 </div>
-                <div class="title-item" style="color: goldenrod;">
+                <div class="title-item" style="color: rgb(255, 230, 168);">
                   <span class="title-name">Champion de la Ligue</span>
                   <span class="title-req">Gagner le Championnat</span>
                 </div>
-                <div class="title-item" style="color: rgb(208, 173, 0);">
+                <div class="title-item" style="color: #5C6166;">
                   <span class="title-name">Trophée de la NCL</span>
                   <span class="title-req">Gagner la NCL</span>
                 </div>
-                <div class="title-item" style="color: goldenrod;">
+                <div class="title-item" style="color: gold;">
                   <span class="title-name">Ballon d'or</span>
                   <span class="title-req">Meilleur joueur saison</span>
                 </div>
@@ -635,7 +641,7 @@
 
           <div class="prestige-checklist" id="checklist-bachira">
             <div class="checklist-header">
-              <h3>The Red Panther</h3>
+              <h3>The Monster</h3>
               <button class="checklist-close" aria-label="Fermer">×</button>
             </div>
 
@@ -2120,7 +2126,7 @@
             <span class="prestige-title-hint">Voir les conditions ▾</span>
           </button>
 
-          <div class="prestige-checklist" id="checklist-lorenzo2">
+          <div class="prestige-checklist" id="checklist-aiku2">
             <div class="checklist-header">
               <h3>The Ace Eater</h3>
               <button class="checklist-close" aria-label="Fermer">×</button>

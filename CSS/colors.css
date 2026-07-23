@@ -1,3 +1,19 @@
+/* Optimisation perf : ces éléments tournent en boucle infinie (animation "shine"
+   + halo flouté en ::after). will-change les fait traiter en couche composite
+   par le navigateur au lieu de tout repeindre à chaque frame. */
+.striker,
+.passer,
+.defender,
+.goat,
+.machinery,
+.striker::after,
+.passer::after,
+.defender::after,
+.goat::after,
+.machinery::after {
+  will-change: background-position, opacity;
+}
+
 /* Global */
 .crown .title {
   background-image: linear-gradient(90deg, #43ff36, #ffea00);
@@ -141,16 +157,20 @@
   color: rgb(153, 130, 0);
 }
 
+.puskas {
+  color: #AFAFBB;
+}
+
 .goldenshoe {
-  color: rgb(250, 112, 0);
+  color: goldenrod;
 }
 
 .ncl {
-  color: rgb(208, 173, 0);
+  color: #5C6166;
 }
 
 .ballonor {
-  color: goldenrod;
+  color: gold;
 }
 
 /* Goat plus bas */
@@ -345,7 +365,7 @@
   -webkit-background-clip: text;
   color: transparent;
 
-  filter: blur(16px);
+  filter: blur(9px);
   opacity: 1;
   pointer-events: none;
 
@@ -377,7 +397,7 @@
   -webkit-background-clip: text;
   color: transparent;
 
-  filter: blur(16px);
+  filter: blur(9px);
   opacity: 1;
   pointer-events: none;
 
@@ -409,7 +429,7 @@
   -webkit-background-clip: text;
   color: transparent;
 
-  filter: blur(16px);
+  filter: blur(9px);
   opacity: 1;
   pointer-events: none;
 
@@ -441,7 +461,7 @@
   -webkit-background-clip: text;
   color: transparent;
 
-  filter: blur(16px);
+  filter: blur(9px);
   opacity: 1;
   pointer-events: none;
 
@@ -483,7 +503,7 @@
   -webkit-background-clip: text;
   color: transparent;
 
-  filter: blur(16px);
+  filter: blur(9px);
   opacity: 1;
   pointer-events: none;
 

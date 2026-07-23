@@ -1,0 +1,106 @@
+/* ==========================================================================
+   GLOBAL THEME — Nebula League
+   ==========================================================================
+   Objectif : harmoniser toutes les pages du site sur la DA de player-card.css
+   (Orbitron + Inter, header sticky avec blur, boutons "glassy" avec glow).
+
+   RÈGLE D'OR : ce fichier doit être chargé EN DERNIER dans le <head> de
+   chaque page, après tous les autres <link rel="stylesheet">. C'est ce qui
+   lui permet de surcharger proprement le header/nav/typo sans avoir besoin
+   de !important ni de toucher aux fichiers CSS existants.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --nebula-purple: #b41cff;
+    --nebula-purple-2: #6f00ff;
+    --nebula-glow: rgba(180, 28, 255, 0.35);
+    --surface: rgba(14, 14, 18, 0.92);
+    --border: rgba(255, 255, 255, 0.08);
+}
+
+/* -------------------- Typographie -------------------- */
+
+body {
+    font-family: 'Inter', 'Arial', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.header-container h1,
+nav ul li a,
+.details-btn,
+.calc-btn,
+.calculator select,
+.calculator input,
+.home-btn,
+.category-btn,
+.record-btn,
+.dropdown-btn,
+.section-title,
+.clubs-title,
+.club-name,
+.stat-number,
+.hero-title {
+    font-family: 'Orbitron', sans-serif;
+}
+
+/* -------------------- Header : sticky + blur harmonisé -------------------- */
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* -------------------- Nav : boutons "glassy" façon player-card -------------------- */
+
+nav ul li a {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    letter-spacing: 0.3px;
+    transition: 0.25s ease;
+}
+
+nav ul li a:hover,
+nav ul li a.active {
+    background: linear-gradient(135deg, var(--nebula-purple-2), var(--nebula-purple));
+    border-color: var(--nebula-purple);
+    box-shadow: 0 0 14px var(--nebula-glow);
+    transform: translateY(-1px);
+}
+
+/* -------------------- Boutons d'action : glow + micro-lift harmonisés -------------------- */
+
+.details-btn:hover,
+.calc-btn:hover,
+.home-btn:hover,
+.record-btn:hover,
+.close-btn:hover,
+.reset-filter-btn:hover,
+.fx-details-btn:hover,
+.details-btn.ligue:hover,
+.details-btn.ncl:hover,
+.details-btn.amical:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--nebula-glow);
+}
+
+/* -------------------- Cards : arrondi harmonisé (16-20px, comme player-card) -------------------- */
+
+.card-A,
+.club,
+.stat-card,
+.season-card,
+.match-card,
+.fx-card,
+.player-card {
+    border-radius: 18px;
+}

@@ -205,6 +205,34 @@ document.addEventListener("DOMContentLoaded", () => {
       // Déplace chaque bouton du groupe à la suite du séparateur (ordre interne conservé)
       group.forEach(btn => tabsBar.appendChild(btn));
     });
+
+    // Recherche en temps réel dans la liste des personnages
+    const searchInput = document.getElementById("charSearchInput");
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        const term = e.target.value.toLowerCase().trim();
+        tabsBar.querySelectorAll(".char-btn").forEach(btn => {
+          if (btn.dataset.target === "global") return;
+          const name = btn.textContent.toLowerCase();
+          const match = name.includes(term);
+          btn.style.display = match ? "inline-block" : "none";
+        });
+
+        // Masquer les séparateurs dont tous les boutons sont cachés
+        tabsBar.querySelectorAll(".tab-divider").forEach(divider => {
+          let next = divider.nextElementSibling;
+          let hasVisible = false;
+          while (next && !next.classList.contains("tab-divider")) {
+            if (next.classList.contains("char-btn") && next.style.display !== "none") {
+              hasVisible = true;
+              break;
+            }
+            next = next.nextElementSibling;
+          }
+          divider.style.display = hasVisible ? "flex" : "none";
+        });
+      });
+    }
   }
 
   // 4) Sidebar rétractable : bouton flèche pour épingler/fermer

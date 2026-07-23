@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/logos/nebula.png">
+    <title>Match Fixtures & Calendrier - Nebula League</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Montserrat:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS stylesheets -->
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="CSS/hamburger.css">
+    <link rel="stylesheet" href="CSS/match.css">
+    <link rel="stylesheet" href="CSS/fixtures.css">
+    <link rel="stylesheet" href="CSS/global-theme.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-container">
+            <!-- Hamburger Menu Button -->
+            <div class="hamburger-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <h1>Match Fixtures & Calendrier</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="title.html">Persos et Titres</a></li>
+                    <li><a href="club.html">Clubs</a></li>
+                    <li><a href="players.html">Joueurs</a></li>
+                    <li><a href="valeur.html">Valeurs</a></li>
+                    <li><a href="rules.html">Règles Matchs</a></li>
+                    <li><a href="stats.html">Records</a></li>
+                    <li><a href="matchs.html">Historique de Matchs</a></li>
+                    <li><a href="saison.html">Historique des Saisons</a></li>
+                    <li><a href="fixtures.html" class="active">Calendrier des Matchs</a></li>
+                    <li>
+                        <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
+                            <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
+                            Discord
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="nav-mobile-overlay">
+        <button class="nav-close-btn" aria-label="Close menu">&times;</button>
+        <nav>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="title.html">Persos et Titres</a></li>
+                <li><a href="club.html">Clubs</a></li>
+                <li><a href="players.html">Joueurs</a></li>
+                <li><a href="valeur.html">Valeurs</a></li>
+                <li><a href="rules.html">Règles Matchs</a></li>
+                <li><a href="stats.html">Records</a></li>
+                <li><a href="matchs.html">Historique de Matchs</a></li>
+                <li><a href="saison.html">Historique des Saisons</a></li>
+                <li><a href="fixtures.html" class="active">Calendrier des Matchs</a></li>
+                <li>
+                    <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
+                        <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
+                        Discord
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Backdrop for click-outside-to-close -->
+    <div class="nav-backdrop"></div>
+
+    <main class="fixtures-container">
+
+        <!-- Top Banner / Title section -->
+        <section class="fixtures-hero">
+            <h2 class="page-title">CALENDRIER DES MATCHS</h2>
+            <p class="page-subtitle">Consultez toutes les dates fixes des matchs de la Nebula League, filtrez par
+                compétition ou équipe, et explorez les rencontres programmées.</p>
+        </section>
+
+        <!-- Controls & Filters Bar -->
+        <section class="fixtures-controls-bar">
+            <div class="filter-group-container">
+                <!-- Category Buttons -->
+                <div class="filter-category">
+                    <span class="filter-label">Catégorie :</span>
+                    <div class="btn-group">
+                        <button class="fx-cat-btn active" data-cat="all">Tous</button>
+                        <button class="fx-cat-btn ligue-btn" data-cat="ligue">Ligue</button>
+                        <button class="fx-cat-btn ncl-btn" data-cat="ncl">NCL</button>
+                        <button class="fx-cat-btn amical-btn" data-cat="amical">Amical</button>
+                    </div>
+                </div>
+
+                <!-- Club Selector -->
+                <div class="filter-club">
+                    <span class="filter-label">Équipe :</span>
+                    <select id="club-select" class="fx-select">
+                        <option value="all">Toutes les équipes</option>
+                        <option value="Manshine City">Manshine City</option>
+                        <option value="PXG">PXG</option>
+                        <option value="Ubers">Ubers</option>
+                        <option value="Barcha">Barcha</option>
+                        <option value="Bastard München">Bastard München</option>
+                    </select>
+                </div>
+
+                <!-- View Switcher -->
+                <div class="view-switcher">
+                    <button id="view-calendar-btn" class="fx-view-btn active">📅 Calendrier</button>
+                    <button id="view-list-btn" class="fx-view-btn">📋 Liste Chronologique</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Calendar & Fixtures Layout Grid -->
+        <div class="fixtures-layout" id="fixtures-layout">
+
+            <!-- Left Panel: Interactive Calendar Widget -->
+            <section class="calendar-section" id="calendar-widget-wrapper">
+                <div class="calendar-card">
+
+                    <!-- Calendar Header (Month Switcher) -->
+                    <div class="calendar-header">
+                        <button id="prev-month-btn" class="month-nav-btn" aria-label="Mois précédent">&lt;</button>
+                        <h3 id="calendar-month-year" class="month-year-title">Juillet 2026</h3>
+                        <button id="next-month-btn" class="month-nav-btn" aria-label="Mois suivant">&gt;</button>
+                        <button id="today-btn" class="today-btn">Aujourd'hui</button>
+                    </div>
+
+                    <!-- Weekdays Row -->
+                    <div class="calendar-weekdays">
+                        <div>Lun</div>
+                        <div>Mar</div>
+                        <div>Mer</div>
+                        <div>Jeu</div>
+                        <div>Ven</div>
+                        <div>Sam</div>
+                        <div>Dim</div>
+                    </div>
+
+                    <!-- Calendar Days Grid -->
+                    <div id="calendar-days-grid" class="calendar-days-grid">
+                        <!-- Generated via JavaScript -->
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="calendar-legend">
+                        <span class="legend-item"><span class="dot ligue-dot"></span> Ligue</span>
+                        <span class="legend-item"><span class="dot ncl-dot"></span> NCL</span>
+                        <span class="legend-item"><span class="dot amical-dot"></span> Amical</span>
+                        <span class="legend-item"><span class="dot active-dot"></span> Sélectionné</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Fixtures Display Area -->
+            <section class="fixtures-list-section">
+
+                <div class="section-header-box">
+                    <h3 id="fixtures-section-title" class="section-title">Matchs du 21 Juillet 2026</h3>
+                    <button id="reset-date-filter-btn" class="reset-filter-btn" style="display: none;">Afficher tous les
+                        mois</button>
+                </div>
+
+                <!-- Matches Cards Container -->
+                <div id="fixtures-cards-container" class="fixtures-cards-container">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- Match Details Modal Popup -->
+    <div class="popup-bg" id="fixture-details-modal">
+        <div class="popup-box fixture-modal-box">
+            <button class="modal-close-x" id="modal-close-x">&times;</button>
+            <div id="modal-content-container">
+                <!-- Dynamically filled by JS -->
+            </div>
+            <button class="close-btn" id="modal-close-btn">Fermer</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="JavaScript/hamburger.js"></script>
+    <script src="JavaScript/fixtures.js"></script>
+</body>
+
+</html>

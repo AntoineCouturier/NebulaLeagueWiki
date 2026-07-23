@@ -1,0 +1,728 @@
+/* ==========================================================================
+   Match Fixtures & Calendar Stylesheet - Nebula League
+   ========================================================================== */
+
+/* Main Container Layout */
+.fixtures-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 30px 20px 80px;
+    box-sizing: border-box;
+}
+
+/* Page Hero Header */
+.fixtures-hero {
+    text-align: center;
+    margin-bottom: 35px;
+    position: relative;
+}
+
+.fixtures-hero .page-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 900;
+    margin: 0 0 12px 0;
+    background: linear-gradient(135deg, #b41cff 0%, #d89aff 50%, #b41cff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 30px rgba(180, 28, 255, 0.4);
+    letter-spacing: 2px;
+}
+
+.fixtures-hero .page-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1rem;
+    color: #c8b3ff;
+    max-width: 750px;
+    margin: 0 auto;
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+/* Controls & Filter Bar */
+.fixtures-controls-bar {
+    background: rgba(15, 10, 25, 0.85);
+    border: 1px solid rgba(180, 28, 255, 0.3);
+    border-radius: 16px;
+    padding: 20px 25px;
+    margin-bottom: 35px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(180, 28, 255, 0.15);
+}
+
+.filter-group-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.filter-category, .filter-club {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.filter-label {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #e0d6ff;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.fx-cat-btn {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(180, 28, 255, 0.3);
+    background: rgba(20, 15, 35, 0.7);
+    color: #d0c0f0;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.fx-cat-btn:hover {
+    border-color: #b41cff;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(180, 28, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+.fx-cat-btn.active {
+    background: linear-gradient(135deg, #a600ff, #b41ce6);
+    border-color: #d89aff;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(180, 28, 255, 0.6);
+}
+
+.fx-cat-btn.ligue-btn.active {
+    background: linear-gradient(135deg, #0055ff, #0099ff);
+    border-color: #66b3ff;
+    box-shadow: 0 0 15px rgba(0, 149, 255, 0.6);
+}
+
+.fx-cat-btn.ncl-btn.active {
+    background: linear-gradient(135deg, #e6005c, #ff3300);
+    border-color: #ff6680;
+    box-shadow: 0 0 15px rgba(255, 51, 0, 0.6);
+}
+
+.fx-cat-btn.amical-btn.active {
+    background: linear-gradient(135deg, #00b359, #00e673);
+    border-color: #66ffb3;
+    box-shadow: 0 0 15px rgba(0, 230, 115, 0.6);
+}
+
+.fx-select {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(180, 28, 255, 0.4);
+    background: rgba(20, 15, 35, 0.9);
+    color: #ffffff;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.fx-select:focus, .fx-select:hover {
+    border-color: #b41cff;
+    box-shadow: 0 0 10px rgba(180, 28, 255, 0.4);
+}
+
+.view-switcher {
+    display: flex;
+    gap: 8px;
+}
+
+.fx-view-btn {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(30, 20, 50, 0.6);
+    color: #ccc;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.fx-view-btn.active {
+    background: rgba(180, 28, 255, 0.3);
+    border-color: #b41cff;
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(180, 28, 255, 0.3);
+}
+
+/* Fixtures Layout Split */
+.fixtures-layout {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.fixtures-layout.list-only {
+    grid-template-columns: 1fr;
+}
+
+.fixtures-layout.list-only #calendar-widget-wrapper {
+    display: none;
+}
+
+/* Calendar Section & Widget */
+.calendar-card {
+    background: rgba(15, 10, 25, 0.9);
+    border: 2px solid rgba(180, 28, 255, 0.35);
+    border-radius: 16px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(111, 0, 255, 0.2);
+}
+
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(180, 28, 255, 0.2);
+}
+
+.month-year-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    color: #d89aff;
+    margin: 0;
+    text-transform: capitalize;
+}
+
+.month-nav-btn {
+    background: rgba(180, 28, 255, 0.2);
+    border: 1px solid rgba(180, 28, 255, 0.4);
+    color: #ffffff;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.month-nav-btn:hover {
+    background: #b41cff;
+    box-shadow: 0 0 10px #b41cff;
+}
+
+.today-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ddd;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.today-btn:hover {
+    background: rgba(180, 28, 255, 0.4);
+    color: #fff;
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #a580e6;
+    margin-bottom: 12px;
+}
+
+.calendar-days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid transparent;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #e0e0e0;
+}
+
+.cal-day:hover {
+    background: rgba(180, 28, 255, 0.2);
+    border-color: rgba(180, 28, 255, 0.5);
+    transform: scale(1.05);
+}
+
+.cal-day.other-month {
+    opacity: 0.25;
+}
+
+.cal-day.is-today {
+    border-color: #00d4ff;
+    box-shadow: inset 0 0 8px rgba(0, 212, 255, 0.5);
+    font-weight: 700;
+    color: #00d4ff;
+}
+
+.cal-day.selected {
+    background: linear-gradient(135deg, rgba(180, 28, 255, 0.6), rgba(111, 0, 255, 0.8));
+    border-color: #d89aff;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(180, 28, 255, 0.8);
+}
+
+.cal-day.has-matches {
+    font-weight: 700;
+}
+
+/* Event Indicator Dots inside Calendar Cell */
+.match-dots-row {
+    display: flex;
+    gap: 3px;
+    position: absolute;
+    bottom: 4px;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dot.ligue-dot { background-color: #0099ff; box-shadow: 0 0 5px #0099ff; }
+.dot.ncl-dot { background-color: #ff3300; box-shadow: 0 0 5px #ff3300; }
+.dot.amical-dot { background-color: #00e673; box-shadow: 0 0 5px #00e673; }
+.dot.active-dot { background-color: #b41cff; box-shadow: 0 0 5px #b41cff; }
+
+.calendar-legend {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.75rem;
+    color: #bbb;
+    font-family: 'Inter', sans-serif;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Section Right: Fixtures List */
+.fixtures-list-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.section-header-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(20, 15, 35, 0.7);
+    padding: 15px 20px;
+    border-radius: 12px;
+    border-left: 4px solid #b41cff;
+}
+
+.section-header-box .section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    color: #ffffff;
+    margin: 0;
+}
+
+.reset-filter-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    padding: 6px 14px;
+    border-radius: 15px;
+    background: rgba(180, 28, 255, 0.2);
+    border: 1px solid #b41cff;
+    color: #e0d6ff;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.reset-filter-btn:hover {
+    background: #b41cff;
+    color: #fff;
+}
+
+/* Fixtures Cards Grid */
+.fixtures-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.no-fixtures-msg {
+    text-align: center;
+    padding: 40px 20px;
+    background: rgba(20, 15, 35, 0.6);
+    border-radius: 12px;
+    border: 1px dashed rgba(180, 28, 255, 0.3);
+    color: #b0a0d0;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+}
+
+/* Individual Fixture Card */
+.fx-card {
+    background: rgba(18, 12, 30, 0.85);
+    border: 1px solid rgba(180, 28, 255, 0.25);
+    border-radius: 16px;
+    padding: 20px 25px;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.fx-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(180, 28, 255, 0.6);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(180, 28, 255, 0.25);
+}
+
+.fx-card.cat-ligue { border-left: 5px solid #0099ff; }
+.fx-card.cat-ncl { border-left: 5px solid #ff3300; }
+.fx-card.cat-amical { border-left: 5px solid #00e673; }
+
+/* Top Row Info */
+.fx-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    font-family: 'Inter', sans-serif;
+}
+
+.fx-badges {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.fx-badge-cat {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.fx-badge-cat.ligue { background: rgba(0, 153, 255, 0.2); color: #66c2ff; border: 1px solid rgba(0, 153, 255, 0.4); }
+.fx-badge-cat.ncl { background: rgba(255, 51, 0, 0.2); color: #ff8066; border: 1px solid rgba(255, 51, 0, 0.4); }
+.fx-badge-cat.amical { background: rgba(0, 230, 115, 0.2); color: #66ffb3; border: 1px solid rgba(0, 230, 115, 0.4); }
+
+.fx-status-badge {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+}
+
+.fx-status-badge.finished { background: rgba(255, 255, 255, 0.1); color: #ccc; }
+.fx-status-badge.upcoming { background: rgba(180, 28, 255, 0.25); color: #d89aff; border: 1px solid #b41cff; }
+.fx-status-badge.live { background: rgba(255, 0, 64, 0.3); color: #ff3366; border: 1px solid #ff0040; animation: pulse-live 1.5s infinite; }
+
+@keyframes pulse-live {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.fx-match-date-str {
+    font-size: 0.9rem;
+    color: #a590c8;
+    font-weight: 500;
+}
+
+/* Main Match Body Row */
+.fx-match-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 15px 0;
+}
+
+.fx-team {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.fx-team.home {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.fx-team.away {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.fx-team-logo {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.2));
+    transition: transform 0.3s ease;
+}
+
+.fx-card:hover .fx-team-logo {
+    transform: scale(1.1);
+}
+
+.fx-team-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.fx-score-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 130px;
+}
+
+.fx-score-box {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 6px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(180, 28, 255, 0.4);
+    box-shadow: inset 0 0 10px rgba(180, 28, 255, 0.2);
+    letter-spacing: 2px;
+}
+
+.fx-time-box {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #d89aff;
+    background: rgba(180, 28, 255, 0.15);
+    padding: 6px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(180, 28, 255, 0.4);
+}
+
+.fx-stadium {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    color: #9d8ab8;
+    margin-top: 6px;
+}
+
+/* Card Bottom Footer */
+.fx-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fx-mvp-summary {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: #e0d6ff;
+}
+
+.fx-details-btn {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 7px 18px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #a600ff, #b41ce6);
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 10px rgba(180, 28, 255, 0.4);
+}
+
+.fx-details-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(180, 28, 255, 0.8);
+}
+
+/* Fixture Modal Overlay & Box */
+.fixture-modal-box {
+    background: rgba(15, 10, 25, 0.95) !important;
+    border: 2px solid #b41cff !important;
+    border-radius: 20px !important;
+    padding: 30px !important;
+    max-width: 650px !important;
+    width: 90% !important;
+    position: relative;
+    box-shadow: 0 0 40px rgba(180, 28, 255, 0.5) !important;
+    backdrop-filter: blur(15px);
+}
+
+.modal-close-x {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close-x:hover {
+    color: #fff;
+}
+
+.modal-header-teams {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.modal-team-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-team-logo {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+}
+
+.modal-team-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    color: #ffffff;
+}
+
+.modal-score-big {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #d89aff;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 8px 24px;
+    border-radius: 15px;
+    border: 1px solid #b41cff;
+}
+
+.modal-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.modal-column h4 {
+    font-family: 'Orbitron', sans-serif;
+    color: #d89aff;
+    margin-top: 0;
+    border-bottom: 1px solid rgba(180, 28, 255, 0.3);
+    padding-bottom: 6px;
+}
+
+.modal-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    line-height: 1.8;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 900px) {
+    .fixtures-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .fixtures-hero .page-title {
+        font-size: 2rem;
+    }
+
+    .filter-group-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .fx-match-body {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .fx-team.home, .fx-team.away {
+        justify-content: center;
+        text-align: center;
+        flex-direction: column;
+    }
+
+    .fx-score-box {
+        font-size: 1.5rem;
+    }
+}
