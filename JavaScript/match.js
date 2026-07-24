@@ -1,6 +1,6 @@
-// match.js - Historique des Matchs (version data-driven)
+// match.js - Historique des Matchs (concept "Match Pulse / Replay Console")
 // Pour ajouter un match : dupliquer un objet dans MATCHES ci-dessous et changer les valeurs.
-// Tout le reste (carte, stat-cards, filtres, popup) se génère automatiquement.
+// Tout le reste (ticker, cartes, frise Pulse, popup, filtres) se génère automatiquement.
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -20,11 +20,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /* ============================================================
-       1. DONNÉES DES MATCHS
-       ============================================================
-       category : "ligue" | "ncl" | "amical"
-       season   : numéro de saison (sert juste à regrouper les cartes) */
+       1. DONNÉES DES MATCHS (inchangées)
+       ============================================================ */
     const MATCHES = [
+        /* ============================================================ MATCH 1 ============================================================*/
         {
             id: "m1",
             date: "2022-04-01",
@@ -35,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
             scoreHome: 13,
             scoreAway: 2,
             mvp: "Antoine",
-            videoUrl: "https://www.youtube.com/watch?v=IUGts4iKlz4",
+            videoUrl: null,
 
             scorersHome: [
                 { name: "Dylan", count: 6 },
@@ -68,19 +67,21 @@ document.addEventListener('DOMContentLoaded', function () {
             ],
 
             notesHome: [
-                { name: "Dylan", note: 9.5 },
-                { name: "Antoine", note: 10.0 },
-                { name: "Theo", note: 8.0 }
+                { name: "Dylan", note: 9.5, defenses: 5, dribbles: 13 },
+                { name: "Antoine", note: 9.8, defenses: 11, dribbles: 24 },
+                { name: "Theo", note: 9.2, defenses: 8, dribbles: 7 }
             ],
             notesAway: [
-                { name: "Enzo", note: 4.5 },
-                { name: "Jason", note: 5.0 },
-                { name: "Amar", note: 3.5 }
+                { name: "Enzo", note: 4.3, defenses: 9, dribbles: 5 },
+                { name: "Jason", note: 4.9, defenses: 4, dribbles: 8 },
+                { name: "Amar", note: 3.2, defenses: 3, dribbles: 4 }
             ]
-        }
+        },
 
-        // Coller un nouveau match ici : { id:"m2", date:"...", category:"ligue", season:1, ... }
+        // Coller un nouveau match ici : { id:"m7", date:"...", category:"ligue", season:1, ... }
     ];
+
+    const MATCH_LENGTH_SECONDS = 12 * 60; // 12 minutes de match (règles.html)
 
     /* ============================================================
        2. UTILITAIRES
@@ -107,13 +108,177 @@ document.addEventListener('DOMContentLoaded', function () {
         if (note <= 7.5) return '#aaff00';
         if (note <= 8) return '#91ff00';
         if (note <= 8.5) return '#59ff00';
-        if (note <= 9) return '#0dff00';
-        if (note <= 9.5) return '#00ff9d';
-        return '#00a6ff';
+        if (note <= 9) return '#00ff9d';
+        if (note <= 9.5) return '#00ffd5ff';
+        if (note <= 9.9) return '#0066ffff';
+        return '#3700ffff';
+    }
+
+    // "10'57\"" -> 657 (secondes)
+    function timeToSeconds(str) {
+        const match = /(\d+)'(\d+)/.exec(str);
+        if (!match) return 0;
+        return Number(match[1]) * 60 + Number(match[2]);
+    }
+
+    function timeToPct(str) {
+        const s = timeToSeconds(str);
+        return Math.max(0, Math.min(100, (s / MATCH_LENGTH_SECONDS) * 100));
+    }
+
+    // Calcule Buts / Passes D / Defenses / Dribbles par joueur pour un match donné.
+    // Buts + Passes D sont déduits automatiquement de scorersHome/Away + timelineHome/Away.
+    // Defenses + Dribbles se lisent directement sur les entrées notesHome/notesAway
+    // (déjà présentes pour chaque joueur ayant joué le match) : ajoute simplement
+    // "defenses" et "dribbles" à côté de "note", ex:
+    // { name: "Antoine", note: 10.0, defenses: 11, dribbles: 24 }
+    // Ces deux champs ne s'affichent nulle part sur la carte, ils servent uniquement
+    // au sous-popup de stats détaillées.
+    function computePlayerStats(m) {
+        const stats = {};
+        function ensure(name) {
+            if (!stats[name]) stats[name] = { buts: 0, passes: 0, defenses: 0, dribbles: 0 };
+            return stats[name];
+        }
+
+        (m.scorersHome || []).forEach(s => { ensure(s.name).buts += s.count; });
+        (m.scorersAway || []).forEach(s => { ensure(s.name).buts += s.count; });
+
+        [...(m.timelineHome || []), ...(m.timelineAway || [])].forEach(ev => {
+            ensure(ev.scorer);
+            if (ev.assist && !ev.assist.includes('🌟')) {
+                ensure(ev.assist).passes += 1;
+            }
+        });
+
+        // Defenses / Dribbles (et surcharge optionnelle de buts/passes) directement
+        // depuis la liste des notes, qui couvre tous les joueurs du match.
+        [...(m.notesHome || []), ...(m.notesAway || [])].forEach(p => {
+            const s = ensure(p.name);
+            if (p.buts !== undefined) s.buts = p.buts;
+            if (p.passes !== undefined) s.passes = p.passes;
+            if (p.defenses !== undefined) s.defenses = p.defenses;
+            if (p.dribbles !== undefined) s.dribbles = p.dribbles;
+        });
+
+        return stats;
     }
 
     /* ============================================================
-       3. BANDEAU STAT-CARDS
+       SOUS-POPUP STATS JOUEUR (clic / survol sur une ligne de notes)
+       ============================================================ */
+    function ensurePlayerStatPopup() {
+        let el = document.getElementById('playerStatPopup');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'playerStatPopup';
+            el.className = 'player-stat-popup';
+            document.body.appendChild(el);
+        }
+        return el;
+    }
+
+    function showPlayerStatPopup(triggerEl, name, currentMatch) {
+        const popupEl = ensurePlayerStatPopup();
+        const s = computePlayerStats(currentMatch)[name] || { buts: 0, passes: 0, defenses: 0, dribbles: 0 };
+
+        popupEl.innerHTML = `
+            <div class="player-stat-popup-name">${name}</div>
+            <ul class="player-stat-popup-list">
+                <li><span>⚽ Buts</span><strong>${s.buts}</strong></li>
+                <li><span>👟 Passes D</span><strong>${s.passes}</strong></li>
+                <li><span>🛡️ Defenses</span><strong>${s.defenses}</strong></li>
+                <li><span>🌀 Dribbles</span><strong>${s.dribbles}</strong></li>
+            </ul>`;
+
+        const rect = triggerEl.getBoundingClientRect();
+        popupEl.style.top = `${window.scrollY + rect.bottom + 8}px`;
+        popupEl.style.left = `${window.scrollX + rect.left}px`;
+        popupEl.classList.add('visible');
+    }
+
+    function hidePlayerStatPopup() {
+        const el = document.getElementById('playerStatPopup');
+        if (el) el.classList.remove('visible');
+    }
+
+    /* ============================================================
+       3. FRISE "PULSE" (signature visuelle)
+       ============================================================ */
+    function renderPulse(m, big) {
+        function dotColor(clubKey) {
+            return `var(--${clubKey}-color, #b41cff)`;
+        }
+
+        const homeDots = (m.timelineHome || []).map(ev => ({ ...ev, side: 'home', clubKey: m.home }));
+        const awayDots = (m.timelineAway || []).map(ev => ({ ...ev, side: 'away', clubKey: m.away }));
+        const allDots = [...homeDots, ...awayDots];
+
+        const dotsHTML = allDots.map(ev => {
+            const pct = timeToPct(ev.time);
+            const color = dotColor(ev.clubKey);
+
+            // Empêche le tooltip de déborder de l'écran près des bords de la frise
+            let tipStyle = 'left:50%; transform:translateX(-50%) translateY(-6px);';
+            if (pct < 12) {
+                tipStyle = 'left:0; transform:translateY(-6px);';
+            } else if (pct > 88) {
+                tipStyle = 'left:auto; right:0; transform:translateY(-6px);';
+            }
+
+            return `
+            <div class="mp-pulse-dot ${ev.side}" style="left:${pct}%; background:${color}; box-shadow:0 0 8px ${color};" tabindex="0">
+                <span class="mp-pulse-tooltip" style="${tipStyle} border-color:${color};">${ev.time.replace('"', '')} — ${ev.scorer} ⚽${ev.assist ? ` · ${ev.assist}${ev.assist.includes('🌟') ? '' : ' 👟'}` : ''}</span>
+            </div>
+        `;
+        }).join('');
+
+        return `
+    <div class="mp-pulse">
+        <div class="mp-pulse-ruler"></div>
+        <div class="mp-pulse-half"></div>
+        ${dotsHTML}
+    </div>
+    <div class="mp-pulse-labels">
+        <span>0'</span><span>6' (MT)</span><span>12'</span>
+    </div>`;
+    }
+
+    /* ============================================================
+       4. TICKER DE RÉSULTATS
+       ============================================================ */
+    function renderTicker(matches) {
+        const wrap = document.getElementById('mpTicker');
+        if (!wrap) return;
+
+        if (!matches.length) { wrap.innerHTML = ""; return; }
+
+        const sorted = [...matches].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+
+        const itemHTML = (m) => {
+            const home = club(m.home), away = club(m.away);
+            return `
+            <div class="mp-ticker-item">
+                <span class="${home.cls}">${home.name}</span>
+                <span class="mp-t-score">${m.scoreHome} - ${m.scoreAway}</span>
+                <span class="${away.cls}">${away.name}</span>
+                <span class="mp-ticker-dot"></span>
+            </div>`;
+        };
+
+        const enoughToScroll = sorted.length >= 3;
+        const items = enoughToScroll ? [...sorted, ...sorted] : sorted;
+
+        wrap.innerHTML = `
+        <div class="mp-ticker">
+            <div class="mp-ticker-track ${enoughToScroll ? '' : 'mp-static'}">
+                ${items.map(itemHTML).join('')}
+            </div>
+        </div>`;
+    }
+
+    /* ============================================================
+       5. BANDEAU STAT-CHIPS
        ============================================================ */
     function renderStatCards(matches) {
         const container = document.getElementById('matchesStatCards');
@@ -124,8 +289,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const biggest = [...matches].sort((a, b) =>
             Math.abs(b.scoreHome - b.scoreAway) - Math.abs(a.scoreHome - a.scoreAway)
         )[0];
-        const biggestDiff = Math.abs(biggest.scoreHome - biggest.scoreAway);
-        const biggestWinner = biggest.scoreHome > biggest.scoreAway ? club(biggest.home) : club(biggest.away);
+        const biggestHome = club(biggest.home);
+        const biggestAway = club(biggest.away);
 
         const last = [...matches].sort((a, b) => new Date(b.date) - new Date(a.date))[0];
 
@@ -133,27 +298,27 @@ document.addEventListener('DOMContentLoaded', function () {
         const avgGoals = (goalsTotal / total).toFixed(1);
 
         container.innerHTML = `
-            <div class="stat-card">
-                <h4>Matchs Joués</h4>
-                <p>${total}</p>
+            <div class="mp-chip" data-stat="played" data-icon="🎮">
+                <span class="mp-chip-label">Matchs Joués</span>
+                <span class="mp-chip-value">${total}</span>
             </div>
-            <div class="stat-card">
-                <h4>Plus Large Victoire</h4>
-                <p>${biggestWinner.name} (+${biggestDiff})</p>
+            <div class="mp-chip" data-stat="biggest" data-icon="💥">
+                <span class="mp-chip-label">Plus Large Victoire</span>
+                <span class="mp-chip-value">${biggestHome.name} ${biggest.scoreHome}-${biggest.scoreAway} ${biggestAway.name}</span>
             </div>
-            <div class="stat-card">
-                <h4>Dernier Match</h4>
-                <p>${club(last.home).name} ${last.scoreHome}-${last.scoreAway} ${club(last.away).name}</p>
+            <div class="mp-chip" data-stat="last" data-icon="📅">
+                <span class="mp-chip-label">Dernier Match</span>
+                <span class="mp-chip-value">${club(last.home).name} ${last.scoreHome}-${last.scoreAway} ${club(last.away).name}</span>
             </div>
-            <div class="stat-card">
-                <h4>Moyenne de Buts / Match</h4>
-                <p>${avgGoals}</p>
+            <div class="mp-chip" data-stat="avg" data-icon="⚽">
+                <span class="mp-chip-label">Moyenne de Buts / Match</span>
+                <span class="mp-chip-value">${avgGoals}</span>
             </div>
         `;
     }
 
     /* ============================================================
-       4. DROPDOWN CLUB (généré depuis CLUB_META)
+       6. DROPDOWN CLUB
        ============================================================ */
     const dropdownMenu = document.getElementById('dropdownMenu');
     const dropdownCurrent = document.getElementById('dropdownCurrent');
@@ -195,10 +360,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     /* ============================================================
-       5. FILTRES CATÉGORIE + TRI
+       7. FILTRES CATÉGORIE + TRI
        ============================================================ */
     let selectedCat = "all";
-    let sortOrder = "desc"; // desc = plus récent d'abord
+    let sortOrder = "desc";
 
     const categoryBtns = document.querySelectorAll('.category-btn');
     categoryBtns.forEach(btn => {
@@ -219,7 +384,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     /* ============================================================
-       6. RENDU D'UNE CARTE DE MATCH
+       8. RENDU D'UNE CARTE DE MATCH
        ============================================================ */
     function renderMatchCard(m) {
         const home = club(m.home);
@@ -227,57 +392,78 @@ document.addEventListener('DOMContentLoaded', function () {
         const homeWin = m.scoreHome > m.scoreAway;
         const awayWin = m.scoreAway > m.scoreHome;
 
-        const scorersLine = (list) => list.map(s => `${s.name}${s.count > 1 ? ` (x${s.count})` : ''}`).join(', ');
+        const scorerChips = (list) => list.map(s =>
+            `<span class="mp-scorer-chip">${s.name}${s.count > 1 ? ` (x${s.count})` : ''} ⚽</span>`
+        ).join('');
 
         return `
-        <div class="match-card ${m.category}-card" data-cat="${m.category}" data-club-home="${m.home}" data-club-away="${m.away}" data-date="${m.date}">
-            <div class="match-card-top">
-                <span class="fx-badge-cat ${m.category}">${CAT_LABEL[m.category]}</span>
-                <span class="match-date">📅 ${fmtDate(m.date)}</span>
+    <div class="mp-card ${m.category}" data-cat="${m.category}" data-club-home="${m.home}" data-club-away="${m.away}" data-date="${m.date}">
+        <div class="mp-card-top">
+            <span class="mp-badge">${CAT_LABEL[m.category]}</span>
+            <span class="mp-date mono">📅 ${fmtDate(m.date)}</span>
+        </div>
+
+        <div class="mp-scoreline">
+            <div class="mp-team ${homeWin ? 'winner' : ''}">
+                <img src="${home.logo}" class="mp-team-logo" alt="${home.name}">
+                <span class="mp-team-name ${home.cls}">${home.name}</span>
             </div>
 
-            <div class="match-header">
-                <div class="team ${homeWin ? 'winner' : ''}">
-                    <img src="${home.logo}" class="team-logo" alt="${home.name}">
-                    <span class="${home.cls}">${home.name}</span>
-                </div>
-
-                <div class="score-block">
-                    <span class="score-${m.category}">${m.scoreHome} - ${m.scoreAway}</span>
-                </div>
-
-                <div class="team ${awayWin ? 'winner' : ''}">
-                    <img src="${away.logo}" class="team-logo" alt="${away.name}">
-                    <span class="${away.cls}">${away.name}</span>
-                </div>
+            <div class="mp-score-center">
+                <div class="mp-score-box">${m.scoreHome} - ${m.scoreAway}</div>
+                <span class="mp-motm">🏅 ${m.mvp}</span>
             </div>
 
-            <div class="match-details">
-                <div class="buteurs">
-                    <ul class="buteurs-left">${m.scorersHome.map(s => `<li>${s.name}${s.count > 1 ? ` (x${s.count})` : ''}</li>`).join('')}</ul>
-                    <ul class="buteurs-right">${m.scorersAway.map(s => `<li>${s.name}${s.count > 1 ? ` (x${s.count})` : ''}</li>`).join('')}</ul>
-                </div>
-                <p><strong>🏅 MVP :</strong> ${m.mvp}</p>
+            <div class="mp-team away ${awayWin ? 'winner' : ''}">
+                <img src="${away.logo}" class="mp-team-logo" alt="${away.name}">
+                <span class="mp-team-name ${away.cls}">${away.name}</span>
             </div>
+        </div>
 
-            <div class="card-buttons">
-                <button class="details-btn ${m.category}" data-popup="popup-${m.id}">Détails du match</button>
-                ${m.videoUrl ? `<button class="video-btn" onclick="window.open('${m.videoUrl}', '_blank')">Vidéo du match ▶</button>` : ''}
+        ${renderPulse(m)}
+
+        <div class="mp-summary-row">
+            <div class="mp-scorers-side home">
+                <div class="mp-side-title ${home.cls}">${home.name}</div>
+                <div class="mp-scorer-chips">${scorerChips(m.scorersHome)}</div>
             </div>
-        </div>`;
+            <div class="mp-scorers-side away">
+                <div class="mp-side-title ${away.cls}">${away.name}</div>
+                <div class="mp-scorer-chips">${scorerChips(m.scorersAway)}</div>
+            </div>
+        </div>
+
+        <div class="mp-buttons">
+            <button class="mp-btn replay details-btn" data-popup="popup-${m.id}">Voir les Stats</button>
+            ${m.videoUrl ? `<button class="mp-btn video" onclick="window.open('${m.videoUrl}', '_blank')">Vidéo ▶</button>` : ''}
+        </div>
+    </div>`;
     }
 
     /* ============================================================
-       7. POPUP DE MATCH
+       9. POPUP "CONSOLE REPLAY"
        ============================================================ */
     function renderNotesTeam(title, notes) {
         return `
-        <div class="notes-team">
-            <h5 class="note-titre">${title}</h5>
+        <div class="mp-rating-team">
+            <h5>${title}</h5>
             ${notes.map(n => `
-                <div class="note-item">
-                    <span class="note-name">${n.name}: ${n.note.toFixed(1)}</span>
-                    <div class="note-bar" data-note="${n.note}"></div>
+                <div class="mp-rating-row player-stat-trigger" data-player="${n.name}">
+                    <span class="mp-rating-name mono">${n.name} · ${n.note.toFixed(1)}</span>
+                    <div class="mp-rating-bar" data-note="${n.note}"></div>
+                </div>
+            `).join('')}
+        </div>`;
+    }
+
+    function renderPlayByPlay(title, timeline) {
+        return `
+        <div class="mp-pbp-col">
+            <h4>${title}</h4>
+            ${timeline.map(t => `
+                <div class="mp-pbp-event">
+                    <span class="mp-pbp-time">${t.time.replace('"', '')}</span>
+                    <span>${t.scorer} ⚽${t.assist ? ` · ${t.assist}${t.assist.includes('🌟') ? '' : ' 👟'}` : ''}</span>
                 </div>
             `).join('')}
         </div>`;
@@ -289,44 +475,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
         return `
         <div class="popup-bg" id="popup-${m.id}">
-            <div class="popup-box ${m.category}-box">
+            <div class="popup-box mp-console ${m.category}" style="--cat-color: var(--${m.category}-color);">
                 <h3>${home.name} - ${away.name} (${fmtDate(m.date)})</h3>
 
-                <div class="modal-header-teams">
-                    <div class="modal-team-block">
-                        <img src="${home.logo}" alt="${home.name}" class="modal-team-logo">
-                        <span class="modal-team-title ${home.cls}">${home.name}</span>
+                <div class="mp-console-header">
+                    <div class="mp-console-team">
+                        <img src="${home.logo}" alt="${home.name}" class="mp-console-logo">
+                        <span class="mp-console-name ${home.cls}">${home.name}</span>
                     </div>
-                    <div class="modal-score-big">${m.scoreHome} - ${m.scoreAway}</div>
-                    <div class="modal-team-block">
-                        <img src="${away.logo}" alt="${away.name}" class="modal-team-logo">
-                        <span class="modal-team-title ${away.cls}">${away.name}</span>
-                    </div>
-                </div>
-
-                <p class="match-mvp-line"><strong>🏅 MVP du match :</strong> <span class="mvp-highlight">${m.mvp}</span></p>
-
-                <div class="details-container">
-                    <div class="team-details ${m.category}-details">
-                        <h4>${home.name}</h4>
-                        <ul>
-                            ${m.timelineHome.map(t => `<li><strong>${t.time}</strong> — ${t.scorer} ⚽ | ${t.assist} 👟</li>`).join('')}
-                        </ul>
-                    </div>
-                    <div class="team-details ${m.category}-details">
-                        <h4>${away.name}</h4>
-                        <ul>
-                            ${m.timelineAway.map(t => `<li><strong>${t.time}</strong> — ${t.scorer} ⚽ | ${t.assist} 👟</li>`).join('')}
-                        </ul>
+                    <div class="mp-console-score">${m.scoreHome} - ${m.scoreAway}</div>
+                    <div class="mp-console-team">
+                        <img src="${away.logo}" alt="${away.name}" class="mp-console-logo">
+                        <span class="mp-console-name ${away.cls}">${away.name}</span>
                     </div>
                 </div>
 
-                <div class="notes-section ${m.category}-section">
-                    <h4>Notes des Joueurs</h4>
-                    <div class="notes-columns">
-                        ${renderNotesTeam(home.name, m.notesHome)}
-                        ${renderNotesTeam(away.name, m.notesAway)}
-                    </div>
+                <div class="mp-console-pulse-wrap">
+                    ${renderPulse(m, true)}
+                </div>
+
+                <div class="mp-mvp-banner">🏅 MVP du match : <strong>${m.mvp}</strong></div>
+
+                <div class="mp-playbyplay">
+                    ${renderPlayByPlay(home.name, m.timelineHome)}
+                    ${renderPlayByPlay(away.name, m.timelineAway)}
+                </div>
+
+                <div class="mp-ratings-title">Notes des Joueurs</div>
+                <div class="mp-ratings-columns">
+                    ${renderNotesTeam(home.name, m.notesHome)}
+                    ${renderNotesTeam(away.name, m.notesAway)}
                 </div>
 
                 <button class="close-btn">Fermer</button>
@@ -335,7 +513,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /* ============================================================
-       8. FILTRAGE + REGROUPEMENT PAR SAISON + RENDU
+       10. FILTRAGE + REGROUPEMENT PAR SAISON + RENDU
        ============================================================ */
     const matchList = document.getElementById('matchList');
     const popupsContainer = document.getElementById('matchPopupsContainer');
@@ -371,7 +549,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!popup) return;
                 popup.style.display = "flex";
 
-                popup.querySelectorAll('.note-bar').forEach(bar => {
+                const matchId = button.dataset.popup.replace('popup-', '');
+                const currentMatch = MATCHES.find(mm => mm.id === matchId);
+
+                popup.querySelectorAll('.mp-rating-bar').forEach(bar => {
                     if (bar.dataset.filled) return;
                     const note = parseFloat(bar.dataset.note);
                     const fill = document.createElement('div');
@@ -382,22 +563,45 @@ document.addEventListener('DOMContentLoaded', function () {
                     bar.appendChild(fill);
                     bar.dataset.filled = "1";
                 });
+
+                // Sous-popup stats détaillées : clic ou survol sur une ligne joueur
+                popup.querySelectorAll('.player-stat-trigger').forEach(row => {
+                    if (row.dataset.statBound) return;
+                    row.dataset.statBound = "1";
+                    row.addEventListener('mouseenter', () => showPlayerStatPopup(row, row.dataset.player, currentMatch));
+                    row.addEventListener('mouseleave', hidePlayerStatPopup);
+                    row.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        showPlayerStatPopup(row, row.dataset.player, currentMatch);
+                    });
+                });
+
+                // Surligne le premier événement du play-by-play au survol de la frise
+                popup.querySelectorAll('.mp-pulse-dot').forEach((dot, i) => {
+                    dot.addEventListener('mouseenter', () => {
+                        popup.querySelectorAll('.mp-pbp-event').forEach(ev => ev.classList.remove('mp-highlight'));
+                    });
+                });
             });
         });
 
         document.querySelectorAll(".close-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 btn.closest(".popup-bg").style.display = "none";
+                hidePlayerStatPopup();
             });
         });
 
         document.querySelectorAll(".popup-bg").forEach(p => {
-            p.addEventListener("click", e => { if (e.target === p) p.style.display = "none"; });
+            p.addEventListener("click", e => {
+                if (e.target === p) { p.style.display = "none"; hidePlayerStatPopup(); }
+            });
         });
     }
 
     function render() {
         const filtered = getFiltered();
+        renderTicker(MATCHES);
         renderStatCards(MATCHES);
 
         matchList.innerHTML = "";
@@ -405,22 +609,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (filtered.length === 0) {
             matchList.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-state-icon">⚽</div>
-                    <p class="empty-state-title">Aucun match ne correspond à ces filtres</p>
-                    <p class="empty-state-sub">Essaie une autre catégorie ou une autre équipe.</p>
+                <div class="mp-empty">
+                    <div class="mp-empty-icon">⚽</div>
+                    <p class="mp-empty-title">Aucun match ne correspond à ces filtres</p>
+                    <p>Essaie une autre catégorie ou une autre équipe.</p>
                 </div>`;
             return;
         }
 
         groupBySeason(filtered).forEach(group => {
             const heading = document.createElement('div');
-            heading.className = 'season-section-header';
+            heading.className = 'mp-season-header';
             heading.innerHTML = `<span>Saison ${group.season}</span>`;
             matchList.appendChild(heading);
 
             const grid = document.createElement('div');
-            grid.className = 'match-season-grid';
+            grid.className = 'mp-season-grid';
             grid.innerHTML = group.matches.map(renderMatchCard).join('');
             matchList.appendChild(grid);
 
@@ -437,7 +641,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /* ============================================================
-       9. INIT
+       11. INIT
        ============================================================ */
     render();
 
@@ -446,6 +650,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.popup-bg').forEach(p => {
                 if (p.style.display === 'flex') p.style.display = 'none';
             });
+            hidePlayerStatPopup();
         }
     });
 });

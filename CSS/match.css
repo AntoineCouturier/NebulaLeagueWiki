@@ -469,8 +469,9 @@ body.menu-open {
 }
 
 .category-btn {
+    position: relative;
     text-decoration: none;
-    padding: 6px 16px;
+    padding: 6px 16px 6px 28px;
     background: transparent;
     border-radius: 8px;
     color: #e6e6e6;
@@ -479,6 +480,45 @@ body.menu-open {
     border: 1px solid transparent;
     cursor: pointer;
     font-size: 0.9rem;
+}
+
+.category-btn::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: 0.25s ease;
+}
+
+.category-btn.all-top::before {
+    background: #ffffff;
+    box-shadow: 0 0 6px #ffffff;
+}
+
+.category-btn.ligue-top::before {
+    background: #0099ff;
+    box-shadow: 0 0 6px #0099ff;
+}
+
+.category-btn.ncl-top::before {
+    background: #ff3300;
+    box-shadow: 0 0 6px #ff3300;
+}
+
+.category-btn.amical-top::before {
+    background: #00e673;
+    box-shadow: 0 0 6px #00e673;
+}
+
+.category-btn.active::before,
+.category-btn:hover::before {
+    background: #000000;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
 }
 
 .category-btn:hover,
