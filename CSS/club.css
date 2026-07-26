@@ -1,13 +1,24 @@
+/* ==========================================================================
+   CLUB.CSS — Nebula League, concept "Écran de Sélection d'Équipe"
+   ========================================================================== */
+
+:root {
+    --bastard-color: #ff0000;
+    --pxg-color: #3b5bff;
+    --ubers-color: #2bff00;
+    --barcha-color: #ffdd00;
+    --manshine-color: #00c8ff;
+}
+
 /* -------------------- Reset -------------------- */
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Inter', 'Arial', sans-serif;
     background: #000;
     color: #dddddd;
 }
 
-/* Effet d'étoiles subtiles */
 body::before {
     content: '';
     position: fixed;
@@ -30,7 +41,7 @@ body::before {
     opacity: 0.4;
 }
 
-/* -------- Header / Navbar -------- */
+/* -------- Header / Navbar (identique au reste du site) -------- */
 header {
     background: rgba(10, 10, 10, 0.75);
     padding: 15px 20px;
@@ -49,7 +60,6 @@ header {
     text-shadow: 0 0 6px #000;
 }
 
-/* NAVIGATION (identique à index.html) */
 nav ul {
     list-style: none;
     padding: 0;
@@ -79,22 +89,11 @@ nav ul li a.active {
     box-shadow: 0 0 10px #b41ce6;
 }
 
-.clubs-title {
-    text-align: center;
-    font-size: 2.4rem;
-    margin: 40px 0 25px;
-    color: #d89aff;
-    font-weight: bold;
-    text-shadow: 0 0 10px #6f00ff, 0 0 25px #b41cff;
-    letter-spacing: 1px;
-}
-
 .discord-btn {
     display: flex;
-    align-items: right;
+    align-items: center;
     gap: 8px;
     background: #ffffff;
-    /* Couleur Discord */
     padding: 6px 14px;
     border-radius: 6px;
     color: #4752C4 !important;
@@ -104,7 +103,6 @@ nav ul li a.active {
 
 .discord-btn:hover {
     background: #4752C4;
-    /* Hover Discord */
     transform: scale(1.07);
     box-shadow: 0 0 12px #5865F2aa;
     color: white !important;
@@ -116,396 +114,500 @@ nav ul li a.active {
     border-radius: 4px;
 }
 
+/* -------------------- Couleurs des liens joueurs par club -------------------- */
+.bastard { color: rgb(200, 0, 0); text-decoration: none; }
+.bastard:hover { color: rgb(255, 0, 0); text-shadow: 0 0 4px #ff0000, 0 0 8px #a00000, 0 0 12px #650000; }
 
-/* --------- BANDE D'ACCENT PAR CLUB (identité visuelle en un coup d'oeil) --------- */
-.club {
+.pxg { color: rgb(0, 0, 200); text-decoration: none; }
+.pxg:hover { color: rgb(0, 0, 255); text-shadow: 0 0 4px #001aff, 0 0 8px #0008a0, 0 0 12px #000265; }
+
+.ubers { color: rgb(0, 200, 0); text-decoration: none; }
+.ubers:hover { color: rgb(0, 255, 0); text-shadow: 0 0 4px #26ff00, 0 0 8px #1ba000, 0 0 12px #0d6500; }
+
+.barcha { color: rgb(200, 200, 0); text-decoration: none; }
+.barcha:hover { color: rgb(255, 255, 0); text-shadow: 0 0 4px #ffdd00, 0 0 8px #a08d00, 0 0 12px #656300; }
+
+.manshine { color: rgb(0, 100, 200); text-decoration: none; }
+.manshine:hover { color: rgb(0, 155, 255); text-shadow: 0 0 4px #0088ff, 0 0 8px #005da0, 0 0 12px #003865; }
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+.clubs-hero {
+    text-align: center;
+    padding: 55px 20px 25px;
     position: relative;
+    overflow: hidden;
 }
 
-.club::before {
-    content: "";
+.clubs-hero::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle, rgba(180, 28, 230, 0.3) 0%, transparent 70%);
+    animation: clubsHeroPulse 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes clubsHeroPulse {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.5; }
+    50% { transform: translateX(-50%) scale(1.1); opacity: 0.85; }
+}
+
+.clubs-hero-title {
+    position: relative;
+    z-index: 1;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.6rem;
+    font-weight: 900;
+    margin: 0 0 12px;
+    background: linear-gradient(135deg, #b41cff 0%, #d89aff 50%, #b41cff 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: clubsShimmer 3s linear infinite;
+    text-shadow: 0 0 30px rgba(180, 28, 255, 0.4);
+    letter-spacing: 2px;
+}
+
+@keyframes clubsShimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+.clubs-hero-subtitle {
+    position: relative;
+    z-index: 1;
+    font-size: 1.05rem;
+    color: #c8b3ff;
+    max-width: 720px;
+    margin: 0 auto;
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+/* ==========================================================================
+   GRILLE DE CARTES CLUB
+   ========================================================================== */
+.clubs-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 20px 80px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 26px;
+}
+
+.club-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1 1 260px;
+    max-width: 280px;
+    background: rgba(12, 10, 18, 0.82);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 22px;
+    cursor: pointer;
+    text-align: left;
+    color: inherit;
+    font-family: inherit;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: clubCardIn 0.5s ease forwards;
+}
+
+@keyframes clubCardIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.club-card::before {
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: 4px;
-    z-index: 1;
+    border-radius: 20px 20px 0 0;
+    background: linear-gradient(90deg, transparent, var(--club-color, #b41cff), transparent);
+    opacity: 0.7;
 }
 
-.club[data-club-accent="bastard"]::before {
-    background: linear-gradient(90deg, transparent, #ff3b3b, transparent);
+.club-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--club-color, #b41cff);
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.55), 0 0 26px color-mix(in srgb, var(--club-color, #b41cff) 45%, transparent);
 }
 
-.club[data-club-accent="pxg"]::before {
-    background: linear-gradient(90deg, transparent, #3b7bff, transparent);
+.card-title-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: rgba(255, 215, 0, 0.12);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+    color: gold;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 20px;
 }
 
-.club[data-club-accent="ubers"]::before {
-    background: linear-gradient(90deg, transparent, #3bff5c, transparent);
-}
-
-.club[data-club-accent="barcha"]::before {
-    background: linear-gradient(90deg, transparent, #ffe100, transparent);
-}
-
-.club[data-club-accent="manshine"]::before {
-    background: linear-gradient(90deg, transparent, #00d4ff, transparent);
-}
-
-/* --------- CONTENEUR CLUBS --------- */
-.clubs-container {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    align-items: center;
-}
-
-/* --------- CARTE CLUB --------- */
-.club {
-    width: 90%;
-    max-width: 750px;
-    background: rgba(15, 15, 15, 0.55);
-    border-radius: 18px;
-    border: 2px solid #b41cff60;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 0 18px #b41cff30;
-    transition: 0.3s ease;
-    overflow: hidden;
-    opacity: 0;
-    transform: translateY(25px);
-}
-
-/* --------- SCROLL REVEAL --------- */
-.club.reveal {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* --------- HOVER --------- */
-.club:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 25px #b41cff80;
-}
-
-/* --------- GLOW PAR CLUB --------- */
-.bastardglow {
-    border-color: #ff000060;
-    box-shadow: 0 0 15px #ff000030;
-}
-
-.pxgglow {
-    border-color: #0033ff60;
-    box-shadow: 0 0 15px #0033ff30;
-}
-
-.ubersglow {
-    border-color: #00ff1160;
-    box-shadow: 0 0 15px #00ff1130;
-}
-
-.barchaglow {
-    border-color: #ffd90060;
-    box-shadow: 0 0 15px #ffd90030;
-}
-
-.manshineglow {
-    border-color: #00eaff60;
-    box-shadow: 0 0 15px #00eaff30;
-}
-
-.bastardglow:hover {
-    border-color: #ff000060;
-    box-shadow: 0 0 15px #ff00008d;
-}
-
-.pxgglow:hover {
-    border-color: #0033ff60;
-    box-shadow: 0 0 15px #0000ff8d;
-}
-
-.ubersglow:hover {
-    border-color: #00ff0060;
-    box-shadow: 0 0 15px #00ff008d;
-}
-
-.barchaglow:hover {
-    border-color: #ffd90060;
-    box-shadow: 0 0 15px #ffd9008d;
-}
-
-.manshineglow:hover {
-    border-color: #00eaff60;
-    box-shadow: 0 0 15px #00eaff8d;
-}
-
-/* --------- BOUTON CLUB --------- */
-.dropdown-btn {
-    width: 100%;
-    padding: 16px 18px;
+.club-card-head {
     display: flex;
     align-items: center;
-    gap: 16px;
-    border: none;
-    background: linear-gradient(135deg, #1a1a1a, #320947);
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: 0.3s;
-    text-align: left;
+    gap: 14px;
 }
 
-.bastard-btn:hover,
-.bastard-btn.active {
-    background: linear-gradient(135deg, #be0000, #000000);
+.club-card-logo {
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--club-color, #b41cff) 55%, transparent));
 }
 
-.pxg-btn:hover,
-.pxg-btn.active {
-    background: linear-gradient(135deg, #0009ab, #c50d00);
-}
-
-.ubers-btn:hover,
-.ubers-btn.active {
-    background: linear-gradient(135deg, #29ce00, #ffffff);
-}
-
-.barcha-btn:hover,
-.barcha-btn.active {
-    background: linear-gradient(135deg, #ffe100, #56007a);
-}
-
-.manshine-btn:hover,
-.manshine-btn.active {
-    background: linear-gradient(135deg, #00b3ff, #a1ffff);
-}
-
-/* Nom + petites infos du club, empilés à côté de l'icône */
-.club-heading {
+.club-card-titles {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    flex: 1;
+    gap: 2px;
     min-width: 0;
 }
 
-.club-name {
-    font-size: 1.35rem;
+.club-card-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
     font-weight: 800;
-    line-height: 1.1;
+    line-height: 1.15;
 }
 
-.club-meta {
+.club-card-fullname {
+    font-size: 0.78rem;
+    color: #a590c8;
+}
+
+/* -------------------- Mini-terrain (carte) -------------------- */
+.club-pitch {
+    position: relative;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 0%, rgba(0, 90, 40, 0.55), rgba(0, 40, 20, 0.75));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.club-pitch-mini {
+    aspect-ratio: 4 / 3;
+}
+
+.club-pitch-big {
+    aspect-ratio: 4 / 3;
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.pitch-lines {
+    position: absolute;
+    inset: 8%;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+}
+
+.pitch-lines::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.pitch-slot {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.pitch-dot {
+    --slot-color: #b41cff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 800;
+    color: #060008;
+    background: var(--slot-color);
+    box-shadow: 0 0 10px var(--slot-color);
+}
+
+.pitch-slot.vacant .pitch-dot {
+    background: rgba(255, 255, 255, 0.08);
+    color: #999;
+    box-shadow: none;
+    border: 1px dashed rgba(255, 255, 255, 0.3);
+}
+
+.pitch-slot-big .pitch-dot {
+    width: 42px;
+    height: 42px;
+    font-size: 0.72rem;
+}
+
+.pitch-player-name {
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.pitch-vacant {
+    color: #888;
+    font-style: italic;
+    font-weight: 400;
+}
+
+/* -------------------- Stats rapides (carte) -------------------- */
+.club-card-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 8px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: #d3c3ff;
-    opacity: 0.85;
 }
 
-.meta-dot {
-    opacity: 0.5;
-}
-
-/* Petite flèche qui indique l'état ouvert/fermé */
-.chevron {
-    font-size: 1.1rem;
-    flex-shrink: 0;
-    transition: transform 0.3s ease;
-    opacity: 0.8;
-}
-
-.dropdown-btn.active .chevron {
-    transform: rotate(180deg);
-}
-
-/* --------- ICÔNE & HALO --------- */
-.club-icon {
-    width: 58px;
-    height: 58px;
-    border-radius: 12px;
-    object-fit: contain;
-    transition: 0.3s;
-    filter: drop-shadow(0 0 10px transparent);
-    flex-shrink: 0;
-}
-
-.dropdown-btn:hover .club-icon {
-    transform: scale(1.12);
-    filter: drop-shadow(0 0 6px #b41cff);
-}
-
-.dropdown-btn.active .club-icon {
-    transform: scale(1.12);
-    filter: drop-shadow(0 0 6px #b41cff);
-}
-
-/* --------- ACCORDÉON --------- */
-.dropdown-content {
-    max-height: 0;
-    overflow: hidden;
-    padding: 0 25px;
-    background: rgba(0, 0, 0, 0.45);
-    transition: max-height 0.4s ease, padding 0.3s ease;
-}
-
-.dropdown-content.open {
-    padding: 20px 25px;
-    max-height: 400px;
-}
-
-
-.bastard {
-    color: rgb(200, 0, 0);
-    text-decoration: none;
-}
-
-.bastard:hover {
-    color: rgb(255, 0, 0);
-    text-decoration: none;
-    text-shadow:
-        0 0 4px #ff0000,
-        0 0 8px #a00000,
-        0 0 12px #650000;
-}
-
-.pxg {
-    color: rgb(0, 0, 200);
-    text-decoration: none;
-}
-
-.pxg:hover {
-    color: rgb(0, 0, 255);
-    text-decoration: none;
-    text-shadow:
-        0 0 4px #001aff,
-        0 0 8px #0008a0,
-        0 0 12px #000265;
-}
-
-.ubers {
-    color: rgb(0, 200, 0);
-    text-decoration: none;
-}
-
-.ubers:hover {
-    color: rgb(0, 255, 0);
-    text-decoration: none;
-    text-shadow:
-        0 0 4px #26ff00,
-        0 0 8px #1ba000,
-        0 0 12px #0d6500;
-}
-
-.barcha {
-    color: rgb(200, 200, 0);
-    text-decoration: none;
-}
-
-.barcha:hover {
-    color: rgb(255, 255, 0);
-    text-decoration: none;
-    text-shadow:
-        0 0 4px #ffdd00,
-        0 0 8px #a08d00,
-        0 0 12px #656300;
-}
-
-.manshine {
-    color: rgb(0, 100, 200);
-    text-decoration: none;
-}
-
-.manshine:hover {
-    color: rgb(0, 155, 255);
-    text-decoration: none;
-    text-shadow:
-        0 0 4px #0088ff,
-        0 0 8px #005da0,
-        0 0 12px #003865;
-}
-
-/* --------- RESPONSIVE --------- */
-@media (max-width: 600px) {
-    .dropdown-btn {
-        font-size: 1.2rem;
-        padding: 15px;
-    }
-
-    .club-icon {
-        width: 55px;
-        height: 55px;
-    }
-}
-
-.dropdown-content {
+.ccs-item {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    /* aligne les colonnes au début */
-    gap: 30px;
-    /* espace entre joueurs et style */
-    max-height: 0;
-    overflow: hidden;
-    padding: 20px 25px;
-    /* padding interne pour éviter que ça touche les bords */
-    background: rgba(0, 0, 0, 0.45);
-    transition: max-height 0.4s ease, opacity 0.4s ease;
-    opacity: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 10px;
+    padding: 8px 4px;
 }
 
-.dropdown-content.open {
-    max-height: 500px;
+.ccs-label {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #9a8cc0;
+}
+
+.ccs-value {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: #fff;
+}
+
+.club-card-cta {
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--club-color, #d89aff);
+    opacity: 0.85;
+    transition: opacity 0.2s ease;
+}
+
+.club-card:hover .club-card-cta {
     opacity: 1;
 }
 
-.dropdown-left {
-    flex: 0 0 350px;
-    /* largeur pour joueurs + valeur */
+/* ==========================================================================
+   MODAL FICHE CLUB
+   ========================================================================== */
+.popup-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(4px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.popup-box {
+    background: rgba(10, 10, 10, 0.96);
+    border-radius: 20px;
+    padding: 28px;
+    width: 92%;
+    max-width: 780px;
+    max-height: 88vh;
+    overflow-y: auto;
+    position: relative;
+    border: 2px solid #b41cff;
+    box-shadow: 0 0 35px rgba(180, 28, 255, 0.5);
+}
+
+.modal-close-x {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    line-height: 1;
+}
+
+.modal-close-x:hover {
+    color: #fff;
+}
+
+.modal-club-head {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 22px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-club-logo {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
+
+.modal-club-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.modal-club-fullname {
+    margin: 2px 0 0;
+    color: #a590c8;
+    font-size: 0.85rem;
+}
+
+.modal-title-badge {
+    margin-left: auto;
+    background: rgba(255, 215, 0, 0.12);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+    color: gold;
+    font-size: 0.8rem;
+    font-weight: 800;
+    padding: 5px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 26px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 700px) {
+    .modal-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.modal-col h4 {
+    margin: 0 0 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    color: #d89aff;
+    border-bottom: 1px solid rgba(180, 28, 255, 0.3);
+    padding-bottom: 6px;
+}
+
+.modal-stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
 
-.dropdown-right {
-    flex: 0 0 220px;
-    /* largeur pour le texte style de jeu */
-    color: #f0f0f0;
-    font-size: 0.95rem;
-    line-height: 1.4;
-    padding-left: 15px;
-    border-left: 1px solid rgba(255, 255, 255, 0.15);
+.modal-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 8px 12px;
 }
 
-/* Responsive : sur petit écran, texte passe sous la liste */
-@media (max-width: 700px) {
-    .dropdown-content {
-        flex-direction: column;
-        padding: 15px;
-    }
-
-    .dropdown-right {
-        border-left: none;
-        padding-left: 0;
-        margin-top: 10px;
-        max-width: 100%;
-    }
+.modal-stat span {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #9a8cc0;
 }
 
-.dropdown-left h4 {
-    margin-bottom: 4px;
-    /* au lieu de margin par défaut */
+.modal-stat strong {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    color: #fff;
 }
 
-.dropdown-left p {
-    margin-top: 0;
+.modal-style-block {
+    margin-top: 6px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* ================================================
-   EFFECTIF ENRICHI : rôles colorés + postes vacants
-   ================================================ */
+.modal-style-block h4 {
+    margin: 0 0 10px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    color: #d89aff;
+}
 
+.style-quote {
+    margin: 0;
+    padding-left: 14px;
+    border-left: 3px solid rgba(180, 28, 255, 0.5);
+    font-style: italic;
+    color: #e6dcff;
+    line-height: 1.5;
+}
+
+.close-btn {
+    display: block;
+    margin: 22px auto 0;
+    padding: 9px 22px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #b41ce6;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.close-btn:hover {
+    background: linear-gradient(135deg, #a600ff, #b41ce6);
+    box-shadow: 0 0 10px #b41ce6;
+}
+
+/* -------------------- Effectif (réutilisé dans le modal) -------------------- */
 .roster-list {
     list-style: none;
     margin: 0;
@@ -545,21 +647,10 @@ nav ul li a.active {
     color: #0a0a0a;
 }
 
-.role-badge.role-cf {
-    background: #ff0000;
-}
-
-.role-badge.role-lw {
-    background: #0066ff;
-}
-
-.role-badge.role-rw {
-    background: #ffd51a;
-}
-
-.role-badge.role-cm {
-    background: #5cff6a;
-}
+.role-badge.role-cf { background: #ff0000; }
+.role-badge.role-lw { background: #0066ff; }
+.role-badge.role-rw { background: #ffd51a; }
+.role-badge.role-cm { background: #5cff6a; }
 
 .empty-slot {
     font-style: italic;
@@ -567,10 +658,9 @@ nav ul li a.active {
     font-size: 0.9rem;
 }
 
-/* ---- Lien croisé vers la page Joueurs, filtré sur ce club ---- */
 .view-roster-link {
     display: inline-block;
-    margin-top: 4px;
+    margin-top: 8px;
     font-size: 0.85rem;
     font-weight: bold;
     color: #d89aff;
@@ -584,16 +674,48 @@ nav ul li a.active {
     transform: translateX(3px);
 }
 
-/* ---- Style de jeu, présenté comme une citation ---- */
-.dropdown-right h4 {
-    margin: 0 0 10px;
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 600px) {
+    .clubs-hero-title {
+        font-size: 2rem;
+    }
+
+    .clubs-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-club-head {
+        flex-wrap: wrap;
+    }
+
+    .modal-title-badge {
+        margin-left: 0;
+    }
 }
 
-.style-quote {
-    margin: 0;
-    padding-left: 14px;
-    border-left: 3px solid rgba(180, 28, 255, 0.5);
-    font-style: italic;
-    color: #e6dcff;
-    line-height: 1.5;
+/* -------------------- Scrollbar -------------------- */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 6px;
+    border: 2px solid #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #444 #1a1a1a;
 }

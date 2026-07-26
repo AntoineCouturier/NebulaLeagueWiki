@@ -200,145 +200,220 @@
   color: rgb(174, 54, 255);
 }
 
-/* Isagi */
-.heartofbluelock {
-  color: #2731f0;
+/* ==========================================================================
+   COULEURS DES TITRES ULTIMES
+   ==========================================================================
+   Chaque personnage peut avoir jusqu'à 4 stops de dégradé
+   (--title-c1 / --title-c2 / --title-c3 / --title-c4) qui pilotent
+   le shimmer animé du nom de son Titre Ultime, aussi bien sur sa fiche perso
+   que dans la grille "Salle des Titres" (page Global). Le nom de classe suit
+   exactement l'id du perso utilisé dans title.html (ex: id="nel-isagi" ->
+   .title-nel-isagi), donc rien d'autre à synchroniser à la main.
+   Si --title-c3 / --title-c4 ne sont pas définis ils héritent de c2 / c1
+   automatiquement grâce au système de fallback var(). */
+
+
+.title-isagi {
+  --title-c1: #2f5bff;
+  --title-c2: #0077ff;
+  --title-c3: #ffffff;
 }
 
-/* Gagamaru */
-.theoverseer {
-  color: #a9fff4;
+/* Isagi - bleu → cyan → blanc → rouge protagoniste */
+.title-gagamaru {
+  --title-c1: #cfcfcf;
+  --title-c2: #c8fff5;
+  --title-c3: #00a892;
+  --title-c4: #fcffff;
 }
 
-
-/* Nagi */
-
-.thefallengenius {
-  background: linear-gradient(135deg, #72c8e3, #daffff, #707272, #72c8e3, #daffff, #707272);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: shimmer 2s infinite linear;
+/* Gagamaru - cyan gardien scintillant */
+.title-nagi {
+  --title-c1: #65a6b9;
+  --title-c2: #37f1f1;
+  --title-c3: #76b2da;
 }
 
-/* Chigiri */
-.theredpanther {
-  color: #e91e63;
+/* Nagi - bleu glace / génie */
+.title-chigiri {
+  --title-c1: #ff3b3b;
+  --title-c2: #ff9955;
+  --title-c3: #ffb199;
+  --title-c4: #ff3b3b;
 }
 
-/* Bachira */
-.themonster {
-  color: #776b00;
+/* Chigiri - rouge → orange → saumon vitesse */
+.title-bachira {
+  --title-c1: #c9ff00;
+  --title-c2: #ffffff;
+  --title-c3: #9f00ff;
+  --title-c4: #6a0dad;
 }
 
-/* Shidou */
-.thedevil {
-  color: #9b59b6;
+/* Bachira - dualité monstre jaune → blanc → violet */
+.title-shidou {
+  --title-c1: #9b1fae;
+  --title-c2: #ff2e6d;
+  --title-c3: #ff8c00;
+  --title-c4: #9b1fae;
 }
 
-/* Otoya */
-.stealthyninja {
-  color: #79a371;
+/* Shidou - violet → rose → orange démoniaque */
+.title-otoya {
+  --title-c1: #1f6b3a;
+  --title-c2: #baffcb;
+  --title-c3: #00ff7f;
 }
 
-/* Niko */
-.thewatchtower {
-  color: #00d491;
+/* Otoya - vert furtif */
+.title-niko {
+  --title-c1: #00d491;
+  --title-c2: #c8fff0;
+  --title-c3: #00b5d8;
 }
 
-/* Kurona */
-.planethotline {
-  color: #e91e63;
+/* Niko - teal */
+.title-kiyora {
+  --title-c1: #695db3;
+  --title-c2: #c9c3ff;
+  --title-c3: #ffffff;
+  --title-c4: #695db3;
 }
 
-/* Karasu */
-.thecrow {
-  color: #0b08ab;
+/* Kiyora - violet-bleu lumineux */
+.title-ness {
+  --title-c1: #f0afee;
+  --title-c2: #ffffff;
+  --title-c3: #ffcbf9;
 }
 
-/* Hiori */
-.ultrasadist {
-  position: relative;
-  display: list-item;
-  width: 100%;
-  margin-bottom: 6px;
-  background: linear-gradient(90deg, #00ffff 0%, #8df7ff 40%, #1bb7ff 100%);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: copycat-shine 3s linear infinite;
+/* Ness - rose magicien */
+.title-kurona {
+  --title-c1: #7a00c2;
+  --title-c2: #cc44ff;
+  --title-c3: #ff7ae0;
+  --title-c4: #7a00c2;
 }
 
-/* Kiyora */
-.godunknownplan {
-  color: #695db3;
+/* Kurona - violet → magenta spatial */
+.title-karasu {
+  --title-c1: #0b0864;
+  --title-c2: #2d3bb5;
+  --title-c3: #5b6fff;
+  --title-c4: #0b0864;
 }
 
-/* Ness */
-.themagician {
-  color: #f0afee;
+/* Karasu - bleu nuit → nuit profonde corbeau */
+.title-kunigami {
+  --title-c1: #ff6a00;
+  --title-c2: #ffb300;
+  --title-c3: #ffd76b;
+  --title-c4: #ff6a00;
 }
 
-/* Kunigami */
-.thewildcard {
-  color: #ca6100;
+/* Kunigami - orange → or feu */
+.title-yukimiya {
+  --title-c1: #3aa9d9;
+  --title-c2: #a8e8ff;
+  --title-c3: #ffffff;
 }
 
-/* Yukimiya */
-.oneononeemperor {
-  color: #ff9900;
+/* Yukimiya - bleu glace prédateur */
+.title-aiku {
+  --title-c1: #0f5c22;
+  --title-c2: #3dff6e;
+  --title-c3: #7dff9e;
+  --title-c4: #0f5c22;
 }
 
-/* Aiku */
-.thesnake {
-  color: #c20000;
+/* Aiku - vert venimeux */
+.title-barou {
+  --title-c1: #7a0000;
+  --title-c2: #cc2200;
+  --title-c3: #ffb300;
+  --title-c4: #7a0000;
 }
 
-/* Barou */
-.theking {
-  color: #9e0000;
+/* Barou - rouge-or royal */
+.title-sae {
+  --title-c1: #c99a00;
+  --title-c2: #fff8dc;
+  --title-c3: #ffd700;
+  --title-c4: #c99a00;
 }
 
-/* Sae */
-.japangreatesttreasure {
-  color: #e2006d;
+/* Sae - or trésor */
+.title-charles {
+  --title-c1: #8a2be2;
+  --title-c2: #c678ff;
+  --title-c3: #d9b3ff;
 }
 
-/* Kaiser */
-.emperorchosenone {
-  color: #2900d4;
+/* Charles - violet */
+.title-kaiser {
+  --title-c1: #2400a8;
+  --title-c2: #4b2fff;
+  --title-c3: #ffd76b;
+  --title-c4: #2400a8;
 }
 
-/* Lorenzo */
-.thezombie {
-  color: #006623;
+/* Kaiser - bleu royal + or */
+.title-lorenzo {
+  --title-c1: #1c4d28;
+  --title-c2: #5aff80;
+  --title-c3: #9fffb0;
+  --title-c4: #1c4d28;
 }
 
-/* Rin */
-.theberserker {
-  color: #11806a;
+/* Lorenzo - vert zombie */
+.title-rin {
+  --title-c1: #c22b00;
+  --title-c2: #ff5500;
+  --title-c3: #ffb347;
+  --title-c4: #c22b00;
 }
 
-/* Reo */
-.masterofalltrades {
-  color: #be90ff;
+/* Rin - rouge → orange rage */
+.title-reo {
+  --title-c1: #7b2fbf;
+  --title-c2: #cc55ff;
+  --title-c3: #ff9de2;
+  --title-c4: #7b2fbf;
 }
 
-/* NEL Isagi */
-.geniusofadaptation {
-  color: #463679;
+/* Reo - violet → rose polyvalent */
+.title-nel-isagi {
+  --title-c1: #241b57;
+  --title-c2: #5a49cc;
+  --title-c3: #8f7bff;
+  --title-c4: #241b57;
 }
 
-/* Lorenzo Mastery */
-.aceeater {
-  color: #ce8d02;
+/* NEL Isagi - indigo évolué */
+.title-lorenzo2 {
+  --title-c1: #a86a00;
+  --title-c2: #d4a030;
+  --title-c3: #ffe08a;
+  --title-c4: #a86a00;
 }
 
-/* Aiku Mastery */
-.thefinalwall {
-  color: #ce8d02;
+/* Lorenzo Mastery - ambre */
+.title-aiku2 {
+  --title-c1: #2f4f3f;
+  --title-c2: #6fa888;
+  --title-c3: #a9c9b8;
+  --title-c4: #2f4f3f;
 }
+
+/* Aiku Mastery - vert-gris défensif */
+.title-hiori {
+  --title-c1: #00ccff;
+  --title-c2: #00ffff;
+  --title-c3: #a8f5ff;
+  --title-c4: #1bb7ff;
+}
+
+/* Hiori - cyan */
 
 /*================================ Animated Global Styles ================================*/
 

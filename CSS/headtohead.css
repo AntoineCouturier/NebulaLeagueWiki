@@ -1,0 +1,684 @@
+/* ==========================================================================
+   HEADTOHEAD.CSS — Face à Face, concept "Character Select / Impact Clash"
+   Palette du site conservée (purple nebula + fond étoilé), avec un accent
+   "impact" doré/électrique propre à cette page pour incarner l'idée de duel.
+   ========================================================================== */
+
+:root {
+    --bastard-color: #ff0000;
+    --pxg-color: #3b5bff;
+    --ubers-color: #2bff00;
+    --barcha-color: #ffdd00;
+    --manshine-color: #00c8ff;
+
+    --bastard-glow: rgba(255, 0, 0, 0.55);
+    --pxg-glow: rgba(59, 91, 255, 0.55);
+    --ubers-glow: rgba(43, 255, 0, 0.5);
+    --barcha-glow: rgba(255, 221, 0, 0.5);
+    --manshine-glow: rgba(0, 200, 255, 0.55);
+
+    --h2h-clash: #ffcf40;
+    --h2h-clash-glow: rgba(255, 207, 64, 0.55);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', 'Arial', sans-serif;
+    background: #000;
+    color: #dddddd;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+        radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+        radial-gradient(1px 1px at 90px 40px, #ddd, transparent),
+        radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+        radial-gradient(2px 2px at 160px 120px, #eee, transparent),
+        radial-gradient(1px 1px at 200px 160px, #fff, transparent),
+        radial-gradient(3px 3px at 240px 200px, rgba(180, 28, 255, 0.5), transparent),
+        radial-gradient(2px 2px at 280px 240px, rgba(100, 0, 255, 0.4), transparent);
+    background-repeat: repeat;
+    background-size: 300px 300px;
+    z-index: -1;
+    opacity: 0.4;
+}
+
+/* ==========================================================================
+   HEADER / NAV / DISCORD — bloc partagé, présent dans tous les autres CSS
+   du site (style.css, match.css, club.css, rules.css, stats.css...) mais
+   oublié dans ce fichier. C'est ce qui causait le menu cassé (puces visibles,
+   liens bleus soulignés, empilés verticalement).
+   ========================================================================== */
+header {
+    background: rgba(10, 10, 10, 0.75);
+    padding: 15px 20px;
+    border-bottom: 2px solid #6f00ff;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 0 10px #6f00ff80;
+    text-align: center;
+}
+
+.header-container h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: #d89aff;
+    text-shadow: 0 0 6px #000;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0 0 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    padding: 6px 14px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+    color: #e6e6e6;
+    font-weight: bold;
+    transition: 0.25s;
+    border: 1px solid transparent;
+}
+
+nav ul li a:hover,
+nav ul li a.active {
+    background: linear-gradient(135deg, #a600ff, #b41ce6);
+    border-color: #b41ce6;
+    color: white;
+    box-shadow: 0 0 10px #b41ce6;
+}
+
+.discord-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    padding: 6px 14px;
+    border-radius: 6px;
+    color: #4752C4 !important;
+    font-weight: bold;
+    transition: 0.25s ease-in-out;
+}
+
+.discord-btn:hover {
+    background: #4752C4;
+    transform: scale(1.07);
+    box-shadow: 0 0 12px #5865F2aa;
+    color: white !important;
+}
+
+.discord-logo {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+}
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+.h2h-hero {
+    text-align: center;
+    padding: 55px 20px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.h2h-hero::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle, rgba(255, 207, 64, 0.18) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.h2h-hero-title {
+    position: relative;
+    z-index: 1;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 900;
+    margin: 0 0 12px;
+    background: linear-gradient(135deg, #b41cff 0%, var(--h2h-clash) 50%, #b41cff 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: h2hShimmer 3s linear infinite;
+    text-shadow: 0 0 30px rgba(180, 28, 255, 0.4);
+    letter-spacing: 2px;
+}
+
+@keyframes h2hShimmer {
+    0% {
+        background-position: 0% center;
+    }
+
+    100% {
+        background-position: 200% center;
+    }
+}
+
+.h2h-hero-subtitle {
+    position: relative;
+    z-index: 1;
+    font-size: 1.05rem;
+    color: #c8b3ff;
+    max-width: 680px;
+    margin: 0 auto;
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+/* ==========================================================================
+   SÉLECTION DES ÉQUIPES (écran de sélection)
+   ========================================================================== */
+.h2h-picker {
+    max-width: 1000px;
+    margin: 0 auto 10px;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.h2h-picker-hint {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: #b0a0d0;
+    margin: 0 0 18px;
+    transition: color 0.25s ease;
+}
+
+.h2h-picker-hint strong {
+    color: var(--h2h-clash);
+}
+
+.h2h-select-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 14px;
+}
+
+.h2h-tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 12px 14px;
+    background: rgba(15, 12, 22, 0.75);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.h2h-tile:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.h2h-tile img {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.15));
+}
+
+.h2h-tile-name {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #eee;
+    text-align: center;
+}
+
+.h2h-tile-badge {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 900;
+    color: #060008;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+}
+
+.h2h-tile.picked-a {
+    border-color: var(--tile-color, #b41cff);
+    box-shadow: 0 0 20px var(--tile-glow, rgba(180, 28, 255, 0.5));
+    transform: translateY(-4px);
+}
+
+.h2h-tile.picked-a .h2h-tile-badge {
+    display: flex;
+    background: var(--tile-color, #b41cff);
+}
+
+.h2h-tile.picked-b {
+    border-color: var(--tile-color, #ffcf40);
+    box-shadow: 0 0 20px var(--tile-glow, rgba(255, 207, 64, 0.5));
+    transform: translateY(-4px);
+}
+
+.h2h-tile.picked-b .h2h-tile-badge {
+    display: flex;
+    background: var(--tile-color, #ffcf40);
+}
+
+/* ==========================================================================
+   ÉTAT VIDE
+   ========================================================================== */
+.h2h-empty {
+    text-align: center;
+    padding: 60px 20px 90px;
+    color: #b0b0b0;
+}
+
+.h2h-empty-icon {
+    font-size: 2.6rem;
+    margin-bottom: 12px;
+    opacity: 0.75;
+}
+
+.h2h-empty-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.15rem;
+    color: #d89aff;
+    margin: 0 0 6px;
+}
+
+.h2h-empty-sub {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* ==========================================================================
+   RÉSULTATS DU DUEL
+   ========================================================================== */
+.h2h-results {
+    display: none;
+    max-width: 1000px;
+    margin: 30px auto 80px;
+    padding: 0 20px;
+    animation: h2hResultsIn 0.5s ease both;
+}
+
+.h2h-results.visible {
+    display: block;
+}
+
+@keyframes h2hResultsIn {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* -------- En-tête choc (logos + VS) -------- */
+.h2h-clash-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 26px 20px;
+    background: rgba(10, 8, 16, 0.85);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 26px;
+    position: relative;
+    overflow: hidden;
+}
+
+.h2h-clash-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--colorA, #b41cff) 0%, transparent 45%, transparent 55%, var(--colorB, #ffcf40) 100%);
+    opacity: 0.12;
+    pointer-events: none;
+}
+
+.h2h-clash-team {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.h2h-clash-team.side-b {
+    flex-direction: row-reverse;
+    text-align: right;
+    justify-content: flex-start;
+}
+
+.h2h-clash-team img {
+    width: 58px;
+    height: 58px;
+    object-fit: contain;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 50%;
+    padding: 5px;
+    flex-shrink: 0;
+}
+
+.h2h-clash-team.side-a img {
+    border: 2px solid var(--colorA, #b41cff);
+}
+
+.h2h-clash-team.side-b img {
+    border: 2px solid var(--colorB, #ffcf40);
+}
+
+.h2h-clash-team-name {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 800;
+    font-size: 1.15rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.h2h-clash-vs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 1.3rem;
+    color: var(--h2h-clash);
+    text-shadow: 0 0 14px var(--h2h-clash-glow);
+    flex-shrink: 0;
+    z-index: 1;
+    animation: h2hVsPulse 1.8s ease-in-out infinite;
+}
+
+.h2h-vs-bolt {
+    font-size: 1.4rem;
+    margin-bottom: 2px;
+}
+
+@keyframes h2hVsPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        text-shadow: 0 0 14px var(--h2h-clash-glow);
+    }
+
+    50% {
+        transform: scale(1.15);
+        text-shadow: 0 0 26px var(--h2h-clash-glow), 0 0 40px var(--h2h-clash-glow);
+    }
+}
+
+/* -------- Barre de bilan V/N/D -------- */
+.h2h-record-bar-wrap {
+    margin-bottom: 30px;
+}
+
+.h2h-record-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    color: #cfc4e6;
+    margin-bottom: 8px;
+}
+
+#h2hRecordLabelA {
+    color: var(--colorA, #b41cff);
+}
+
+#h2hRecordLabelB {
+    color: var(--colorB, #ffcf40);
+}
+
+#h2hRecordLabelDraw {
+    color: #999;
+}
+
+.h2h-record-bar {
+    display: flex;
+    height: 16px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.h2h-record-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.h2h-record-fill.side-a {
+    background: var(--colorA, #b41cff);
+}
+
+.h2h-record-fill.draw {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.h2h-record-fill.side-b {
+    background: var(--colorB, #ffcf40);
+}
+
+/* -------- Colonnes de stats (avec ligne de fracture) -------- */
+.h2h-stat-columns {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    background: rgba(12, 10, 18, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 24px 0;
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+.h2h-stat-columns::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    background: repeating-linear-gradient(180deg, var(--h2h-clash) 0 10px, transparent 10px 18px);
+    opacity: 0.5;
+    transform: translateX(-50%) skewX(-6deg);
+}
+
+.h2h-stat-col {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 0 28px;
+}
+
+.h2h-stat-col.col-b {
+    align-items: flex-end;
+    text-align: right;
+}
+
+.h2h-stat-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.h2h-stat-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #9a8cc0;
+}
+
+.h2h-stat-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.h2h-stat-col.col-a .h2h-stat-value {
+    color: var(--colorA, #b41cff);
+}
+
+.h2h-stat-col.col-b .h2h-stat-value {
+    color: var(--colorB, #ffcf40);
+}
+
+/* -------- Historique des confrontations -------- */
+.h2h-history-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    color: #d89aff;
+    margin: 0 0 14px;
+}
+
+.h2h-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.h2h-match-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px;
+    background: rgba(15, 12, 22, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 4px solid var(--h2h-clash);
+    border-radius: 12px;
+    flex-wrap: wrap;
+}
+
+.h2h-match-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.78rem;
+    color: #a590c8;
+}
+
+.h2h-match-teams {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.h2h-match-score {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.h2h-empty-history {
+    text-align: center;
+    padding: 30px 20px;
+    color: #9a8cc0;
+    font-style: italic;
+    background: rgba(15, 12, 22, 0.6);
+    border-radius: 12px;
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 640px) {
+    .h2h-hero-title {
+        font-size: 2rem;
+    }
+
+    .h2h-clash-header {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .h2h-clash-team,
+    .h2h-clash-team.side-b {
+        flex-direction: row;
+        text-align: left;
+        justify-content: flex-start;
+    }
+
+    .h2h-stat-columns {
+        grid-template-columns: 1fr;
+    }
+
+    .h2h-stat-columns::before {
+        display: none;
+    }
+
+    .h2h-stat-col.col-b {
+        align-items: flex-start;
+        text-align: left;
+        border-top: 1px dashed rgba(255, 255, 255, 0.1);
+        padding-top: 14px;
+        margin-top: 6px;
+    }
+
+    .h2h-match-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}

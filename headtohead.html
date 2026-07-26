@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/logos/nebula.png">
+    <title>Face à Face - Nebula League</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="CSS/hamburger.css">
+    <link rel="stylesheet" href="CSS/headtohead.css">
+    <link rel="stylesheet" href="CSS/global-theme.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-container">
+            <!-- Hamburger Menu Button -->
+            <div class="hamburger-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <h1>Nebula League - Face à Face</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="title.html">Persos et Titres</a></li>
+                    <li><a href="club.html">Clubs</a></li>
+                    <li><a href="players.html">Joueurs</a></li>
+                    <li><a href="valeur.html">Valeurs</a></li>
+                    <li><a href="rules.html">Règles Matchs</a></li>
+                    <li><a href="stats.html">Records</a></li>
+                    <li><a href="matchs.html">Historique de Matchs</a></li>
+                    <li><a href="headtohead.html" class="active">Face à Face</a></li>
+                    <li><a href="saison.html">Historique des Saisons</a></li>
+                    <li><a href="fixtures.html">Calendrier des Matchs</a></li>
+                    <li>
+                        <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
+                            <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
+                            Discord
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="nav-mobile-overlay">
+        <button class="nav-close-btn" aria-label="Close menu">&times;</button>
+        <nav>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="title.html">Persos et Titres</a></li>
+                <li><a href="club.html">Clubs</a></li>
+                <li><a href="players.html">Joueurs</a></li>
+                <li><a href="valeur.html">Valeurs</a></li>
+                <li><a href="rules.html">Règles Matchs</a></li>
+                <li><a href="stats.html">Records</a></li>
+                <li><a href="matchs.html">Historique de Matchs</a></li>
+                <li><a href="headtohead.html" class="active">Face à Face</a></li>
+                <li><a href="saison.html">Historique des Saisons</a></li>
+                <li><a href="fixtures.html">Calendrier des Matchs</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Backdrop for click-outside-to-close -->
+    <div class="nav-backdrop"></div>
+
+    <!-- ============ HERO ============ -->
+    <section class="h2h-hero">
+        <h2 class="h2h-hero-title">FACE À FACE</h2>
+        <p class="h2h-hero-subtitle">Choisis deux équipes pour révéler leur historique : confrontations directes,
+            bilan victoires/défaites et buts marqués l'une contre l'autre.</p>
+    </section>
+
+    <!-- ============ SÉLECTION DES ÉQUIPES ============ -->
+    <section class="h2h-picker">
+        <p class="h2h-picker-hint" id="h2hHint">Sélectionne ta <strong>première</strong> équipe.</p>
+        <div class="h2h-select-grid" id="h2hSelectGrid"></div>
+    </section>
+
+    <!-- ============ ÉTAT VIDE (moins de 2 équipes choisies) ============ -->
+    <section class="h2h-empty" id="h2hEmptyState">
+        <div class="h2h-empty-icon">⚔️</div>
+        <p class="h2h-empty-title">Le duel n'a pas encore commencé</p>
+        <p class="h2h-empty-sub">Clique sur deux équipes ci-dessus pour lancer le face à face.</p>
+    </section>
+
+    <!-- ============ RÉSULTATS DU DUEL ============ -->
+    <section class="h2h-results" id="h2hResults">
+
+        <div class="h2h-clash-header">
+            <div class="h2h-clash-team side-a" id="h2hHeaderA"></div>
+            <div class="h2h-clash-vs">
+                <span class="h2h-vs-bolt">⚡</span>
+                <span>VS</span>
+            </div>
+            <div class="h2h-clash-team side-b" id="h2hHeaderB"></div>
+        </div>
+
+        <div class="h2h-record-bar-wrap">
+            <div class="h2h-record-labels">
+                <span id="h2hRecordLabelA">0 Victoires</span>
+                <span id="h2hRecordLabelDraw">0 Nuls</span>
+                <span id="h2hRecordLabelB">0 Victoires</span>
+            </div>
+            <div class="h2h-record-bar" id="h2hRecordBar">
+                <div class="h2h-record-fill side-a" id="h2hFillA"></div>
+                <div class="h2h-record-fill draw" id="h2hFillDraw"></div>
+                <div class="h2h-record-fill side-b" id="h2hFillB"></div>
+            </div>
+        </div>
+
+        <div class="h2h-stat-columns" id="h2hStatColumns"></div>
+
+        <div class="h2h-history">
+            <h3 class="h2h-history-title">Historique des confrontations</h3>
+            <div class="h2h-history-list" id="h2hHistoryList"></div>
+        </div>
+
+    </section>
+
+    <script src="JavaScript/match.js"></script>
+    <script src="JavaScript/headtohead.js"></script>
+    <script src="JavaScript/hamburger.js"></script>
+</body>
+
+</html>

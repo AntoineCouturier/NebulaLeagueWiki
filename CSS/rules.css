@@ -1,13 +1,18 @@
-/* -------------------- Reset -------------------- */
+/* ==========================================================================
+   RULES.CSS — Nebula League, concept "Dossier d'Arbitre / Match Briefing"
+   Règlement présenté comme une fiche officielle : tampon, horloge de match
+   visuelle, cartons de restriction, bracket NCL, résumé en chips.
+   ========================================================================== */
+
+/* -------------------- Reset & fond -------------------- */
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Inter', 'Arial', sans-serif;
     background: #000;
     color: #dddddd;
 }
 
-/* Effet d'étoiles subtiles */
 body::before {
     content: '';
     position: fixed;
@@ -30,8 +35,7 @@ body::before {
     opacity: 0.4;
 }
 
-/* ---------------- HEADER ---------------- */
-
+/* -------------------- Header / Nav (identique au reste du site) -------------------- */
 header {
     background: rgba(10, 10, 10, 0.75);
     padding: 15px 20px;
@@ -49,8 +53,6 @@ header h1 {
     color: #d89aff;
     text-shadow: 0 0 6px #000;
 }
-
-/* NAVIGATION */
 
 nav ul {
     list-style: none;
@@ -83,10 +85,9 @@ nav ul li a.active {
 
 .discord-btn {
     display: flex;
-    align-items: right;
+    align-items: center;
     gap: 8px;
     background: #ffffff;
-    /* Couleur Discord */
     padding: 6px 14px;
     border-radius: 6px;
     color: #4752C4 !important;
@@ -96,7 +97,6 @@ nav ul li a.active {
 
 .discord-btn:hover {
     background: #4752C4;
-    /* Hover Discord */
     transform: scale(1.07);
     box-shadow: 0 0 12px #5865F2aa;
     color: white !important;
@@ -108,358 +108,513 @@ nav ul li a.active {
     border-radius: 4px;
 }
 
-/* ---------- Hamburger Menu (manquait sur cette page) ---------- */
-.hamburger-menu {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    padding: 10px;
-    z-index: 1001;
-    position: relative;
+/* ==========================================================================
+   DOSSIER — conteneur général
+   ========================================================================== */
+.ref-dossier {
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 40px 20px 90px;
 }
 
-.hamburger-menu span {
-    width: 25px;
-    height: 3px;
-    background: #d89aff;
-    margin: 3px 0;
-    border-radius: 3px;
-    transition: all 0.3s ease;
-}
-
-.hamburger-menu.active span:nth-child(1) {
-    transform: rotate(45deg) translate(8px, 8px);
-}
-
-.hamburger-menu.active span:nth-child(2) {
-    opacity: 0;
-}
-
-.hamburger-menu.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -7px);
-}
-
-/* Panneau mobile : caché hors-écran par défaut (c'est ça qui manquait,
-   d'où la barre affichée en double en permanence) */
-.nav-mobile-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: -100%;
-    width: 80%;
-    max-width: 300px;
-    height: 100vh;
-    background: rgba(10, 10, 10, 0.98);
-    backdrop-filter: blur(10px);
-    border-right: 2px solid #6f00ff;
-    box-shadow: 0 0 20px rgba(111, 0, 255, 0.5);
-    z-index: 1000;
-    transition: left 0.3s ease;
-    overflow-y: auto;
-}
-
-.nav-mobile-overlay.active {
-    left: 0;
-}
-
-.nav-close-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: transparent;
-    border: none;
-    color: #d89aff;
-    font-size: 2rem;
-    cursor: pointer;
-    padding: 5px 10px;
-    line-height: 1;
-    transition: all 0.3s ease;
-    z-index: 1001;
-}
-
-.nav-close-btn:hover {
-    color: #b41cff;
-    transform: rotate(90deg);
-}
-
-.nav-mobile-overlay nav ul {
-    flex-direction: column;
-    gap: 0;
-    margin-top: 60px;
-    align-items: stretch;
-    padding: 0;
-}
-
-.nav-mobile-overlay nav ul li {
-    width: 100%;
-}
-
-.nav-mobile-overlay nav ul li a {
-    display: block;
-    width: 100%;
-    padding: 15px 20px;
-    border-radius: 0;
-    border-bottom: 1px solid rgba(111, 0, 255, 0.3);
-    text-align: left;
-    box-sizing: border-box;
-}
-
-.nav-mobile-overlay .discord-btn {
+.section-heading {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    gap: 10px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    color: #d89aff;
+    margin: 46px 0 20px;
+    letter-spacing: 0.5px;
+}
+
+.briefing-icon {
+    font-size: 1.2rem;
+}
+
+/* ==========================================================================
+   HERO + TAMPON OFFICIEL
+   ========================================================================== */
+.dossier-hero {
+    position: relative;
+    text-align: center;
+    padding: 30px 20px 20px;
+}
+
+.dossier-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 900;
+    margin: 14px 0 10px;
+    background: linear-gradient(135deg, #b41cff 0%, #d89aff 50%, #b41cff 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px rgba(180, 28, 255, 0.4);
+    letter-spacing: 2px;
+    animation: dossierShimmer 3s linear infinite;
+}
+
+@keyframes dossierShimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+.dossier-subtitle {
+    font-size: 1.05rem;
+    color: #c8b3ff;
+    max-width: 620px;
+    margin: 0 auto;
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+.dossier-subtitle strong {
+    color: #ffcf40;
+}
+
+.dossier-stamp {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 96px;
+    height: 96px;
+    margin-bottom: 6px;
+    transform: rotate(-8deg);
+    animation: stampPulse 3.5s ease-in-out infinite;
+}
+
+.stamp-ring {
+    position: absolute;
+    inset: 0;
+    border: 3px double #ff5c5c;
+    border-radius: 50%;
+    box-shadow: 0 0 18px rgba(255, 92, 92, 0.5), inset 0 0 12px rgba(255, 92, 92, 0.3);
+}
+
+.stamp-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 900;
+    color: #ff5c5c;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 8px rgba(255, 92, 92, 0.6);
+}
+
+@keyframes stampPulse {
+    0%, 100% { transform: rotate(-8deg) scale(1); opacity: 0.9; }
+    50% { transform: rotate(-8deg) scale(1.06); opacity: 1; }
+}
+
+/* ==========================================================================
+   BRIEFING ROW — horloge de match + effectif
+   ========================================================================== */
+.briefing-row {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 22px;
+    margin-top: 30px;
+}
+
+.briefing-card {
+    background: rgba(15, 12, 22, 0.8);
+    border: 1px solid rgba(180, 28, 255, 0.3);
+    border-radius: 18px;
+    padding: 22px 24px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.5), 0 0 16px rgba(180, 28, 255, 0.12);
+    transition: 0.3s ease;
+}
+
+.briefing-card:hover {
+    border-color: rgba(180, 28, 255, 0.6);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 22px rgba(180, 28, 255, 0.25);
+}
+
+.briefing-card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.briefing-card-head h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.05rem;
+    color: #ffffff;
     margin: 0;
-    width: 100%;
-    background: #5865F2;
-    color: white !important;
-    gap: 8px;
 }
 
-.nav-mobile-overlay .discord-btn:hover {
-    background: #4752C4;
-    transform: none;
+/* -------- Horloge de match (2 mi-temps) -------- */
+.match-clock {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0 14px;
 }
 
-.nav-backdrop {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+.clock-face {
+    position: relative;
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    background: conic-gradient(#0099ff 0deg 180deg, #ff3300 180deg 360deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 4px rgba(0,0,0,0.5), 0 0 26px rgba(180, 28, 255, 0.35);
+    animation: clockGlow 4s ease-in-out infinite;
 }
 
-.nav-backdrop.active {
+@keyframes clockGlow {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(0,0,0,0.5), 0 0 20px rgba(180, 28, 255, 0.25); }
+    50% { box-shadow: 0 0 0 4px rgba(0,0,0,0.5), 0 0 34px rgba(180, 28, 255, 0.5); }
+}
+
+.clock-half {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    color: #fff;
+    top: 50%;
+}
+
+.half-1 {
+    left: 26px;
+    transform: translateY(-50%);
+}
+
+.half-2 {
+    right: 26px;
+    transform: translateY(-50%);
+}
+
+.half-label {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.85;
+}
+
+.half-time {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.clock-center {
+    position: relative;
+    z-index: 2;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(6, 4, 10, 0.95);
+    border: 2px solid #b41cff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 0 14px rgba(180, 28, 255, 0.6);
+}
+
+.clock-needle {
+    position: absolute;
+    width: 3px;
+    height: 46%;
+    background: linear-gradient(#ffcf40, transparent);
+    top: 50%;
+    left: 50%;
+    border-radius: 3px;
+    transform-origin: top center;
+    transform: translateX(-50%) rotate(0deg);
+    animation: needleSweep 6s linear infinite;
+    box-shadow: 0 0 8px #ffcf40;
+}
+
+@keyframes needleSweep {
+    0% { transform: translateX(-50%) rotate(0deg); }
+    100% { transform: translateX(-50%) rotate(360deg); }
+}
+
+.clock-total {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #cbb8e8;
+    margin: 6px 0 0;
+}
+
+.clock-total strong {
+    color: #ffffff;
+}
+
+/* -------- Effectif : pastilles de joueurs -------- */
+.roster-dots {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin: 22px 0 18px;
+}
+
+.roster-dot {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.roster-dot::before {
+    content: "👤";
+}
+
+.roster-dot.filled {
+    background: linear-gradient(135deg, #a600ff, #b41ce6);
+    border-color: #d89aff;
+    box-shadow: 0 0 14px rgba(180, 28, 255, 0.55);
+}
+
+.roster-dot.optional {
+    background: rgba(255, 255, 255, 0.04);
+    border-style: dashed;
+    opacity: 0.7;
+}
+
+.roster-caption {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #cbb8e8;
+    margin: 0;
+}
+
+.roster-caption strong {
+    color: #fff;
+}
+
+/* ==========================================================================
+   CARTONS DE RESTRICTION
+   ========================================================================== */
+.offense-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+.offense-card {
+    position: relative;
+    background: rgba(15, 12, 22, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 4px solid #ff3d3d;
+    border-radius: 14px;
+    padding: 22px 18px 18px;
+    text-align: center;
+    transition: 0.25s ease;
+}
+
+.offense-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.5), 0 0 18px rgba(255, 61, 61, 0.25);
+    border-top-color: #ff6666;
+}
+
+.offense-card-tag {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff3d3d;
+    color: #060008;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(255, 61, 61, 0.6);
+}
+
+.offense-card-icon {
     display: block;
-    opacity: 1;
+    font-size: 2.1rem;
+    margin: 14px 0 12px;
 }
 
-body.menu-open {
-    overflow: hidden;
+.offense-card p {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: #e0d6ff;
+    margin: 0;
 }
 
+/* ==========================================================================
+   NCL — BRACKET DE TOURNOI
+   ========================================================================== */
+.ncl-intro {
+    font-size: 1rem;
+    color: #e0d6ff;
+    max-width: 700px;
+}
+
+.ncl-intro strong {
+    color: #ffcf40;
+}
+
+.ncl-bracket {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    align-items: center;
+    gap: 6px;
+    margin-top: 24px;
+    background: rgba(12, 10, 18, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 26px 20px;
+}
+
+.bracket-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.bracket-node {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(180, 28, 255, 0.3);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    color: #fff;
+    text-align: center;
+}
+
+.final-node {
+    border-color: #ffcf40;
+    box-shadow: 0 0 16px rgba(255, 207, 64, 0.35);
+}
+
+.third-node {
+    border-color: #c58aff;
+}
+
+.bracket-sub {
+    display: block;
+    margin-top: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: #b0a0d0;
+}
+
+.bracket-lines {
+    position: relative;
+    height: 100%;
+    min-height: 140px;
+}
+
+.bracket-lines .line {
+    position: absolute;
+    background: linear-gradient(90deg, rgba(180, 28, 255, 0.7), rgba(255, 207, 64, 0.7));
+    height: 2px;
+    width: 100%;
+    left: 0;
+}
+
+.line-top { top: 22%; }
+.line-bottom { top: 78%; }
+
+.line-mid {
+    top: 50%;
+    width: 2px;
+    height: 56%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, rgba(180, 28, 255, 0.7), rgba(255, 207, 64, 0.7));
+}
+
+/* ==========================================================================
+   RÉSUMÉ EXPRESS — chips
+   ========================================================================== */
+.quickref-chips {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+}
+
+.qr-chip {
+    background: rgba(15, 12, 22, 0.75);
+    border: 1px solid rgba(180, 28, 255, 0.3);
+    border-left: 4px solid #b41cff;
+    border-radius: 4px 12px 12px 4px;
+    padding: 14px 18px;
+    transition: 0.25s ease;
+}
+
+.qr-chip:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.5), 0 0 16px rgba(180, 28, 255, 0.3);
+}
+
+.qr-label {
+    display: block;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #b0a0d0;
+    margin-bottom: 6px;
+}
+
+.qr-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    color: #fff;
+    font-weight: 700;
+}
+
+.qr-sep {
+    color: #888;
+    margin: 0 4px;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
 @media (max-width: 768px) {
-    .hamburger-menu {
-        display: flex;
-        position: absolute;
-        top: 20px;
-        left: 20px;
+    .dossier-title {
+        font-size: 1.8rem;
     }
 
-    .nav-mobile-overlay {
-        display: block;
+    .briefing-row {
+        grid-template-columns: 1fr;
     }
 
-    .header-container nav {
+    .ncl-bracket {
+        grid-template-columns: 1fr;
+    }
+
+    .bracket-lines {
         display: none;
     }
 
-    header h1 {
-        font-size: 1.5rem;
+    .clock-face {
+        width: 150px;
+        height: 150px;
     }
 }
 
-/* ---------------- SECTION CONTENT ---------------- */
-
-.section {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 0;
-}
-
-/* ---------------- SECTION BLOCK ---------------- */
-
-.section-block {
-    margin-top: 30px;
-    padding: 20px;
-    background: rgba(40, 40, 40, 0.7);
-    border-radius: 10px;
-    border-left: 4px solid #b41ce6;
-    box-shadow: 0 0 15px #b41cff50;
-    transition: 0.3s;
-}
-
-.section-block:hover {
-    box-shadow: 0 0 25px #b41cff80;
-}
-
-.section-block h3 {
-    color: #e7b3ff;
-    font-size: 1.4rem;
-    margin-top: 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.section-block h3::before {
-    content: "⚡";
-    /* icône par défaut */
-}
-
-/* Icônes spécifiques par titre */
-.section-block h3:nth-of-type(1)::before {
-    content: "❓";
-}
-
-/* Ex: Qu’est-ce que la Valeur ? */
-.section-block h3:nth-of-type(2)::before {
-    content: "📊";
-}
-
-/* Multiplicateurs de Matchs */
-.section-block h3:nth-of-type(3)::before {
-    content: "💎";
-}
-
-/* Tableau des Récompenses */
-.section-block h3:nth-of-type(4)::before {
-    content: "🧮";
-}
-
-/* Calculateur de Valeur */
-
-/* Section titles H2 */
-.section h2 {
-    margin-top: 0;
-    color: #c084ff;
-    border-bottom: 2px solid #b41ce6;
-    padding-bottom: 6px;
-    text-shadow: 0 0 5px #000;
-    text-align: center;
-}
-
-/* ---------------- TEXT / LIST ---------------- */
-
-.section p,
-.section ul,
-.section li {
-    font-size: 1rem;
-    line-height: 1.6;
-}
-
-ul {
-    margin-left: 25px;
-}
-
-.section p strong {
-    color: #d59cff;
-}
-
-/* ---------------- TABLE ---------------- */
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-    background: rgba(20, 20, 20, 0.6);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-thead th {
-    background: #3b0066;
-    padding: 12px;
-    color: white;
-    font-size: 1rem;
-}
-
-td,
-th {
-    padding: 12px;
-    border-bottom: 1px solid #444;
-}
-
-tbody tr:nth-child(even) {
-    background: rgba(255, 255, 255, 0.05);
-}
-
-/* Tables align center */
-td.center,
-th.center {
-    text-align: center;
-    font-weight: bold;
-    color: #d593ff;
-}
-
-/* ---------------- CALCULATOR ---------------- */
-
-.calculator {
-    margin-top: 40px;
-    padding: 20px;
-    background: rgba(20, 20, 20, 0.8);
-    border-radius: 10px;
-    border: 1px solid #8f2dff;
-    box-shadow: 0 0 20px #b41cff50;
-}
-
-.calculator select,
-.calculator input {
-    width: 100%;
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    background: #222;
-    color: white;
-}
-
-.calc-btn {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    background: linear-gradient(135deg, #a600ff, #b41ce6);
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.calc-btn:hover {
-    opacity: 0.8;
-}
-
-.result {
-    margin-top: 20px;
-    text-align: center;
-    color: #d584ff;
-    font-size: 1.3rem;
-}
-
-/* ---------------- RESPONSIVE ---------------- */
-
-@media(max-width: 768px) {
-    .section {
-        margin: 20px;
-        padding: 0 10px;
-    }
-
-    .section-block {
-        padding: 15px;
-        margin-top: 20px;
-    }
-
-    .calculator select,
-    .calculator input,
-    .calc-btn {
-        font-size: 0.9rem;
-        padding: 8px;
-    }
-
-    table,
-    th,
-    td {
-        font-size: 0.9rem;
-        padding: 8px;
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
     }
 }
 
+/* -------------------- Scrollbar (identique au reste du site) -------------------- */
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -467,23 +622,18 @@ th.center {
 
 ::-webkit-scrollbar-track {
     background: #1a1a1a;
-    /* Couleur de fond (thème sombre) */
 }
 
 ::-webkit-scrollbar-thumb {
     background: #444;
-    /* Couleur du "bouton" */
     border-radius: 6px;
     border: 2px solid #1a1a1a;
-    /* Espace autour du thumb */
 }
 
 ::-webkit-scrollbar-thumb:hover {
     background: #666;
-    /* Couleur au survol */
 }
 
-/* Firefox (fonctionne différemment) */
 * {
     scrollbar-width: thin;
     scrollbar-color: #444 #1a1a1a;

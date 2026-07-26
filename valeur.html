@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="images/logos/nebula.png">
     <title>Nebula League - Valeurs</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="CSS/style.css" />
     <link rel="stylesheet" href="CSS/valeur.css" />
     <link rel="stylesheet" href="CSS/hamburger.css" />
@@ -16,7 +23,6 @@
 
     <header>
         <div class="header-container">
-            <!-- Hamburger Menu Button -->
             <div class="hamburger-menu">
                 <span></span>
                 <span></span>
@@ -34,20 +40,14 @@
                     <li><a href="rules.html">Règles Matchs</a></li>
                     <li><a href="stats.html">Records</a></li>
                     <li><a href="matchs.html">Historique de Matchs</a></li>
+                    <li><a href="headtohead.html">Face à Face</a></li>
                     <li><a href="saison.html">Historique des Saisons</a></li>
                     <li><a href="fixtures.html">Calendrier des Matchs</a></li>
-                    <li>
-                        <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
-                            <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
-                            Discord
-                        </a>
-                    </li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <!-- Mobile Navigation Overlay -->
     <div class="nav-mobile-overlay">
         <button class="nav-close-btn" aria-label="Close menu">&times;</button>
         <nav>
@@ -60,6 +60,7 @@
                 <li><a href="rules.html">Règles Matchs</a></li>
                 <li><a href="stats.html">Records</a></li>
                 <li><a href="matchs.html">Historique de Matchs</a></li>
+                <li><a href="headtohead.html">Face à Face</a></li>
                 <li><a href="saison.html">Historique des Saisons</a></li>
                 <li><a href="fixtures.html">Calendrier des Matchs</a></li>
                 <li>
@@ -72,203 +73,269 @@
         </nav>
     </div>
 
-    <!-- Backdrop for click-outside-to-close -->
     <div class="nav-backdrop"></div>
 
-    <div class="section">
-        <div class="section-block">
-            <h2>📈 Système des Valeurs</h2>
-        </div>
+    <main class="ve-page">
 
-        <div class="section-block">
-            <h3>❓ Qu’est-ce que la Valeur ?</h3>
-            <p>
-                La <strong>Valeur</strong> représente votre <strong>expérience</strong>,
-                votre <strong>impact</strong> et votre <strong>réputation</strong> dans Nebula League.<br>
-                (pour l'instant c'est purement esthetique et pour flex, je verrais dans le futur si ça peut etre utile
-                pour des echanges de clubs par exemple)
+        <!-- ============ HERO ============ -->
+        <section class="ve-hero">
+            <h2 class="ve-title">Valeur</h2>
+            <p class="ve-subtitle">
+                La <strong>Valeur</strong> mesure votre expérience, votre impact et votre réputation dans la
+                Nebula League. Chaque action rapporte selon un taux fixé par l'enjeu du match — d'un simple
+                amical à une Finale NCL.
             </p>
-        </div>
 
-        <div class="section-block">
-            <h3>📊 Multiplicateurs de Matchs</h3>
-            <ul>
-                <li>Match Amical : <strong>x0.5</strong></li>
-                <li>Match de Ligue : <strong>x1</strong></li>
-                <li>Match de NCL : <strong>x2</strong></li>
-                <li>3eme Match de NCL : <strong>x3</strong></li>
-                <li>Finale NCL : <strong>x4</strong></li>
-            </ul>
-        </div>
+            <div class="ve-ticker-wrap">
+                <div class="ve-ticker-track">
+                    <span class="ve-ticker-item amical"><b>x0.5</b> Amical</span>
+                    <span class="ve-ticker-item ligue"><b>x1</b> Ligue</span>
+                    <span class="ve-ticker-item ncl"><b>x2</b> NCL</span>
+                    <span class="ve-ticker-item third"><b>x3</b> 3ᵉ Place NCL</span>
+                    <span class="ve-ticker-item finale"><b>x4</b> Finale NCL</span>
+                    <span class="ve-ticker-item amical"><b>x0.5</b> Amical</span>
+                    <span class="ve-ticker-item ligue"><b>x1</b> Ligue</span>
+                    <span class="ve-ticker-item ncl"><b>x2</b> NCL</span>
+                    <span class="ve-ticker-item third"><b>x3</b> 3ᵉ Place NCL</span>
+                    <span class="ve-ticker-item finale"><b>x4</b> Finale NCL</span>
+                </div>
+            </div>
+        </section>
 
-        <div class="section-block">
-            <h3>📋 Tableau des Récompenses</h3>
-            <div class="table-responsive">
-                <table class="valeur-table">
-                    <tr>
-                        <th>Action</th>
-                        <th>Amical x0.5</th>
-                        <th>Ligue x1</th>
-                        <th>NCL x2</th>
-                        <th>3eme x3</th>
-                        <th>Finale x4</th>
-                    </tr>
+        <!-- ============ INTRO ============ -->
+        <section class="ve-intro">
+            <div class="ve-intro-card">
+                <span class="ve-intro-tag">❓ Définition</span>
+                <h3>Qu'est-ce que la Valeur ?</h3>
+                <p>
+                    À chaque match, vos actions — buts, passes décisives, défenses, dribbles, victoire, MVP —
+                    sont converties en ¥ selon le taux du match joué. Plus l'enjeu est élevé, plus le taux
+                    grimpe, jusqu'à x4 en Finale NCL.
+                </p>
+            </div>
+            <div class="ve-intro-card muted">
+                <span class="ve-intro-tag">📌 Statut actuel</span>
+                <h3>Purement cosmétique</h3>
+                <p>
+                    Pour l'instant la Valeur ne sert qu'à flex sur le serveur. Elle pourrait, à l'avenir,
+                    servir de base pour des échanges de clubs — rien n'est encore fixé.
+                </p>
+            </div>
+        </section>
 
-                    <tr>
-                        <td>Victoire</td>
-                        <td>2,500,000¥</td>
-                        <td>5,000,000¥</td>
-                        <td>10,000,000¥</td>
-                        <td>15,000,000¥</td>
-                        <td>20,000,000¥</td>
-                    </tr>
+        <!-- ============ GRAND LIVRE ============ -->
+        <section class="ve-ledger-section">
+            <div class="ve-section-head">
+                <h2>📋 Grand Livre des Gains</h2>
+                <p>Choisissez un palier dans le simulateur plus bas : la colonne correspondante s'illumine ici.</p>
+            </div>
 
-                    <tr>
-                        <td>But</td>
-                        <td>750,000¥</td>
-                        <td>1,500,000¥</td>
-                        <td>3,000,000¥</td>
-                        <td>4,500,000¥</td>
-                        <td>6,000,000¥</td>
-                    </tr>
-
-                    <tr>
-                        <td>Passe D</td>
-                        <td>500,000¥</td>
-                        <td>1,000,000¥</td>
-                        <td>2,000,000¥</td>
-                        <td>3,000,000¥</td>
-                        <td>4,000,000¥</td>
-                    </tr>
-
-                    <tr>
-                        <td>Defenses</td>
-                        <td>100,000¥</td>
-                        <td>200,000¥</td>
-                        <td>400,000¥</td>
-                        <td>600,000¥</td>
-                        <td>800,000¥</td>
-                    </tr>
-
-                    <tr>
-                        <td>Dribbles</td>
-                        <td>100,000¥</td>
-                        <td>200,000¥</td>
-                        <td>400,000¥</td>
-                        <td>600,000¥</td>
-                        <td>800,000¥</td>
-                    </tr>
-
-                    <tr>
-                        <td>MVP</td>
-                        <td>5,000,000¥</td>
-                        <td>10,000,000¥</td>
-                        <td>20,000,000¥</td>
-                        <td>30,000,000¥</td>
-                        <td>40,000,000¥</td>
-                    </tr>
-                    <tr>
-                        <td>Prix Puskas</td>
-                        <td colspan="5" class="center">+50,000,000¥</td>
-                    </tr>
-
-                    <tr>
-                        <td>Trophée NCL</td>
-                        <td colspan="5" class="center">+100,000,000¥</td>
-                    </tr>
-
-                    <tr>
-                        <td>Golden Shoe</td>
-                        <td colspan="5" class="center">+150,000,000¥</td>
-                    </tr>
-
-                    <tr>
-                        <td>Ballon d’Or</td>
-                        <td colspan="5" class="center">+250,000,000¥</td>
-                    </tr>
+            <div class="ve-ledger-wrap">
+                <table class="ve-ledger" id="ledgerTable">
+                    <thead>
+                        <tr>
+                            <th class="ve-row-label">Action</th>
+                            <th data-tier="0"><span class="tier-chip amical">x0.5</span>Amical</th>
+                            <th data-tier="1"><span class="tier-chip ligue">x1</span>Ligue</th>
+                            <th data-tier="2"><span class="tier-chip ncl">x2</span>NCL</th>
+                            <th data-tier="3"><span class="tier-chip third">x3</span>3ᵉ Place</th>
+                            <th data-tier="4"><span class="tier-chip finale">x4</span>Finale</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ve-row-label">🏆 Victoire</td>
+                            <td data-tier="0">2,500,000¥</td>
+                            <td data-tier="1">5,000,000¥</td>
+                            <td data-tier="2">10,000,000¥</td>
+                            <td data-tier="3">15,000,000¥</td>
+                            <td data-tier="4">20,000,000¥</td>
+                        </tr>
+                        <tr>
+                            <td class="ve-row-label">⚽ But</td>
+                            <td data-tier="0">750,000¥</td>
+                            <td data-tier="1">1,500,000¥</td>
+                            <td data-tier="2">3,000,000¥</td>
+                            <td data-tier="3">4,500,000¥</td>
+                            <td data-tier="4">6,000,000¥</td>
+                        </tr>
+                        <tr>
+                            <td class="ve-row-label">🎯 Passe D</td>
+                            <td data-tier="0">500,000¥</td>
+                            <td data-tier="1">1,000,000¥</td>
+                            <td data-tier="2">2,000,000¥</td>
+                            <td data-tier="3">3,000,000¥</td>
+                            <td data-tier="4">4,000,000¥</td>
+                        </tr>
+                        <tr>
+                            <td class="ve-row-label">🛡️ Défenses</td>
+                            <td data-tier="0">100,000¥</td>
+                            <td data-tier="1">200,000¥</td>
+                            <td data-tier="2">400,000¥</td>
+                            <td data-tier="3">600,000¥</td>
+                            <td data-tier="4">800,000¥</td>
+                        </tr>
+                        <tr>
+                            <td class="ve-row-label">🌀 Dribbles</td>
+                            <td data-tier="0">100,000¥</td>
+                            <td data-tier="1">200,000¥</td>
+                            <td data-tier="2">400,000¥</td>
+                            <td data-tier="3">600,000¥</td>
+                            <td data-tier="4">800,000¥</td>
+                        </tr>
+                        <tr>
+                            <td class="ve-row-label">🏅 MVP</td>
+                            <td data-tier="0">5,000,000¥</td>
+                            <td data-tier="1">10,000,000¥</td>
+                            <td data-tier="2">20,000,000¥</td>
+                            <td data-tier="3">30,000,000¥</td>
+                            <td data-tier="4">40,000,000¥</td>
+                        </tr>
+                    </tbody>
                 </table>
-            </div>
-        </div>
 
-        <!-- CALCULATEUR -->
-        <div class="calculator">
-            <h3>💎🧮 Calculateur de Valeur</h3>
-
-            <div class="calc-field">
-                <label for="typeMatch">Type de match</label>
-                <select id="typeMatch">
-                    <option value="0.5">Match Amical (x0.5)</option>
-                    <option value="1">Match de Ligue (x1)</option>
-                    <option value="2">Match de NCL (x2)</option>
-                    <option value="3">Match de 3eme Place (x3)</option>
-                    <option value="4">Finale NCL (x4)</option>
-                </select>
-            </div>
-
-            <div class="calc-field">
-                <label for="victoire">Victoire ?</label>
-                <select id="victoire">
-                    <option value="0">Non</option>
-                    <option value="1">Oui</option>
-                </select>
-            </div>
-
-            <div class="calc-field">
-                <label for="buts">Buts</label>
-                <div class="stepper">
-                    <button type="button" class="stepper-btn stepper-minus" data-target="buts">−</button>
-                    <input type="number" id="buts" value="0" min="0">
-                    <button type="button" class="stepper-btn stepper-plus" data-target="buts">+</button>
+                <div class="ve-bonus-row">
+                    <div class="ve-bonus-stamp">
+                        <span class="ve-bonus-icon">🥅</span>
+                        <span class="ve-bonus-label">Prix Puskás</span>
+                        <span class="ve-bonus-value">+50,000,000¥</span>
+                    </div>
+                    <div class="ve-bonus-stamp">
+                        <span class="ve-bonus-icon">🏆</span>
+                        <span class="ve-bonus-label">Trophée NCL</span>
+                        <span class="ve-bonus-value">+100,000,000¥</span>
+                    </div>
+                    <div class="ve-bonus-stamp">
+                        <span class="ve-bonus-icon">👟</span>
+                        <span class="ve-bonus-label">Golden Shoe</span>
+                        <span class="ve-bonus-value">+150,000,000¥</span>
+                    </div>
+                    <div class="ve-bonus-stamp gold">
+                        <span class="ve-bonus-icon">🌟</span>
+                        <span class="ve-bonus-label">Ballon d'Or</span>
+                        <span class="ve-bonus-value">+250,000,000¥</span>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <div class="calc-field">
-                <label for="passes">Passes décisives</label>
-                <div class="stepper">
-                    <button type="button" class="stepper-btn stepper-minus" data-target="passes">−</button>
-                    <input type="number" id="passes" value="0" min="0">
-                    <button type="button" class="stepper-btn stepper-plus" data-target="passes">+</button>
+        <!-- ============ TERMINAL / CALCULATEUR ============ -->
+        <section class="ve-terminal-section">
+            <div class="ve-section-head">
+                <h2>🧮 Simulateur de Valeur</h2>
+                <p>Entrez vos statistiques de match pour estimer votre gain.</p>
+            </div>
+
+            <div class="ve-terminal">
+                <div class="ve-terminal-head">
+                    <span class="ve-terminal-dot red"></span>
+                    <span class="ve-terminal-dot yellow"></span>
+                    <span class="ve-terminal-dot green"></span>
+                    <span class="ve-terminal-title">valeur_sim.exe</span>
+                </div>
+
+                <div class="ve-terminal-body">
+
+                    <div class="ve-terminal-controls">
+
+                        <div class="ve-field">
+                            <label for="typeMatch">Type de match</label>
+                            <select id="typeMatch">
+                                <option value="0.5">Match Amical (x0.5)</option>
+                                <option value="1">Match de Ligue (x1)</option>
+                                <option value="2">Match de NCL (x2)</option>
+                                <option value="3">Match de 3ᵉ Place (x3)</option>
+                                <option value="4">Finale NCL (x4)</option>
+                            </select>
+                        </div>
+
+                        <div class="ve-field">
+                            <label for="victoire">Victoire ?</label>
+                            <select id="victoire">
+                                <option value="0">Non</option>
+                                <option value="1">Oui</option>
+                            </select>
+                        </div>
+
+                        <div class="ve-field">
+                            <label for="buts">Buts</label>
+                            <div class="stepper">
+                                <button type="button" class="stepper-btn stepper-minus" data-target="buts">−</button>
+                                <input type="number" id="buts" value="0" min="0">
+                                <button type="button" class="stepper-btn stepper-plus" data-target="buts">+</button>
+                            </div>
+                        </div>
+
+                        <div class="ve-field">
+                            <label for="passes">Passes décisives</label>
+                            <div class="stepper">
+                                <button type="button" class="stepper-btn stepper-minus" data-target="passes">−</button>
+                                <input type="number" id="passes" value="0" min="0">
+                                <button type="button" class="stepper-btn stepper-plus" data-target="passes">+</button>
+                            </div>
+                        </div>
+
+                        <div class="ve-field">
+                            <label for="def">Défenses</label>
+                            <div class="stepper">
+                                <button type="button" class="stepper-btn stepper-minus" data-target="def">−</button>
+                                <input type="number" id="def" value="0" min="0">
+                                <button type="button" class="stepper-btn stepper-plus" data-target="def">+</button>
+                            </div>
+                        </div>
+
+                        <div class="ve-field">
+                            <label for="dribbles">Dribbles</label>
+                            <div class="stepper">
+                                <button type="button" class="stepper-btn stepper-minus"
+                                    data-target="dribbles">−</button>
+                                <input type="number" id="dribbles" value="0" min="0">
+                                <button type="button" class="stepper-btn stepper-plus" data-target="dribbles">+</button>
+                            </div>
+                        </div>
+
+                        <div class="ve-field">
+                            <label for="mvp">MVP ?</label>
+                            <select id="mvp">
+                                <option value="0">Non</option>
+                                <option value="1">Oui</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="ve-terminal-readout">
+
+                        <div class="ve-meter">
+                            <span class="ve-meter-label">TAUX SÉLECTIONNÉ</span>
+                            <div class="ve-meter-track">
+                                <div class="ve-meter-fill" id="meterFill"></div>
+                                <div class="ve-meter-tick" style="left:0%"><span>x0.5</span></div>
+                                <div class="ve-meter-tick" style="left:25%"><span>x1</span></div>
+                                <div class="ve-meter-tick" style="left:50%"><span>x2</span></div>
+                                <div class="ve-meter-tick" style="left:75%"><span>x3</span></div>
+                                <div class="ve-meter-tick" style="left:100%"><span>x4</span></div>
+                                <div class="ve-meter-dot" id="meterDot"></div>
+                            </div>
+                        </div>
+
+                        <div class="ve-receipt">
+                            <span class="ve-receipt-label">VALEUR ESTIMÉE</span>
+                            <span class="ve-receipt-value" id="resultValeur">0¥</span>
+                        </div>
+
+                        <button class="ve-calc-btn" onclick="calculValeur()">Calculer <span>→</span></button>
+
+                    </div>
+
                 </div>
             </div>
+        </section>
 
-            <div class="calc-field">
-                <label for="def">Defense</label>
-                <div class="stepper">
-                    <button type="button" class="stepper-btn stepper-minus" data-target="def">−</button>
-                    <input type="number" id="def" value="0" min="0">
-                    <button type="button" class="stepper-btn stepper-plus" data-target="def">+</button>
-                </div>
-            </div>
-
-            <div class="calc-field">
-                <label for="dribbles">Dribbles</label>
-                <div class="stepper">
-                    <button type="button" class="stepper-btn stepper-minus" data-target="dribbles">−</button>
-                    <input type="number" id="dribbles" value="0" min="0">
-                    <button type="button" class="stepper-btn stepper-plus" data-target="dribbles">+</button>
-                </div>
-            </div>
-
-            <div class="calc-field">
-                <label for="mvp">MVP ?</label>
-                <select id="mvp">
-                    <option value="0">Non</option>
-                    <option value="1">Oui</option>
-                </select>
-            </div>
-
-            <button class="calc-btn" onclick="calculValeur()">Calculer</button>
-
-            <div class="result-box">
-                <h3 class="result">Valeur gagnée : <span id="resultValeur">0¥</span></h3>
-            </div>
-        </div>
-
-    </div>
+    </main>
 
     <script src="JavaScript/valeur.js"></script>
     <script src="JavaScript/hamburger.js"></script>
 </body>
 
 </html>
-```

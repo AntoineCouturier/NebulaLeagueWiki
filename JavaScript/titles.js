@@ -155,8 +155,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (h2) h2.classList.add("rarity-name", rarityClass);
 
     // Nouveau système de titre unique : la couleur de rareté habille le badge + la checklist
+    // en repli, mais chaque titre a maintenant sa PROPRE couleur (title-{id} dans colors.css)
+    // qui prend le dessus grâce au sélecteur [class*="title-"] dans title.css.
     const prestigeWrap = page.querySelector(".prestige-title-wrap");
-    if (prestigeWrap) prestigeWrap.classList.add(rarityClass);
+    if (prestigeWrap) prestigeWrap.classList.add(rarityClass, `title-${page.id}`);
 
     // Associe la même rareté au bouton d'onglet correspondant
     const btn = document.querySelector(`.char-btn[data-target="${page.id}"]`);
@@ -360,4 +362,36 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   });
+
+  // 6) SALLE DES TITRES : grille auto-générée à partir des fiches perso existantes.
+  //    Rien à dupliquer à la main : le nom du perso et le nom du titre sont lus
+  //    directement depuis chaque .char-page, donc si un titre change plus tard
+  //    ici la grille suit automatiquement. Les persos pas encore jouables
+  //    (bouton d'onglet commenté, ex: Niko, Kiyora, Ness, Charles) sont ignorés.
+  const hallGrid = document.getElementById("titleHallGrid");
+  if (hallGrid) {
+    document.querySelectorAll(".char-page").forEach(page => {
+      if (page.id === "global") return;
+
+      const tabBtn = document.querySelector(`.char-btn[data-target="${page.id}"]`);
+      if (!tabBtn) return; // perso pas encore sorti / pas d'onglet actif
+
+      const titleNameEl = page.querySelector(".prestige-title-name");
+      const charNameEl = page.querySelector("h2");
+      if (!titleNameEl || !charNameEl) return;
+
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = `title-hall-card title-${page.id}`;
+      card.innerHTML = `
+        <span class="hall-char-name">${charNameEl.textContent}</span>
+        <span class="hall-title-name">${titleNameEl.textContent}</span>
+      `;
+      card.addEventListener("click", () => {
+        tabBtn.click();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+      hallGrid.appendChild(card);
+    });
+  }
 });

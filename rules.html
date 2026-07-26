@@ -6,7 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="images/logos/nebula.png">
     <title>Nebula League - Règles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="CSS/rules.css" />
+    <link rel="stylesheet" href="CSS/hamburger.css" />
     <link rel="stylesheet" href="CSS/global-theme.css">
 </head>
 
@@ -31,14 +37,9 @@
                     <li><a href="rules.html" class="active">Règles Matchs</a></li>
                     <li><a href="stats.html">Records</a></li>
                     <li><a href="matchs.html">Historique de Matchs</a></li>
+                    <li><a href="headtohead.html">Face à Face</a></li>
                     <li><a href="saison.html">Historique des Saisons</a></li>
                     <li><a href="fixtures.html">Calendrier des Matchs</a></li>
-                    <li>
-                        <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
-                            <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
-                            Discord
-                        </a>
-                    </li>
                 </ul>
             </nav>
         </div>
@@ -57,6 +58,7 @@
                 <li><a href="rules.html" class="active">Règles Matchs</a></li>
                 <li><a href="stats.html">Records</a></li>
                 <li><a href="matchs.html">Historique de Matchs</a></li>
+                <li><a href="headtohead.html">Face à Face</a></li>
                 <li><a href="saison.html">Historique des Saisons</a></li>
                 <li><a href="fixtures.html">Calendrier des Matchs</a></li>
                 <li>
@@ -72,78 +74,146 @@
     <!-- Backdrop for click-outside-to-close -->
     <div class="nav-backdrop"></div>
 
-    <section class="section">
+    <!-- ============================================================
+         CONCEPT : "Dossier d'Arbitre" — le règlement présenté comme
+         une fiche de briefing officielle avant match, avec tampon,
+         horloge de match visuelle, fiches de restrictions façon
+         carton, et un bracket NCL animé.
+         ============================================================ -->
+    <main class="ref-dossier">
 
-        <!-- Introduction -->
-        <div class="section-block">
-            <h2>Règles des Matchs</h2>
-            <p><strong>Jouer en équipe, ça rend le tout plus drôle, on n’est pas là pour try hard</strong></p>
-        </div>
+        <!-- ============ EN-TÊTE / TAMPON OFFICIEL ============ -->
+        <section class="dossier-hero">
+            <h2 class="dossier-title">FICHE DE RÈGLEMENT</h2>
+            <p class="dossier-subtitle">Jouer en équipe, ça rend le tout plus drôle — <strong>on n'est pas là pour
+                    try hard.</strong></p>
+        </section>
 
-        <!-- Informations Générales -->
-        <div class="section-block">
-            <h3>📌 Informations Générales</h3>
-            <ul>
-                <li>Durée d’un match : <strong>12 Minutes | 6 Minutes pour une mi-temps</strong></li>
-                <li>Nombre de joueurs : <strong>3 à 4 joueurs</strong></li>
-            </ul>
-        </div>
+        <!-- ============ HORLOGE DE MATCH + EFFECTIF ============ -->
+        <section class="briefing-row">
 
-        <!-- Restrictions & Règles Spéciales -->
-        <div class="section-block">
-            <h3>⚠️ Restrictions & Règles Spéciales</h3>
-            <p>
-                - Merci de ne pas vous éloigner exprès de quelqu'un avec un Ulti<br><br>
-                - Si vous attendez devant les cages pour recevoir la balle et marquer, le but ne sera pas comptabilisé
-                (une règle de hors-jeu simplifiée)<br><br>
-                - Éviter de camper la balle pour assurer la victoire, marquez le plus possible (Ball Hog)
-            </p>
-        </div>
+            <div class="briefing-card clock-card">
+                <div class="briefing-card-head">
+                    <span class="briefing-icon">⏱️</span>
+                    <h3>Format du Match</h3>
+                </div>
 
-        <!-- A propos de la NCL -->
-        <div class="section-block">
-            <h3>🏆 A Propos de la NCL</h3>
-            <p><strong>La NCL est un tournoi, dont seules les 4 premières équipes de la ligue sont qualifiées</strong>
-            </p>
-            <p><strong>Voici quelques règles simples :</strong></p>
-            <ul>
-                <li>Pas d'égalité : <strong>Les matchs durent toujours 12 minutes avec une Mi-Temps à 6, MAIS si égalité
-                        à la fin des 12 minutes, dans ce cas, but en or</strong></li>
-                <br>
-                <li>3eme Place : <strong>Les 2 perdants des Matchs avant la finale feront un Match pour savoir qui est à
-                        la 3eme Place</strong></li>
-            </ul>
-        </div>
+                <div class="match-clock" aria-hidden="true">
+                    <div class="clock-face">
+                        <div class="clock-half half-1">
+                            <span class="half-label">1ère MT</span>
+                            <span class="half-time">6'</span>
+                        </div>
+                        <div class="clock-half half-2">
+                            <span class="half-label">2e MT</span>
+                            <span class="half-time">6'</span>
+                        </div>
+                        <div class="clock-needle"></div>
+                        <div class="clock-center">⚽</div>
+                    </div>
+                </div>
 
-        <!-- Tableau résumé des règles -->
-        <div class="section-block">
-            <h3>📊 Tableau Résumé des Règles</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Élément</th>
-                        <th>Règle</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Durée du match</td>
-                        <td>12 minutes | 6 minutes par mi-temps (But en or si égalité)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Nombre de joueurs</td>
-                        <td>3 à 4 (plus souvent 3)</td>
-                    </tr>
-                    <tr>
-                        <td>Restrictions</td>
-                        <td>Pas d'Anti Jeu, "Hors Jeu" et pas de Ball Hog</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                <p class="clock-total">Durée totale : <strong>12 minutes</strong></p>
+            </div>
 
-    </section>
+            <div class="briefing-card roster-card">
+                <div class="briefing-card-head">
+                    <span class="briefing-icon">👥</span>
+                    <h3>Effectif sur le Terrain</h3>
+                </div>
+
+                <div class="roster-dots">
+                    <span class="roster-dot filled"></span>
+                    <span class="roster-dot filled"></span>
+                    <span class="roster-dot filled"></span>
+                    <span class="roster-dot optional"></span>
+                </div>
+                <p class="roster-caption"><strong>3 à 4 joueurs</strong> par équipe</p>
+            </div>
+
+        </section>
+
+        <!-- ============ RESTRICTIONS : FICHES CARTON ============ -->
+        <section class="cards-section">
+            <h3 class="section-heading"><span class="briefing-icon">⚠️</span> Restrictions & Règles Spéciales</h3>
+
+            <div class="offense-cards">
+                <div class="offense-card">
+                    <span class="offense-card-tag">Anti-Jeu</span>
+                    <span class="offense-card-icon">🌀</span>
+                    <p>Merci de ne pas vous éloigner exprès de quelqu'un avec un Ulti.</p>
+                </div>
+
+                <div class="offense-card">
+                    <span class="offense-card-tag">Hors-Jeu</span>
+                    <span class="offense-card-icon">🥅</span>
+                    <p>Si vous attendez devant les cages pour recevoir la balle et marquer, le but ne sera pas
+                        comptabilisé (règle de hors-jeu simplifiée).</p>
+                </div>
+
+                <div class="offense-card">
+                    <span class="offense-card-tag">Ball Hog</span>
+                    <span class="offense-card-icon">🚫</span>
+                    <p>Éviter de camper la balle pour assurer la victoire, marquez le plus possible.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ NCL : BRACKET DE TOURNOI ============ -->
+        <section class="ncl-section">
+            <h3 class="section-heading"><span class="briefing-icon">🏆</span> À Propos de la NCL</h3>
+            <p class="ncl-intro">La NCL est un tournoi, dont seules les <strong>4 premières équipes</strong> de la
+                ligue sont qualifiées.</p>
+
+            <div class="ncl-bracket">
+                <div class="bracket-col">
+                    <div class="bracket-node">Demi-Finale A</div>
+                    <div class="bracket-node">Demi-Finale B</div>
+                </div>
+
+                <div class="bracket-lines" aria-hidden="true">
+                    <span class="line line-top"></span>
+                    <span class="line line-bottom"></span>
+                    <span class="line line-mid"></span>
+                </div>
+
+                <div class="bracket-col center-col">
+                    <div class="bracket-node final-node">
+                        🏆 Finale
+                        <span class="bracket-sub">But en Or si égalité après 12'</span>
+                    </div>
+                    <div class="bracket-node third-node">
+                        🥉 Petite Finale
+                        <span class="bracket-sub">Les 2 perdants des demi-finales</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ RÉSUMÉ EXPRESS (chips) ============ -->
+        <section class="quickref-section">
+            <h3 class="section-heading">📋 Résumé Express</h3>
+            <div class="quickref-chips">
+                <div class="qr-chip">
+                    <span class="qr-label">Durée du match</span>
+                    <span class="qr-value">12 min <span class="qr-sep">|</span> 6 min / mi-temps</span>
+                </div>
+                <div class="qr-chip">
+                    <span class="qr-label">NCL - Égalité</span>
+                    <span class="qr-value">But en Or</span>
+                </div>
+                <div class="qr-chip">
+                    <span class="qr-label">Nombre de joueurs</span>
+                    <span class="qr-value">3 à 4 (souvent 3)</span>
+                </div>
+                <div class="qr-chip">
+                    <span class="qr-label">Interdits</span>
+                    <span class="qr-value">Anti-Jeu · Hors-Jeu · Ball Hog</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
 
     <script src="JavaScript/hamburger.js"></script>
 </body>

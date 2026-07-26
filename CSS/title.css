@@ -952,12 +952,28 @@ li {
   font-size: clamp(1.8rem, 4vw, 2.4rem);
   font-weight: 900;
   line-height: 1.2;
-  background: linear-gradient(90deg, var(--rarity-color, #d89aff), #ffffff 50%, var(--rarity-color, #d89aff));
+  background: linear-gradient(90deg,
+    var(--title-c1, var(--rarity-color, #d89aff)),
+    var(--title-c2, #ffffff) 33%,
+    var(--title-c3, var(--title-c2, #ffffff)) 66%,
+    var(--title-c4, var(--title-c1, var(--rarity-color, #d89aff)))
+  );
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: globalShimmer 3s linear infinite;
-  filter: drop-shadow(0 0 20px var(--rarity-color, #b41cff));
+  filter: drop-shadow(0 0 22px var(--title-c1, var(--rarity-color, #b41cff)));
+}
+
+/* Le halo derriere le bouton du titre suit aussi la couleur propre du titre,
+   pas seulement la rarete du perso (voir .prestige-title-wrap plus haut). */
+.prestige-title-wrap[class*="title-"] .prestige-title {
+  border-color: var(--title-c1, var(--rarity-color, #b41cff));
+  box-shadow: 0 0 25px color-mix(in srgb, var(--title-c1, var(--rarity-color, #b41cff)) 55%, transparent), inset 0 0 30px rgba(255, 255, 255, 0.05);
+}
+
+.prestige-title-wrap[class*="title-"] .prestige-checklist {
+  border-color: var(--title-c1, var(--rarity-color, #b41cff));
 }
 
 .prestige-title-hint {
@@ -1644,6 +1660,103 @@ li {
   .char-info img {
     width: 160px;
     height: 160px;
+  }
+}
+
+/* ============================================================
+   SALLE DES TITRES — vitrine de tous les Titres Ultimes
+   (grille cliquable, ajoutee en haut de la page Global)
+   ============================================================ */
+.title-hall-section {
+  max-width: 1150px;
+  margin: 30px auto 10px;
+  background: linear-gradient(145deg, rgba(30, 30, 45, 0.9), rgba(18, 16, 28, 0.95));
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2px solid rgba(111, 0, 255, 0.35);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.title-hall-section .category-header {
+  --card-color: #ffcf40;
+  --card-glow: rgba(255, 207, 64, 0.35);
+}
+
+.title-hall-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  padding: 22px;
+}
+
+.title-hall-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: rgba(8, 6, 14, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 22px 16px 18px;
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden;
+  font-family: inherit;
+  color: inherit;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.title-hall-card:hover,
+.title-hall-card:focus-visible {
+  transform: translateY(-5px);
+  border-color: var(--title-c1, #b41cff);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.45), 0 0 20px color-mix(in srgb, var(--title-c1, #b41cff) 40%, transparent);
+  outline: none;
+}
+
+.title-hall-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--title-c1, #b41cff);
+  box-shadow: 0 0 10px var(--title-c1, #b41cff);
+}
+
+.hall-char-name {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #8a7aa8;
+  font-family: 'Inter', sans-serif;
+}
+
+.hall-title-name {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 1.15rem;
+  line-height: 1.3;
+  background-image: linear-gradient(90deg,
+    var(--title-c1, #b41cff),
+    var(--title-c2, #ffffff) 33%,
+    var(--title-c3, var(--title-c2, #ffffff)) 66%,
+    var(--title-c4, var(--title-c1, #b41cff))
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: globalShimmer 3s linear infinite;
+  filter: drop-shadow(0 0 12px var(--title-c1, #b41cff));
+}
+
+@media (max-width: 480px) {
+  .title-hall-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    padding: 16px;
   }
 }
 

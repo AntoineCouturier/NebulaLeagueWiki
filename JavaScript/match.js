@@ -1,87 +1,124 @@
 // match.js - Historique des Matchs (concept "Match Pulse / Replay Console")
 // Pour ajouter un match : dupliquer un objet dans MATCHES ci-dessous et changer les valeurs.
 // Tout le reste (ticker, cartes, frise Pulse, popup, filtres) se génère automatiquement.
+//
+// NOTE : CLUB_META, MATCHES, MATCH_LENGTH_SECONDS et computePlayerStats sont déclarés
+// hors du DOMContentLoaded (même principe que PLAYERS dans players.js) pour rester
+// la SOURCE UNIQUE DE VÉRITÉ des matchs, réutilisable par d'autres pages/scripts
+// (ex: headtohead.js) sans jamais dupliquer les données de matchs ailleurs.
 
-document.addEventListener('DOMContentLoaded', function () {
+/* ============================================================
+   0. RÉFÉRENTIEL CLUBS
+   ============================================================ */
+const CLUB_META = {
+    bastard: { name: "Bastard München", logo: "images/clubs_icon/Bastard_Munchen.png", cls: "bastard" },
+    pxg: { name: "PXG", logo: "images/clubs_icon/PXG.png", cls: "pxg" },
+    ubers: { name: "Ubers", logo: "images/clubs_icon/Ubers.png", cls: "ubers" },
+    barcha: { name: "Barcha", logo: "images/clubs_icon/Barcha.png", cls: "barcha" },
+    manshine: { name: "Manshine City", logo: "images/clubs_icon/Manshine_City.png", cls: "manshine" }
+};
 
-    /* ============================================================
-       0. RÉFÉRENTIEL CLUBS
-       ============================================================ */
-    const CLUB_META = {
-        bastard: { name: "Bastard München", logo: "images/clubs_icon/Bastard_Munchen.png", cls: "bastard" },
-        pxg: { name: "PXG", logo: "images/clubs_icon/PXG.png", cls: "pxg" },
-        ubers: { name: "Ubers", logo: "images/clubs_icon/Ubers.png", cls: "ubers" },
-        barcha: { name: "Barcha", logo: "images/clubs_icon/Barcha.png", cls: "barcha" },
-        manshine: { name: "Manshine City", logo: "images/clubs_icon/Manshine_City.png", cls: "manshine" }
-    };
+function club(key) {
+    return CLUB_META[key] || { name: key || "???", logo: "", cls: "" };
+}
 
-    function club(key) {
-        return CLUB_META[key] || { name: key || "???", logo: "", cls: "" };
+/* ============================================================
+   1. DONNÉES DES MATCHS (inchangées)
+   ============================================================ */
+const MATCHES = [
+    /* ============================================================ MATCH 1 ============================================================*/
+    {
+        id: "m1",
+        date: "2022-04-01",
+        category: "amical",
+        season: 0,
+        home: "manshine",
+        away: "pxg",
+        scoreHome: 13,
+        scoreAway: 2,
+        mvp: "Antoine",
+        videoUrl: null,
+
+        scorersHome: [
+            { name: "Dylan", count: 6 },
+            { name: "Antoine", count: 5 },
+            { name: "Theo", count: 2 }
+        ],
+        scorersAway: [
+            { name: "Enzo", count: 1 },
+            { name: "Jason", count: 1 }
+        ],
+
+        timelineHome: [
+            { time: "0'43\"", scorer: "Dylan", assist: "Antoine" },
+            { time: "1'21\"", scorer: "Dylan", assist: "Theo" },
+            { time: "2'48\"", scorer: "Antoine", assist: "Dylan" },
+            { time: "3'21\"", scorer: "Theo", assist: "Antoine" },
+            { time: "4'05\"", scorer: "Dylan", assist: "Antoine" },
+            { time: "4'51\"", scorer: "Antoine", assist: "Theo" },
+            { time: "5'56\"", scorer: "Dylan", assist: "Antoine" },
+            { time: "6'21\"", scorer: "Dylan", assist: "Antoine" },
+            { time: "7'12\"", scorer: "Antoine", assist: "Theo" },
+            { time: "8'45\"", scorer: "Antoine", assist: "Theo" },
+            { time: "9'29\"", scorer: "Dylan", assist: "Antoine" },
+            { time: "10'57\"", scorer: "Antoine", assist: "Solo Dribble 🌟" },
+            { time: "11'52\"", scorer: "Theo", assist: "Antoine" }
+        ],
+        timelineAway: [
+            { time: "7'56\"", scorer: "Enzo", assist: "Jason" },
+            { time: "10'07\"", scorer: "Jason", assist: "Amar" }
+        ],
+
+        notesHome: [
+            { name: "Dylan", note: 9.5, defenses: 5, dribbles: 13 },
+            { name: "Antoine", note: 9.8, defenses: 11, dribbles: 24 },
+            { name: "Theo", note: 9.2, defenses: 8, dribbles: 7 }
+        ],
+        notesAway: [
+            { name: "Enzo", note: 4.3, defenses: 9, dribbles: 5 },
+            { name: "Jason", note: 4.9, defenses: 4, dribbles: 8 },
+            { name: "Amar", note: 3.2, defenses: 3, dribbles: 4 }
+        ]
+    },
+
+    // Coller un nouveau match ici : { id:"m7", date:"...", category:"ligue", season:1, ... }
+];
+
+const MATCH_LENGTH_SECONDS = 12 * 60; // 12 minutes de match (règles.html)
+
+// Calcule Buts / Passes D / Defenses / Dribbles par joueur pour un match donné.
+// Buts + Passes D sont déduits automatiquement de scorersHome/Away + timelineHome/Away.
+// Defenses + Dribbles se lisent directement sur les entrées notesHome/notesAway.
+// Global (hors DOMContentLoaded) pour être réutilisable par d'autres scripts (headtohead.js).
+function computePlayerStats(m) {
+    const stats = {};
+    function ensure(name) {
+        if (!stats[name]) stats[name] = { buts: 0, passes: 0, defenses: 0, dribbles: 0 };
+        return stats[name];
     }
 
-    /* ============================================================
-       1. DONNÉES DES MATCHS (inchangées)
-       ============================================================ */
-    const MATCHES = [
-        /* ============================================================ MATCH 1 ============================================================*/
-        {
-            id: "m1",
-            date: "2022-04-01",
-            category: "amical",
-            season: 0,
-            home: "manshine",
-            away: "pxg",
-            scoreHome: 13,
-            scoreAway: 2,
-            mvp: "Antoine",
-            videoUrl: null,
+    (m.scorersHome || []).forEach(s => { ensure(s.name).buts += s.count; });
+    (m.scorersAway || []).forEach(s => { ensure(s.name).buts += s.count; });
 
-            scorersHome: [
-                { name: "Dylan", count: 6 },
-                { name: "Antoine", count: 5 },
-                { name: "Theo", count: 2 }
-            ],
-            scorersAway: [
-                { name: "Enzo", count: 1 },
-                { name: "Jason", count: 1 }
-            ],
+    [...(m.timelineHome || []), ...(m.timelineAway || [])].forEach(ev => {
+        ensure(ev.scorer);
+        if (ev.assist && !ev.assist.includes('🌟')) {
+            ensure(ev.assist).passes += 1;
+        }
+    });
 
-            timelineHome: [
-                { time: "0'43\"", scorer: "Dylan", assist: "Antoine" },
-                { time: "1'21\"", scorer: "Dylan", assist: "Theo" },
-                { time: "2'48\"", scorer: "Antoine", assist: "Dylan" },
-                { time: "3'21\"", scorer: "Theo", assist: "Antoine" },
-                { time: "4'05\"", scorer: "Dylan", assist: "Antoine" },
-                { time: "4'51\"", scorer: "Antoine", assist: "Theo" },
-                { time: "5'56\"", scorer: "Dylan", assist: "Antoine" },
-                { time: "6'21\"", scorer: "Dylan", assist: "Antoine" },
-                { time: "7'12\"", scorer: "Antoine", assist: "Theo" },
-                { time: "8'45\"", scorer: "Antoine", assist: "Theo" },
-                { time: "9'29\"", scorer: "Dylan", assist: "Antoine" },
-                { time: "10'57\"", scorer: "Antoine", assist: "Solo Dribble 🌟" },
-                { time: "11'52\"", scorer: "Theo", assist: "Antoine" }
-            ],
-            timelineAway: [
-                { time: "7'56\"", scorer: "Enzo", assist: "Jason" },
-                { time: "10'07\"", scorer: "Jason", assist: "Amar" }
-            ],
+    [...(m.notesHome || []), ...(m.notesAway || [])].forEach(p => {
+        const s = ensure(p.name);
+        if (p.buts !== undefined) s.buts = p.buts;
+        if (p.passes !== undefined) s.passes = p.passes;
+        if (p.defenses !== undefined) s.defenses = p.defenses;
+        if (p.dribbles !== undefined) s.dribbles = p.dribbles;
+    });
 
-            notesHome: [
-                { name: "Dylan", note: 9.5, defenses: 5, dribbles: 13 },
-                { name: "Antoine", note: 9.8, defenses: 11, dribbles: 24 },
-                { name: "Theo", note: 9.2, defenses: 8, dribbles: 7 }
-            ],
-            notesAway: [
-                { name: "Enzo", note: 4.3, defenses: 9, dribbles: 5 },
-                { name: "Jason", note: 4.9, defenses: 4, dribbles: 8 },
-                { name: "Amar", note: 3.2, defenses: 3, dribbles: 4 }
-            ]
-        },
+    return stats;
+}
 
-        // Coller un nouveau match ici : { id:"m7", date:"...", category:"ligue", season:1, ... }
-    ];
-
-    const MATCH_LENGTH_SECONDS = 12 * 60; // 12 minutes de match (règles.html)
+document.addEventListener('DOMContentLoaded', function () {
 
     /* ============================================================
        2. UTILITAIRES
@@ -124,44 +161,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function timeToPct(str) {
         const s = timeToSeconds(str);
         return Math.max(0, Math.min(100, (s / MATCH_LENGTH_SECONDS) * 100));
-    }
-
-    // Calcule Buts / Passes D / Defenses / Dribbles par joueur pour un match donné.
-    // Buts + Passes D sont déduits automatiquement de scorersHome/Away + timelineHome/Away.
-    // Defenses + Dribbles se lisent directement sur les entrées notesHome/notesAway
-    // (déjà présentes pour chaque joueur ayant joué le match) : ajoute simplement
-    // "defenses" et "dribbles" à côté de "note", ex:
-    // { name: "Antoine", note: 10.0, defenses: 11, dribbles: 24 }
-    // Ces deux champs ne s'affichent nulle part sur la carte, ils servent uniquement
-    // au sous-popup de stats détaillées.
-    function computePlayerStats(m) {
-        const stats = {};
-        function ensure(name) {
-            if (!stats[name]) stats[name] = { buts: 0, passes: 0, defenses: 0, dribbles: 0 };
-            return stats[name];
-        }
-
-        (m.scorersHome || []).forEach(s => { ensure(s.name).buts += s.count; });
-        (m.scorersAway || []).forEach(s => { ensure(s.name).buts += s.count; });
-
-        [...(m.timelineHome || []), ...(m.timelineAway || [])].forEach(ev => {
-            ensure(ev.scorer);
-            if (ev.assist && !ev.assist.includes('🌟')) {
-                ensure(ev.assist).passes += 1;
-            }
-        });
-
-        // Defenses / Dribbles (et surcharge optionnelle de buts/passes) directement
-        // depuis la liste des notes, qui couvre tous les joueurs du match.
-        [...(m.notesHome || []), ...(m.notesAway || [])].forEach(p => {
-            const s = ensure(p.name);
-            if (p.buts !== undefined) s.buts = p.buts;
-            if (p.passes !== undefined) s.passes = p.passes;
-            if (p.defenses !== undefined) s.defenses = p.defenses;
-            if (p.dribbles !== undefined) s.dribbles = p.dribbles;
-        });
-
-        return stats;
     }
 
     /* ============================================================
