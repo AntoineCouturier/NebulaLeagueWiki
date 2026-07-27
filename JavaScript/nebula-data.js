@@ -300,10 +300,11 @@
        les appels à Discord pendant la navigation entre les pages.
        ---------------------------------------------------------------------- */
     const discordAvatarCacheDuration = 60 * 60 * 1000;
+    const discordAvatarCacheVersion = "v2";
 
     function readDiscordAvatarCache(discordId) {
         try {
-            const cached = JSON.parse(localStorage.getItem(`nebula:discord-avatar:${discordId}`));
+            const cached = JSON.parse(localStorage.getItem(`nebula:discord-avatar:${discordAvatarCacheVersion}:${discordId}`));
             return cached?.avatarUrl && cached.expiresAt > Date.now() ? cached.avatarUrl : null;
         } catch {
             return null;
@@ -312,7 +313,7 @@
 
     function writeDiscordAvatarCache(discordId, avatarUrl) {
         try {
-            localStorage.setItem(`nebula:discord-avatar:${discordId}`, JSON.stringify({
+            localStorage.setItem(`nebula:discord-avatar:${discordAvatarCacheVersion}:${discordId}`, JSON.stringify({
                 avatarUrl,
                 expiresAt: Date.now() + discordAvatarCacheDuration
             }));
@@ -353,7 +354,7 @@
         }
 
         try {
-            const endpoint = pageUrl(`api/discord-avatar?userId=${encodeURIComponent(player.discordId)}`);
+            const endpoint = pageUrl(`api/discord-avatar?userId=${encodeURIComponent(player.discordId)}&v=${discordAvatarCacheVersion}`);
             const response = await fetch(endpoint, {
                 headers: { Accept: "application/json" }
             });

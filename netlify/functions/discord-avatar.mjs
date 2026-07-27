@@ -54,7 +54,7 @@ export default async function discordAvatar(request) {
 
         const user = await discordResponse.json();
         const avatarUrl = user.avatar
-            ? `${DISCORD_CDN_BASE}/avatars/${user.id}/${user.avatar}.webp?size=256`
+            ? `${DISCORD_CDN_BASE}/avatars/${user.id}/${user.avatar}.webp?size=1024`
             : `${DISCORD_CDN_BASE}/embed/avatars/${Number((BigInt(user.id) >> 22n) % 6n)}.png`;
 
         return jsonResponse(
