@@ -46,13 +46,11 @@ body.fixture-modal-open {
     font: inherit;
 }
 
-body.nebula-page.fixtures-page :is(
-    .indexed-section-head,
+body.nebula-page.fixtures-page :is(.indexed-section-head,
     .calendar-header,
     .fixture-list-head,
     .fixture-card-meta,
-    .fixture-modal-head
-) {
+    .fixture-modal-head) {
     position: relative !important;
     z-index: auto !important;
     top: auto !important;
@@ -170,14 +168,14 @@ body.nebula-page.fixtures-page :is(
     border-bottom: 1px solid var(--fixture-line);
 }
 
-.fixture-hero-stats > div {
+.fixture-hero-stats>div {
     display: flex;
     align-items: center;
     min-width: 0;
     padding: 19px 20px 19px 0;
 }
 
-.fixture-hero-stats > div + div {
+.fixture-hero-stats>div+div {
     padding-left: 20px;
     border-left: 1px solid var(--fixture-line);
 }
@@ -407,7 +405,7 @@ body.nebula-page.fixtures-page :is(
     background: rgba(89, 231, 255, 0.025);
 }
 
-.next-fixture-countdown > span {
+.next-fixture-countdown>span {
     margin-right: 22px;
     color: var(--fixture-muted);
     font-family: "Orbitron", sans-serif;
@@ -415,7 +413,7 @@ body.nebula-page.fixtures-page :is(
     letter-spacing: 0.15em;
 }
 
-.next-fixture-countdown > strong {
+.next-fixture-countdown>strong {
     min-width: 58px;
     color: var(--fixture-cyan);
     font-family: "Orbitron", sans-serif;
@@ -533,7 +531,7 @@ body.nebula-page.fixtures-page :is(
     box-shadow: 0 0 12px rgba(173, 255, 47, 0.42);
 }
 
-.season-month > span {
+.season-month>span {
     grid-row: 1 / 3;
     color: #42505b;
     font-family: "Orbitron", sans-serif;
@@ -580,7 +578,7 @@ body.nebula-page.fixtures-page .indexed-section-head {
     font-weight: 800;
 }
 
-.indexed-section-head > div {
+.indexed-section-head>div {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -606,7 +604,7 @@ body.nebula-page.fixtures-page .indexed-section-head {
     letter-spacing: -0.045em;
 }
 
-.indexed-section-head > p {
+.indexed-section-head>p {
     display: flex;
     align-items: center;
     margin: 0;
@@ -632,7 +630,7 @@ body.nebula-page.fixtures-page .indexed-section-head {
     padding: 0;
 }
 
-.fixture-filter-block + .fixture-filter-block {
+.fixture-filter-block+.fixture-filter-block {
     border-left: 0;
 }
 
@@ -908,7 +906,7 @@ body.nebula-page.fixtures-page .calendar-header {
     font-weight: 700;
 }
 
-.calendar-day > strong {
+.calendar-day>strong {
     position: absolute;
     right: 8px;
     bottom: 8px;
@@ -922,7 +920,41 @@ body.nebula-page.fixtures-page .calendar-header {
     bottom: 8px;
     left: 8px;
     display: flex;
+    align-items: center;
     gap: 3px;
+}
+
+.calendar-day-completed,
+.legend-completed {
+    position: relative;
+    display: inline-block;
+    flex: 0 0 auto;
+    width: 9px;
+    height: 9px;
+}
+
+.calendar-day-completed::before,
+.calendar-day-completed::after,
+.legend-completed::before,
+.legend-completed::after {
+    position: absolute;
+    top: 4px;
+    left: 0;
+    width: 9px;
+    height: 1px;
+    background: var(--fixture-violet);
+    box-shadow: 0 0 6px var(--fixture-violet);
+    content: "";
+}
+
+.calendar-day-completed::before,
+.legend-completed::before {
+    transform: rotate(45deg);
+}
+
+.calendar-day-completed::after,
+.legend-completed::after {
+    transform: rotate(-45deg);
 }
 
 .calendar-day-signals i,
@@ -965,7 +997,7 @@ body.nebula-page.fixtures-page .calendar-header {
     border-top: 1px solid var(--fixture-line);
 }
 
-.calendar-legend > span {
+.calendar-legend>span {
     display: flex;
     align-items: center;
     gap: 7px;
@@ -1081,7 +1113,7 @@ body.nebula-page.fixtures-page .fixture-list-head {
     border-right: 1px solid var(--fixture-line);
 }
 
-.fixture-card-rail > span {
+.fixture-card-rail>span {
     margin-bottom: 15px;
     color: #394650;
     font-family: "Orbitron", sans-serif;
@@ -1259,7 +1291,7 @@ body.nebula-page.fixtures-page .fixture-list-head {
     border-top: 1px solid var(--fixture-line);
 }
 
-.fixture-card-footer > span {
+.fixture-card-footer>span {
     color: #657681;
     font-family: "Orbitron", sans-serif;
     font-size: 0.43rem;
@@ -1299,7 +1331,7 @@ body.nebula-page.fixtures-page .fixture-list-head {
     padding: 25px 30px;
 }
 
-.fixture-empty-state > span {
+.fixture-empty-state>span {
     color: #26323a;
     font-family: "Orbitron", sans-serif;
     font-size: 2.5rem;
@@ -1505,6 +1537,7 @@ body.nebula-page.fixtures-page .fixture-list-head {
         opacity: 0;
         transform: translateY(15px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1616,7 +1649,7 @@ body.nebula-page.fixtures-page .fixture-modal-head {
     border-bottom: 1px solid var(--fixture-line);
 }
 
-.fixture-modal-versus > div {
+.fixture-modal-versus>div {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1639,7 +1672,7 @@ body.nebula-page.fixtures-page .fixture-modal-head {
     letter-spacing: 0.12em;
 }
 
-.fixture-modal-versus > div strong {
+.fixture-modal-versus>div strong {
     margin-top: 7px;
     font-family: "Orbitron", sans-serif;
     font-size: 0.82rem;
@@ -1668,7 +1701,7 @@ body.nebula-page.fixtures-page .fixture-modal-head {
     border-bottom: 1px solid var(--fixture-line);
 }
 
-.fixture-modal-grid > div {
+.fixture-modal-grid>div {
     display: flex;
     flex-direction: column;
     min-width: 0;
@@ -1676,7 +1709,7 @@ body.nebula-page.fixtures-page .fixture-modal-head {
     border-right: 1px solid var(--fixture-line);
 }
 
-.fixture-modal-grid > div:last-child {
+.fixture-modal-grid>div:last-child {
     border-right: 0;
 }
 
@@ -1807,7 +1840,7 @@ body.nebula-page.fixtures-page .fixture-modal-head {
         grid-template-columns: 84px 1fr;
     }
 
-    .indexed-section-head > p {
+    .indexed-section-head>p {
         grid-column: 1 / 3;
         min-height: 78px;
         border-top: 1px solid var(--fixture-line);
@@ -1874,12 +1907,12 @@ body.nebula-page.fixtures-page .fixture-modal-head {
         margin-top: 34px;
     }
 
-    .fixture-hero-stats > div {
+    .fixture-hero-stats>div {
         display: block;
         padding: 14px 7px;
     }
 
-    .fixture-hero-stats > div + div {
+    .fixture-hero-stats>div+div {
         padding-left: 10px;
     }
 
@@ -1917,7 +1950,7 @@ body.nebula-page.fixtures-page .fixture-modal-head {
         font-size: 1.15rem;
     }
 
-    .next-fixture-countdown > span {
+    .next-fixture-countdown>span {
         display: none;
     }
 
@@ -1948,8 +1981,8 @@ body.nebula-page.fixtures-page .fixture-modal-head {
         font-size: 1.25rem;
     }
 
-    .indexed-section-head > div,
-    .indexed-section-head > p {
+    .indexed-section-head>div,
+    .indexed-section-head>p {
         padding: 21px 18px;
     }
 
@@ -1968,7 +2001,7 @@ body.nebula-page.fixtures-page .fixture-modal-head {
         grid-column: auto;
     }
 
-    .fixture-filter-block + .fixture-filter-block {
+    .fixture-filter-block+.fixture-filter-block {
         border-top: 0;
         border-left: 0;
     }
@@ -2010,7 +2043,7 @@ body.nebula-page.fixtures-page .fixture-modal-head {
         font-size: 0.45rem;
     }
 
-    .calendar-day > strong {
+    .calendar-day>strong {
         display: none;
     }
 
@@ -2099,7 +2132,7 @@ body.nebula-page.fixtures-page .fixture-modal-head {
         margin-right: -12px;
     }
 
-    .fixture-card-footer > span {
+    .fixture-card-footer>span {
         display: none;
     }
 
@@ -2185,7 +2218,7 @@ body.nebula-page.fixtures-page .fixture-modal-head {
         height: 48px;
     }
 
-    .fixture-modal-versus > div strong {
+    .fixture-modal-versus>div strong {
         font-size: 0.56rem;
     }
 
@@ -2203,11 +2236,11 @@ body.nebula-page.fixtures-page .fixture-modal-head {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .fixture-modal-grid > div:nth-child(2) {
+    .fixture-modal-grid>div:nth-child(2) {
         border-right: 0;
     }
 
-    .fixture-modal-grid > div:nth-child(-n + 2) {
+    .fixture-modal-grid>div:nth-child(-n + 2) {
         border-bottom: 1px solid var(--fixture-line);
     }
 }

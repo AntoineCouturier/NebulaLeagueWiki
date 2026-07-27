@@ -372,7 +372,7 @@ body.nebula-page.matches-page .match-hero-copy h1 {
     background: linear-gradient(90deg,
             rgba(99, 231, 255, 0.16),
             rgba(99, 231, 255, 0.5) 30%,
-            rgba(173, 255, 47, 0.55) 50%,
+            rgba(255, 255, 255, 0.72) 50%,
             rgba(99, 231, 255, 0.5) 70%,
             rgba(99, 231, 255, 0.16));
     box-shadow: 0 0 14px rgba(99, 231, 255, 0.12);
@@ -386,14 +386,14 @@ body.nebula-page.matches-page .match-hero-copy h1 {
     bottom: 17%;
     left: 50%;
     width: 1px;
-    background: repeating-linear-gradient(to bottom, rgba(173, 255, 47, 0.42) 0 4px, transparent 4px 9px);
+    background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.55) 0 4px, transparent 4px 9px);
 }
 
 .goal-curve-half span {
     position: absolute;
     top: -2px;
     left: 7px;
-    color: var(--match-acid);
+    color: #fff;
     font-family: var(--match-mono);
     font-size: 0.48rem;
     font-weight: 700;
@@ -619,6 +619,7 @@ body.nebula-page.matches-page .match-archive {
 
 .match-section-heading small,
 .match-filter-category>span,
+.match-filter-season>span,
 .match-filter-club>span,
 .detail-section-title small {
     display: block;
@@ -654,17 +655,56 @@ body.nebula-page.matches-page .match-section-heading h2 {
     position: relative;
     z-index: 90;
     display: grid;
-    grid-template-columns: minmax(360px, 1.25fr) minmax(270px, 0.75fr) 190px;
+    grid-template-columns: minmax(360px, 1.2fr) minmax(175px, 0.5fr) minmax(240px, 0.7fr) 190px;
     align-items: stretch;
     gap: 1px;
     background: var(--match-line);
 }
 
 .match-filter-category,
+.match-filter-season,
 .match-filter-club {
     min-width: 0;
     padding: 20px 22px;
     background: var(--match-surface-2);
+}
+
+.match-season-select-shell {
+    position: relative;
+}
+
+body.nebula-page.matches-page .match-season-select {
+    width: 100%;
+    min-height: 54px;
+    padding: 0 42px 0 15px;
+    border: 1px solid #303944;
+    border-radius: 0;
+    outline: 0;
+    appearance: none;
+    background: #080c11;
+    color: #dce2e6;
+    font-family: var(--match-mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+body.nebula-page.matches-page .match-season-select:hover,
+body.nebula-page.matches-page .match-season-select:focus-visible {
+    border-color: var(--match-acid);
+    background: rgba(173, 255, 47, 0.05);
+}
+
+.match-season-select-shell>span {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    color: var(--match-acid);
+    font-family: var(--match-display);
+    font-size: 1rem;
+    pointer-events: none;
+    transform: translateY(-58%);
 }
 
 .match-category-tabs {
@@ -950,7 +990,7 @@ body.nebula-page.matches-page .match-sort-toggle:hover {
     left: -1px;
     height: 2px;
     content: "";
-    background: linear-gradient(90deg, var(--home-accent), var(--category-accent) 50%, var(--away-accent));
+    background: linear-gradient(90deg, var(--home-accent), #fff 50%, var(--away-accent));
 }
 
 .match-dossier-topline>span:last-child {
@@ -1643,6 +1683,10 @@ body.nebula-page.matches-page .match-detail-close:hover {
         grid-template-columns: 1fr 1fr;
     }
 
+    .match-filter-category {
+        grid-column: 1 / -1;
+    }
+
     .match-sort-toggle {
         grid-column: 1 / -1;
         min-height: 76px;
@@ -1737,6 +1781,10 @@ body.nebula-page.matches-page .match-detail-close:hover {
 
     .match-filter-bar {
         grid-template-columns: 1fr;
+    }
+
+    .match-filter-category {
+        grid-column: auto;
     }
 
     .match-sort-toggle {

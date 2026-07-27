@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const featuredMatch = document.getElementById("featuredMatch");
     const resultCount = document.getElementById("matchResultCount");
     const categoryGroup = document.getElementById("categoryFilterGroup");
+    const seasonFilter = document.getElementById("seasonFilter");
     const clubDropdown = document.getElementById("clubDropdown");
     const dropdownCurrent = document.getElementById("dropdownCurrent");
     const dropdownLabel = dropdownCurrent.querySelector(".dropdown-current-label");
@@ -26,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const detailPanel = document.getElementById("matchDetailPanel");
 
     let selectedCategory = "all";
+    let selectedSeason = "all";
     let selectedClub = "all";
     let sortOrder = "desc";
     let lastFocusedElement = null;
@@ -427,6 +429,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function getFilteredMatches() {
         return matches
             .filter(match => selectedCategory === "all" || match.category === selectedCategory)
+            .filter(match => selectedSeason === "all" || String(match.season) === selectedSeason)
             .filter(match => selectedClub === "all" || match.home === selectedClub || match.away === selectedClub)
             .sort((a, b) => sortOrder === "desc"
                 ? b.date.localeCompare(a.date)
@@ -441,7 +444,7 @@ document.addEventListener("DOMContentLoaded", () => {
             matchList.innerHTML = `
                 <div class="match-empty-state">
                     <span>00</span>
-                    <div><strong>AUCUN SIGNAL TROUVÉ</strong><p>Modifiez la compétition ou l’équipe sélectionnée.</p></div>
+                    <div><strong>AUCUN SIGNAL TROUVÉ</strong><p>Modifiez la saison, la compétition ou l’équipe sélectionnée.</p></div>
                 </div>
             `;
             return;
@@ -485,6 +488,19 @@ document.addEventListener("DOMContentLoaded", () => {
         `).join("");
     }
 
+    function buildSeasonFilter() {
+        const seasons = [...new Set(matches.map(match => Number(match.season)))]
+            .filter(Number.isFinite)
+            .sort((a, b) => b - a);
+
+        seasonFilter.innerHTML = [
+            '<option value="all">Toutes les saisons</option>',
+            ...seasons.map(season => (
+                `<option value="${season}">Saison ${String(season).padStart(2, "0")}</option>`
+            ))
+        ].join("");
+    }
+
     categoryGroup.addEventListener("click", event => {
         const button = event.target.closest("[data-cat]");
         if (!button) return;
@@ -494,6 +510,11 @@ document.addEventListener("DOMContentLoaded", () => {
             item.classList.toggle("active", active);
             item.setAttribute("aria-pressed", String(active));
         });
+        renderResults();
+    });
+
+    seasonFilter.addEventListener("change", () => {
+        selectedSeason = seasonFilter.value;
         renderResults();
     });
 
@@ -552,6 +573,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    buildSeasonFilter();
     buildClubMenu();
     renderHeroStats();
     renderFeaturedMatch();

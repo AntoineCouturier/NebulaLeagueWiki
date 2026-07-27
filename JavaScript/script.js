@@ -17,6 +17,14 @@ document.addEventListener("DOMContentLoaded", () => {
         element.textContent = String(count).padStart(padding, "0");
     });
 
+    const activeSeason = leagueData.getActiveSeason?.()
+        || leagueData.seasons?.find(season => season.status === "active");
+    document.querySelectorAll("[data-active-season]").forEach(element => {
+        element.textContent = activeSeason
+            ? String(activeSeason.number).padStart(2, "0")
+            : "--";
+    });
+
     const revealItems = [...document.querySelectorAll(".reveal")];
     document.body.classList.add("reveal-ready");
 

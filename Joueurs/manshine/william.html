@@ -26,13 +26,12 @@
             <a href="../../title.html">Titres</a>
             <a href="../../club.html">Clubs</a>
             <a class="nav-active" href="../../players.html" aria-current="page">Joueurs</a>
-            <a href="../../valeur.html">Valeurs</a>
-            <a href="../../rules.html">Règles</a>
-            <a href="../../stats.html">Records</a>
             <a href="../../matchs.html">Matchs</a>
-            <a href="../../headtohead.html">Face à face</a>
             <a href="../../saison.html">Saisons</a>
             <a href="../../fixtures.html">Calendrier</a>
+            <a href="../../headtohead.html">Face à Face</a>
+            <a href="../../valeur.html">Valeurs</a>
+            <a href="../../stats.html">Records</a>
         </nav>
         <div class="header-actions">
             <span class="live-pill"><i></i> SAISON 01</span>
@@ -92,8 +91,7 @@
             <p><strong class="matchs">MVP :</strong> 0</p>
             <p><strong class="matchs">Victoire :</strong> 0</p>
             <p><strong class="matchs">Défaite :</strong> 0</p>
-            <!-- 🔵 Bouton -->
-            <button class="season-btn manshine-season" id="openSeasonPopup">Voir les Stats par Saisons</button>
+
         </div>
 
         <!-- Cube Titres / Trophées -->
@@ -110,64 +108,6 @@
             </ul>
         </div>
 
-    </div>
-
-    <!-- 🔵 POPUP SAISONS (CORRIGÉ - min) -->
-    <div class="popup-overlay" id="popupSeason">
-        <div class="popup-box manshine-box">
-            <h2>Stats par Saison</h2>
-
-            <label for="seasonSelect">Choisir une saison :</label>
-            <select id="seasonSelect">
-                <option value="1">Saison 1 (Actuel)</option>
-            </select>
-
-            <!-- <-- ZONE D'AFFICHAGE (obligatoire !) -->
-            <div id="seasonStatsDisplay" class="popup-stats">
-                <!-- Le script injectera les stats ici -->
-            </div>
-
-            <!-- 🔒 Stats cachées (propres au joueur) -->
-            <div id="hidden-season-stats" style="display:none;">
-
-                <div class="season" data-season="1" data-matchs="0" data-buts="0" data-assists="0" data-saves="0"
-                    data-dribbles="0" data-mvp="0" data-win="0" data-lose="0">
-                </div>
-
-            </div>
-
-            <button class="close-btn" id="closeSeasonPopup">Fermer</button>
-        </div>
-    </div>
-
-    <!-- 🔥 POPUP SECRET PAR MATCHS -->
-    <div class="popup-overlay" id="popupMatch">
-        <div class="popup-box manshine-box">
-            <h2>Stats par Match</h2>
-
-            <label for="matchSelect">Choisir un match :</label>
-            <select id="matchSelect">
-                <option value="1">Match 1</option>
-                <option value="2">Match 2</option>
-            </select>
-
-            <div id="matchStatsDisplay" class="popup-stats"></div>
-
-            <!-- 🔒 Stats cachées par match -->
-            <div id="hidden-match-stats" style="display:none;">
-
-                <div class="match" data-match="1" data-title="Barcha vs PXG | 01/04/2022" data-buts="2" data-pass="1"
-                    data-saves="0" data-dribbles="3">
-                </div>
-
-                <div class="match" data-match="2" data-title="Barcha vs Manshine" data-buts="0" data-pass="0"
-                    data-saves="0" data-dribbles="0">
-                </div>
-
-            </div>
-
-            <button class="close-btn" id="closeMatchPopup">Fermer</button>
-        </div>
     </div>
 
     <!-- POPUP RADAR AGRANDI -->

@@ -196,7 +196,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const passerRanking = categoryRanking(playerRecords, "passes");
     const defenderRanking = categoryRanking(playerRecords, "defenses");
     const dribblerRanking = categoryRanking(playerRecords, "dribbles");
-    const mostValuable = [...players].sort((a, b) => b.value - a.value)[0];
+    const mostValuable = [...players]
+        .sort((a, b) => b.value - a.value)
+        .find(player => Number(player.value) > 0) || null;
     const topScorer = scorerRanking[0];
 
     const totalGoals = matches.reduce((sum, match) => sum + match.scoreHome + match.scoreAway, 0);
@@ -209,18 +211,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const tag = href ? "a" : "article";
         const hrefAttribute = href ? ` href="${href}"` : "";
         const avatar = profile?.avatar || "images/logos/nebula.png";
-        const club = record.name ? playerClub(record.name) : { key: "unknown", name: record.subtitle || "Archive" };
+        const club = record.name
+            ? playerClub(record.name)
+            : { key: "unknown", name: record.subtitle || "Aucune donnée" };
+        const status = record.name ? "RECORD ACTIF" : "EN ATTENTE";
 
         return `
             <${tag} class="record-leader-card" style="--record-accent:${record.accent};"${hrefAttribute}>
-                <div class="leader-card-topline"><span>${record.code}</span><span><i></i> RECORD ACTIF</span></div>
+                <div class="leader-card-topline"><span>${record.code}</span><span><i></i> ${status}</span></div>
                 <div class="leader-card-visual">
                     <img src="${avatar}" alt="${record.name || record.label}">
                     <span>${record.watermark}</span>
                 </div>
                 <div class="leader-card-body">
                     <small>${record.label}</small>
-                    <strong>${record.name || "Aucun"}</strong>
+                    <strong>${record.name || "Non attribué"}</strong>
                     <span>${club.name}</span>
                     <div><b>${record.value}</b><i>↗</i></div>
                 </div>

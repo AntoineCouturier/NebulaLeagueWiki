@@ -13,6 +13,7 @@ const CLUBS = Object.fromEntries([
     ...Object.values(window.NEBULA_DATA?.groups || {})
 ].map(club => [club.key, {
     name: club.name,
+    logo: club.logo || '',
     borderColor: club.color,
     bgColor: playerCardTint(club.color)
 }]));
@@ -29,11 +30,13 @@ const STAT_LABELS = [
 const TECHNICAL_TITLE_RULES = window.NEBULA_DATA?.technicalTitleRules || [];
 
 const CAREER_TITLE_TRACKS = window.NEBULA_DATA?.careerTitleTracks || [];
+const VALUE_TITLE_TRACK = window.NEBULA_DATA?.valueTitleTrack || null;
 
 let radarChart = null;
 let inlineRadarChart = null;
 let clubData = CLUBS.bastard;
 let playerName = 'Joueur';
+let playerData = null;
 
 /* ===================== UTILITIES ===================== */
 function detectClub() {
@@ -51,6 +54,38 @@ function getPlayerName() {
     return header ? header.textContent.trim() : 'Joueur';
 }
 
+function getCentralPlayer(name) {
+    const directMatch = window.NEBULA_DATA?.getPlayer?.(name);
+    if (directMatch) return directMatch;
+    return (window.NEBULA_DATA?.players || [])
+        .find(player => normalizeLabel(player.name) === normalizeLabel(name)) || null;
+}
+
+function formatPlayerValue(value) {
+    const amount = Number(value);
+    if (!Number.isFinite(amount)) return 'NON COTÉ';
+    return `${Math.round(amount).toLocaleString('fr-FR')} ¥`;
+}
+
+function syncInfoField(labelText, value) {
+    if (value === undefined || value === null) return;
+    const paragraph = [...document.querySelectorAll('.player-info p')]
+        .find(item => normalizeLabel(item.textContent).startsWith(normalizeLabel(labelText)));
+    if (!paragraph) return;
+
+    const label = paragraph.querySelector('strong');
+    paragraph.innerHTML = `${label ? label.outerHTML : `<strong>${labelText} :</strong>`} ${value}`;
+}
+
+function syncPlayerIdentityFromData(player) {
+    if (!player) return;
+    syncInfoField('Pseudo', player.name);
+    syncInfoField('Club', player.clubName);
+    syncInfoField('Position', player.position);
+    syncInfoField('Personnage', player.character);
+    syncInfoField('Valeur', formatPlayerValue(player.value));
+}
+
 function parseInfoField(label) {
     const items = document.querySelectorAll('.player-info p');
     for (const p of items) {
@@ -62,6 +97,19 @@ function parseInfoField(label) {
 }
 
 function extractStatsFromHTML() {
+    if (playerData?.technical) {
+        return {
+            defense: playerData.technical.defense ?? null,
+            passe: playerData.technical.passe ?? null,
+            dribble: playerData.technical.dribble ?? null,
+            tir: playerData.technical.tir ?? null,
+            offense: playerData.technical.offense ?? null,
+            position: playerData.technical.position ?? null,
+            global: playerData.technical.global ?? null,
+            rankHTML: ''
+        };
+    }
+
     const container = document.querySelector('.player-card-fifa-stats');
     const text = container ? container.textContent : '';
 
@@ -101,6 +149,18 @@ function parseStatParagraphs() {
     const container = document.querySelector('.player-card-fifa-stats');
     if (!container) return [];
 
+    if (playerData?.technical) {
+        return STAT_LABELS.map(stat => {
+            const value = playerData.technical[stat.key];
+            const grade = Number.isFinite(value) ? getFIFARating(value) : 'N/A';
+            return {
+                ...stat,
+                value: Number.isFinite(value) ? value : null,
+                gradeHTML: `<span class="${grade.toLowerCase()}">${grade}</span>`
+            };
+        });
+    }
+
     const statMap = {
         Defense: 'defense',
         Passe: 'passe',
@@ -132,6 +192,20 @@ function parseStatParagraphs() {
 }
 
 function parseMatchStats() {
+    const centralStats = window.NEBULA_DATA?.getPlayerMatchStats?.(playerName);
+    if (centralStats) {
+        return {
+            Matchs: centralStats.matches,
+            Buts: centralStats.goals,
+            Assists: centralStats.assists,
+            'Contribution défensive': centralStats.defenses,
+            Dribbles: centralStats.dribbles,
+            MVP: centralStats.mvp,
+            Victoire: centralStats.wins,
+            Défaite: centralStats.losses
+        };
+    }
+
     const container = document.querySelector('.player-card-match-stats');
     if (!container) return {};
 
@@ -196,18 +270,57 @@ function extractManualTitles() {
     return titles;
 }
 
-function evaluatePlayerTitles(stats, matchStats) {
+function getSeasonRewardTitles() {
+    const seasons = window.NEBULA_DATA?.seasons || [];
+    const currentPlayer = normalizeLabel(playerName);
+    const rewardAccents = {
+        PUS: '#ff536e',
+        GLD: '#ffd84d',
+        NCL: '#9bff20',
+        BDO: '#ffd84d'
+    };
+
+    return seasons.flatMap(season => {
+        const rewards = window.NEBULA_DATA?.resolveSeasonRewards
+            ? window.NEBULA_DATA.resolveSeasonRewards(season)
+            : (season.rewards || []);
+
+        return rewards
+        .filter(reward => normalizeLabel(reward.value) === currentPlayer)
+        .map(reward => ({
+            name: `${reward.label} Saison ${season.number}`,
+            requirement: `Attribué lors de la Saison ${season.number}`,
+            code: reward.code || 'RWD',
+            accent: rewardAccents[reward.code] || '#ffd84d',
+            priority: 1000 + Number(season.number || 0),
+            source: 'season',
+            category: 'Récompense officielle',
+            season: season.number
+        }));
+    });
+}
+
+function highestUnlockedTier(track, value) {
+    if (!track || !Number.isFinite(value)) return null;
+
+    return track.titles.reduce((highest, [threshold, name], tierIndex) => (
+        value >= threshold ? { threshold, name, tierIndex } : highest
+    ), null);
+}
+
+function evaluatePlayerTitles(stats, matchStats, playerValue = null) {
     const unlocked = [];
 
     TECHNICAL_TITLE_RULES.forEach(rule => {
         const value = rule.metric === 'global'
             ? (stats.global ?? calculateGlobalAverage(stats))
             : stats[rule.metric];
-        if (Number.isFinite(value) && value >= 95) {
+        const threshold = Number(rule.threshold ?? 95);
+        if (Number.isFinite(value) && value >= threshold) {
             unlocked.push({
                 ...rule,
                 value,
-                threshold: 95,
+                threshold,
                 source: 'automatic',
                 category: 'Statistique'
             });
@@ -216,23 +329,39 @@ function evaluatePlayerTitles(stats, matchStats) {
 
     CAREER_TITLE_TRACKS.forEach(track => {
         const value = getMatchStat(matchStats, track.aliases);
-        track.titles.forEach(([threshold, name], tierIndex) => {
-            if (value >= threshold) {
-                unlocked.push({
-                    name,
-                    requirement: `${threshold} ${track.unit}`,
-                    code: track.code,
-                    accent: track.accent,
-                    priority: 20 + tierIndex * 12,
-                    value,
-                    threshold,
-                    source: 'automatic',
-                    category: 'Carrière',
-                    metric: track.metric
-                });
-            }
+        const tier = highestUnlockedTier(track, value);
+        if (!tier) return;
+
+        unlocked.push({
+            name: tier.name,
+            requirement: `${tier.threshold} ${track.unit}`,
+            code: track.code,
+            accent: track.accent,
+            priority: 20 + tier.tierIndex * 12,
+            value,
+            threshold: tier.threshold,
+            source: 'automatic',
+            category: 'Carrière',
+            metric: track.metric
         });
     });
+
+    const marketValue = Number(playerValue);
+    const valueTier = highestUnlockedTier(VALUE_TITLE_TRACK, marketValue);
+    if (valueTier) {
+        unlocked.push({
+            name: valueTier.name,
+            requirement: `${formatPlayerValue(valueTier.threshold)} de valeur`,
+            code: VALUE_TITLE_TRACK.code,
+            accent: VALUE_TITLE_TRACK.accent,
+            priority: 30 + valueTier.tierIndex * 12,
+            value: marketValue,
+            threshold: valueTier.threshold,
+            source: 'automatic',
+            category: 'Valeur',
+            metric: VALUE_TITLE_TRACK.metric
+        });
+    }
 
     return unlocked.sort((a, b) => b.priority - a.priority || a.name.localeCompare(b.name));
 }
@@ -295,8 +424,8 @@ function buildHero(club, stats, titles) {
 
     const ovr = stats.global ?? calculateGlobalAverage(stats) ?? '??';
     const rankEl = main.querySelector('.player-card-fifa-stats') || document.querySelector('.player-card-fifa-stats');
-    let rankHTML = '';
-    if (rankEl) {
+    let rankHTML = Number.isFinite(ovr) ? getFIFARating(ovr) : '';
+    if (!playerData?.technical && rankEl) {
         const globalP = [...rankEl.querySelectorAll('p')].find(p => p.textContent.includes('Global'));
         if (globalP) {
             const span = globalP.querySelector('span');
@@ -319,7 +448,7 @@ function buildHero(club, stats, titles) {
         </div>
         <div class="pc-hero-portrait">
             <span class="pc-portrait-number">${String(typeof ovr === 'number' ? ovr : '00').padStart(2, '0')}</span>
-            <img class="pc-hero-avatar" src="${avatar?.src || ''}" alt="${playerName}">
+            <img class="pc-hero-avatar" src="${playerData?.avatar || avatar?.src || ''}" alt="${playerName}">
             <span class="pc-portrait-scan" aria-hidden="true"></span>
         </div>
         <div class="pc-hero-identity">
@@ -338,7 +467,7 @@ function buildHero(club, stats, titles) {
                 <strong class="pc-ovr-value">${ovr}</strong>
                 <span class="pc-ovr-rank">${rankHTML || (typeof ovr === 'number' ? getFIFARating(ovr) : 'N/A')}</span>
             </div>
-            ${clubLogoEl ? `<img class="pc-hero-club-logo" src="${clubLogoEl.src}" alt="${clubLabel}">` : ''}
+            ${(clubData.logo || clubLogoEl) ? `<img class="pc-hero-club-logo" src="${clubData.logo || clubLogoEl.src}" alt="${clubLabel}">` : ''}
         </div>
         <div class="pc-hero-meta">
             <div class="pc-meta-chip">
@@ -355,7 +484,7 @@ function buildHero(club, stats, titles) {
             </div>
             <div class="pc-meta-chip">
                 <span class="pc-meta-label">04 // VALEUR</span>
-                <span class="pc-meta-value">${parseInfoField('Valeur')}</span>
+                <span class="pc-meta-value">${playerData ? formatPlayerValue(playerData.value) : parseInfoField('Valeur')}</span>
             </div>
         </div>
     `;
@@ -412,9 +541,7 @@ function buildKPIs(matchStats) {
     const buts = getMatchStat(matchStats, ['buts', 'but']);
     const assists = getMatchStat(matchStats, ['assists', 'passes d', 'passes decisives']);
     const wins = getMatchStat(matchStats, ['victoire', 'victoires']);
-    const loses = getMatchStat(matchStats, ['defaite', 'defaites']);
-    const totalGames = wins + loses;
-    const winRate = totalGames > 0 ? Math.round((wins / totalGames) * 100) : 0;
+    const winRate = matchs > 0 ? Math.round((wins / matchs) * 100) : 0;
     const contributions = matchs > 0 ? ((buts + assists) / matchs).toFixed(1) : '0.0';
 
     return [
@@ -474,7 +601,10 @@ function buildMatchPanel(matchStats) {
 function copyStatsToClipboard() {
     const stats = extractStatsFromHTML();
     const matchStats = parseMatchStats();
-    const titles = mergePlayerTitles(evaluatePlayerTitles(stats, matchStats), extractManualTitles());
+    const titles = mergePlayerTitles(
+        [...evaluatePlayerTitles(stats, matchStats, playerData?.value), ...getSeasonRewardTitles()],
+        extractManualTitles()
+    );
     const lines = [
         `${playerName} — Nebula League`,
         `OVR: ${stats.global ?? '??'}`,
@@ -497,42 +627,66 @@ function copyStatsToClipboard() {
 
 /* ===================== TROPHIES PANEL ===================== */
 function buildTrophiesPanel(titles) {
-    const container = document.querySelector('.player-card-trophies');
-    if (!container || container.querySelector('.pc-trophies-panel')) return;
+    let container = document.querySelector('.player-card-trophies');
+    if (!container) {
+        const wrapper = document.querySelector('.player-card-wrapper');
+        if (!wrapper) return;
 
-    const trophyIcons = {
-        'Prix Puskas': 'PUS',
-        'NCL Cup': 'NCL',
-        'Golden Shoe': 'GLD',
-        'Ballon d\'Or': 'BDO',
-        "Ballon d'Or": 'BDO'
-    };
+        container = document.createElement('div');
+        container.className = 'player-card-trophies';
+        wrapper.appendChild(container);
+    }
+    if (container.querySelector('.pc-trophies-panel')) return;
+
+    const trophyDefinitions = [
+        { code: 'PUS', name: 'Prix Puskas' },
+        { code: 'NCL', name: 'NCL Cup' },
+        { code: 'GLD', name: 'Golden Shoe' },
+        { code: 'BDO', name: "Ballon d'Or" }
+    ];
 
     const panel = document.createElement('div');
     panel.className = 'pc-trophies-panel pc-dossier-panel';
 
     let trophyHTML = '<div class="pc-panel-heading"><span>03</span><div><small>ARCHIVES OFFICIELLES</small><h3>PALMARÈS & TITRES</h3></div></div><div class="pc-trophy-grid">';
-    container.querySelectorAll(':scope > h3').forEach(h3 => {
-        if (!h3.textContent.includes('Troph')) return;
-        const ul = h3.nextElementSibling;
-        if (!ul) return;
-        ul.querySelectorAll('li').forEach(li => {
-            const strong = li.querySelector('strong');
-            const name = strong ? strong.textContent.replace(':', '').trim() : li.textContent;
-            const countMatch = li.textContent.match(/:\s*(\d+)/);
-            const count = countMatch ? countMatch[1] : '0';
-            const icon = Object.entries(trophyIcons).find(([k]) => name.includes(k))?.[1] || '🏅';
+
+    const automaticCounts = window.NEBULA_DATA?.getPlayerTrophyCounts?.(playerName);
+    if (automaticCounts) {
+        trophyDefinitions.forEach(trophy => {
+            const count = Number(automaticCounts[trophy.code] || 0);
             trophyHTML += `
                 <div class="pc-trophy-item">
-                    <span class="pc-trophy-icon">${icon}</span>
+                    <span class="pc-trophy-icon">${trophy.code}</span>
                     <div class="pc-trophy-info">
-                        <strong>${name}</strong>
-                        <span><b class="pc-trophy-count">${count}</b> OBTENU${count === '1' ? '' : 'S'}</span>
+                        <strong>${trophy.name}</strong>
+                        <span><b class="pc-trophy-count">${count}</b> OBTENU${count === 1 ? '' : 'S'}</span>
                     </div>
                 </div>
             `;
         });
-    });
+    } else {
+        container.querySelectorAll(':scope > h3').forEach(h3 => {
+            if (!h3.textContent.includes('Troph')) return;
+            const ul = h3.nextElementSibling;
+            if (!ul) return;
+            ul.querySelectorAll('li').forEach(li => {
+                const strong = li.querySelector('strong');
+                const name = strong ? strong.textContent.replace(':', '').trim() : li.textContent;
+                const countMatch = li.textContent.match(/:\s*(\d+)/);
+                const count = countMatch ? Number(countMatch[1]) : 0;
+                const icon = trophyDefinitions.find(trophy => name.includes(trophy.name))?.code || '🏅';
+                trophyHTML += `
+                    <div class="pc-trophy-item">
+                        <span class="pc-trophy-icon">${icon}</span>
+                        <div class="pc-trophy-info">
+                            <strong>${name}</strong>
+                            <span><b class="pc-trophy-count">${count}</b> OBTENU${count === 1 ? '' : 'S'}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        });
+    }
     trophyHTML += '</div>';
 
     let titlesHTML = `
@@ -545,9 +699,15 @@ function buildTrophiesPanel(titles) {
     `;
 
     titles.forEach((title, index) => {
-        const sourceLabel = title.source === 'automatic' ? 'AUTO' : 'ARCHIVE';
-        const proof = Number.isFinite(title.value) && Number.isFinite(title.threshold)
-            ? `${title.value} / ${title.threshold}`
+        const sourceLabel = title.source === 'automatic'
+            ? 'AUTO'
+            : title.source === 'season'
+                ? `SAISON ${String(title.season).padStart(2, '0')}`
+                : 'ARCHIVE';
+        const proof = title.metric === 'value' && Number.isFinite(title.value) && Number.isFinite(title.threshold)
+            ? `${formatPlayerValue(title.value)} / ${formatPlayerValue(title.threshold)}`
+            : Number.isFinite(title.value) && Number.isFinite(title.threshold)
+                ? `${title.value} / ${title.threshold}`
             : title.requirement;
         titlesHTML += `
             <li class="pc-title-card ${title.source}" style="--title-accent:${title.accent}">
@@ -758,110 +918,23 @@ function closeRadarPopup() {
     }
 }
 
-/* ===================== POPUPS (season + match) ===================== */
-function initSeasonPopup() {
-    const popup = document.getElementById('popupSeason');
-    const openBtn = document.getElementById('openSeasonPopup');
-    const closeBtn = document.getElementById('closeSeasonPopup');
-    const seasonSelect = document.getElementById('seasonSelect');
-    const seasonStatsDisplay = document.getElementById('seasonStatsDisplay');
-
-    if (!popup || !openBtn) return;
-
-    function getStatsForSeason(season) {
-        const elem = document.querySelector(`.season[data-season="${season}"]`);
-        if (!elem) return null;
-        return {
-            matchs: elem.dataset.matchs,
-            buts: elem.dataset.buts,
-            assists: elem.dataset.assists,
-            saves: elem.dataset.saves,
-            dribbles: elem.dataset.dribbles,
-            mvp: elem.dataset.mvp,
-            win: elem.dataset.win,
-            lose: elem.dataset.lose
-        };
-    }
-
-    function updateSeasonStats(season) {
-        const s = getStatsForSeason(season);
-        if (!s) return;
-        seasonStatsDisplay.innerHTML = `
-            <p><strong>Matchs :</strong> ${s.matchs}</p>
-            <p><strong>Buts :</strong> ${s.buts}</p>
-            <p><strong>Assists :</strong> ${s.assists}</p>
-            <p><strong>Defensive Save :</strong> ${s.saves}</p>
-            <p><strong>Dribbles :</strong> ${s.dribbles}</p>
-            <p><strong>MVP :</strong> ${s.mvp}</p>
-            <p><strong>Victoire :</strong> ${s.win}</p>
-            <p><strong>Défaite :</strong> ${s.lose}</p>
-        `;
-    }
-
-    openBtn.onclick = () => {
-        popup.style.display = 'flex';
-        updateSeasonStats(seasonSelect.value);
-    };
-
-    closeBtn.onclick = () => { popup.style.display = 'none'; };
-    window.addEventListener('click', e => {
-        if (e.target === popup) popup.style.display = 'none';
-    });
-    seasonSelect.onchange = () => updateSeasonStats(seasonSelect.value);
-}
-
-function initMatchPopup() {
-    const popupMatch = document.getElementById('popupMatch');
-    const closeMatchBtn = document.getElementById('closeMatchPopup');
-    const matchSelect = document.getElementById('matchSelect');
-    const matchStatsDisplay = document.getElementById('matchStatsDisplay');
-
-    if (!popupMatch) return;
-
-    function getStatsForMatch(match) {
-        const elem = document.querySelector(`.match[data-match="${match}"]`);
-        if (!elem) return null;
-        return {
-            title: elem.dataset.title,
-            buts: elem.dataset.buts,
-            pass: elem.dataset.pass,
-            saves: elem.dataset.saves,
-            dribbles: elem.dataset.dribbles
-        };
-    }
-
-    function updateMatchStats(match) {
-        const s = getStatsForMatch(match);
-        if (!s) return;
-        matchStatsDisplay.innerHTML = `
-            <h3 style="margin-top:5px;">${s.title}</h3>
-            <p><strong>Buts :</strong> ${s.buts}</p>
-            <p><strong>Passes D :</strong> ${s.pass}</p>
-            <p><strong>Defenses :</strong> ${s.saves}</p>
-            <p><strong>Dribbles :</strong> ${s.dribbles}</p>
-        `;
-    }
-
-    document.addEventListener('keydown', e => {
-        if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's') {
-            popupMatch.style.display = 'flex';
-            updateMatchStats(matchSelect.value);
-        }
-    });
-
-    closeMatchBtn.onclick = () => { popupMatch.style.display = 'none'; };
-    window.addEventListener('click', e => {
-        if (e.target === popupMatch) popupMatch.style.display = 'none';
-    });
-    matchSelect.onchange = () => updateMatchStats(matchSelect.value);
-}
-
 function initRadarPopup() {
     const popupRadar = document.getElementById('popupRadar');
     const openRadarBtn = document.getElementById('openRadarPopup');
     const closeRadarBtn = document.getElementById('closeRadarPopup');
 
     if (!openRadarBtn || !popupRadar) return;
+
+    const stats = extractStatsFromHTML();
+    const globalValue = stats.global ?? calculateGlobalAverage(stats);
+    const popupTitle = popupRadar.querySelector('h2');
+    const popupReadout = popupRadar.querySelector('.radar-info strong');
+    if (popupTitle) popupTitle.textContent = `Graphique Radar - ${playerName}`;
+    if (popupReadout) {
+        popupReadout.textContent = Number.isFinite(globalValue)
+            ? `Note Globale : ${globalValue} | ${getFIFARating(globalValue)}`
+            : 'Note Globale : N/A';
+    }
 
     openRadarBtn.onclick = () => {
         popupRadar.style.display = 'flex';
@@ -878,9 +951,11 @@ function initRadarPopup() {
 function initPlayerCard() {
     document.body.classList.add('player-card-page');
 
-    const clubKey = detectClub();
-    clubData = CLUBS[clubKey] || CLUBS.bastard;
     playerName = getPlayerName();
+    playerData = getCentralPlayer(playerName);
+    const clubKey = playerData?.club || detectClub();
+    clubData = CLUBS[clubKey] || CLUBS.bastard;
+    syncPlayerIdentityFromData(playerData);
 
     const wrapper = document.querySelector('.player-card-wrapper');
     if (wrapper) wrapper.dataset.club = clubKey;
@@ -889,8 +964,12 @@ function initPlayerCard() {
     const statRows = parseStatParagraphs();
     const matchStats = parseMatchStats();
     const manualTitles = extractManualTitles();
-    const automaticTitles = evaluatePlayerTitles(stats, matchStats);
-    const unlockedTitles = mergePlayerTitles(automaticTitles, manualTitles);
+    const automaticTitles = evaluatePlayerTitles(stats, matchStats, playerData?.value);
+    const seasonRewardTitles = getSeasonRewardTitles();
+    const unlockedTitles = mergePlayerTitles(
+        [...automaticTitles, ...seasonRewardTitles],
+        manualTitles
+    );
 
     buildHero(clubKey, stats, unlockedTitles);
     buildStatBars(statRows);
@@ -903,14 +982,13 @@ function initPlayerCard() {
         createInlineRadarChart();
     }, 300);
 
-    initSeasonPopup();
-    initMatchPopup();
     initRadarPopup();
 }
 
 window.NEBULA_TITLE_ENGINE = {
     technicalRules: TECHNICAL_TITLE_RULES,
     careerTracks: CAREER_TITLE_TRACKS,
+    valueTrack: VALUE_TITLE_TRACK,
     evaluate: evaluatePlayerTitles
 };
 

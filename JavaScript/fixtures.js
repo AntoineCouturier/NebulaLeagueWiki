@@ -260,7 +260,12 @@ document.addEventListener("DOMContentLoaded", () => {
             cellDate.setDate(gridStart.getDate() + index);
             const key = dateKey(cellDate);
             const dayMatches = filtered.filter(match => match.date === key);
-            const categories = [...new Set(dayMatches.map(match => match.category))];
+            const finishedMatches = dayMatches.filter(match => match.status === "finished");
+            const upcomingCategories = [...new Set(
+                dayMatches
+                    .filter(match => match.status !== "finished")
+                    .map(match => match.category)
+            )];
             const isCurrentMonth = cellDate.getMonth() === month;
             const isSelected = selectedDate === key;
 
@@ -272,16 +277,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 !isCurrentMonth ? "is-outside" : "",
                 key === today ? "is-today" : "",
                 isSelected ? "is-selected" : "",
-                dayMatches.length ? "has-fixture" : ""
+                dayMatches.length ? "has-fixture" : "",
+                finishedMatches.length ? "has-finished" : ""
             ].filter(Boolean).join(" ");
             day.dataset.calendarDate = key;
-            day.setAttribute("aria-label", `${formatLongDate(key)}${dayMatches.length ? `, ${dayMatches.length} match` : ""}`);
+            day.setAttribute(
+                "aria-label",
+                `${formatLongDate(key)}${dayMatches.length ? `, ${dayMatches.length} match` : ""}`
+                + `${finishedMatches.length ? `, ${finishedMatches.length} terminé` : ""}`
+            );
             day.setAttribute("aria-pressed", String(isSelected));
             day.innerHTML = `
                 <span class="calendar-day-number">${String(cellDate.getDate()).padStart(2, "0")}</span>
                 ${dayMatches.length ? `<strong>${String(dayMatches.length).padStart(2, "0")}</strong>` : ""}
                 <span class="calendar-day-signals">
-                    ${categories.map(category => `<i class="${categoryClass(category)}"></i>`).join("")}
+                    ${finishedMatches.length ? '<b class="calendar-day-completed" aria-hidden="true"></b>' : ""}
+                    ${upcomingCategories.map(category => `<i class="${categoryClass(category)}"></i>`).join("")}
                 </span>
             `;
             dom.daysGrid.appendChild(day);

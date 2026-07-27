@@ -581,10 +581,6 @@ body.player-card-page nav ul li a:hover {
     display: none;
 }
 
-.player-card-match-stats.pc-enhanced .season-btn {
-    display: none;
-}
-
 .pc-match-actions {
     display: flex;
     gap: 10px;
@@ -722,8 +718,8 @@ body.player-card-page nav ul li a:hover {
     color: #fff;
 }
 
-/* Legacy button classes mapped */
-.radar-btn, .season-btn,
+/* Legacy radar button classes mapped */
+.radar-btn,
 [class$="-season"] {
     padding: 11px 20px;
     border: none;
@@ -739,29 +735,10 @@ body.player-card-page nav ul li a:hover {
     margin-top: 0;
 }
 
-.radar-btn:hover, .season-btn:hover,
+.radar-btn:hover,
 [class$="-season"]:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 22px var(--club-glow);
-}
-
-/* ===================== FOOTER HINT ===================== */
-.pc-secret-hint {
-    text-align: center;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    opacity: 0.5;
-    margin-top: 8px;
-    font-style: italic;
-}
-
-.pc-secret-hint kbd {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 2px 6px;
-    font-family: monospace;
-    font-size: 0.7rem;
 }
 
 /* ===================== POPUPS ===================== */

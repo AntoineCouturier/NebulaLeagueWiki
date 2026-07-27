@@ -1,26 +1,6 @@
-const VALUE_TIERS = [
-    { key: "amical", label: "Amical", shortLabel: "AMICAL", multiplier: 0.5, victory: 2500000 },
-    { key: "ligue", label: "Ligue", shortLabel: "LIGUE", multiplier: 1, victory: 5000000 },
-    { key: "ncl", label: "NCL", shortLabel: "NCL", multiplier: 2, victory: 10000000 },
-    { key: "third", label: "3ᵉ Place", shortLabel: "3ᵉ PLACE", multiplier: 3, victory: 15000000 },
-    { key: "finale", label: "Finale NCL", shortLabel: "FINALE", multiplier: 4, victory: 20000000 }
-];
-
-const VALUE_ACTIONS = [
-    { key: "victoire", code: "WIN", label: "Victoire", base: 0 },
-    { key: "buts", code: "GLS", label: "But", base: 1500000 },
-    { key: "passes", code: "AST", label: "Passe décisive", base: 1000000 },
-    { key: "def", code: "DEF", label: "Défense", base: 200000 },
-    { key: "dribbles", code: "DRB", label: "Dribble", base: 200000 },
-    { key: "mvp", code: "MVP", label: "MVP", base: 10000000 }
-];
-
-const VALUE_BONUSES = [
-    { code: "PSK", label: "Prix Puskás", value: 50000000 },
-    { code: "NCL", label: "Trophée NCL", value: 100000000 },
-    { code: "GSH", label: "Golden Shoe", value: 150000000 },
-    { code: "BDO", label: "Ballon d’Or", value: 250000000, premium: true }
-];
+const VALUE_TIERS = window.NEBULA_DATA?.marketValueTiers || [];
+const VALUE_ACTIONS = window.NEBULA_DATA?.marketValueActions || [];
+const VALUE_BONUSES = window.NEBULA_DATA?.marketValueBonuses || [];
 
 const MARKET_CLUB_COLORS = Object.fromEntries([
     ...(window.NEBULA_DATA?.clubs || []),
@@ -64,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const sortedPlayers = [...players].sort((a, b) => b.value - a.value);
         const totalValue = sortedPlayers.reduce((total, player) => total + player.value, 0);
         const valuedPlayers = sortedPlayers.filter(player => player.value > 0);
-        const leader = sortedPlayers[0];
+        const leader = sortedPlayers.find(player => Number(player.value) > 0) || null;
         const maximumValue = leader?.value || 1;
 
         document.getElementById("marketTotal").textContent = formatCompactCredits(totalValue);
@@ -72,11 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("marketProfileCount").textContent =
             `${String(sortedPlayers.length).padStart(2, "0")} PROFIL${sortedPlayers.length > 1 ? "S" : ""}`;
 
-        if (leader) {
-            document.getElementById("marketLeaderName").textContent = leader.name;
-            document.getElementById("marketLeaderValue").textContent =
-                leader.value > 0 ? formatCredits(leader.value) : "NON COTÉ";
-        }
+        document.getElementById("marketLeaderName").textContent = leader?.name || "NON ATTRIBUÉ";
+        document.getElementById("marketLeaderValue").textContent =
+            leader ? formatCredits(leader.value) : "AUCUNE VALEUR";
 
         ranking.innerHTML = sortedPlayers.map((player, index) => {
             const accent = MARKET_CLUB_COLORS[player.club] || "#63e7ff";

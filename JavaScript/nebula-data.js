@@ -57,10 +57,11 @@
        logoPath   = chemin du logo depuis la racine
        className  = classe CSS du club
        color      = couleur principale au format hexadécimal
-       titles     = nombre de titres collectifs
        style      = texte tactique visible sur la page Clubs
 
        Pour ajouter un club, dupliquer un objet complet dans ce tableau.
+       Les points et titres collectifs sont calculés depuis les matchs et
+       récompenses de saisons : ils ne sont pas renseignés ici.
        ---------------------------------------------------------------------- */
     const clubs = [
         {
@@ -69,8 +70,7 @@
             shortName: "Bastard",
             logoPath: "images/clubs_icon/Bastard_Munchen.png",
             className: "bastard",
-            color: "#ff515a",
-            titles: 0,
+            color: "#ff323cff",
             style: "Le Bastard München utilise Antoine en pivot pendant que les deux autres attaquants se rendent disponibles pour recevoir la passe au moment décisif."
         },
         {
@@ -79,8 +79,7 @@
             fullName: "Paris X Gen",
             logoPath: "images/clubs_icon/PXG.png",
             className: "pxg",
-            color: "#4a8dff",
-            titles: 0,
+            color: "#2877ffff",
             style: "Le PXG n'a pas encore de style de jeu fixe."
         },
         {
@@ -88,8 +87,7 @@
             name: "Ubers",
             logoPath: "images/clubs_icon/Ubers.png",
             className: "ubers",
-            color: "#43f58b",
-            titles: 0,
+            color: "#21ff3fff",
             style: "Les Ubers n'ont pas encore de style de jeu fixe."
         },
         {
@@ -98,7 +96,6 @@
             logoPath: "images/clubs_icon/Barcha.png",
             className: "barcha",
             color: "#ffd84d",
-            titles: 0,
             style: "Le Barcha n'a pas encore de style de jeu fixe."
         },
         {
@@ -106,15 +103,13 @@
             name: "Manshine City",
             logoPath: "images/clubs_icon/Manshine_City.png",
             className: "manshine",
-            color: "#63e7ff",
-            titles: 0,
+            color: "#2fe0ffff",
             style: "Manshine City mise sur une attaque à trois, agressive et difficile à contenir pour les défenseurs adverses."
         }
     ].map(club => ({
         ...club,
         logo: assetUrl(club.logoPath),
-        cls: club.className,
-        standings: { points: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 }
+        cls: club.className
     }));
 
     /* ----------------------------------------------------------------------
@@ -148,8 +143,11 @@
        club       = `key` d'un club ou d'un groupe déclaré plus haut
        folder     = dossier de sa fiche dans Joueurs/
        position   = CF, LW, RW ou CM
-       value      = valeur entière sans espace, par exemple 18250000
+       baseValue  = valeur de départ facultative ; généralement 0
+       discordId  = identifiant utilisateur Discord facultatif pour synchroniser la PFP
        avatarPath = image depuis la racine du projet
+       character  = personnage représenté sur sa fiche
+       technical  = notes techniques affichées sur sa player-card
 
        Après l'ajout, les listes, compteurs, valeurs et effectifs se mettent à
        jour seuls. La fiche HTML individuelle doit encore être créée en copiant
@@ -157,19 +155,130 @@
        ---------------------------------------------------------------------- */
     const players = [
         /* ========================== Bastard München ========================== */
-        { name: "Antoine", club: "bastard", folder: "bm", position: "CM", value: 18250000, avatarPath: "Joueurs/images-joueurs/anto.png" },
-        { name: "Dylan", club: "bastard", folder: "bm", position: "RW", value: 9300000, avatarPath: "Joueurs/images-joueurs/dylan.jpeg" },
-        { name: "Alessio", club: "bastard", folder: "bm", position: "CF", value: 0, avatarPath: "Joueurs/images-joueurs/alessio.png" },
+        {
+            name: "Antoine", club: "bastard", folder: "bm", position: "CM", baseValue: 0, discordId: "725931972802904115", avatarPath: "Joueurs/images-joueurs/anto.png", character: "Kurona", technical:
+            {
+                defense: 94,
+                passe: 100,
+                dribble: 95,
+                tir: 88,
+                offense: 93,
+                position: 94,
+                global: 94
+            }
+        },
+        {
+            name: "Dylan", club: "bastard", folder: "bm", position: "RW", baseValue: 0, discordId: "469446272235995141", avatarPath: "Joueurs/images-joueurs/dylan.jpeg", character: "Kiyora", technical:
+            {
+                defense: 78,
+                passe: 85,
+                dribble: 85,
+                tir: 79,
+                offense: 83,
+                position: 84,
+                global: 82
+            }
+        },
+        {
+            name: "Alessio", club: "bastard", folder: "bm", position: "CF", baseValue: 0, discordId: "748818822290604032", avatarPath: "Joueurs/images-joueurs/alessio.png", character: "Rin", technical:
+            {
+                defense: 74,
+                passe: 77,
+                dribble: 81,
+                tir: 82,
+                offense: 76,
+                position: 80,
+                global: 78
+            }
+        },
         /* ========================== PxG ========================== */
-        { name: "Jason", club: "pxg", folder: "pxg", position: "CF", value: 2450000, avatarPath: "Joueurs/images-joueurs/Jason.png" },
-        { name: "Enzo", club: "pxg", folder: "pxg", position: "CM", value: 2150000, avatarPath: "Joueurs/images-joueurs/enzo.png" },
+        {
+            name: "Jason", club: "pxg", folder: "pxg", position: "CF", baseValue: 0, discordId: "771124358311051284", avatarPath: "Joueurs/images-joueurs/Jason.png", character: "Shidou", technical:
+            {
+                defense: null,
+                passe: null,
+                dribble: null,
+                tir: null,
+                offense: null,
+                position: null,
+                global: null
+            }
+        },
+        {
+            name: "Enzo", club: "pxg", folder: "pxg", position: "CM", baseValue: 0, discordId: "775004632576950272", avatarPath: "Joueurs/images-joueurs/enzo.png", character: "Chigiri", technical:
+            {
+                defense: 71,
+                passe: 75,
+                dribble: 67,
+                tir: 68,
+                offense: 75,
+                position: 72,
+                global: 71
+            }
+        },
         /* ========================== Manshine City ========================== */
-        { name: "William", club: "manshine", folder: "manshine", position: "CF", value: 0, avatarPath: "Joueurs/images-joueurs/william.png" },
-        { name: "Imrane", club: "manshine", folder: "manshine", position: "LW", value: 0, avatarPath: "Joueurs/images-joueurs/imrane.png" },
-        { name: "Elijah", club: "manshine", folder: "manshine", position: "RW", value: 0, avatarPath: "Joueurs/images-joueurs/elijah.png" },
+        {
+            name: "William", club: "manshine", folder: "manshine", position: "CF", baseValue: 0, discordId: "915917842602405888", avatarPath: "Joueurs/images-joueurs/william.png", character: "Nagi", technical:
+            {
+                defense: 77,
+                passe: 79,
+                dribble: 78,
+                tir: 82,
+                offense: 77,
+                position: 84,
+                global: 80
+            }
+        },
+        {
+            name: "Imrane", club: "manshine", folder: "manshine", position: "LW", baseValue: 0, discordId: "1049719803725750302", avatarPath: "Joueurs/images-joueurs/imrane.png", character: "Reo", technical:
+            {
+                defense: 88,
+                passe: 84,
+                dribble: 93,
+                tir: 100,
+                offense: 94,
+                position: 85,
+                global: 91
+            }
+        },
+        {
+            name: "Elijah", club: "manshine", folder: "manshine", position: "RW", baseValue: 0, discordId: "827952021239889940", avatarPath: "Joueurs/images-joueurs/elijah.png", character: "Shidou", technical:
+            {
+                defense: 72,
+                passe: 74,
+                dribble: 83,
+                tir: 82,
+                offense: 77,
+                position: 78,
+                global: 78
+            }
+        },
         /* ========================== Retraite ========================== */
-        { name: "Matheo", club: "retraite", folder: "retraite", position: "CM", value: 0, avatarPath: "Joueurs/images-joueurs/matheo.png" },
-        { name: "Theo", club: "retraite", folder: "retraite", position: "RW", value: 7500000, avatarPath: "Joueurs/images-joueurs/theo.png" }
+        {
+            name: "Matheo", club: "retraite", folder: "retraite", position: "CM", baseValue: 0, discordId: "506800771417767938", avatarPath: "Joueurs/images-joueurs/matheo.png", character: "Lorenzo", technical:
+            {
+                defense: 82,
+                passe: 80,
+                dribble: 74,
+                tir: 73,
+                offense: 79,
+                position: 82,
+                global: 78
+            }
+        },
+        {
+            name: "Theo", club: "retraite", folder: "retraite", position: "RW", baseValue: 0, discordId: "414493257775448075", avatarPath: "Joueurs/images-joueurs/theo.png", character: "Kunigami", technical:
+            {
+                defense: null,
+                passe: null,
+                dribble: null,
+                tir: null,
+                offense: null,
+                position: null,
+                global: null
+            }
+        },
+
     ].map(player => {
         const club = clubMeta[player.club] || groups[player.club];
         const profilePath = `Joueurs/${player.folder}/${player.name.toLowerCase()}.html`;
@@ -183,6 +292,96 @@
     });
 
     /* ----------------------------------------------------------------------
+       04B. AVATARS DISCORD
+
+       Si `discordId` est renseigné, Netlify récupère la PFP actuelle sans
+       exposer le token Discord. `avatarPath` reste toujours l'image de secours.
+       Les résultats sont conservés une heure dans le navigateur pour limiter
+       les appels à Discord pendant la navigation entre les pages.
+       ---------------------------------------------------------------------- */
+    const discordAvatarCacheDuration = 60 * 60 * 1000;
+
+    function readDiscordAvatarCache(discordId) {
+        try {
+            const cached = JSON.parse(localStorage.getItem(`nebula:discord-avatar:${discordId}`));
+            return cached?.avatarUrl && cached.expiresAt > Date.now() ? cached.avatarUrl : null;
+        } catch {
+            return null;
+        }
+    }
+
+    function writeDiscordAvatarCache(discordId, avatarUrl) {
+        try {
+            localStorage.setItem(`nebula:discord-avatar:${discordId}`, JSON.stringify({
+                avatarUrl,
+                expiresAt: Date.now() + discordAvatarCacheDuration
+            }));
+        } catch {
+            // Le cache est facultatif : la synchronisation continue sans lui.
+        }
+    }
+
+    function isDiscordAvatarUrl(value) {
+        try {
+            return new URL(value).hostname === "cdn.discordapp.com";
+        } catch {
+            return false;
+        }
+    }
+
+    function applyDiscordAvatar(player, avatarUrl, fallbackAvatar) {
+        if (!isDiscordAvatarUrl(avatarUrl)) return false;
+
+        player.avatar = avatarUrl;
+        document.querySelectorAll("img").forEach(image => {
+            if (image.src !== fallbackAvatar && image.dataset.nebulaPlayer !== player.name) return;
+
+            image.dataset.nebulaPlayer = player.name;
+            image.addEventListener("error", () => {
+                if (image.src === avatarUrl) image.src = fallbackAvatar;
+            }, { once: true });
+            image.src = avatarUrl;
+        });
+        return true;
+    }
+
+    async function syncDiscordAvatar(player) {
+        const fallbackAvatar = player.avatar;
+        const cachedAvatar = readDiscordAvatarCache(player.discordId);
+        if (cachedAvatar && applyDiscordAvatar(player, cachedAvatar, fallbackAvatar)) {
+            return player.name;
+        }
+
+        try {
+            const endpoint = pageUrl(`api/discord-avatar?userId=${encodeURIComponent(player.discordId)}`);
+            const response = await fetch(endpoint, {
+                headers: { Accept: "application/json" }
+            });
+            if (!response.ok) return null;
+
+            const result = await response.json();
+            if (!applyDiscordAvatar(player, result.avatarUrl, fallbackAvatar)) return null;
+
+            writeDiscordAvatarCache(player.discordId, result.avatarUrl);
+            return player.name;
+        } catch {
+            return null;
+        }
+    }
+
+    async function syncDiscordAvatars() {
+        const linkedPlayers = players.filter(player => /^\d{17,20}$/.test(player.discordId || ""));
+        const updatedPlayers = (await Promise.all(linkedPlayers.map(syncDiscordAvatar))).filter(Boolean);
+
+        if (updatedPlayers.length) {
+            window.dispatchEvent(new CustomEvent("nebula:discord-avatars-updated", {
+                detail: { players: updatedPlayers }
+            }));
+        }
+        return updatedPlayers;
+    }
+
+    /* ----------------------------------------------------------------------
        05. MATCHS TERMINÉS
 
        Utilisé par :
@@ -192,6 +391,7 @@
        id          = identifiant unique du match
        date/time   = date AAAA-MM-JJ et heure HH:MM
        category    = amical, ligue ou ncl
+       valueTier   = facultatif : third ou finale pour le calcul de valeur
        season      = numéro de saison
        home/away   = `key` des deux clubs
        scoreHome/Away = score final
@@ -207,58 +407,47 @@
        records, comparaisons, saisons et archives du calendrier.
        ---------------------------------------------------------------------- */
     const matches = [
-        /* ==================================================== MATCH 1 ==================================================== */
-        {
+        // EXEMPLE DE MATCH À COPIER
+        //
+        // Retirez les `//`, adaptez les valeurs et ajoutez une virgule entre
+        // deux matchs. Les totaux des buteurs doivent correspondre au score.
+        /* {
             id: "m1",
-            date: "2022-04-01",
+            date: "2026-09-02",
             time: "20:00",
-            category: "amical",
-            season: 0,
-            home: "manshine",
-            away: "pxg",
-            scoreHome: 13,
-            scoreAway: 2,
-            mvp: "Antoine",
+            category: "ligue",
+            valueTier: null,
+            season: 1,
+            home: "bastard",
+            away: "manshine",
+            scoreHome: 2,
+            scoreAway: 1,
             videoUrl: null,
             scorersHome: [
-                { name: "Dylan", count: 6 },
-                { name: "Antoine", count: 5 },
-                { name: "Theo", count: 2 }
+                { name: "Antoine", count: 1 },
+                { name: "Dylan", count: 1 }
             ],
             scorersAway: [
-                { name: "Enzo", count: 1 },
-                { name: "Jason", count: 1 }
+                { name: "William", count: 1 }
             ],
             timelineHome: [
-                { time: "0'43\"", scorer: "Dylan", assist: "Antoine" },
-                { time: "1'21\"", scorer: "Dylan", assist: "Theo" },
-                { time: "2'48\"", scorer: "Antoine", assist: "Dylan" },
-                { time: "3'21\"", scorer: "Theo", assist: "Antoine" },
-                { time: "4'05\"", scorer: "Dylan", assist: "Antoine" },
-                { time: "4'51\"", scorer: "Antoine", assist: "Theo" },
-                { time: "5'56\"", scorer: "Dylan", assist: "Antoine" },
-                { time: "6'21\"", scorer: "Dylan", assist: "Antoine" },
-                { time: "7'12\"", scorer: "Antoine", assist: "Theo" },
-                { time: "8'45\"", scorer: "Antoine", assist: "Theo" },
-                { time: "9'29\"", scorer: "Dylan", assist: "Antoine" },
-                { time: "10'57\"", scorer: "Antoine", assist: "Solo Dribble 🌟" },
-                { time: "11'52\"", scorer: "Theo", assist: "Antoine" }
+                { time: "2'10\"", scorer: "Antoine", assist: "Dylan" },
+                { time: "8'42\"", scorer: "Dylan", assist: "Antoine" }
             ],
             timelineAway: [
-                { time: "7'56\"", scorer: "Enzo", assist: "Jason" },
-                { time: "10'07\"", scorer: "Jason", assist: "Amar" }
+                { time: "5'16\"", scorer: "William", assist: "Elijah" }
             ],
             notesHome: [
-                { name: "Dylan", note: 9.5, defenses: 5, dribbles: 13 },
-                { name: "Antoine", note: 9.8, defenses: 11, dribbles: 24 },
-                { name: "Theo", note: 9.2, defenses: 8, dribbles: 7 }
+                { name: "Antoine", note: 9.2, defenses: 4, dribbles: 8 },
+                { name: "Dylan", note: 8.8, defenses: 2, dribbles: 10 },
+                { name: "Alessio", note: 7.5, defenses: 8, dribbles: 6 },
             ],
             notesAway: [
-                { name: "Enzo", note: 4.3, defenses: 9, dribbles: 5 },
-                { name: "Jason", note: 4.8, defenses: 4, dribbles: 8 },
-                { name: "Amar", note: 3.2, defenses: 3, dribbles: 4 }
+                { name: "William", note: 8.1, defenses: 3, dribbles: 6 },
+                { name: "Elijah", note: 7.4, defenses: 5, dribbles: 7 },
+                { name: "Imrane", note: 7.1, defenses: 3, dribbles: 6 }
             ]
-        }
+        }, */
     ];
 
     /* ----------------------------------------------------------------------
@@ -346,44 +535,65 @@
         };
     };
 
+    const scheduledLeagueFixtures = leagueSchedule.map(([date, home, away], index) => ({
+        id: `league-s1-${String(index + 1).padStart(2, "0")}`,
+        date,
+        time: "18:00",
+        category: "ligue",
+        status: "upcoming",
+        season: 1,
+        competitionLabel: "Ligue — Saison 1",
+        stage: `Journée ${String(index + 1).padStart(2, "0")}`,
+        home,
+        away,
+        homeTeam: clubMeta[home].name,
+        awayTeam: clubMeta[away].name,
+        homeLogo: clubMeta[home].logo,
+        awayLogo: clubMeta[away].logo,
+        scoreHome: null,
+        scoreAway: null
+    }));
+
+    const scheduledNclFixtures = nclSchedule.map(([date, stage], index) => ({
+        id: `ncl-s1-${String(index + 1).padStart(2, "0")}`,
+        date,
+        time: "18:00",
+        category: "ncl",
+        status: "upcoming",
+        season: 1,
+        competitionLabel: "Nebula Champions League — Saison 1",
+        stage,
+        home: null,
+        away: null,
+        homeTeam: "???",
+        awayTeam: "???",
+        homeLogo: assetUrl("images/clubs_icon/placeholder.png"),
+        awayLogo: assetUrl("images/clubs_icon/placeholder.png"),
+        scoreHome: null,
+        scoreAway: null
+    }));
+
+    function hasCompletedResult(fixture) {
+        return matches.some(match => {
+            if (
+                Number(match.season) !== Number(fixture.season)
+                || match.date !== fixture.date
+                || match.category !== fixture.category
+            ) {
+                return false;
+            }
+
+            // Les affiches NCL du calendrier utilisent encore des clubs inconnus.
+            // Dans ce cas, la date et la compétition suffisent pour les remplacer.
+            if (!fixture.home || !fixture.away) return true;
+            return match.home === fixture.home && match.away === fixture.away;
+        });
+    }
+
     const fixtures = [
         ...matches.map(fixtureFromMatch),
-        ...leagueSchedule.map(([date, home, away], index) => ({
-            id: `league-s1-${String(index + 1).padStart(2, "0")}`,
-            date,
-            time: "18:00",
-            category: "ligue",
-            status: "upcoming",
-            season: 1,
-            competitionLabel: "Ligue — Saison 1",
-            stage: `Journée ${String(index + 1).padStart(2, "0")}`,
-            home,
-            away,
-            homeTeam: clubMeta[home].name,
-            awayTeam: clubMeta[away].name,
-            homeLogo: clubMeta[home].logo,
-            awayLogo: clubMeta[away].logo,
-            scoreHome: null,
-            scoreAway: null
-        })),
-        ...nclSchedule.map(([date, stage], index) => ({
-            id: `ncl-s1-${String(index + 1).padStart(2, "0")}`,
-            date,
-            time: "18:00",
-            category: "ncl",
-            status: "upcoming",
-            season: 1,
-            competitionLabel: "Nebula Champions League — Saison 1",
-            stage,
-            home: null,
-            away: null,
-            homeTeam: "???",
-            awayTeam: "???",
-            homeLogo: assetUrl("images/clubs_icon/placeholder.png"),
-            awayLogo: assetUrl("images/clubs_icon/placeholder.png"),
-            scoreHome: null,
-            scoreAway: null
-        }))
+        ...scheduledLeagueFixtures.filter(fixture => !hasCompletedResult(fixture)),
+        ...scheduledNclFixtures.filter(fixture => !hasCompletedResult(fixture))
     ];
 
     /* ----------------------------------------------------------------------
@@ -399,6 +609,13 @@
        endDate         = date de fin, ou null si la saison continue
        expectedMatches = nombre de matchs prévu pour calculer la progression
        rewards         = récompenses affichées dans le dossier de saison
+       reward.value    = nom exact du joueur récompensé, ou NON ATTRIBUÉ
+
+       Quand `reward.value` correspond à un joueur, sa fiche ajoute
+       automatiquement un titre comme « Ballon d’Or Saison 3 ».
+
+       Exception : la récompense GLD (Soulier d’Or / Golden Shoe) est toujours
+       attribuée automatiquement au meilleur buteur de la saison.
        ---------------------------------------------------------------------- */
     const emptySeasonRewards = [
         { code: "PUS", label: "Prix Puskas", value: "NON ATTRIBUÉ" },
@@ -409,15 +626,6 @@
 
     const seasons = [
         {
-            id: "s0",
-            number: 0,
-            status: "finished",
-            startDate: "2022-03-25",
-            endDate: "2022-04-01",
-            expectedMatches: 1,
-            rewards: emptySeasonRewards
-        },
-        {
             id: "s1",
             number: 1,
             status: "active",
@@ -425,16 +633,345 @@
             endDate: null,
             expectedMatches: 20,
             rewards: emptySeasonRewards
-            /* Pour ajouter des Rewards:
+        }
+
+        /*
+        EXEMPLE DE SAISON À COPIER
+
+        Ajoutez une virgule après la saison précédente, puis copiez cet objet.
+        Une seule saison doit normalement avoir le statut `active`.
+
+        {
+            id: "s2",
+            number: 2,
+            status: "active",
+            startDate: "2027-01-10",
+            endDate: null,
+            expectedMatches: 20,
             rewards: [
                 { code: "PUS", label: "Prix Puskas", value: "NON ATTRIBUÉ" },
                 { code: "GLD", label: "Soulier d’Or", value: "NON ATTRIBUÉ" },
                 { code: "NCL", label: "Club gagnant NCL", value: "NON ATTRIBUÉ" },
                 { code: "BDO", label: "Ballon d’Or", value: "NON ATTRIBUÉ" }
             ]
-            */
         }
+        */
     ];
+
+    /* ----------------------------------------------------------------------
+       08B. CALCUL AUTOMATIQUE DE LA VALEUR
+
+       La valeur finale d'un joueur est composée de sa `baseValue`, de toutes
+       ses performances de matchs et des récompenses saisonnières obtenues.
+       Ces règles alimentent aussi le simulateur de valeur.
+
+       `valueTier` peut être ajouté à un match pour distinguer une petite
+       finale (`third`) ou une finale NCL (`finale`). Sans ce champ, la
+       catégorie du match est utilisée.
+       ---------------------------------------------------------------------- */
+    const marketValueTiers = [
+        { key: "amical", label: "Amical", shortLabel: "AMICAL", multiplier: 0.5, victory: 2500000 },
+        { key: "ligue", label: "Ligue", shortLabel: "LIGUE", multiplier: 1, victory: 5000000 },
+        { key: "ncl", label: "NCL", shortLabel: "NCL", multiplier: 2, victory: 10000000 },
+        { key: "third", label: "3e Place", shortLabel: "3e PLACE", multiplier: 3, victory: 15000000 },
+        { key: "finale", label: "Finale NCL", shortLabel: "FINALE", multiplier: 4, victory: 20000000 }
+    ];
+
+    const marketValueActions = [
+        { key: "victoire", metric: "win", code: "WIN", label: "Victoire", base: 0 },
+        { key: "buts", metric: "goals", code: "GLS", label: "But", base: 1500000 },
+        { key: "passes", metric: "assists", code: "AST", label: "Passe décisive", base: 1000000 },
+        { key: "def", metric: "defenses", code: "DEF", label: "Défense", base: 200000 },
+        { key: "dribbles", metric: "dribbles", code: "DRB", label: "Dribble", base: 200000 },
+        { key: "mvp", metric: "mvp", code: "MVP", label: "MVP", base: 10000000 }
+    ];
+
+    const marketValueBonuses = [
+        { code: "PUS", label: "Prix Puskas", value: 50000000 },
+        { code: "NCL", label: "Trophée NCL", value: 100000000 },
+        { code: "GLD", label: "Golden Shoe", value: 150000000 },
+        { code: "BDO", label: "Ballon d’Or", value: 250000000, premium: true }
+    ];
+
+    function getSeasonTopScorer(seasonNumber) {
+        const totals = new Map();
+
+        matches
+            .filter(match => Number(match.season) === Number(seasonNumber))
+            .forEach(match => {
+                [...(match.scorersHome || []), ...(match.scorersAway || [])]
+                    .forEach(scorer => {
+                        const goals = Number(scorer.count || 0);
+                        totals.set(scorer.name, (totals.get(scorer.name) || 0) + goals);
+                    });
+            });
+
+        return [...totals.entries()]
+            .filter(([, goals]) => goals > 0)
+            .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "fr"))[0]?.[0] || null;
+    }
+
+    function resolveSeasonRewards(season) {
+        if (!season) return [];
+        const goldenShoeWinner = season.status === "finished"
+            ? getSeasonTopScorer(season.number)
+            : null;
+
+        return (season.rewards || emptySeasonRewards).map(reward => (
+            reward.code === "GLD"
+                ? { ...reward, value: goldenShoeWinner || "NON ATTRIBUÉ" }
+                : { ...reward }
+        ));
+    }
+
+    function normalizeRewardOwner(value) {
+        return String(value || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[’']/g, "")
+            .toLowerCase()
+            .trim();
+    }
+
+    function getPlayerTrophyCounts(playerName) {
+        const counts = { PUS: 0, NCL: 0, GLD: 0, BDO: 0 };
+        const normalizedPlayerName = normalizeRewardOwner(playerName);
+        const player = players.find(item => normalizeRewardOwner(item.name) === normalizedPlayerName);
+        if (!player) return counts;
+
+        const club = clubMeta[player.club] || groups[player.club];
+        const clubAliases = new Set([
+            player.club,
+            club?.key,
+            club?.name,
+            club?.shortName,
+            club?.fullName
+        ].filter(Boolean).map(normalizeRewardOwner));
+
+        seasons.forEach(season => {
+            resolveSeasonRewards(season).forEach(reward => {
+                if (!Object.hasOwn(counts, reward.code)) return;
+                const owner = normalizeRewardOwner(reward.value);
+
+                if (reward.code === "NCL") {
+                    if (clubAliases.has(owner)) counts.NCL += 1;
+                    return;
+                }
+
+                if (owner === normalizedPlayerName) counts[reward.code] += 1;
+            });
+        });
+
+        return counts;
+    }
+
+    function getPlayerMatchPerformance(match, playerName) {
+        const normalizedPlayerName = normalizeRewardOwner(playerName);
+        const itemContainsPlayer = item => (
+            normalizeRewardOwner(item?.name) === normalizedPlayerName
+            || normalizeRewardOwner(item?.scorer) === normalizedPlayerName
+            || normalizeRewardOwner(item?.assist) === normalizedPlayerName
+        );
+        const homeCollections = [match.notesHome, match.scorersHome, match.timelineHome];
+        const awayCollections = [match.notesAway, match.scorersAway, match.timelineAway];
+        const playsHome = homeCollections.some(collection => (collection || []).some(itemContainsPlayer));
+        const playsAway = awayCollections.some(collection => (collection || []).some(itemContainsPlayer));
+        const side = playsHome ? "home" : playsAway ? "away" : null;
+        if (!side) return null;
+
+        const goals = [...(match.scorersHome || []), ...(match.scorersAway || [])]
+            .filter(scorer => normalizeRewardOwner(scorer.name) === normalizedPlayerName)
+            .reduce((total, scorer) => total + Number(scorer.count || 0), 0);
+        const assists = [...(match.timelineHome || []), ...(match.timelineAway || [])]
+            .filter(event => normalizeRewardOwner(event.assist) === normalizedPlayerName)
+            .length;
+        const note = [...(match.notesHome || []), ...(match.notesAway || [])]
+            .find(player => normalizeRewardOwner(player.name) === normalizedPlayerName);
+        const ratedPlayers = [...(match.notesHome || []), ...(match.notesAway || [])]
+            .filter(player => Number.isFinite(Number(player.note)))
+            .sort((a, b) => Number(b.note) - Number(a.note) || a.name.localeCompare(b.name, "fr"));
+        const matchMvp = ratedPlayers[0]?.name || match.mvp;
+        const homeScore = Number(match.scoreHome || 0);
+        const awayScore = Number(match.scoreAway || 0);
+        const draw = homeScore === awayScore;
+        const won = !draw && (
+            (side === "home" && homeScore > awayScore)
+            || (side === "away" && awayScore > homeScore)
+        );
+
+        return {
+            side,
+            goals,
+            assists,
+            defenses: Number(note?.defenses || 0),
+            dribbles: Number(note?.dribbles || 0),
+            mvp: normalizeRewardOwner(matchMvp) === normalizedPlayerName ? 1 : 0,
+            won,
+            draw,
+            lost: !won && !draw
+        };
+    }
+
+    function getPlayerMatchStats(playerName) {
+        const totals = {
+            matches: 0,
+            goals: 0,
+            assists: 0,
+            defenses: 0,
+            dribbles: 0,
+            mvp: 0,
+            wins: 0,
+            draws: 0,
+            losses: 0
+        };
+
+        matches.forEach(match => {
+            const performance = getPlayerMatchPerformance(match, playerName);
+            if (!performance) return;
+
+            totals.matches += 1;
+            totals.goals += performance.goals;
+            totals.assists += performance.assists;
+            totals.defenses += performance.defenses;
+            totals.dribbles += performance.dribbles;
+            totals.mvp += performance.mvp;
+            totals.wins += performance.won ? 1 : 0;
+            totals.draws += performance.draw ? 1 : 0;
+            totals.losses += performance.lost ? 1 : 0;
+        });
+
+        return totals;
+    }
+
+    function getActiveSeason() {
+        return seasons.find(season => season.status === "active") || seasons[seasons.length - 1] || null;
+    }
+
+    function getClubMatchStats(clubKey, seasonNumber = getActiveSeason()?.number) {
+        const totals = {
+            played: 0,
+            points: 0,
+            w: 0,
+            d: 0,
+            l: 0,
+            gf: 0,
+            ga: 0
+        };
+
+        matches
+            .filter(match => (
+                (match.home === clubKey || match.away === clubKey)
+                && (seasonNumber === null || seasonNumber === undefined || Number(match.season) === Number(seasonNumber))
+            ))
+            .forEach(match => {
+                const isHome = match.home === clubKey;
+                const scored = Number(isHome ? match.scoreHome : match.scoreAway) || 0;
+                const conceded = Number(isHome ? match.scoreAway : match.scoreHome) || 0;
+
+                totals.played += 1;
+                totals.gf += scored;
+                totals.ga += conceded;
+
+                if (scored > conceded) {
+                    totals.w += 1;
+                    totals.points += 3;
+                } else if (scored < conceded) {
+                    totals.l += 1;
+                } else {
+                    totals.d += 1;
+                    totals.points += 1;
+                }
+            });
+
+        return totals;
+    }
+
+    function getClubTitleCount(clubKey) {
+        const club = clubMeta[clubKey];
+        if (!club) return 0;
+
+        const aliases = new Set([
+            normalizeRewardOwner(clubKey),
+            normalizeRewardOwner(club.name),
+            normalizeRewardOwner(club.fullName),
+            normalizeRewardOwner(club.shortName)
+        ].filter(Boolean));
+
+        return seasons.reduce((total, season) => (
+            total + resolveSeasonRewards(season).filter(reward => (
+                reward.code === "NCL" && aliases.has(normalizeRewardOwner(reward.value))
+            )).length
+        ), 0);
+    }
+
+    function getPlayerMarketValueBreakdown(playerName) {
+        const normalizedPlayerName = normalizeRewardOwner(playerName);
+        const player = players.find(item => normalizeRewardOwner(item.name) === normalizedPlayerName);
+        const baseValue = Number(player?.baseValue || 0);
+        const actionTotals = Object.fromEntries(
+            marketValueActions.map(action => [action.key, { quantity: 0, value: 0 }])
+        );
+
+        matches.forEach(match => {
+            const performance = getPlayerMatchPerformance(match, playerName);
+            if (!performance) return;
+
+            const tierKey = match.valueTier || match.category;
+            const tier = marketValueTiers.find(item => item.key === tierKey) || marketValueTiers[0];
+            const quantities = {
+                victoire: performance.won ? 1 : 0,
+                buts: performance.goals,
+                passes: performance.assists,
+                def: performance.defenses,
+                dribbles: performance.dribbles,
+                mvp: performance.mvp
+            };
+
+            marketValueActions.forEach(action => {
+                const quantity = Number(quantities[action.key] || 0);
+                const unitValue = action.key === "victoire"
+                    ? Number(tier.victory || 0)
+                    : Number(action.base || 0) * Number(tier.multiplier || 1);
+                actionTotals[action.key].quantity += quantity;
+                actionTotals[action.key].value += quantity * unitValue;
+            });
+        });
+
+        const trophyCounts = getPlayerTrophyCounts(playerName);
+        const rewardTotals = marketValueBonuses.map(bonus => {
+            const count = Number(trophyCounts[bonus.code] || 0);
+            return {
+                ...bonus,
+                count,
+                total: count * Number(bonus.value || 0)
+            };
+        });
+        const matchValue = Object.values(actionTotals)
+            .reduce((total, action) => total + action.value, 0);
+        const rewardValue = rewardTotals.reduce((total, bonus) => total + bonus.total, 0);
+
+        return {
+            baseValue,
+            matchValue,
+            rewardValue,
+            total: Math.round(baseValue + matchValue + rewardValue),
+            actions: actionTotals,
+            rewards: rewardTotals
+        };
+    }
+
+    function getPlayerMarketValue(playerName) {
+        return getPlayerMarketValueBreakdown(playerName).total;
+    }
+
+    function refreshPlayerValues() {
+        players.forEach(player => {
+            player.value = getPlayerMarketValue(player.name);
+        });
+        return players;
+    }
+
+    refreshPlayerValues();
 
     /* ----------------------------------------------------------------------
        09. POSTES
@@ -458,13 +995,13 @@
        lue par Joueurs/player-card.js.
        ---------------------------------------------------------------------- */
     const technicalTitleRules = [
-        { metric: "defense", name: "Crown Messenger", requirement: "Défense 95+", code: "DEF", accent: "#9dff5c", priority: 55 },
-        { metric: "passe", name: "Rainbow Passes", requirement: "Passe 95+", code: "PAS", accent: "#65b5ff", priority: 55 },
-        { metric: "dribble", name: "Butterfly Dribbling", requirement: "Dribble 95+", code: "DRI", accent: "#c879ff", priority: 55 },
-        { metric: "tir", name: "Predator Eyes", requirement: "Tir 95+", code: "TIR", accent: "#ff6670", priority: 55 },
-        { metric: "offense", name: "God Speed", requirement: "Offense 95+", code: "OFF", accent: "#ffad4d", priority: 55 },
-        { metric: "position", name: "Meta-Vision", requirement: "Positionnement 95+", code: "POS", accent: "#63e7ff", priority: 55 },
-        { metric: "global", name: "The Machinery.", requirement: "Note globale 95+", code: "OVR", accent: "#f4f7f9", priority: 75 }
+        { metric: "defense", name: "Crown Messenger", threshold: 95, requirement: "Défense 95+", code: "DEF", accent: "#9dff5c", priority: 55 },
+        { metric: "passe", name: "Rainbow Passes", threshold: 95, requirement: "Passe 95+", code: "PAS", accent: "#65b5ff", priority: 55 },
+        { metric: "dribble", name: "Butterfly Dribbling", threshold: 95, requirement: "Dribble 95+", code: "DRI", accent: "#c879ff", priority: 55 },
+        { metric: "tir", name: "Predator Eyes", threshold: 95, requirement: "Tir 95+", code: "TIR", accent: "#ff6670", priority: 55 },
+        { metric: "offense", name: "God Speed", threshold: 95, requirement: "Offense 95+", code: "OFF", accent: "#ffad4d", priority: 55 },
+        { metric: "position", name: "Meta-Vision", threshold: 95, requirement: "Positionnement 95+", code: "POS", accent: "#63e7ff", priority: 55 },
+        { metric: "global", name: "The Machinery.", threshold: 95, requirement: "Note globale 95+", code: "OVR", accent: "#f4f7f9", priority: 75 }
     ];
 
     /* ----------------------------------------------------------------------
@@ -509,6 +1046,18 @@
         }
     ];
 
+    const valueTitleTrack = {
+        metric: "value",
+        code: "VAL",
+        accent: "#ffd84d",
+        unit: "¥",
+        titles: [
+            [100000000, "Riche"],
+            [500000000, "Extra Riche"],
+            [1000000000, "Milliardaire"]
+        ]
+    };
+
     /* ----------------------------------------------------------------------
        11. EXPORT VERS LES AUTRES PAGES
 
@@ -520,6 +1069,13 @@
        pageUrl(path)        = URL absolue d'une page
        getClub(key)         = retrouver un club ou groupe
        getPlayer(name)      = retrouver un joueur par son nom
+       getSeasonTopScorer(n)= retrouver le meilleur buteur d'une saison
+       resolveSeasonRewards = résoudre les récompenses automatiques
+       getPlayerTrophyCounts= compter les trophées d'un joueur
+       getPlayerMatchStats   = cumuler les statistiques de matchs d'un joueur
+       getClubMatchStats     = calculer le bilan du club sur une saison
+       getClubTitleCount     = compter les trophées NCL du club
+       getPlayerMarketValue  = calculer la valeur totale d'un joueur
        playerPageHref(obj)  = lien vers une fiche joueur
        clubPageHref(key)    = lien vers un dossier club
        ---------------------------------------------------------------------- */
@@ -537,11 +1093,28 @@
         seasons,
         positions,
         matchLengthSeconds: 12 * 60,
+        marketValueTiers,
+        marketValueActions,
+        marketValueBonuses,
         technicalTitleRules,
         careerTitleTracks,
+        valueTitleTrack,
         getClub: key => clubMeta[key] || groups[key] || null,
         getPlayer: name => players.find(player => player.name === name) || null,
+        getSeasonTopScorer,
+        resolveSeasonRewards,
+        getPlayerTrophyCounts,
+        getPlayerMatchStats,
+        getActiveSeason,
+        getClubMatchStats,
+        getClubTitleCount,
+        getPlayerMarketValue,
+        getPlayerMarketValueBreakdown,
+        refreshPlayerValues,
+        syncDiscordAvatars,
         playerPageHref: player => player?.href || pageUrl("players.html"),
         clubPageHref: key => pageUrl(`club.html?club=${encodeURIComponent(key)}`)
     });
+
+    window.NEBULA_DATA.discordAvatarReady = syncDiscordAvatars();
 })();

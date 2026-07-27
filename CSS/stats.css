@@ -647,6 +647,16 @@ body.nebula-page.records-page .club-record-identity img {
     font-size: 0.78rem;
 }
 
+body.nebula-page.records-page .club-record-table tbody td:nth-child(3),
+body.nebula-page.records-page .club-record-table tbody td:nth-child(4),
+body.nebula-page.records-page .club-record-table tbody td:nth-child(5),
+body.nebula-page.records-page .club-record-table tbody td:nth-child(6),
+body.nebula-page.records-page .club-record-table tbody td:nth-child(4)>strong {
+    font-family: var(--display);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
 .club-record-table .positive {
     color: var(--record-acid);
 }

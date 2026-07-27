@@ -462,6 +462,62 @@ const rarityMeta = {
   worldclass: { label: "World Class", accent: "#ff5f5fff", short: "WC" },
   mastery: { label: "Mastery", accent: "#ffffffff", short: "MX" }
 };
+
+function syncGlobalTitleCatalog() {
+  const technicalRules = window.NEBULA_DATA?.technicalTitleRules || [];
+  const careerTracks = window.NEBULA_DATA?.careerTitleTracks || [];
+
+  document.querySelectorAll(".stat-title[data-code]").forEach((card) => {
+    const rule = technicalRules.find((item) => item.code === card.dataset.code);
+    if (!rule) return;
+
+    const threshold = Number(rule.threshold ?? 95);
+    const readout = card.querySelector(".stat-readout strong");
+    const title = card.querySelector("h4");
+    if (readout) readout.innerHTML = `${threshold}<sup>+</sup>`;
+    if (title) title.textContent = rule.name;
+  });
+
+  const uniqueTechnicalThresholds = [...new Set(technicalRules.map((rule) => Number(rule.threshold ?? 95)))];
+  const thresholdCopy = document.querySelector("[data-technical-threshold-copy]");
+  if (thresholdCopy && uniqueTechnicalThresholds.length) {
+    thresholdCopy.textContent = uniqueTechnicalThresholds.length === 1
+      ? `Atteindre ${uniqueTechnicalThresholds[0]} dans une statistique déverrouille son titre spécialisé.`
+      : "Chaque statistique possède son propre seuil de titre spécialisé.";
+  }
+
+  const unitLabels = {
+    STK: "BUTS",
+    PAS: "PASSES D.",
+    DEF: "SAUV.",
+    DRI: "DRIBBLES"
+  };
+
+  document.querySelectorAll(".career-track").forEach((section) => {
+    const code = section.querySelector(".career-track-heading > span")?.textContent.trim();
+    const track = careerTracks.find((item) => item.code === code);
+    if (!track) return;
+
+    const ultimateThreshold = track.titles.at(-1)?.[0];
+    const headingThreshold = section.querySelector(".career-track-heading > strong");
+    if (headingThreshold && ultimateThreshold !== undefined) {
+      headingThreshold.textContent = ultimateThreshold;
+    }
+
+    section.querySelectorAll("ol > li").forEach((row, index) => {
+      const tier = track.titles[index];
+      if (!tier) return;
+      const [threshold, name] = tier;
+      const title = row.querySelector("div strong");
+      const requirement = row.querySelector(":scope > span");
+      if (title) title.textContent = name;
+      if (requirement) requirement.textContent = `${threshold} ${unitLabels[track.code] || track.unit.toUpperCase()}`;
+    });
+  });
+}
+
+syncGlobalTitleCatalog();
+
 const imageBase = "images/icons";
 let selectedId = "isagi";
 let activeRarity = "all";
@@ -473,6 +529,11 @@ const search = document.getElementById("search");
 const resultCount = document.getElementById("result-count");
 const profileCount = document.getElementById("profile-count");
 const challengeCount = document.getElementById("challenge-count");
+const rarityCount = document.getElementById("rarity-count");
+
+if (rarityCount) {
+  rarityCount.textContent = String(Object.keys(rarityMeta).length).padStart(2, "0");
+}
 
 if (grid && playerFile && search && resultCount && profileCount && challengeCount) {
   profileCount.textContent = String(characters.length).padStart(2, "0");

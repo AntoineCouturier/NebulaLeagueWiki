@@ -852,13 +852,15 @@ body.nebula-page.seasons-page .season-switch.is-selected {
 }
 
 .season-award small {
-    color: #667783;
-    font-size: 0.44rem;
+    color: #8c9ca6;
+    font-size: 0.56rem;
+    line-height: 1.35;
 }
 
 .season-award strong {
-    color: #cfd8dd;
-    font-size: 0.55rem;
+    color: #e0e7eb;
+    font-size: 0.65rem;
+    line-height: 1.25;
 }
 
 .season-dossier-actions {

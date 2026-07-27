@@ -366,9 +366,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderRewards(season) {
+        const rewards = window.NEBULA_DATA?.resolveSeasonRewards
+            ? window.NEBULA_DATA.resolveSeasonRewards(season)
+            : (season.rewards || EMPTY_REWARDS);
+
         return `
             <div class="season-awards">
-                ${(season.rewards || EMPTY_REWARDS).map(reward => `
+                ${rewards.map(reward => `
                     <div class="season-award">
                         <span>${escapeHtml(reward.code)}</span>
                         <div><small>${escapeHtml(reward.label)}</small><strong>${escapeHtml(reward.value)}</strong></div>

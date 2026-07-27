@@ -174,13 +174,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Données de synthèse de l'en-tête.
     const totalValue = PLAYERS.reduce((total, player) => total + player.value, 0);
-    const featuredPlayer = [...PLAYERS].sort((a, b) => b.value - a.value)[0];
+    const featuredPlayer = [...PLAYERS]
+        .sort((a, b) => b.value - a.value)
+        .find(player => Number(player.value) > 0) || null;
     document.getElementById("playersTotal").textContent = String(PLAYERS.length).padStart(2, "0");
     document.getElementById("playersValue").textContent = `${compactValue(totalValue)} ¥`;
     if (featuredPlayer) {
         document.getElementById("featuredPlayerName").textContent = featuredPlayer.name;
-        document.getElementById("featuredPlayerValue").textContent =
-            featuredPlayer.value === 0 ? "NON COTÉ" : `${formatValue(featuredPlayer.value)} ¥`;
+        document.getElementById("featuredPlayerValue").textContent = `${formatValue(featuredPlayer.value)} ¥`;
+    } else {
+        document.getElementById("featuredPlayerName").textContent = "NON ATTRIBUÉ";
+        document.getElementById("featuredPlayerValue").textContent = "AUCUNE VALEUR";
     }
 
     dropdownCurrent.addEventListener("click", event => {

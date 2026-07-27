@@ -26,13 +26,12 @@
             <a href="../../title.html">Titres</a>
             <a href="../../club.html">Clubs</a>
             <a class="nav-active" href="../../players.html" aria-current="page">Joueurs</a>
-            <a href="../../valeur.html">Valeurs</a>
-            <a href="../../rules.html">Règles</a>
-            <a href="../../stats.html">Records</a>
             <a href="../../matchs.html">Matchs</a>
-            <a href="../../headtohead.html">Face à face</a>
             <a href="../../saison.html">Saisons</a>
             <a href="../../fixtures.html">Calendrier</a>
+            <a href="../../headtohead.html">Face à Face</a>
+            <a href="../../valeur.html">Valeurs</a>
+            <a href="../../stats.html">Records</a>
         </nav>
         <div class="header-actions">
             <span class="live-pill"><i></i> SAISON 01</span>
@@ -84,16 +83,15 @@
         <!-- Cube Stats matchs -->
         <div class="player-card-match-stats">
             <h3>Stats de Matchs Total</h3>
-            <p><strong class="matchs">Matchs :</strong> 1</p>
-            <p><strong class="matchs">Buts :</strong> 6</p>
-            <p><strong class="matchs">Assists :</strong> 1</p>
-            <p><strong class="matchs">Contribution Defensive :</strong> 5</p>
-            <p><strong class="matchs">Dribbles :</strong> 13</p>
+            <p><strong class="matchs">Matchs :</strong> 0</p>
+            <p><strong class="matchs">Buts :</strong> 0</p>
+            <p><strong class="matchs">Assists :</strong> 0</p>
+            <p><strong class="matchs">Contribution Defensive :</strong> 0</p>
+            <p><strong class="matchs">Dribbles :</strong> 0</p>
             <p><strong class="matchs">MVP :</strong> 0</p>
-            <p><strong class="matchs">Victoire :</strong> 1</p>
+            <p><strong class="matchs">Victoire :</strong> 0</p>
             <p><strong class="matchs">Défaite :</strong> 0</p>
-            <!-- 🔵 Bouton -->
-            <button class="season-btn bastard-season" id="openSeasonPopup">Voir les Stats par Saisons</button>
+
         </div>
 
         <!-- Cube Titres / Trophées -->
@@ -111,78 +109,6 @@
             </ul>
         </div>
 
-    </div>
-
-    <!-- 🔵 POPUP SAISONS (CORRIGÉ - min) -->
-    <div class="popup-overlay" id="popupSeason">
-        <div class="popup-box bastard-box">
-            <h2>Stats par Saison</h2>
-
-            <label for="seasonSelect">Choisir une saison :</label>
-            <select id="seasonSelect">
-                <option value="1">Saison 1</option>
-            </select>
-
-            <!-- <-- ZONE D'AFFICHAGE (obligatoire !) -->
-            <div id="seasonStatsDisplay" class="popup-stats">
-                <!-- Le script injectera les stats ici -->
-            </div>
-
-            <!-- 🔒 Stats cachées (propres au joueur) -->
-            <div id="hidden-season-stats" style="display:none;">
-
-                <div class="season" data-season="1" data-matchs="0" data-buts="0" data-assists="0" data-saves="0"
-                    data-dribbles="0" data-mvp="0" data-win="0" data-lose="0">
-                </div>
-
-            </div>
-
-            <button class="close-btn" id="closeSeasonPopup">Fermer</button>
-        </div>
-    </div>
-
-    <!-- 🔥 POPUP SECRET PAR MATCHS -->
-    <div class="popup-overlay" id="popupMatch">
-        <div class="popup-box bastard-box">
-            <h2>Stats par Match</h2>
-
-            <label for="matchSelect">Choisir un match :</label>
-            <select id="matchSelect">
-                <option value="1">Match 1</option>
-                <option value="2">Match 2</option>
-                <option value="3">Match 3</option>
-                <option value="4">Match 4</option>
-                <option value="5">Match 5</option>
-                <option value="6">Match 6</option>
-                <option value="7">Match 7</option>
-                <option value="8">Match 8</option>
-                <option value="9">Match 9</option>
-                <option value="10">Match 10</option>
-                <option value="11">Match 11</option>
-                <option value="12">Match 12</option>
-                <option value="13">Match 13</option>
-                <option value="14">Match 14</option>
-                <option value="15">Match 15</option>
-                <option value="16">Match 16</option>
-            </select>
-
-            <div id="matchStatsDisplay" class="popup-stats"></div>
-
-            <!-- 🔒 Stats cachées par match -->
-            <div id="hidden-match-stats" style="display:none;">
-
-                <div class="match" data-match="1" data-title="Manshine City vs PXG | 01/04/2022" data-buts="6"
-                    data-pass="1" data-saves="6" data-dribbles="9">
-                </div>
-
-                <div class="match" data-match="1" data-title="PXG vs Manshine City| 01/04/2022" data-buts="0"
-                    data-pass="0" data-saves="0" data-dribbles="0">
-                </div>
-
-            </div>
-
-            <button class="close-btn" id="closeMatchPopup">Fermer</button>
-        </div>
     </div>
 
     <!-- POPUP RADAR AGRANDI -->

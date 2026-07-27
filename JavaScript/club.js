@@ -6,8 +6,11 @@
 
 const CLUBS = (window.NEBULA_DATA?.clubs || []).map(club => ({
     ...club,
-    standings: { ...club.standings }
+    standings: window.NEBULA_DATA?.getClubMatchStats?.(club.key)
+        || { played: 0, points: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
+    titles: window.NEBULA_DATA?.getClubTitleCount?.(club.key) || 0
 }));
+const ACTIVE_SEASON = window.NEBULA_DATA?.getActiveSeason?.() || null;
 
 const CLUB_ROLES = ["CF", "LW", "RW", "CM"];
 
@@ -219,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     ${renderRosterList(club)}
                     <a class="view-roster-link" href="players.html?club=${club.key}">Voir l'effectif complet →</a>
 
-                    <h4 style="margin-top:22px;">Statistiques — Saison en cours</h4>
+                    <h4 style="margin-top:22px;">Statistiques — Saison ${ACTIVE_SEASON?.number ?? "en cours"}</h4>
                     <div class="modal-stat-grid">
                         <div class="modal-stat"><span>Points</span><strong>${s.points}</strong></div>
                         <div class="modal-stat"><span>V / N / D</span><strong>${s.w}/${s.d}/${s.l}</strong></div>

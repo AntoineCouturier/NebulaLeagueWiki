@@ -754,7 +754,7 @@ body.nebula-page.rules-page .manual-heading h2 {
 }
 
 .diagram-player.ultimate-player,
-.diagram-player.passing-player,
+.diagram-player.defender-player,
 .diagram-player.offside-player,
 .diagram-player.ball-carrier,
 .diagram-player.open-player-one,
@@ -765,7 +765,7 @@ body.nebula-page.rules-page .manual-heading h2 {
 }
 
 .diagram-player.distant-carrier::after,
-.diagram-player.passing-player::after,
+.diagram-player.defender-player::after,
 .diagram-player.ball-carrier::after {
     position: absolute;
     right: -8px;
@@ -844,7 +844,7 @@ body.nebula-page.rules-page .manual-heading h2 {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: 55%;
+    left: calc(41% + 27px);
     width: 1px;
     content: "";
     background: var(--rules-danger);

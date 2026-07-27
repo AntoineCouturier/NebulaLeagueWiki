@@ -30,13 +30,12 @@
         <a class="nav-active" href="#codex" aria-current="page">Titres</a>
         <a href="club.html">Clubs</a>
         <a href="players.html">Joueurs</a>
-        <a href="valeur.html">Valeurs</a>
-        <a href="rules.html">Règles</a>
-        <a href="stats.html">Records</a>
         <a href="matchs.html">Matchs</a>
-        <a href="headtohead.html">Face à face</a>
         <a href="saison.html">Saisons</a>
         <a href="fixtures.html">Calendrier</a>
+        <a href="headtohead.html">Face à Face</a>
+        <a href="valeur.html">Valeurs</a>
+        <a href="stats.html">Records</a>
       </nav>
       <div class="header-actions">
         <span class="live-pill"><i></i> SAISON 01</span>
@@ -68,7 +67,7 @@
       </div>
       <div class="hero-stats">
         <div><strong id="profile-count">00</strong><span>profils indexés</span></div>
-        <div><strong>06</strong><span>classes de rareté</span></div>
+        <div><strong id="rarity-count">00</strong><span>classes de rareté</span></div>
         <div><strong id="challenge-count">000</strong><span>défis à accomplir</span></div>
       </div>
     </section>
@@ -91,7 +90,7 @@
               <small>SEUILS INDIVIDUELS</small>
               <h3>PROTOCOLES DE STATISTIQUES</h3>
             </div>
-            <p>Dépasser 95 dans une statistique déverrouille son titre spécialisé.</p>
+            <p data-technical-threshold-copy>Atteindre le seuil d’une statistique déverrouille son titre spécialisé.</p>
           </div>
 
           <div class="stat-title-grid">
@@ -349,6 +348,7 @@
     </footer>
   </main>
 
+  <script src="JavaScript/nebula-data.js" defer></script>
   <script src="JavaScript/titles.js" defer></script>
 </body>
 
