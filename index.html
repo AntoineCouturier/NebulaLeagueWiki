@@ -4,346 +4,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05070a">
+    <meta name="description"
+        content="Le hub officiel de la Nebula League : joueurs, clubs, titres, matchs, valeurs et archives d'une ligue privée sur Azure Latch.">
     <link rel="icon" type="image/png" href="images/logos/nebula.png">
-    <title>Nebula League - Accueil</title>
+    <title>Nebula League — Entrez dans la ligue</title>
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="CSS/style.css">
     <link rel="stylesheet" href="CSS/hamburger.css">
     <link rel="stylesheet" href="CSS/global-theme.css">
-
-    <style>
-        /* Hero Section Styles */
-        .hero-section {
-            text-align: center;
-            padding: 80px 20px 60px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(180, 28, 230, 0.3) 0%, transparent 70%);
-            animation: pulse 4s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                transform: translateX(-50%) scale(1);
-                opacity: 0.5;
-            }
-
-            50% {
-                transform: translateX(-50%) scale(1.1);
-                opacity: 0.8;
-            }
-        }
-
-        .hero-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 4rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #b41cff 0%, #d89aff 50%, #b41cff 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin: 0 0 20px 0;
-            animation: shimmer 3s linear infinite;
-            position: relative;
-            z-index: 1;
-            text-shadow: 0 0 40px rgba(180, 28, 255, 0.5);
-        }
-
-        @keyframes shimmer {
-            0% {
-                background-position: 0% center;
-            }
-
-            100% {
-                background-position: 200% center;
-            }
-        }
-
-        .hero-subtitle {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.3rem;
-            color: #e0d6ff;
-            font-weight: 300;
-            max-width: 700px;
-            margin: 0 auto 30px;
-            line-height: 1.6;
-            position: relative;
-            z-index: 1;
-            opacity: 0.9;
-        }
-
-        .hero-stats {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
-            margin-top: 40px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .stat-item {
-            background: rgba(180, 28, 255, 0.1);
-            border: 1px solid rgba(180, 28, 255, 0.3);
-            border-radius: 12px;
-            padding: 20px 30px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-
-        .stat-item:hover {
-            transform: translateY(-5px);
-            border-color: rgba(180, 28, 255, 0.6);
-            box-shadow: 0 10px 30px rgba(180, 28, 255, 0.3);
-        }
-
-        .stat-number {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #b41cff, #d89aff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            display: block;
-        }
-
-        .stat-label {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            color: #c8b3ff;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 5px;
-        }
-
-        /* Section Title */
-        .section-title {
-            font-family: 'Orbitron', sans-serif;
-            text-align: center;
-            font-size: 2.5rem;
-            color: #d89aff;
-            margin: 0 0 50px 0;
-            position: relative;
-            display: inline-block;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #b41cff, transparent);
-        }
-
-        /* Enhanced Cards */
-        .cards-wrapper {
-            padding: 20px 20px 60px;
-        }
-
-        .card-A {
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .card-A::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(180, 28, 255, 0.1), transparent);
-            transform: rotate(45deg);
-            transition: all 0.5s ease;
-            opacity: 0;
-        }
-
-        .card-A:hover::before {
-            opacity: 1;
-            animation: shine 1.5s ease-in-out;
-        }
-
-        @keyframes shine {
-            0% {
-                transform: translateX(-100%) translateY(-100%) rotate(45deg);
-            }
-
-            100% {
-                transform: translateX(100%) translateY(100%) rotate(45deg);
-            }
-        }
-
-        .card-A h3 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
-
-        .card-A p {
-            font-family: 'Inter', sans-serif;
-            font-weight: 300;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.5rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1.1rem;
-            }
-
-            .stat-item {
-                padding: 15px 25px;
-            }
-
-            .stat-number {
-                font-size: 2rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="CSS/home.css">
 </head>
 
-<body>
-
-    <header>
-        <div class="header-container">
-            <!-- Hamburger Menu Button -->
-            <div class="hamburger-menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-
-            <h1>Nebula League - Accueil</h1>
-            <nav>
-                <ul>
-                    <li><a href="index.html" class="active">Accueil</a></li>
-                    <li><a href="title.html">Persos et Titres</a></li>
-                    <li><a href="club.html">Clubs</a></li>
-                    <li><a href="players.html">Joueurs</a></li>
-                    <li><a href="valeur.html">Valeurs</a></li>
-                    <li><a href="rules.html">Règles Matchs</a></li>
-                    <li><a href="stats.html">Records</a></li>
-                    <li><a href="matchs.html">Historique de Matchs</a></li>
-                    <li><a href="headtohead.html">Face à Face</a></li>
-                    <li><a href="saison.html">Historique des Saisons</a></li>
-                    <li><a href="fixtures.html">Calendrier des Matchs</a></li>
-                </ul>
-            </nav>
+<body class="nebula-page home-page">
+    <header class="site-header" id="top">
+        <a class="brand" href="#top" aria-label="Nebula League, retour en haut">
+            <span class="brand-mark"><span></span></span>
+            <span class="brand-copy"><strong>NEBULA</strong><small>LEAGUE // DATABASE</small></span>
+        </a>
+        <nav class="main-nav" aria-label="Navigation principale">
+            <a class="nav-active" href="index.html" aria-current="page">Accueil</a>
+            <a href="title.html">Titres</a>
+            <a href="club.html">Clubs</a>
+            <a href="players.html">Joueurs</a>
+            <a href="valeur.html">Valeurs</a>
+            <a href="rules.html">Règles</a>
+            <a href="stats.html">Records</a>
+            <a href="matchs.html">Matchs</a>
+            <a href="headtohead.html">Face à face</a>
+            <a href="saison.html">Saisons</a>
+            <a href="fixtures.html">Calendrier</a>
+        </nav>
+        <div class="header-actions">
+            <span class="live-pill"><i></i> SAISON 01</span>
+            <button class="menu-button" type="button" aria-label="Ouvrir le menu"
+                aria-expanded="false"><span></span><span></span></button>
         </div>
     </header>
 
-    <!-- Mobile Navigation Overlay -->
-    <div class="nav-mobile-overlay">
-        <button class="nav-close-btn" aria-label="Close menu">&times;</button>
-        <nav>
-            <ul>
-                <li><a href="index.html" class="active">Accueil</a></li>
-                <li><a href="title.html">Persos et Titres</a></li>
-                <li><a href="club.html">Clubs</a></li>
-                <li><a href="players.html">Joueurs</a></li>
-                <li><a href="valeur.html">Valeurs</a></li>
-                <li><a href="rules.html">Règles Matchs</a></li>
-                <li><a href="stats.html">Records</a></li>
-                <li><a href="matchs.html">Historique de Matchs</a></li>
-                <li><a href="headtohead.html">Face à Face</a></li>
-                <li><a href="saison.html">Historique des Saisons</a></li>
-                <li><a href="fixtures.html">Calendrier des Matchs</a></li>
-                <li>
-                    <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
-                        <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
-                        Discord
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+    <main class="home-main">
+        <section class="home-hero" aria-labelledby="home-title">
+            <div class="home-grid" aria-hidden="true"></div>
+            <div class="home-scanline" aria-hidden="true"></div>
 
-    <!-- Backdrop for click-outside-to-close -->
-    <div class="nav-backdrop"></div>
+            <div class="home-hero-copy">
+                <p class="home-eyebrow"><span>NL—00</span> COMPÉTITION PRIVÉE // AZURE LATCH</p>
+                <h1 id="home-title"><span>NEBULA</span><em>LEAGUE</em></h1>
+                <p class="home-lead">
+                    Une ligue entre rivaux. Des valeurs qui évoluent, des titres à conquérir et chaque match
+                    archivé. Entre dans la base de données et trouve ta place sur le terrain.
+                </p>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <h1 class="hero-title">NEBULA LEAGUE</h1>
-        <p class="hero-subtitle">
-            Bienvenue sur ce site dedié au Jeu Azure Latch, avec des matchs entre potes et des titres obtenables dans
-            les matchs scrims.
-        </p>
-    </section>
+                <div class="home-actions">
+                    <a class="home-primary-cta" href="title.html">Explorer les titres <span>↘</span></a>
+                    <a class="home-secondary-cta" href="#directory">Ouvrir le hub <span>↓</span></a>
+                </div>
 
-    <div class="cards-wrapper">
-
-        <main class="cards-container">
-            <div class="card card-A" data-link="title.html">
-                <h3>🏆 Persos et Titres</h3>
-                <p>Découvrez tous les titres que vous pouvez débloquer ainsi que les persos dispo.</p>
+                <dl class="home-metrics" aria-label="La ligue en chiffres">
+                    <div>
+                        <dt data-count="characters" data-pad="2">26</dt>
+                        <dd>Personnages<br>archivés</dd>
+                    </div>
+                    <div>
+                        <dt data-count="players" data-pad="2">10</dt>
+                        <dd>Joueurs<br>enregistrés</dd>
+                    </div>
+                    <div>
+                        <dt data-count="clubs" data-pad="2">05</dt>
+                        <dd>Clubs<br>en lice</dd>
+                    </div>
+                </dl>
             </div>
 
-            <div class="card card-A" data-link="players.html">
-                <h3>👤 Joueurs</h3>
-                <p>Consultez la carte du joueur que vous voulez.</p>
+            <div class="home-hero-visual" aria-label="Système orbital des clubs de la Nebula League">
+                <div class="home-orbit" aria-hidden="true">
+                    <div class="orbit-ring orbit-ring-one"></div>
+                    <div class="orbit-ring orbit-ring-two"></div>
+                    <div class="orbit-axis"></div>
+
+                    <div class="orbit-core">
+                        <span class="orbit-core-label">NEBULA</span>
+                        <strong>NL</strong>
+                        <small>CORE // 01</small>
+                    </div>
+
+                    <span class="orbit-point orbit-point-one"></span>
+                    <span class="orbit-point orbit-point-two"></span>
+                    <span class="orbit-point orbit-point-three"></span>
+                </div>
+
+                <div class="home-system-card">
+                    <div class="system-card-head">
+                        <span>SYSTEM STATUS</span>
+                        <strong><i></i> ONLINE</strong>
+                    </div>
+                    <div class="system-card-body">
+                        <p><span>Saison active</span><strong>01</strong></p>
+                        <p><span>Archive centrale</span><strong>SYNC</strong></p>
+                        <p><span>Dernière entrée</span><strong>LIVE</strong></p>
+                    </div>
+                    <a href="fixtures.html">Consulter le calendrier <span>↗</span></a>
+                </div>
             </div>
 
-            <div class="card card-A" data-link="club.html">
-                <h3>⚽ Clubs</h3>
-                <p>Chaque joueur appartient à un club. Soyez performant pour avoir une place dans le XI titulaire.</p>
-            </div>
+            <a class="home-scroll-cue" href="#directory" aria-label="Découvrir la suite">
+                <span>SCROLL TO ACCESS</span><i></i>
+            </a>
+        </section>
 
-            <div class="card card-A" data-link="valeur.html">
-                <h3>💎 Valeur</h3>
-                <p>Selon vos actions durant un match, vous gagnez de la Valeur. Plus votre Valeur est élevée, plus vous
-                    êtes reconnu dans le serveur.</p>
-            </div>
-
-            <div class="card card-A" data-link="rules.html">
-                <h3>📜 Règles</h3>
-                <p>Consultez toutes les règles des matchs pour comprendre comment progresser et maximiser votre Valeur.
+        <section class="home-directory" id="directory" aria-labelledby="directory-title">
+            <div class="directory-heading reveal">
+                <div>
+                    <p class="home-eyebrow"><span>NL—02</span> LEAGUE DIRECTORY</p>
+                    <h2 id="directory-title">TOUTE LA LIGUE.<br><em>UN SEUL HUB.</em></h2>
+                </div>
+                <p>
+                    Passe des profils aux archives, suis la valeur des joueurs ou replonge dans chaque confrontation.
+                    Toutes les données de la ligue sont accessibles ici.
                 </p>
             </div>
 
-            <div class="card card-A" data-link="stats.html">
-                <h3>🏅 Records</h3>
-                <p>Les records du serveur sont ici, buts, passes, meilleur match etc, tout est la.</p>
-            </div>
+            <div class="home-portals">
+                <a class="portal-card portal-featured reveal" href="title.html">
+                    <span class="portal-index">01 / ARCHIVES</span>
+                    <div class="portal-copy">
+                        <p><span data-count="characters">26</span> personnages — Titres communs à Mastery</p>
+                        <h3>PERSONNAGES<br>&amp; TITRES</h3>
+                        <span class="portal-arrow">↗</span>
+                    </div>
+                    <div class="portal-orbit" aria-hidden="true">
+                        <i></i><i></i><i></i><strong data-count="characters">26</strong>
+                    </div>
+                </a>
 
-            <div class="card card-A" data-link="fixtures.html">
-                <h3>📅 Match Fixtures</h3>
-                <p>Consultez le calendrier interactif des matchs sur dates fixes, filtrez par équipe et compétition.</p>
-            </div>
-        </main>
-    </div>
+                <a class="portal-card portal-players reveal" href="players.html">
+                    <span class="portal-index">02 / ROSTER</span>
+                    <div class="portal-copy">
+                        <p>Profils, postes et valeurs</p>
+                        <h3>JOUEURS</h3>
+                        <span class="portal-arrow">↗</span>
+                    </div>
+                    <strong class="portal-figure" data-count="players" data-pad="2">10</strong>
+                </a>
 
-    <script src="JavaScript/script.js"></script>
+                <a class="portal-card portal-clubs reveal" href="club.html">
+                    <span class="portal-index">03 / TEAMS</span>
+                    <div class="portal-copy">
+                        <p>Effectifs et identités de jeu</p>
+                        <h3>CLUBS</h3>
+                        <span class="portal-arrow">↗</span>
+                    </div>
+                    <div class="portal-club-marks" aria-hidden="true">
+                        <img src="images/clubs_icon/Bastard_Munchen.png" alt="">
+                        <img src="images/clubs_icon/PXG.png" alt="">
+                        <img src="images/clubs_icon/Manshine_City.png" alt="">
+                    </div>
+                </a>
+
+                <a class="portal-card portal-value reveal" href="valeur.html">
+                    <span class="portal-index">04 / MARKET</span>
+                    <div class="portal-copy">
+                        <p>Progression et cotations</p>
+                        <h3>VALEURS</h3>
+                        <span class="portal-arrow">↗</span>
+                    </div>
+                    <div class="value-graph" aria-hidden="true">
+                        <i style="--bar:32%"></i>
+                        <i style="--bar:48%"></i>
+                        <i style="--bar:42%"></i>
+                        <i style="--bar:68%"></i>
+                        <i style="--bar:86%"></i>
+                        <i style="--bar:100%"></i>
+                    </div>
+                </a>
+
+                <a class="portal-card portal-matches reveal" href="matchs.html">
+                    <span class="portal-index">05 / TIMELINE</span>
+                    <div class="portal-copy">
+                        <p>Chaque score, chaque résultat</p>
+                        <h3>MATCHS</h3>
+                        <span class="portal-arrow">↗</span>
+                    </div>
+                    <div class="match-timeline" aria-hidden="true">
+                        <span></span><i></i><i></i><i></i>
+                    </div>
+                </a>
+
+                <a class="portal-card portal-records reveal" href="stats.html">
+                    <span class="portal-index">06 / RECORDS</span>
+                    <div class="portal-copy">
+                        <p>Les performances qui restent</p>
+                        <h3>RECORDS</h3>
+                        <span class="portal-arrow">↗</span>
+                    </div>
+                    <div class="record-target" aria-hidden="true"><i></i></div>
+                </a>
+
+                <a class="portal-card portal-rules reveal" href="rules.html">
+                    <span class="portal-index">07 / PROTOCOLE</span>
+                    <div class="portal-copy">
+                        <p>Cadre officiel de la ligue</p>
+                        <h3>RÈGLES</h3>
+                        <span class="portal-arrow">↗</span>
+                    </div>
+                    <div class="portal-rule-diagram" aria-hidden="true"><i></i><i></i><i></i></div>
+                </a>
+
+                <a class="portal-card portal-headtohead reveal" href="headtohead.html">
+                    <span class="portal-index">08 / COMPARAISON</span>
+                    <div class="portal-copy">
+                        <p>Clubs et joueurs en duel</p>
+                        <h3>FACE À FACE</h3>
+                        <span class="portal-arrow">↗</span>
+                    </div>
+                    <div class="portal-versus-symbol" aria-hidden="true"><i data-side="A"></i><strong>VS</strong><i data-side="B"></i></div>
+                </a>
+
+                <a class="portal-card portal-seasons reveal" href="saison.html">
+                    <span class="portal-index">09 / CYCLES</span>
+                    <div class="portal-copy">
+                        <p>Progression de la compétition</p>
+                        <h3>SAISONS</h3>
+                        <span class="portal-arrow">↗</span>
+                    </div>
+                    <div class="portal-season-symbol" aria-hidden="true"><i></i><strong>01</strong></div>
+                </a>
+
+                <a class="portal-card portal-calendar reveal" href="fixtures.html">
+                    <span class="portal-index">10 / PLANNING</span>
+                    <div class="portal-copy">
+                        <p>Prochaines rencontres</p>
+                        <h3>CALENDRIER</h3>
+                        <span class="portal-arrow">↗</span>
+                    </div>
+                    <div class="portal-calendar-symbol" aria-hidden="true">
+                        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="home-final reveal">
+            <div class="home-final-grid" aria-hidden="true"></div>
+            <p class="home-eyebrow"><span>NL—03</span> ENTER THE PITCH</p>
+            <h2>TON EGO.<br><em>TA TRACE.</em></h2>
+            <p>
+                Rejoins le serveur, entre sur le terrain et transforme chaque action en donnée permanente
+                dans l’histoire de la Nebula League.
+            </p>
+            <div class="home-actions">
+                <a class="home-primary-cta" href="https://discord.gg/Ab9tFpzm" target="_blank" rel="noreferrer">
+                    Rejoindre Discord <span>↗</span>
+                </a>
+                <a class="home-secondary-cta" href="rules.html">Lire les règles <span>→</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="home-footer">
+        <a class="footer-brand" href="#top">
+            <span class="brand-mark"><span></span></span>
+            <strong>NEBULA LEAGUE</strong>
+        </a>
+        <p>PRIVATE AZURE LATCH LEAGUE // DATABASE ONLINE</p>
+        <div>
+            <span>© <span id="current-year">2026</span> NEBULA</span>
+            <a href="#top">Retour en haut ↑</a>
+        </div>
+    </footer>
+
+<script src="JavaScript/nebula-data.js" defer></script>
+<script src="JavaScript/players.js" defer></script>
+    <script src="JavaScript/club.js" defer></script>
+    <script src="JavaScript/titles.js" defer></script>
+    <script src="JavaScript/script.js" defer></script>
+    <script src="JavaScript/hamburger.js" defer></script>
 </body>
 
 </html>

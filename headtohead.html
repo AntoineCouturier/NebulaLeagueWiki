@@ -4,133 +4,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05070a">
     <link rel="icon" type="image/png" href="images/logos/nebula.png">
     <title>Face à Face - Nebula League</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
     <link rel="stylesheet" href="CSS/hamburger.css">
-    <link rel="stylesheet" href="CSS/headtohead.css">
     <link rel="stylesheet" href="CSS/global-theme.css">
+    <link rel="stylesheet" href="CSS/headtohead.css">
 </head>
 
-<body>
-
-    <header>
-        <div class="header-container">
-            <!-- Hamburger Menu Button -->
-            <div class="hamburger-menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-
-            <h1>Nebula League - Face à Face</h1>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Accueil</a></li>
-                    <li><a href="title.html">Persos et Titres</a></li>
-                    <li><a href="club.html">Clubs</a></li>
-                    <li><a href="players.html">Joueurs</a></li>
-                    <li><a href="valeur.html">Valeurs</a></li>
-                    <li><a href="rules.html">Règles Matchs</a></li>
-                    <li><a href="stats.html">Records</a></li>
-                    <li><a href="matchs.html">Historique de Matchs</a></li>
-                    <li><a href="headtohead.html" class="active">Face à Face</a></li>
-                    <li><a href="saison.html">Historique des Saisons</a></li>
-                    <li><a href="fixtures.html">Calendrier des Matchs</a></li>
-                    <li>
-                        <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
-                            <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
-                            Discord
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+<body class="nebula-page h2h-page">
+    <header class="site-header" id="top">
+        <a class="brand" href="#top" aria-label="Nebula League, retour en haut">
+            <span class="brand-mark"><span></span></span>
+            <span class="brand-copy"><strong>NEBULA</strong><small>LEAGUE // DATABASE</small></span>
+        </a>
+        <nav class="main-nav" aria-label="Navigation principale">
+            <a href="index.html">Accueil</a>
+            <a href="title.html">Titres</a>
+            <a href="club.html">Clubs</a>
+            <a href="players.html">Joueurs</a>
+            <a href="valeur.html">Valeurs</a>
+            <a href="rules.html">Règles</a>
+            <a href="stats.html">Records</a>
+            <a href="matchs.html">Matchs</a>
+            <a class="nav-active" href="headtohead.html" aria-current="page">Face à face</a>
+            <a href="saison.html">Saisons</a>
+            <a href="fixtures.html">Calendrier</a>
+        </nav>
+        <div class="header-actions">
+            <span class="live-pill"><i></i> SAISON 01</span>
+            <button class="menu-button" type="button" aria-label="Ouvrir le menu"
+                aria-expanded="false"><span></span><span></span></button>
         </div>
     </header>
 
-    <!-- Mobile Navigation Overlay -->
-    <div class="nav-mobile-overlay">
-        <button class="nav-close-btn" aria-label="Close menu">&times;</button>
-        <nav>
-            <ul>
-                <li><a href="index.html">Accueil</a></li>
-                <li><a href="title.html">Persos et Titres</a></li>
-                <li><a href="club.html">Clubs</a></li>
-                <li><a href="players.html">Joueurs</a></li>
-                <li><a href="valeur.html">Valeurs</a></li>
-                <li><a href="rules.html">Règles Matchs</a></li>
-                <li><a href="stats.html">Records</a></li>
-                <li><a href="matchs.html">Historique de Matchs</a></li>
-                <li><a href="headtohead.html" class="active">Face à Face</a></li>
-                <li><a href="saison.html">Historique des Saisons</a></li>
-                <li><a href="fixtures.html">Calendrier des Matchs</a></li>
-            </ul>
-        </nav>
-    </div>
-
-    <!-- Backdrop for click-outside-to-close -->
-    <div class="nav-backdrop"></div>
-
-    <!-- ============ HERO ============ -->
-    <section class="h2h-hero">
-        <h2 class="h2h-hero-title">FACE À FACE</h2>
-        <p class="h2h-hero-subtitle">Choisis deux équipes pour révéler leur historique : confrontations directes,
-            bilan victoires/défaites et buts marqués l'une contre l'autre.</p>
-    </section>
-
-    <!-- ============ SÉLECTION DES ÉQUIPES ============ -->
-    <section class="h2h-picker">
-        <p class="h2h-picker-hint" id="h2hHint">Sélectionne ta <strong>première</strong> équipe.</p>
-        <div class="h2h-select-grid" id="h2hSelectGrid"></div>
-    </section>
-
-    <!-- ============ ÉTAT VIDE (moins de 2 équipes choisies) ============ -->
-    <section class="h2h-empty" id="h2hEmptyState">
-        <div class="h2h-empty-icon">⚔️</div>
-        <p class="h2h-empty-title">Le duel n'a pas encore commencé</p>
-        <p class="h2h-empty-sub">Clique sur deux équipes ci-dessus pour lancer le face à face.</p>
-    </section>
-
-    <!-- ============ RÉSULTATS DU DUEL ============ -->
-    <section class="h2h-results" id="h2hResults">
-
-        <div class="h2h-clash-header">
-            <div class="h2h-clash-team side-a" id="h2hHeaderA"></div>
-            <div class="h2h-clash-vs">
-                <span class="h2h-vs-bolt">⚡</span>
-                <span>VS</span>
+    <main class="h2h-lab">
+        <section class="h2h-command-hero" aria-labelledby="h2hPageTitle">
+            <div class="h2h-hero-copy">
+                <p class="h2h-eyebrow"><span>NL–09</span> SIMULATEUR COMPARATIF</p>
+                <h1 id="h2hPageTitle">DEUX PROFILS.<br><span>UN SEUL VERDICT.</span></h1>
+                <p class="h2h-intro">
+                    Opposez deux clubs ou deux joueurs. Toutes les données sont recalculées depuis les effectifs et
+                    l'historique des matchs de la Nebula League.
+                </p>
+                <div class="h2h-hero-stats" id="h2hHeroStats" aria-label="Données analysées"></div>
             </div>
-            <div class="h2h-clash-team side-b" id="h2hHeaderB"></div>
-        </div>
 
-        <div class="h2h-record-bar-wrap">
-            <div class="h2h-record-labels">
-                <span id="h2hRecordLabelA">0 Victoires</span>
-                <span id="h2hRecordLabelDraw">0 Nuls</span>
-                <span id="h2hRecordLabelB">0 Victoires</span>
+            <div class="h2h-radar" aria-hidden="true">
+                <span class="h2h-radar-ring ring-one"></span>
+                <span class="h2h-radar-ring ring-two"></span>
+                <span class="h2h-radar-axis axis-x"></span>
+                <span class="h2h-radar-axis axis-y"></span>
+                <span class="h2h-radar-dot dot-a"></span>
+                <span class="h2h-radar-dot dot-b"></span>
+                <span class="h2h-radar-core">
+                    <small id="h2hRadarMode">MODE CLUBS</small>
+                    <strong>VS</strong>
+                    <em>ANALYSE ACTIVE</em>
+                </span>
             </div>
-            <div class="h2h-record-bar" id="h2hRecordBar">
-                <div class="h2h-record-fill side-a" id="h2hFillA"></div>
-                <div class="h2h-record-fill draw" id="h2hFillDraw"></div>
-                <div class="h2h-record-fill side-b" id="h2hFillB"></div>
+        </section>
+
+        <section class="h2h-console" aria-labelledby="h2hConsoleTitle">
+            <div class="h2h-section-head">
+                <div class="h2h-section-index">01</div>
+                <div>
+                    <p class="h2h-kicker">PROTOCOLE DE SÉLECTION</p>
+                    <h2 id="h2hConsoleTitle">CONFIGURER LE DUEL</h2>
+                </div>
+                <p id="h2hSelectionHint">Sélectionnez un premier club, puis son adversaire pour lancer l'analyse.</p>
             </div>
-        </div>
 
-        <div class="h2h-stat-columns" id="h2hStatColumns"></div>
+            <div class="h2h-mode-tabs" id="h2hModeTabs" role="tablist" aria-label="Type de comparaison">
+                <button class="h2h-control-button h2h-mode-tab is-active" type="button" role="tab"
+                    aria-selected="true" data-mode="clubs">
+                    <span>01</span> CLUBS
+                </button>
+                <button class="h2h-control-button h2h-mode-tab" type="button" role="tab"
+                    aria-selected="false" data-mode="players">
+                    <span>02</span> JOUEURS
+                </button>
+            </div>
 
-        <div class="h2h-history">
-            <h3 class="h2h-history-title">Historique des confrontations</h3>
-            <div class="h2h-history-list" id="h2hHistoryList"></div>
-        </div>
+            <div class="h2h-versus-deck">
+                <article class="h2h-slot slot-a" id="h2hSlotA"></article>
+                <div class="h2h-deck-controls">
+                    <button class="h2h-control-button h2h-swap" id="h2hSwap" type="button"
+                        aria-label="Inverser les deux profils">⇄</button>
+                    <span>VERSUS</span>
+                    <button class="h2h-control-button h2h-reset" id="h2hReset" type="button">RÉINITIALISER</button>
+                </div>
+                <article class="h2h-slot slot-b" id="h2hSlotB"></article>
+            </div>
 
-    </section>
+            <div class="h2h-entity-head">
+                <p><span id="h2hModeLabel">CLUBS</span> DISPONIBLES</p>
+                <small>CLIQUEZ POUR ATTRIBUER OU RETIRER UN PROFIL</small>
+            </div>
+            <div class="h2h-entity-grid" id="h2hEntityGrid"></div>
+        </section>
 
+        <section class="h2h-empty-panel" id="h2hEmpty" aria-live="polite">
+            <span>02</span>
+            <div>
+                <p>ANALYSE EN ATTENTE</p>
+                <h2>DEUX PROFILS SONT NÉCESSAIRES</h2>
+            </div>
+            <p>Sélectionnez un participant A et un participant B pour lancer la matrice comparative.</p>
+        </section>
+
+        <section class="h2h-analysis" id="h2hResults" aria-labelledby="h2hAnalysisTitle">
+            <div class="h2h-section-head h2h-analysis-head">
+                <div class="h2h-section-index">02</div>
+                <div>
+                    <p class="h2h-kicker">RAPPORT COMPARATIF</p>
+                    <h2 id="h2hAnalysisTitle">MATRICE DE PERFORMANCE</h2>
+                </div>
+                <div class="h2h-verdict" id="h2hVerdict"></div>
+            </div>
+
+            <div class="h2h-duel-header" id="h2hDuelHeader"></div>
+            <div class="h2h-metric-grid" id="h2hMetricGrid"></div>
+
+            <section class="h2h-history-panel" id="h2hHistorySection">
+                <div class="h2h-history-head">
+                    <div>
+                        <p class="h2h-kicker" id="h2hHistoryKicker">ARCHIVES COMMUNES</p>
+                        <h3 id="h2hHistoryTitle">HISTORIQUE DU DUEL</h3>
+                    </div>
+                    <span id="h2hHistoryCount"></span>
+                </div>
+                <div class="h2h-history-list" id="h2hHistoryList"></div>
+            </section>
+        </section>
+    </main>
+
+<script src="JavaScript/nebula-data.js"></script>
+<script src="JavaScript/players.js"></script>
     <script src="JavaScript/match.js"></script>
     <script src="JavaScript/headtohead.js"></script>
     <script src="JavaScript/hamburger.js"></script>

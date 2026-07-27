@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05070a">
     <link rel="icon" type="image/png" href="../images/logos/nebula.png">
     <title>Nebula League – Plus Beau But</title>
 
@@ -59,33 +60,34 @@
             line-height: 1.6;
         }
     </style>
+    <link rel="stylesheet" href="../CSS/hamburger.css">
+    <link rel="stylesheet" href="../CSS/global-theme.css">
 </head>
 
-<body>
+<body class="nebula-page">
 
-<header>
-    <div class="header-container">
-        <h1>Nebula League – Plus Beau But</h1>
-        <nav>
-            <ul>
-                <li><a href="../index.html">Accueil</a></li>
-                <li><a href="../title.html">Titres</a></li>
-                <li><a href="../club.html">Clubs</a></li>
-                <li><a href="../players.html">Joueurs</a></li>
-                <li><a href="../valeur.html">Valeurs</a></li>
-                <li><a href="../rules.html">Règles Matchs</a></li>
-                <li><a href="../stats.html">Records</a></li>
-                <li><a href="../matchs.html">Historique de Matchs</a></li>
-                <li><a href="../saison.html">Historique des Saisons</a></li>
-                <li>
-    <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
-        <img src="../images/logos/discord.png" 
-             alt="Discord Logo" class="discord-logo">
-        Discord
+<header class="site-header">
+    <a class="brand" href="../index.html" aria-label="Nebula League, accueil">
+        <span class="brand-mark"><span></span></span>
+        <span class="brand-copy"><strong>NEBULA</strong><small>LEAGUE // DATABASE</small></span>
     </a>
-</li>
-            </ul>
-        </nav>
+    <nav class="main-nav" aria-label="Navigation principale">
+        <a href="../index.html">Accueil</a>
+        <a href="../title.html">Titres</a>
+        <a href="../club.html">Clubs</a>
+        <a href="../players.html">Joueurs</a>
+        <a href="../valeur.html">Valeurs</a>
+        <a href="../rules.html">Règles</a>
+        <a class="nav-active" href="../stats.html" aria-current="page">Records</a>
+        <a href="../matchs.html">Matchs</a>
+        <a href="../headtohead.html">Face à face</a>
+        <a href="../saison.html">Saisons</a>
+        <a href="../fixtures.html">Calendrier</a>
+    </nav>
+    <div class="header-actions">
+        <span class="live-pill"><i></i> SAISON 01</span>
+        <button class="menu-button" type="button" aria-label="Ouvrir le menu"
+            aria-expanded="false"><span></span><span></span></button>
     </div>
 </header>
 
@@ -115,5 +117,6 @@
     </div>
 </main>
 
+<script src="../JavaScript/hamburger.js"></script>
 </body>
 </html>

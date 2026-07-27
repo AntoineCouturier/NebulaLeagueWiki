@@ -2,160 +2,163 @@
 <html lang="fr">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05070a">
     <link rel="icon" type="image/png" href="images/logos/nebula.png">
-    <title>Nebula League – Records</title>
+    <title>Nebula League — Archives des Records</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="CSS/style.css">
     <link rel="stylesheet" href="CSS/stats.css">
     <link rel="stylesheet" href="CSS/hamburger.css">
     <link rel="stylesheet" href="CSS/global-theme.css">
-
 </head>
 
-<body>
+<body class="nebula-page records-page">
 
-    <header>
-        <div class="header-container">
-            <!-- Hamburger Menu Button -->
-            <div class="hamburger-menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-
-            <h1>Nebula League - Records</h1>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Accueil</a></li>
-                    <li><a href="title.html">Persos et Titres</a></li>
-                    <li><a href="club.html">Clubs</a></li>
-                    <li><a href="players.html">Joueurs</a></li>
-                    <li><a href="valeur.html">Valeurs</a></li>
-                    <li><a href="rules.html">Règles Matchs</a></li>
-                    <li><a class="active" href="stats.html">Records</a></li>
-                    <li><a href="matchs.html">Historique de Matchs</a></li>
-                    <li><a href="headtohead.html">Face à Face</a></li>
-                    <li><a href="saison.html">Historique des Saisons</a></li>
-                    <li><a href="fixtures.html">Calendrier des Matchs</a></li>
-                    <li>
-                        <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
-                            <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
-                            Discord
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+    <header class="site-header" id="top">
+        <a class="brand" href="#top" aria-label="Nebula League, retour en haut">
+            <span class="brand-mark"><span></span></span>
+            <span class="brand-copy"><strong>NEBULA</strong><small>LEAGUE // DATABASE</small></span>
+        </a>
+        <nav class="main-nav" aria-label="Navigation principale">
+            <a href="index.html">Accueil</a>
+            <a href="title.html">Titres</a>
+            <a href="club.html">Clubs</a>
+            <a href="players.html">Joueurs</a>
+            <a href="valeur.html">Valeurs</a>
+            <a href="rules.html">Règles</a>
+            <a class="nav-active" href="stats.html" aria-current="page">Records</a>
+            <a href="matchs.html">Matchs</a>
+            <a href="headtohead.html">Face à face</a>
+            <a href="saison.html">Saisons</a>
+            <a href="fixtures.html">Calendrier</a>
+        </nav>
+        <div class="header-actions">
+            <span class="live-pill"><i></i> SAISON 01</span>
+            <button class="menu-button" type="button" aria-label="Ouvrir le menu"
+                aria-expanded="false"><span></span><span></span></button>
         </div>
     </header>
 
-    <!-- Mobile Navigation Overlay -->
-    <div class="nav-mobile-overlay">
-        <button class="nav-close-btn" aria-label="Close menu">&times;</button>
-        <nav>
-            <ul>
-                <li><a href="index.html">Accueil</a></li>
-                <li><a href="title.html">Persos et Titres</a></li>
-                <li><a href="club.html">Clubs</a></li>
-                <li><a href="players.html">Joueurs</a></li>
-                <li><a href="valeur.html">Valeurs</a></li>
-                <li><a href="rules.html">Règles Matchs</a></li>
-                <li><a class="active" href="stats.html">Records</a></li>
-                <li><a href="matchs.html">Historique de Matchs</a></li>
-                <li><a href="headtohead.html">Face à Face</a></li>
-                <li><a href="saison.html">Historique des Saisons</a></li>
-                <li><a href="fixtures.html">Calendrier des Matchs</a></li>
-            </ul>
-        </nav>
-    </div>
+    <section class="records-intro">
+        <div class="records-intro-copy">
+            <p class="records-kicker"><span>NL–06</span> PERMANENT ARCHIVE</p>
+            <h1>LES CHIFFRES<br><em>NE S’OUBLIENT PAS</em></h1>
+            <p class="records-intro-text">Chaque match alimente les archives. Retrouvez les leaders, les performances
+                de clubs et les marques historiques de la Nebula League.</p>
 
-    <!-- Backdrop for click-outside-to-close -->
-    <div class="nav-backdrop"></div>
-
-    <main class="stats-page">
-
-        <!-- Résumé (stat-cards) -->
-        <div class="stat-cards">
-            <div class="stat-card">
-                <h4>Meilleur Buteur</h4>
-                <p id="topScorer">—</p>
-            </div>
-            <div class="stat-card">
-                <h4>Meilleur Passeur</h4>
-                <p id="topPasser">—</p>
-            </div>
-            <div class="stat-card">
-                <h4>Meilleur Defenseur</h4>
-                <p id="topDefender">—</p>
-            </div>
-            <div class="stat-card">
-                <h4>Joueur le plus cher</h4>
-                <p id="topPrice">—</p>
-            </div>
-            <div class="stat-card">
-                <h4>Club le plus titré</h4>
-                <p id="topClub">—</p>
+            <div class="records-intro-stats" aria-label="État des archives">
+                <div><strong id="archiveMatches">00</strong><span>Matchs archivés</span></div>
+                <div><strong id="archiveGoals">00</strong><span>Buts enregistrés</span></div>
+                <div><strong id="archivePlayers">00</strong><span>Joueurs détectés</span></div>
             </div>
         </div>
 
-        <div class="grid-2">
+        <aside class="record-signal">
+            <div class="record-signal-topline"><span>ARCHIVE SIGNAL</span><span><i></i> SYNCHRONISÉ</span></div>
+            <div class="record-target" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="record-signal-readout" aria-label="Leader actuellement présenté">
+                <small id="recordSignalLabel">RECORD DE BUTS</small>
+                <strong id="recordSignalName">—</strong>
+                <span id="recordSignalValue">0 BUT</span>
+            </div>
+            <div class="record-signal-footer"><span>ALL-TIME // S00–S01</span><span>DATA LIVE</span></div>
+        </aside>
+    </section>
 
-            <!-- SECTION GAUCHE -->
-            <section class="table-section">
-                <h3>🏆 Classement All-Time des Clubs</h3>
+    <main class="records-archive">
+        <section class="record-holders">
+            <div class="records-section-heading">
+                <span class="records-section-index">01</span>
+                <div><small>LEADERS ABSOLUS</small>
+                    <h2>DÉTENTEURS DE RECORDS</h2>
+                </div>
+                <p>Les meilleures marques sont recalculées directement depuis l’historique des matchs et les joueurs.
+                </p>
+            </div>
+            <div class="record-highlight-grid" id="recordHighlights"></div>
+        </section>
 
-                <table class="stats-table" id="alltime-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Club</th>
-                            <th>Points</th>
-                            <th>Titres</th>
-                            <th>Win %</th>
-                            <th>Diff</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+        <section class="club-archive">
+            <div class="records-section-heading">
+                <span class="records-section-index">02</span>
+                <div><small>PERFORMANCES COLLECTIVES</small>
+                    <h2>ARCHIVE DES CLUBS</h2>
+                </div>
+                <p>Classement cumulé calculé avec les victoires, les nuls, les buts et la différence de chaque club.</p>
+            </div>
 
-                <div class="table-section" style="margin-top:15px;">
-                    <h3>🔥 Meilleurs Buteurs</h3>
-                    <table class="stats-table" id="scorers-table">
+            <div class="club-table-shell">
+                <div class="archive-topline"><span><i></i> CLUB DATABASE ONLINE</span><span>TRI // POINTS</span></div>
+                <div class="club-table-scroll">
+                    <table class="club-record-table">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Joueur</th>
-                                <th>Club</th>
-                                <th>Buts</th>
-                                <th>Moy.</th>
+                                <th>RANG</th>
+                                <th>CLUB</th>
+                                <th>MJ</th>
+                                <th>PTS</th>
+                                <th>V–N–D</th>
+                                <th>DIFF.</th>
+                                <th>VICTOIRES</th>
                             </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody id="clubRecordsBody"></tbody>
                     </table>
                 </div>
+            </div>
+        </section>
 
-                <div class="table-section" style="margin-top:15px;">
-                    <h3>📜 Records</h3>
-                    <ul class="records-list" id="records-alltime"></ul>
+        <section class="individual-archive">
+            <div class="records-section-heading">
+                <span class="records-section-index">03</span>
+                <div><small>INDEX INDIVIDUEL</small>
+                    <h2>CLASSEMENTS JOUEURS</h2>
                 </div>
+                <p>Changez de catégorie pour comparer les buts, passes décisives, défenses et dribbles.</p>
+            </div>
 
+            <div class="record-category-tabs" id="recordCategoryTabs" aria-label="Catégorie du classement">
+                <button type="button" class="record-category-tab active" data-record-category="buts"
+                    aria-pressed="true">BUTS</button>
+                <button type="button" class="record-category-tab" data-record-category="passes"
+                    aria-pressed="false">PASSES D.</button>
+                <button type="button" class="record-category-tab" data-record-category="defenses"
+                    aria-pressed="false">DÉFENSES</button>
+                <button type="button" class="record-category-tab" data-record-category="dribbles"
+                    aria-pressed="false">DRIBBLES</button>
+            </div>
 
+            <div class="player-ranking-shell">
+                <div class="ranking-summary" id="rankingSummary"></div>
+                <div class="player-record-list" id="playerRecordList"></div>
+            </div>
+        </section>
 
-            </section>
-
-            <!-- SECTION DROITE -->
-            <aside class="clubs-column" id="clubsPerfs">
-                <h1>Taux de Victoire</h1>
-                <!-- rempli par JS -->
-            </aside>
-
-        </div>
+        <section class="record-vault">
+            <div class="records-section-heading">
+                <span class="records-section-index">04</span>
+                <div><small>MARQUES HISTORIQUES</small>
+                    <h2>COFFRE DES RECORDS</h2>
+                </div>
+                <p>Les performances collectives et individuelles les plus rares enregistrées dans les archives.</p>
+            </div>
+            <div class="record-vault-grid" id="recordVaultGrid"></div>
+        </section>
     </main>
 
+<script src="JavaScript/nebula-data.js"></script>
+<script src="JavaScript/players.js"></script>
+    <script src="JavaScript/club.js"></script>
+    <script src="JavaScript/match.js"></script>
     <script src="JavaScript/stats.js"></script>
     <script src="JavaScript/hamburger.js"></script>
-
 </body>
 
 </html>

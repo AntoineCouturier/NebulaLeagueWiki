@@ -1,818 +1,1512 @@
-/* ==========================================================================
-   saison.css — Historique des Saisons (refonte)
-   ========================================================================== */
-
 :root {
-    --bastard-color: #ff0000;
-    --pxg-color: #3b5bff;
-    --ubers-color: #2bff00;
-    --barcha-color: #ffdd00;
-    --manshine-color: #00c8ff;
-
-    --nebula-purple: #b41cff;
-    --nebula-purple-2: #6f00ff;
-    --nebula-glow: rgba(180, 28, 255, 0.35);
+    --season-acid: #adff2f;
+    --season-cyan: #63e7ff;
+    --season-violet: #a76bff;
+    --season-red: #ff5d66;
+    --season-gold: #ffd84d;
+    --season-ink: #05080b;
+    --season-panel: #080d12;
+    --season-panel-2: #0b1117;
+    --season-line: rgba(174, 198, 214, 0.16);
+    --season-muted: #7c8d99;
+    --season-paper: #f2f6f8;
 }
 
-/* -------------------- Reset / fond étoilé (identique au reste du site) -------------------- */
-body {
+* {
+    box-sizing: border-box;
+}
+
+body.nebula-page.seasons-page {
+    min-width: 320px;
     margin: 0;
-    padding: 0;
-    font-family: 'Inter', 'Arial', sans-serif;
-    background: #000;
-    color: #dddddd;
+    color: var(--season-paper);
+    background:
+        linear-gradient(rgba(99, 231, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 231, 255, 0.035) 1px, transparent 1px),
+        radial-gradient(circle at 88% 10%, rgba(99, 231, 255, 0.08), transparent 29rem),
+        radial-gradient(circle at 8% 60%, rgba(167, 107, 255, 0.06), transparent 33rem),
+        var(--season-ink);
+    background-size: 64px 64px, 64px 64px, auto, auto, auto;
+    font-family: "Inter", sans-serif;
 }
 
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image:
-        radial-gradient(2px 2px at 20px 30px, #eee, transparent),
-        radial-gradient(2px 2px at 40px 70px, #fff, transparent),
-        radial-gradient(1px 1px at 90px 40px, #ddd, transparent),
-        radial-gradient(1px 1px at 130px 80px, #fff, transparent),
-        radial-gradient(2px 2px at 160px 120px, #eee, transparent),
-        radial-gradient(1px 1px at 200px 160px, #fff, transparent),
-        radial-gradient(3px 3px at 240px 200px, rgba(180, 28, 255, 0.5), transparent),
-        radial-gradient(2px 2px at 280px 240px, rgba(100, 0, 255, 0.4), transparent);
-    background-repeat: repeat;
-    background-size: 300px 300px;
-    z-index: -1;
-    opacity: 0.4;
-}
-
-.bastard {
-    color: var(--bastard-color);
-}
-
-.pxg {
-    color: var(--pxg-color);
-}
-
-.ubers {
-    color: var(--ubers-color);
-}
-
-.barcha {
-    color: var(--barcha-color);
-}
-
-.manshine {
-    color: var(--manshine-color);
-}
-
-/* ==========================================================================
-   HERO
-   ========================================================================== */
-.season-hero {
-    text-align: center;
-    padding: 60px 20px 30px;
-    position: relative;
+body.season-modal-open {
     overflow: hidden;
 }
 
-.season-hero::before {
-    content: '';
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 520px;
-    height: 520px;
-    background: radial-gradient(circle, rgba(180, 28, 230, 0.3) 0%, transparent 70%);
-    animation: seasonHeroPulse 4s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 0;
+body.nebula-page.seasons-page [hidden] {
+    display: none !important;
 }
 
-@keyframes seasonHeroPulse {
-
-    0%,
-    100% {
-        transform: translateX(-50%) scale(1);
-        opacity: 0.5;
-    }
-
-    50% {
-        transform: translateX(-50%) scale(1.1);
-        opacity: 0.85;
-    }
+body.nebula-page.seasons-page .season-command {
+    width: min(1440px, calc(100% - 48px)) !important;
+    max-width: none !important;
+    margin: 0 auto !important;
+    padding: 0 0 100px !important;
 }
 
-.season-hero-title {
-    position: relative;
-    z-index: 1;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2.8rem;
-    font-weight: 900;
-    margin: 0 0 12px;
-    background: linear-gradient(135deg, #b41cff 0%, #d89aff 50%, #b41cff 100%);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: seasonShimmer 3s linear infinite;
-    text-shadow: 0 0 30px rgba(180, 28, 255, 0.4);
-    letter-spacing: 1px;
+.season-hero {
+    min-height: 600px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(390px, 0.8fr);
+    border-inline: 1px solid var(--season-line);
+    border-bottom: 1px solid var(--season-line);
+    overflow: hidden;
 }
 
-@keyframes seasonShimmer {
-    0% {
-        background-position: 0% center;
-    }
-
-    100% {
-        background-position: 200% center;
-    }
-}
-
-.season-hero-subtitle {
-    position: relative;
-    z-index: 1;
-    font-size: 1.05rem;
-    color: #c8b3ff;
-    max-width: 700px;
-    margin: 0 auto;
-    line-height: 1.6;
-    font-weight: 300;
-}
-
-/* ==========================================================================
-   LAYOUT : TIMELINE + CARTES
-   ========================================================================== */
-.season-layout {
-    position: relative;
-    padding: 20px 20px 80px;
-}
-
-/* -------------------- Timeline -------------------- */
-/* Par défaut (et sur toute largeur < 1300px) : réglette au-dessus, en flux normal. */
-.season-timeline {
+.season-hero-copy {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 10px 0;
+    justify-content: center;
+    padding: 88px 6vw 68px 62px;
+    border-right: 1px solid var(--season-line);
+}
+
+.season-hero-copy::before {
+    position: absolute;
+    right: -30px;
+    bottom: 28px;
+    content: "SEASONS";
+    color: transparent;
+    font: 900 clamp(4.5rem, 10vw, 10rem)/0.8 "Orbitron", sans-serif;
+    letter-spacing: -0.08em;
+    -webkit-text-stroke: 1px rgba(220, 238, 246, 0.055);
+}
+
+.season-eyebrow,
+.season-kicker {
+    margin: 0;
+    color: var(--season-muted);
+    font: 700 0.64rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.19em;
+}
+
+.season-eyebrow span,
+.season-kicker {
+    color: var(--season-acid);
+}
+
+.season-eyebrow span {
+    margin-right: 17px;
+}
+
+.season-hero h1 {
+    position: relative;
+    z-index: 1;
     max-width: 900px;
-    margin: 0 auto 10px;
+    margin: 28px 0 25px;
+    color: #f5f8fa;
+    font: 900 clamp(3.4rem, 6.3vw, 6.9rem)/0.86 "Orbitron", sans-serif;
+    letter-spacing: -0.075em;
 }
 
-/* À partir de 1300px : la timeline sort du flux et devient une réglette flottante
-   à gauche, pour que la carte reste, elle, parfaitement centrée sur la page. */
-@media (min-width: 1300px) {
-    .season-timeline {
-        position: absolute;
-        top: 20px;
-        right: calc(50% + 450px + 40px);
-        width: 190px;
-        max-width: none;
-        margin: 0;
-    }
+.season-hero h1 em {
+    color: transparent;
+    font-style: normal;
+    -webkit-text-stroke: 1px rgba(237, 247, 250, 0.72);
 }
 
-.timeline-track {
-    position: absolute;
-    top: 10px;
-    bottom: 10px;
-    left: 9px;
-    width: 2px;
-    background: linear-gradient(180deg, transparent, rgba(180, 28, 255, 0.45), transparent);
-}
-
-.timeline-node {
+.season-intro {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
-    padding: 10px 10px 10px 26px;
-    background: transparent;
-    border: none;
-    color: #b0a0d0;
-    cursor: pointer;
-    text-align: left;
-    font-family: 'Inter', sans-serif;
-    transition: 0.2s ease;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0;
+    padding-left: 20px;
+    border-left: 2px solid var(--season-acid);
+    color: #9cabb5;
+    font-size: clamp(0.94rem, 1.2vw, 1.08rem);
+    line-height: 1.8;
 }
 
-.timeline-dot {
+.season-hero-stats {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 690px;
+    margin-top: 50px;
+    border-block: 1px solid var(--season-line);
+}
+
+.season-hero-stats div {
+    min-height: 82px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 14px 20px 14px 0;
+}
+
+.season-hero-stats div + div {
+    padding-left: 20px;
+    border-left: 1px solid var(--season-line);
+}
+
+.season-hero-stats strong {
+    font: 800 2rem/1 "Orbitron", sans-serif;
+    letter-spacing: -0.07em;
+}
+
+.season-hero-stats span {
+    color: var(--season-muted);
+    font: 600 0.5rem/1.5 "Orbitron", sans-serif;
+    letter-spacing: 0.1em;
+}
+
+.season-cycle {
+    --cycle-progress: 0deg;
+    position: relative;
+    min-height: 600px;
+    overflow: hidden;
+    background:
+        linear-gradient(rgba(99, 231, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 231, 255, 0.05) 1px, transparent 1px),
+        radial-gradient(circle, rgba(99, 231, 255, 0.07), transparent 53%);
+    background-size: 45px 45px, 45px 45px, auto;
+}
+
+.season-cycle::before {
     position: absolute;
-    left: 4px;
-    top: 14px;
-    width: 12px;
-    height: 12px;
+    inset: 8%;
+    content: "";
     border-radius: 50%;
-    background: #1a1a1a;
-    border: 2px solid rgba(180, 28, 255, 0.5);
-    transition: 0.25s ease;
+    background: conic-gradient(var(--season-acid) var(--cycle-progress), rgba(99, 231, 255, 0.08) 0);
+    opacity: 0.24;
+    -webkit-mask: radial-gradient(circle, transparent 68%, #000 69%);
+    mask: radial-gradient(circle, transparent 68%, #000 69%);
 }
 
-.timeline-node.active-season .timeline-dot {
-    background: #b41cff;
-    box-shadow: 0 0 10px #b41cff;
-    animation: timelinePulse 1.8s ease-in-out infinite;
+.season-cycle-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    aspect-ratio: 1;
+    border: 1px solid rgba(99, 231, 255, 0.22);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
 }
 
-@keyframes timelinePulse {
-
-    0%,
-    100% {
-        box-shadow: 0 0 6px #b41cff;
-    }
-
-    50% {
-        box-shadow: 0 0 16px #b41cff, 0 0 26px rgba(180, 28, 255, 0.6);
-    }
+.season-cycle-ring.ring-outer {
+    width: 75%;
 }
 
-.timeline-label {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #e0d6ff;
+.season-cycle-ring.ring-inner {
+    width: 46%;
+    border-color: rgba(173, 255, 47, 0.17);
 }
 
-.timeline-sub {
-    font-size: 0.7rem;
-    color: #8a7aa8;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.season-cycle-axis {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: rgba(99, 231, 255, 0.11);
+    transform: translate(-50%, -50%);
 }
 
-.timeline-node:hover {
-    color: #fff;
+.season-cycle-axis.axis-x {
+    width: 86%;
+    height: 1px;
 }
 
-.timeline-node:hover .timeline-dot {
-    border-color: #d89aff;
+.season-cycle-axis.axis-y {
+    width: 1px;
+    height: 86%;
 }
 
-.timeline-node.selected .timeline-label {
-    color: #d89aff;
+.season-cycle-node {
+    position: absolute;
+    z-index: 2;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--season-cyan);
+    box-shadow: 0 0 16px var(--season-cyan);
 }
 
-.timeline-node.selected .timeline-dot {
-    border-color: #d89aff;
-    box-shadow: 0 0 10px rgba(180, 28, 255, 0.7);
+.season-cycle-node.node-one {
+    top: 24%;
+    left: 31%;
 }
 
-@media (max-width: 900px) {
-    .season-layout {
-        grid-template-columns: 1fr;
-    }
-
-    .season-timeline {
-        position: static;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 8px;
-        padding: 0;
-    }
-
-    .timeline-track {
-        display: none;
-    }
-
-    .timeline-node {
-        flex-direction: row;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 14px;
-        background: rgba(20, 15, 35, 0.6);
-        border: 1px solid rgba(180, 28, 255, 0.25);
-        border-radius: 20px;
-    }
-
-    .timeline-dot {
-        position: static;
-    }
-
-    .timeline-sub {
-        display: none;
-    }
+.season-cycle-node.node-two {
+    right: 22%;
+    bottom: 27%;
+    background: var(--season-acid);
+    box-shadow: 0 0 16px var(--season-acid);
 }
 
-/* ==========================================================================
-   CARTES DE SAISON
-   ========================================================================== */
-.season-cards-wrap {
+.season-cycle-core {
+    position: absolute;
+    z-index: 3;
+    top: 50%;
+    left: 50%;
+    width: min(60%, 290px);
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(99, 231, 255, 0.38);
+    flex-direction: column;
+    background: rgba(4, 8, 12, 0.92);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.48);
+    transform: translate(-50%, -50%);
+}
+
+.season-cycle-core::before,
+.season-cycle-core::after {
+    position: absolute;
+    width: 23px;
+    height: 23px;
+    content: "";
+    border-color: var(--season-acid);
+}
+
+.season-cycle-core::before {
+    top: -1px;
+    left: -1px;
+    border-top: 2px solid;
+    border-left: 2px solid;
+}
+
+.season-cycle-core::after {
+    right: -1px;
+    bottom: -1px;
+    border-right: 2px solid;
+    border-bottom: 2px solid;
+}
+
+.season-cycle-core small,
+.season-cycle-core span {
+    color: var(--season-muted);
+    font: 600 0.5rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.14em;
+}
+
+.season-cycle-core strong {
+    margin: 15px 0;
+    font: 900 clamp(4.2rem, 8vw, 7rem)/0.75 "Orbitron", sans-serif;
+    letter-spacing: -0.1em;
+    text-shadow: 7px 0 rgba(99, 231, 255, 0.08), -7px 0 rgba(167, 107, 255, 0.08);
+}
+
+.season-console,
+.season-ledger {
+    margin-top: 36px;
+    border: 1px solid var(--season-line);
+    background: rgba(5, 9, 13, 0.86);
+}
+
+.season-section-head {
+    min-height: 124px;
+    display: grid;
+    grid-template-columns: 104px minmax(300px, 1.25fr) minmax(280px, 0.75fr);
+    align-items: center;
+    border-bottom: 1px solid var(--season-line);
+}
+
+.season-section-index {
+    align-self: stretch;
+    display: grid;
+    place-items: center;
+    border-right: 1px solid var(--season-line);
+    color: #2c3945;
+    font: 800 2.15rem/1 "Orbitron", sans-serif;
+}
+
+.season-section-head > div {
+    padding: 25px 28px;
+}
+
+.season-section-head h2 {
+    margin: 10px 0 0;
+    font: 700 clamp(1.55rem, 2.7vw, 2.65rem)/1 "Orbitron", sans-serif;
+    letter-spacing: -0.05em;
+}
+
+.season-section-head > p {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 25px 31px;
+    border-left: 1px solid var(--season-line);
+    color: #8798a4;
+    font-size: 0.8rem;
+    line-height: 1.7;
+}
+
+.season-switcher {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    border-bottom: 1px solid var(--season-line);
+    background: var(--season-line);
+    gap: 1px;
+}
+
+body.nebula-page.seasons-page .season-switch {
+    position: relative;
+    min-height: 92px;
+    display: grid;
+    grid-template-columns: 35px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 16px;
+    margin: 0;
+    padding: 19px 23px;
+    border: 0;
+    border-radius: 0;
+    color: #7c8c98;
+    background: var(--season-panel);
+    text-align: left;
+    cursor: pointer;
+}
+
+.season-switch > span {
+    color: #35434e;
+    font: 700 0.55rem/1 "Orbitron", sans-serif;
+}
+
+.season-switch div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.season-switch small,
+.season-switch em {
+    color: #687985;
+    font: 600 0.46rem/1 "Orbitron", sans-serif;
+    font-style: normal;
+    letter-spacing: 0.1em;
+}
+
+.season-switch strong {
+    color: #dfe6e9;
+    font: 700 0.73rem/1 "Orbitron", sans-serif;
+}
+
+.season-switch i {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: var(--season-acid);
+    transform: scaleX(0);
+    transform-origin: left;
+}
+
+body.nebula-page.seasons-page .season-switch:hover,
+body.nebula-page.seasons-page .season-switch.is-selected {
+    background: rgba(173, 255, 47, 0.07);
+}
+
+.season-switch.is-selected > span,
+.season-switch.is-selected small {
+    color: var(--season-acid);
+}
+
+.season-switch.is-selected i {
+    transform: scaleX(1);
+}
+
+.season-dossier-host {
+    min-height: 600px;
+}
+
+.season-dossier {
+    animation: season-dossier-in 360ms ease both;
+}
+
+.season-dossier-head {
+    min-height: 155px;
+    display: grid;
+    grid-template-columns: 135px minmax(260px, 1fr) minmax(300px, 0.7fr);
+    align-items: center;
+    border-bottom: 1px solid var(--season-line);
+}
+
+.season-dossier-number {
+    align-self: stretch;
+    display: grid;
+    place-items: center;
+    border-right: 1px solid var(--season-line);
+    color: transparent;
+    font: 900 3.8rem/1 "Orbitron", sans-serif;
+    -webkit-text-stroke: 1px #3e4c57;
+}
+
+.season-dossier-head > div:nth-child(2) {
+    padding: 25px 32px;
+}
+
+.season-dossier-head p {
+    margin: 0;
+    color: var(--season-acid);
+    font: 700 0.53rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.14em;
+}
+
+.season-dossier-head p i {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-right: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 9px currentColor;
+}
+
+.season-dossier-head h2 {
+    margin: 13px 0 0;
+    font: 800 clamp(2rem, 4vw, 4.1rem)/0.9 "Orbitron", sans-serif;
+    letter-spacing: -0.06em;
+}
+
+.season-dossier-date {
+    align-self: stretch;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 25px 31px;
+    border-left: 1px solid var(--season-line);
+    flex-direction: column;
+    gap: 10px;
+}
+
+.season-dossier-date small,
+.season-dossier-date strong {
+    font-family: "Orbitron", sans-serif;
+}
+
+.season-dossier-date small {
+    color: #697b87;
+    font-size: 0.48rem;
+    letter-spacing: 0.13em;
+}
+
+.season-dossier-date strong {
+    color: #cbd4d9;
+    font-size: 0.66rem;
+    line-height: 1.5;
+}
+
+.season-overview {
+    display: grid;
+    grid-template-columns: minmax(300px, 1fr) minmax(310px, 0.8fr) minmax(330px, 1fr);
+    border-bottom: 1px solid var(--season-line);
+}
+
+.season-leader-card,
+.season-leader-empty {
+    min-height: 205px;
+    display: grid;
+    grid-template-columns: 85px minmax(0, 1fr) 28px;
+    align-items: center;
+    gap: 22px;
+    padding: 34px 30px;
+    color: inherit;
+    background: linear-gradient(105deg, color-mix(in srgb, var(--club-accent, #677782) 12%, transparent), transparent 65%);
+    text-decoration: none;
+}
+
+.season-leader-card img {
+    width: 85px;
+    height: 85px;
+    padding: 7px;
+    border: 1px solid var(--club-accent);
+    background: #05090c;
+    object-fit: contain;
+    filter: drop-shadow(0 0 18px color-mix(in srgb, var(--club-accent) 35%, transparent));
+}
+
+.season-leader-card div,
+.season-leader-empty div {
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 26px;
-    max-width: 900px;
-    margin: 0 auto;
 }
 
-.season-card {
-    background: rgba(12, 10, 18, 0.8);
-    border: 2px solid rgba(180, 28, 255, 0.35);
-    border-radius: 20px;
-    padding: 24px 26px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 20px rgba(180, 28, 255, 0.12);
-    backdrop-filter: blur(10px);
-    animation: seasonCardIn 0.6s ease both;
-    scroll-margin-top: 100px;
-    transition: box-shadow 0.4s ease, border-color 0.4s ease;
+.season-leader-card small,
+.season-leader-empty small,
+.season-leader-card span {
+    color: #6f818d;
+    font: 600 0.49rem/1.45 "Orbitron", sans-serif;
+    letter-spacing: 0.09em;
 }
 
-@keyframes seasonCardIn {
+.season-leader-card strong,
+.season-leader-empty strong {
+    margin: 10px 0;
+    color: #f0f4f6;
+    font: 700 clamp(1.05rem, 1.8vw, 1.6rem)/1.05 "Orbitron", sans-serif;
+}
+
+.season-leader-card > i {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    border: 1px solid var(--season-line);
+    color: var(--club-accent);
+    font-style: normal;
+}
+
+.season-leader-empty {
+    grid-template-columns: 72px 1fr;
+}
+
+.season-leader-empty > span {
+    display: grid;
+    width: 65px;
+    height: 65px;
+    place-items: center;
+    border: 1px dashed #3a4853;
+    color: #3a4853;
+    font: 700 1rem/1 "Orbitron", sans-serif;
+    transform: rotate(45deg);
+}
+
+.season-progress-module {
+    min-height: 205px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 30px;
+    border-inline: 1px solid var(--season-line);
+}
+
+.season-progress-ring {
+    width: 92px;
+    height: 92px;
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: conic-gradient(var(--season-acid) var(--progress), rgba(255, 255, 255, 0.07) 0);
+    flex-direction: column;
+    -webkit-mask: radial-gradient(circle, transparent 55%, #000 56%);
+    mask: radial-gradient(circle, transparent 55%, #000 56%);
+}
+
+.season-progress-ring strong,
+.season-progress-ring span {
+    visibility: hidden;
+}
+
+.season-progress-module > div:last-child {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.season-progress-module small,
+.season-progress-module span {
+    color: #6f808c;
+    font: 600 0.47rem/1.35 "Orbitron", sans-serif;
+    letter-spacing: 0.08em;
+}
+
+.season-progress-module > div > strong {
+    color: #e8eef1;
+    font: 700 0.73rem/1.3 "Orbitron", sans-serif;
+}
+
+.season-metric-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.season-metric-grid div {
+    min-height: 102px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 17px;
+    border-right: 1px solid var(--season-line);
+    border-bottom: 1px solid var(--season-line);
+}
+
+.season-metric-grid div:nth-child(2n) {
+    border-right: 0;
+}
+
+.season-metric-grid div:nth-last-child(-n + 2) {
+    border-bottom: 0;
+}
+
+.season-metric-grid strong {
+    font: 800 1.65rem/1 "Orbitron", sans-serif;
+    letter-spacing: -0.06em;
+}
+
+.season-metric-grid span {
+    max-width: 72px;
+    color: #6e7f8b;
+    font: 600 0.45rem/1.4 "Orbitron", sans-serif;
+    letter-spacing: 0.08em;
+}
+
+.season-rankings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--season-line);
+}
+
+.season-ranking-panel + .season-ranking-panel {
+    border-left: 1px solid var(--season-line);
+}
+
+.season-ranking-panel > header {
+    min-height: 82px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--season-line);
+}
+
+.season-ranking-panel header small,
+.season-ranking-panel header > span {
+    color: #667783;
+    font: 600 0.46rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.11em;
+}
+
+.season-ranking-panel h3 {
+    margin: 8px 0 0;
+    font: 700 1rem/1 "Orbitron", sans-serif;
+}
+
+.season-standing-row {
+    min-height: 68px;
+    display: grid;
+    grid-template-columns: 32px 38px minmax(120px, 1fr) minmax(80px, 0.7fr) 35px;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--season-line);
+    color: inherit;
+    text-decoration: none;
+}
+
+.season-standing-row:last-child {
+    border-bottom: 0;
+}
+
+.season-standing-row.is-leading {
+    background: linear-gradient(90deg, color-mix(in srgb, var(--club-accent) 10%, transparent), transparent 70%);
+    box-shadow: inset 2px 0 var(--club-accent);
+}
+
+.season-standing-row > span {
+    color: #475661;
+    font: 600 0.5rem/1 "Orbitron", sans-serif;
+}
+
+.season-standing-row img {
+    width: 34px;
+    height: 34px;
+    padding: 3px;
+    object-fit: contain;
+}
+
+.season-standing-row div {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.season-standing-row strong,
+.season-standing-row small {
+    overflow: hidden;
+    font-family: "Orbitron", sans-serif;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.season-standing-row strong {
+    color: #dfe6e9;
+    font-size: 0.63rem;
+}
+
+.season-standing-row small {
+    color: #62737f;
+    font-size: 0.43rem;
+}
+
+.season-standing-row > i {
+    height: 2px;
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.season-standing-row > i b {
+    display: block;
+    height: 100%;
+    background: var(--club-accent);
+}
+
+.season-standing-row > em {
+    color: #eff4f6;
+    font: 700 0.78rem/1 "Orbitron", sans-serif;
+    font-style: normal;
+    text-align: right;
+}
+
+.season-player-leader {
+    --leader-accent: var(--season-cyan);
+    min-height: 113px;
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr) 25px;
+    align-items: center;
+    gap: 17px;
+    padding: 20px 23px;
+    border-bottom: 1px solid var(--season-line);
+    color: inherit;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--leader-accent) 6%, transparent), transparent);
+    text-decoration: none;
+}
+
+.season-player-leader:last-child {
+    border-bottom: 0;
+}
+
+.season-player-leader > span {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--leader-accent), transparent 45%);
+    color: var(--leader-accent);
+    font: 700 0.52rem/1 "Orbitron", sans-serif;
+    transform: rotate(45deg);
+}
+
+.season-player-leader div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+}
+
+.season-player-leader small,
+.season-player-leader em {
+    color: #687985;
+    font: 600 0.45rem/1.35 "Orbitron", sans-serif;
+    font-style: normal;
+    letter-spacing: 0.07em;
+}
+
+.season-player-leader strong {
+    margin: 8px 0;
+    color: #ecf1f3;
+    font: 700 0.78rem/1 "Orbitron", sans-serif;
+}
+
+.season-player-leader > i {
+    color: var(--leader-accent);
+    font-style: normal;
+}
+
+.season-awards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid var(--season-line);
+}
+
+.season-award {
+    min-height: 103px;
+    display: grid;
+    grid-template-columns: 43px minmax(0, 1fr);
+    align-items: center;
+    gap: 15px;
+    padding: 19px 22px;
+    border-right: 1px solid var(--season-line);
+}
+
+.season-award:last-child {
+    border-right: 0;
+}
+
+.season-award > span {
+    color: var(--season-gold);
+    font: 700 0.54rem/1 "Orbitron", sans-serif;
+}
+
+.season-award div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.season-award small,
+.season-award strong {
+    overflow: hidden;
+    font-family: "Orbitron", sans-serif;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.season-award small {
+    color: #667783;
+    font-size: 0.44rem;
+}
+
+.season-award strong {
+    color: #cfd8dd;
+    font-size: 0.55rem;
+}
+
+.season-dossier-actions {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr;
+}
+
+body.nebula-page.seasons-page .season-details-button,
+.season-dossier-actions a {
+    min-height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    padding: 0 22px;
+    border: 0;
+    border-right: 1px solid var(--season-line);
+    border-radius: 0;
+    color: #aeb9c0;
+    background: transparent;
+    font: 700 0.54rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.09em;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+body.nebula-page.seasons-page .season-details-button {
+    color: #071006;
+    background: var(--season-acid);
+}
+
+.season-dossier-actions a:last-child {
+    border-right: 0;
+}
+
+.season-dossier-actions a:hover {
+    color: var(--season-acid);
+    background: rgba(173, 255, 47, 0.05);
+}
+
+.season-history-row {
+    width: 100%;
+    min-height: 92px;
+    display: grid;
+    grid-template-columns: 85px 1fr 1.35fr 1fr 0.75fr 70px;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid var(--season-line);
+    border-radius: 0;
+    color: #cbd4d9;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+}
+
+.season-history-row:last-child {
+    border-bottom: 0;
+}
+
+.season-history-row:hover,
+.season-history-row.is-current {
+    background: rgba(173, 255, 47, 0.045);
+}
+
+.season-history-row > span {
+    align-self: stretch;
+    display: grid;
+    place-items: center;
+    border-right: 1px solid var(--season-line);
+    color: #475661;
+    font: 600 0.47rem/1 "Orbitron", sans-serif;
+}
+
+.season-history-row > div {
+    min-width: 0;
+    display: flex;
+    align-self: stretch;
+    justify-content: center;
+    padding: 15px 22px;
+    border-right: 1px solid var(--season-line);
+    flex-direction: column;
+    gap: 9px;
+}
+
+.season-history-row small,
+.season-history-row strong {
+    overflow: hidden;
+    font-family: "Orbitron", sans-serif;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.season-history-row small {
+    color: #61727e;
+    font-size: 0.43rem;
+    letter-spacing: 0.09em;
+}
+
+.season-history-row strong {
+    color: #dce4e8;
+    font-size: 0.57rem;
+}
+
+.season-history-row > em {
+    color: var(--season-acid);
+    font: 700 0.7rem/1 "Orbitron", sans-serif;
+    font-style: normal;
+    text-align: center;
+}
+
+.season-no-data {
+    padding: 80px 30px;
+    color: var(--season-muted);
+    font: 600 0.65rem/1.6 "Orbitron", sans-serif;
+    text-align: center;
+}
+
+.season-modal {
+    position: fixed;
+    z-index: 5000;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+}
+
+.season-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 3, 6, 0.88);
+    backdrop-filter: blur(9px);
+}
+
+.season-modal-panel {
+    position: relative;
+    z-index: 1;
+    width: min(1260px, 100%);
+    max-height: min(90vh, 940px);
+    overflow: hidden;
+    border: 1px solid rgba(99, 231, 255, 0.3);
+    background: #070b0f;
+    box-shadow: 0 30px 100px rgba(0, 0, 0, 0.65);
+    animation: season-modal-in 240ms ease both;
+}
+
+.season-modal-head {
+    min-height: 105px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 26px 22px 31px;
+    border-bottom: 1px solid var(--season-line);
+}
+
+.season-modal-head h2 {
+    margin: 10px 0 0;
+    font: 800 2rem/1 "Orbitron", sans-serif;
+}
+
+body.nebula-page.seasons-page .season-modal-close {
+    width: 48px;
+    height: 48px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--season-line);
+    border-radius: 0;
+    color: #aab6bd;
+    background: transparent;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+body.nebula-page.seasons-page .season-modal-close:hover {
+    border-color: var(--season-red);
+    color: var(--season-red);
+}
+
+.season-modal-content {
+    max-height: calc(min(90vh, 940px) - 105px);
+    overflow: auto;
+    scrollbar-color: var(--season-cyan) #070b0f;
+}
+
+.season-modal-section-head {
+    min-height: 92px;
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    align-items: center;
+    border-bottom: 1px solid var(--season-line);
+}
+
+.season-modal-section-head > span {
+    align-self: stretch;
+    display: grid;
+    place-items: center;
+    border-right: 1px solid var(--season-line);
+    color: #35434e;
+    font: 700 1rem/1 "Orbitron", sans-serif;
+}
+
+.season-modal-section-head > div {
+    padding: 20px 24px;
+}
+
+.season-modal-section-head small {
+    color: var(--season-acid);
+    font: 600 0.45rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.11em;
+}
+
+.season-modal-section-head h3 {
+    margin: 9px 0 0;
+    font: 700 1.18rem/1 "Orbitron", sans-serif;
+}
+
+.season-table-wrap {
+    overflow-x: auto;
+}
+
+.season-table {
+    width: 100%;
+    min-width: 850px;
+    border-collapse: collapse;
+}
+
+.season-table th,
+.season-table td {
+    height: 58px;
+    padding: 10px 15px;
+    border-right: 1px solid var(--season-line);
+    border-bottom: 1px solid var(--season-line);
+    color: #9eabb4;
+    font: 600 0.53rem/1 "Orbitron", sans-serif;
+    text-align: center;
+}
+
+.season-table th {
+    height: 48px;
+    color: #667783;
+    background: rgba(255, 255, 255, 0.018);
+    font-size: 0.43rem;
+    letter-spacing: 0.08em;
+}
+
+.season-table td:nth-child(2),
+.season-table th:nth-child(2) {
+    text-align: left;
+}
+
+.season-table td a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #dde5e8;
+    text-decoration: none;
+}
+
+.season-table td img {
+    width: 29px;
+    height: 29px;
+    object-fit: contain;
+}
+
+.season-table tr.is-leading {
+    background: rgba(173, 255, 47, 0.045);
+    box-shadow: inset 2px 0 var(--season-acid);
+}
+
+.season-table tr.is-leading td:last-child strong {
+    color: var(--season-acid);
+}
+
+.season-modal-rankings {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.season-modal-ranking {
+    border-right: 1px solid var(--season-line);
+}
+
+.season-modal-ranking:last-child {
+    border-right: 0;
+}
+
+.season-modal-ranking > header {
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 17px 21px;
+    border-bottom: 1px solid var(--season-line);
+}
+
+.season-modal-ranking header span {
+    color: var(--ranking-accent);
+    font: 700 0.52rem/1 "Orbitron", sans-serif;
+}
+
+.season-modal-ranking header h3 {
+    margin: 0;
+    font: 700 0.67rem/1 "Orbitron", sans-serif;
+}
+
+.season-modal-ranking a {
+    min-height: 70px;
+    display: grid;
+    grid-template-columns: 30px 1fr 42px;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--season-line);
+    color: inherit;
+    text-decoration: none;
+}
+
+.season-modal-ranking a > span {
+    color: #465560;
+    font: 600 0.47rem/1 "Orbitron", sans-serif;
+}
+
+.season-modal-ranking a div {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.season-modal-ranking a strong,
+.season-modal-ranking a small {
+    overflow: hidden;
+    font-family: "Orbitron", sans-serif;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.season-modal-ranking a strong {
+    color: #e2e9ec;
+    font-size: 0.6rem;
+}
+
+.season-modal-ranking a small {
+    color: #62737f;
+    font-size: 0.4rem;
+}
+
+.season-modal-ranking a em {
+    color: var(--ranking-accent);
+    font: 700 0.78rem/1 "Orbitron", sans-serif;
+    font-style: normal;
+    text-align: right;
+}
+
+.season-modal-ranking p {
+    margin: 0;
+    padding: 38px 20px;
+    color: #667783;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+@keyframes season-dossier-in {
     from {
         opacity: 0;
-        transform: translateY(25px);
+        transform: translateY(12px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-.season-card.pulse-highlight {
-    border-color: #d89aff;
-    box-shadow: 0 0 35px rgba(180, 28, 255, 0.7);
-}
-
-.season-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.season-card-heading {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.season-card-heading h2 {
-    margin: 0;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.5rem;
-    color: #e0d6ff;
-}
-
-.season-status-badge {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    padding: 4px 12px;
-    border-radius: 20px;
-}
-
-.season-status-badge.live {
-    background: rgba(255, 0, 64, 0.2);
-    color: #ff5c85;
-    border: 1px solid #ff0040;
-    animation: seasonLivePulse 1.6s infinite;
-}
-
-.season-status-badge.finished {
-    background: rgba(255, 255, 255, 0.08);
-    color: #cfc4e6;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-@keyframes seasonLivePulse {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.55;
-    }
-}
-
-.season-dates {
-    font-size: 0.85rem;
-    color: #a590c8;
-    background: rgba(0, 0, 0, 0.35);
-    padding: 5px 12px;
-    border-radius: 12px;
-}
-
-/* -------------------- Podium -------------------- */
-.podium {
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 14px;
-    margin: 10px 0 26px;
-    flex-wrap: wrap;
-}
-
-.podium-slot {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    padding: 16px 18px 14px;
-    border-radius: 14px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    min-width: 110px;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.podium-slot:hover {
-    transform: translateY(-4px);
-}
-
-.podium-medal {
-    font-size: 1.6rem;
-}
-
-.podium-logo {
-    width: 40px;
-    height: 40px;
-    object-fit: contain;
-}
-
-.podium-club {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-align: center;
-}
-
-.podium-pts {
-    font-size: 0.75rem;
-    color: #b0a0d0;
-}
-
-.podium-1 {
-    order: 2;
-    padding-top: 22px;
-    border-color: rgba(255, 215, 0, 0.5);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
-    min-width: 130px;
-}
-
-.podium-1 .podium-medal {
-    font-size: 2rem;
-}
-
-.podium-2 {
-    order: 1;
-    border-color: rgba(200, 200, 220, 0.4);
-}
-
-.podium-3 {
-    order: 3;
-    border-color: rgba(205, 127, 50, 0.4);
-}
-
-.podium-empty {
-    opacity: 0.4;
-}
-
-.podium-empty-label {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.2rem;
-}
-
-/* -------------------- Reward mini-cards -------------------- */
-.reward-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 14px;
-    margin-bottom: 22px;
-}
-
-.reward-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    text-align: center;
-    background: rgba(20, 15, 35, 0.6);
-    border: 1px solid rgba(180, 28, 255, 0.25);
-    border-radius: 14px;
-    padding: 14px 10px;
-    transition: 0.25s ease;
-}
-
-.reward-card:hover {
-    border-color: rgba(180, 28, 255, 0.6);
-    box-shadow: 0 0 14px rgba(180, 28, 255, 0.25);
-    transform: translateY(-3px);
-}
-
-.reward-icon {
-    font-size: 1.5rem;
-}
-
-.reward-label {
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #a590c8;
-}
-
-.reward-value {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: #fff;
-}
-
-/* -------------------- Bouton détails -------------------- */
-.details-btn {
-    width: 100%;
-    padding: 12px 16px;
-    border: none;
-    border-radius: 10px;
-    font-weight: bold;
-    font-family: 'Montserrat', 'Inter', sans-serif;
-    cursor: pointer;
-    color: white;
-    font-size: 0.95rem;
-    background: linear-gradient(135deg, #a600ff, #b41ce6);
-    box-shadow: 0 0 15px rgba(180, 28, 255, 0.3);
-    transition: 0.25s ease;
-}
-
-.details-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(180, 28, 255, 0.5);
-}
-
-/* ==========================================================================
-   POPUP
-   ========================================================================== */
-.popup-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(3px);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    animation: fadeIn 0.25s ease;
-}
-
-@keyframes fadeIn {
+@keyframes season-modal-in {
     from {
         opacity: 0;
+        transform: translateY(18px) scale(0.985);
     }
-
     to {
         opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
-.popup-box {
-    background: rgba(10, 10, 10, 0.96);
-    border-radius: 18px;
-    padding: 24px;
-    width: 92%;
-    max-width: 850px;
-    max-height: 88vh;
-    display: flex;
-    flex-direction: column;
-    border: 2px solid #b41cff;
-    box-shadow: 0 0 30px rgba(180, 28, 255, 0.5);
-    position: relative;
-}
-
-.popup-box h3 {
-    text-align: center;
-    margin: 0 0 18px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.3rem;
-    color: #d59cff;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(180, 28, 255, 0.3);
-    flex-shrink: 0;
-}
-
-.popup-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 4px 6px;
-    margin-bottom: 55px;
-}
-
-.season-section {
-    margin-bottom: 26px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.season-section:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-}
-
-.season-section h4 {
-    margin: 0 0 14px;
-    font-size: 1.05rem;
-    padding-bottom: 6px;
-    border-bottom: 2px solid;
-    position: sticky;
-    top: 0;
-    background: rgba(10, 10, 10, 0.96);
-    z-index: 1;
-    padding-top: 4px;
-}
-
-.leaderboard {
-    color: #fff200;
-    border-bottom-color: #fff200;
-}
-
-.goal {
-    color: #ff3b3b;
-    border-bottom-color: #ff3b3b;
-}
-
-.assist {
-    color: #00bfff;
-    border-bottom-color: #00bfff;
-}
-
-.goal-assist {
-    color: #9d00ff;
-    border-bottom-color: #9d00ff;
-}
-
-.season-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.88rem;
-}
-
-.season-table th,
-.season-table td {
-    padding: 9px 10px;
-    text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.season-table td:nth-child(2) {
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.season-table th {
-    background: rgba(0, 0, 0, 0.4);
-    font-weight: bold;
-    color: #d59cff;
-    border-bottom: 2px solid rgba(180, 28, 255, 0.3);
-}
-
-.season-table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.club-badge {
-    object-fit: contain;
-    border-radius: 4px;
-    flex-shrink: 0;
-}
-
-.champion-row {
-    background: linear-gradient(90deg, rgba(255, 215, 0, 0.1), transparent);
-    box-shadow: inset 3px 0 0 gold;
-}
-
-.champion-row td {
-    color: #ffe9a8;
-    font-weight: 700;
-}
-
-/* Bouton fermer fixe */
-.close-btn {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10px 25px;
-    background: linear-gradient(135deg, #a600ff, #b41ce6);
-    border: 1px solid #b41ce6;
-    border-radius: 8px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-    z-index: 10;
-    min-width: 150px;
-}
-
-.popup-box .close-btn:hover {
-    background: linear-gradient(135deg, #b41ce6, #8b5cf6);
-    box-shadow: 0 0 15px #b41ce6;
-    transform: translateX(-50%) translateY(-2px);
-}
-
-.popup-content::-webkit-scrollbar {
-    width: 8px;
-}
-
-.popup-content::-webkit-scrollbar-track {
-    background: rgba(10, 10, 10, 0.8);
-    border-radius: 4px;
-}
-
-.popup-content::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #a600ff, #b41ce6);
-    border-radius: 4px;
-}
-
-.popup-content::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #b41ce6, #8b5cf6);
-}
-
-.popup-content {
-    scrollbar-width: thin;
-    scrollbar-color: #a600ff rgba(10, 10, 10, 0.8);
-}
-
-/* ==========================================================================
-   RESPONSIVE
-   ========================================================================== */
-@media (max-width: 768px) {
-    .season-hero-title {
-        font-size: 2rem;
+@media (max-width: 1180px) {
+    body.nebula-page.seasons-page .season-command {
+        width: calc(100% - 24px) !important;
     }
 
-    .season-hero-subtitle {
-        font-size: 0.95rem;
+    .season-hero {
+        grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.7fr);
     }
 
-    .season-card {
-        padding: 18px;
-        border-radius: 14px;
+    .season-hero-copy {
+        padding-inline: 42px;
     }
 
-    .season-card-heading h2 {
-        font-size: 1.2rem;
+    .season-overview {
+        grid-template-columns: 1fr 1fr;
     }
 
-    .podium-slot {
-        min-width: 90px;
-        padding: 12px 12px 10px;
+    .season-metric-grid {
+        grid-column: 1 / -1;
+        grid-template-columns: repeat(4, 1fr);
+        border-top: 1px solid var(--season-line);
     }
 
-    .podium-1 {
-        min-width: 105px;
+    .season-metric-grid div,
+    .season-metric-grid div:nth-child(2n) {
+        min-height: 86px;
+        border-right: 1px solid var(--season-line);
+        border-bottom: 0;
     }
 
-    .reward-cards {
+    .season-metric-grid div:last-child {
+        border-right: 0;
+    }
+
+    .season-history-row {
+        grid-template-columns: 75px 1fr 1.2fr 1fr 0.7fr 60px;
+    }
+}
+
+@media (max-width: 900px) {
+    .season-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .season-hero-copy {
+        min-height: 540px;
+        border-right: 0;
+    }
+
+    .season-cycle {
+        min-height: 430px;
+        border-top: 1px solid var(--season-line);
+    }
+
+    .season-section-head {
+        grid-template-columns: 78px 1fr;
+    }
+
+    .season-section-head > p {
+        grid-column: 1 / -1;
+        min-height: 78px;
+        border-top: 1px solid var(--season-line);
+        border-left: 0;
+    }
+
+    .season-dossier-head {
+        grid-template-columns: 90px 1fr;
+    }
+
+    .season-dossier-date {
+        grid-column: 1 / -1;
+        min-height: 90px;
+        border-top: 1px solid var(--season-line);
+        border-left: 0;
+    }
+
+    .season-rankings {
+        grid-template-columns: 1fr;
+    }
+
+    .season-ranking-panel + .season-ranking-panel {
+        border-top: 1px solid var(--season-line);
+        border-left: 0;
+    }
+
+    .season-awards {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .popup-box {
-        width: 95%;
-        padding: 16px;
-        max-height: 90vh;
+    .season-award:nth-child(2) {
+        border-right: 0;
     }
 
-    .season-table {
-        font-size: 0.8rem;
+    .season-award:nth-child(-n + 2) {
+        border-bottom: 1px solid var(--season-line);
     }
 
-    .season-table th,
-    .season-table td {
-        padding: 6px 5px;
+    .season-dossier-actions {
+        grid-template-columns: 1fr;
     }
 
-    .close-btn {
-        padding: 8px 20px;
-        font-size: 0.9rem;
-        min-width: 120px;
+    body.nebula-page.seasons-page .season-details-button,
+    .season-dossier-actions a {
+        border-right: 0;
+        border-bottom: 1px solid var(--season-line);
+    }
+
+    .season-history-row {
+        grid-template-columns: 65px 1fr 1fr 55px;
+    }
+
+    .season-history-row > div:nth-of-type(2),
+    .season-history-row > div:nth-of-type(4) {
+        display: none;
+    }
+
+    .season-modal-rankings {
+        grid-template-columns: 1fr;
+    }
+
+    .season-modal-ranking {
+        border-right: 0;
+        border-bottom: 1px solid var(--season-line);
     }
 }
 
-@media (max-width: 480px) {
-    .podium {
-        gap: 8px;
+@media (max-width: 620px) {
+    body.nebula-page.seasons-page .season-command {
+        width: 100% !important;
     }
 
-    .podium-slot {
-        min-width: 78px;
-        padding: 10px 8px;
+    .season-hero-copy {
+        min-height: 510px;
+        padding: 70px 22px 45px;
     }
 
-    .podium-club {
-        font-size: 0.72rem;
+    .season-hero h1 {
+        font-size: clamp(2.7rem, 14vw, 4.1rem);
+    }
+
+    .season-hero-stats {
+        grid-template-columns: 1fr;
+        width: 100%;
+        margin-top: 36px;
+    }
+
+    .season-hero-stats div {
+        min-height: 62px;
+        padding: 10px 5px;
+    }
+
+    .season-hero-stats div + div {
+        padding-left: 5px;
+        border-top: 1px solid var(--season-line);
+        border-left: 0;
+    }
+
+    .season-cycle {
+        min-height: 350px;
+    }
+
+    .season-section-head {
+        grid-template-columns: 58px 1fr;
+    }
+
+    .season-section-index {
+        font-size: 1.35rem;
+    }
+
+    .season-section-head > div {
+        padding: 22px 18px;
+    }
+
+    .season-section-head h2 {
+        font-size: 1.3rem;
+    }
+
+    .season-switcher {
+        grid-template-columns: 1fr;
+    }
+
+    .season-dossier-head {
+        grid-template-columns: 62px 1fr;
+    }
+
+    .season-dossier-number {
+        font-size: 2rem;
+    }
+
+    .season-dossier-head > div:nth-child(2) {
+        padding-inline: 18px;
+    }
+
+    .season-overview {
+        grid-template-columns: 1fr;
+    }
+
+    .season-leader-card,
+    .season-leader-empty,
+    .season-progress-module {
+        min-height: 170px;
+    }
+
+    .season-progress-module {
+        border-top: 1px solid var(--season-line);
+        border-inline: 0;
+    }
+
+    .season-metric-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .season-metric-grid div:nth-child(2) {
+        border-right: 0;
+    }
+
+    .season-metric-grid div:nth-child(-n + 2) {
+        border-bottom: 1px solid var(--season-line);
+    }
+
+    .season-standing-row {
+        grid-template-columns: 27px 32px 1fr 34px;
+        padding-inline: 13px;
+    }
+
+    .season-standing-row > i {
+        display: none;
+    }
+
+    .season-awards {
+        grid-template-columns: 1fr;
+    }
+
+    .season-award,
+    .season-award:nth-child(2) {
+        border-right: 0;
+        border-bottom: 1px solid var(--season-line);
+    }
+
+    .season-history-row {
+        grid-template-columns: 55px 1fr 45px;
+    }
+
+    .season-history-row > div:nth-of-type(3) {
+        display: none;
+    }
+
+    .season-modal {
+        padding: 8px;
+    }
+
+    .season-modal-panel {
+        max-height: 96vh;
+    }
+
+    .season-modal-content {
+        max-height: calc(96vh - 105px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .season-dossier,
+    .season-modal-panel {
+        animation: none;
     }
 }

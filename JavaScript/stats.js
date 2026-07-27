@@ -1,309 +1,489 @@
-// 🔥 COULEURS DEGRADÉES SELON TON ORDRE
-const CLUB_COLORS = {
-    "Bastard Munchen": { from: "#be0000", to: "#000000" },
-    "PXG": { from: "#0009ab", to: "#c50d00" },
-    "Ubers": { from: "#29ce00", to: "#ffffffff" },
-    "Barcha": { from: "#ffe100", to: "#56007a" },
-    "Manshine City": { from: "#00b3ff", to: "#a1ffff" },
-    "Retraite": { from: "#ff8c00ff", to: "#c900dfff" },
+const RECORD_CATEGORY_META = {
+    buts: { code: "GLS", label: "Buts", accent: "#ff5d66" },
+    passes: { code: "AST", label: "Passes décisives", accent: "#63e7ff" },
+    defenses: { code: "DEF", label: "Défenses", accent: "#43f58b" },
+    dribbles: { code: "DRB", label: "Dribbles", accent: "#c879ff" }
 };
 
-// 🔥 LOGOS — nommage automatique (img/clubs/)
-const CLUB_LOGOS = club => `images/clubs_icon/${club.replace(/\s+/g, "_")}.png`;
+const RECORD_CLUB_COLORS = Object.fromEntries([
+    ...(window.NEBULA_DATA?.clubs || []),
+    ...Object.values(window.NEBULA_DATA?.groups || {})
+].map(club => [club.key, club.color]));
 
+// Temps entre deux leaders dans le signal des Records, en millisecondes.
+const RECORD_SIGNAL_INTERVAL_MS = 2000;
 
-// ------------------------
-// TES DONNÉES (NON MODIFIÉES)
-// ------------------------
-const DATA = {
-    topScorer: { name: "Aucun", goals: 0, club: "Retraite" },
-    topPasser: { name: "Aucun", passes: 0, club: "Retraite" },
-    topDefender: { name: "Aucun", defenses: 0, club: "Retraite" },
-    topPrice: { name: "Aucun", price: "0¥💎", club: "Retraite" },
-    topClub: { name: "Aucun", titles: 0, club: "Retraite" },
+document.addEventListener("DOMContentLoaded", () => {
+    const highlightGrid = document.getElementById("recordHighlights");
+    if (!highlightGrid) return;
 
-    clubsAlltime: [
-        { rank: 1, name: "Manshine City", points: 0, titles: 0, winpct: 0, diff: 0 },
-        { rank: 2, name: "PXG", points: 0, titles: 0, winpct: 0, diff: 0 },
-        { rank: 3, name: "Ubers", points: 0, titles: 0, winpct: 0, diff: 0 },
-        { rank: 4, name: "Barcha", points: 0, titles: 0, winpct: 0, diff: 0 },
-        { rank: 5, name: "Bastard Munchen", points: 0, titles: 0, winpct: 0, diff: 0 }
-    ],
+    const players = typeof PLAYERS === "undefined" ? [] : PLAYERS;
+    const matches = typeof MATCHES === "undefined" ? [] : MATCHES;
+    const clubKeys = typeof CLUB_META === "undefined" ? [] : Object.keys(CLUB_META);
+    const profilesByName = new Map(players.map(player => [player.name.toLowerCase(), player]));
 
-    scorers: [
-        { rank: 1, name: "???", club: "Bastard Munchen", goals: 0, avg: 0 },
-        { rank: 2, name: "???", club: "PXG", goals: 0, avg: 0 },
-        { rank: 3, name: "???", club: "Ubers", goals: 0, avg: 0 },
-        { rank: 4, name: "???", club: "Barcha", goals: 0, avg: 0 },
-        { rank: 5, name: "???", club: "Manshine City", goals: 0, avg: 0 },
-    ],
+    function playerProfile(name) {
+        return profilesByName.get(String(name).toLowerCase()) || null;
+    }
 
+    function playerHref(name) {
+        const profile = playerProfile(name);
+        return profile ? window.NEBULA_DATA.playerPageHref(profile) : null;
+    }
 
-    records: [
+    function playerClub(name) {
+        const profile = playerProfile(name);
+        return profile
+            ? { key: profile.club, name: profile.clubName }
+            : { key: "unknown", name: "Non référencé" };
+    }
 
-        // ----------------------------
-        // Records All Time
-        // ----------------------------
-        { title: "Match le plus prolifique", value: "??? — 0 Buts" }, // { title: "Match le plus prolifique", value: "Manshine City 13 - 2 PXG (15 buts)" },
-        { title: "Plus grosse victoire", value: "??? — 0 Buts" }, // { title: "Plus grosse victoire", value: "Manshine City 13 - 2 PXG (11 buts)" },
-        { title: "Série d'invincibilité", value: "??? — 0 Matchs" }, // { title: "Série d'invincibilité", value: "Manshine City — 1 matchs" },
-        { title: "Meilleur Buteur en une seul Saison", value: "??? — 0 Buts" }, // { title: "Meilleur Buteur en une seul Saison", value: "Dylan — 6 Buts" },
-        { title: "Meilleur Offense", value: "??? — 0 Buts Marqués" }, // { title: "Meilleur Offense", value: "Manshine City — 13 Buts Marqués" },
-        { title: "Meilleur Defense", value: "??? — 0 Buts Encaissés" }, // { title: "Meilleur Defense", value: "Manshine City — 2 Buts Encaissés" },
-        { title: "Buts le Plus Rapide", value: "??? — 0s" }, // { title: "Buts le Plus Rapide", value: "Dylan — 43s" },
-        {
-            title: "Meilleur But de tout les Temps",
-            value: `<a href="Autre/greatest_goal.html" target=_blank class="record-btn">Voir →</a>`
-        },
-        {
-            title: "Pire Raté de tout les Temps",
-            value: `<a href="Autre/worst_goal.html" target=_blank class="record-btn">Voir →</a>`
+    function playerAvatar(name) {
+        return playerProfile(name)?.avatar || "images/logos/nebula.png";
+    }
+
+    function clubInfo(key) {
+        const fallback = { name: key || "???", logo: "", cls: key || "" };
+        return typeof CLUB_META === "undefined" ? fallback : (CLUB_META[key] || fallback);
+    }
+
+    function clubTitles(key) {
+        if (typeof CLUBS === "undefined") return 0;
+        return CLUBS.find(clubItem => clubItem.key === key)?.titles || 0;
+    }
+
+    function formatCredits(value) {
+        if (value >= 1000000000) {
+            return `${(value / 1000000000).toLocaleString("fr-FR", { maximumFractionDigits: 2 })} B ¥`;
+        }
+        if (value >= 1000000) {
+            return `${(value / 1000000).toLocaleString("fr-FR", { maximumFractionDigits: 2 })} M ¥`;
+        }
+        return `${value.toLocaleString("fr-FR")} ¥`;
+    }
+
+    function plural(value, singular, pluralForm = `${singular}s`) {
+        return `${value} ${value === 1 ? singular : pluralForm}`;
+    }
+
+    function buildPlayerRecords() {
+        const records = {};
+
+        function ensure(name) {
+            if (!records[name]) {
+                records[name] = {
+                    name,
+                    buts: 0,
+                    passes: 0,
+                    defenses: 0,
+                    dribbles: 0,
+                    matchs: 0,
+                    mvp: 0
+                };
+            }
+            return records[name];
         }
 
-    ],
-
-    clubsPerformance: [
-        { club: "Manshine City", value: 0 },
-        { club: "Bastard Munchen", value: 0 },
-        { club: "Ubers", value: 0 },
-        { club: "Barcha", value: 0 },
-        { club: "PXG", value: 0 }
-    ]
-};
-
-
-// ----------------------------
-// Injection des stat-cards
-// ----------------------------
-document.getElementById("topScorer").textContent = DATA.topScorer.name + " (" + DATA.topScorer.goals + ")";
-document.getElementById("topPasser").textContent = DATA.topPasser.name + " (" + DATA.topPasser.passes + ")";
-document.getElementById("topDefender").textContent = DATA.topDefender.name + " (" + DATA.topDefender.defenses + ")";
-document.getElementById("topPrice").textContent = DATA.topPrice.name + " (" + DATA.topPrice.price + ")";
-document.getElementById("topClub").textContent = DATA.topClub.name + " (" + DATA.topClub.titles + ")";
-
-
-// ----------------------------
-// FONCTION LIGNE CLUB avec LOGO
-// ----------------------------
-const clubRow = c => `
-<tr>
-    <td>${c.rank}</td>
-    <td>
-        <img src="${CLUB_LOGOS(c.name)}" class="club-icon"> 
-        ${c.name}
-    </td>
-    <td>${c.points}</td>
-    <td>${c.titles}</td>
-    <td>${c.winpct}%</td>
-    <td>${c.diff}</td>
-</tr>
-`;
-
-
-// ----------------------------
-// Tableau all-time + TRI
-// ----------------------------
-let clubsTableData = [...DATA.clubsAlltime];
-
-// Créer une copie pour le classement naturel (toujours décroissant)
-function getNaturalRanking() {
-    // Trier par points décroissant pour le classement naturel
-    return [...DATA.clubsAlltime].sort((a, b) => b.points - a.points);
-}
-
-// Calculer les rangs une fois pour toutes selon le classement naturel
-const naturalRanking = getNaturalRanking();
-const rankMap = {};
-naturalRanking.forEach((club, index) => {
-    rankMap[club.name] = index + 1; // #1, #2, etc.
-});
-
-const tbodyAll = document.querySelector("#alltime-table tbody");
-
-function renderAllTime() {
-    tbodyAll.innerHTML = "";
-
-    clubsTableData.forEach(c => {
-        // Utiliser le rang naturel (toujours le même) peu importe le tri
-        const rank = rankMap[c.name] || 0;
-
-        tbodyAll.innerHTML += `
-        <tr>
-            <td>${rank}</td>
-            <td>
-                <img src="${CLUB_LOGOS(c.name)}" class="club-icon"> 
-                ${c.name}
-            </td>
-            <td>${c.points}</td>
-            <td>${c.titles}</td>
-            <td>${c.winpct}%</td>
-            <td>${c.diff}</td>
-        </tr>
-        `;
-    });
-}
-
-// Trier par défaut selon les points (décroissant) au chargement
-clubsTableData.sort((a, b) => b.points - a.points);
-renderAllTime();
-
-document.querySelectorAll("#alltime-table th").forEach((th, index) => {
-    if (index < 2) return; // On ne trie pas Rank / Nom
-
-    let asc = false;
-    th.style.cursor = "pointer";
-
-    th.addEventListener("click", () => {
-        const keys = ["points", "titles", "winpct", "diff"];
-        const key = keys[index - 2];
-
-        asc = !asc;
-
-        clubsTableData.sort((a, b) => {
-            if (a[key] === "No Data") return 1;
-            if (b[key] === "No Data") return -1;
-            return asc ? a[key] - b[key] : b[key] - a[key];
+        matches.forEach(match => {
+            const matchStats = computePlayerStats(match);
+            Object.entries(matchStats).forEach(([name, stats]) => {
+                const record = ensure(name);
+                record.buts += stats.buts || 0;
+                record.passes += stats.passes || 0;
+                record.defenses += stats.defenses || 0;
+                record.dribbles += stats.dribbles || 0;
+                record.matchs += 1;
+            });
+            const matchMvp = typeof computeMatchMvp === "function" ? computeMatchMvp(match)?.name : match.mvp;
+            if (matchMvp) ensure(matchMvp).mvp += 1;
         });
 
-        renderAllTime();
-    });
-});
+        return Object.values(records);
+    }
 
+    function buildClubRecords() {
+        const records = Object.fromEntries(clubKeys.map(key => [key, {
+            key,
+            played: 0,
+            wins: 0,
+            draws: 0,
+            losses: 0,
+            points: 0,
+            gf: 0,
+            ga: 0,
+            titles: clubTitles(key)
+        }]));
 
-// ----------------------------
-// Tableau buteurs (+ logos)
-// ----------------------------
-const tbodySc = document.querySelector("#scorers-table tbody");
+        matches.forEach(match => {
+            if (!records[match.home] || !records[match.away]) return;
+            const home = records[match.home];
+            const away = records[match.away];
+            home.played += 1;
+            away.played += 1;
+            home.gf += match.scoreHome;
+            home.ga += match.scoreAway;
+            away.gf += match.scoreAway;
+            away.ga += match.scoreHome;
 
-DATA.scorers.forEach(s => {
-    tbodySc.innerHTML += `
-        <tr>
-            <td>${s.rank}</td>
-            <td>${s.name}</td>
-            <td>
-                <img src="${CLUB_LOGOS(s.club)}" class="club-icon">
-                ${s.club}
-            </td>
-            <td>${s.goals}</td>
-            <td>${s.avg}</td>
-        </tr>
-    `;
-});
+            if (match.scoreHome > match.scoreAway) {
+                home.wins += 1;
+                away.losses += 1;
+                home.points += 3;
+            } else if (match.scoreAway > match.scoreHome) {
+                away.wins += 1;
+                home.losses += 1;
+                away.points += 3;
+            } else {
+                home.draws += 1;
+                away.draws += 1;
+                home.points += 1;
+                away.points += 1;
+            }
+        });
 
+        return Object.values(records)
+            .map(record => ({
+                ...record,
+                diff: record.gf - record.ga,
+                winpct: record.played ? Math.round((record.wins / record.played) * 100) : 0
+            }))
+            .sort((a, b) => b.points - a.points || b.diff - a.diff || b.gf - a.gf);
+    }
 
-// ----------------------------
-// Records
-// ----------------------------
+    function categoryRanking(records, category) {
+        return [...records].sort((a, b) =>
+            b[category] - a[category] ||
+            b.matchs - a.matchs ||
+            a.name.localeCompare(b.name, "fr")
+        );
+    }
 
+    function fastestGoalRecord() {
+        let fastest = null;
+        matches.forEach(match => {
+            [...(match.timelineHome || []), ...(match.timelineAway || [])].forEach(event => {
+                const timeMatch = /(\d+)'(\d+)/.exec(event.time || "");
+                if (!timeMatch) return;
+                const seconds = Number(timeMatch[1]) * 60 + Number(timeMatch[2]);
+                if (!fastest || seconds < fastest.seconds) fastest = { ...event, seconds };
+            });
+        });
+        return fastest;
+    }
 
-// ----------------------------
-// CLUB MINI-BARRES ANIMÉES + LOGO
-// ----------------------------
-const clubsPerf = document.getElementById("clubsPerfs");
+    function longestUnbeatenRecord() {
+        const state = Object.fromEntries(clubKeys.map(key => [key, { current: 0, best: 0 }]));
+        [...matches].sort((a, b) => a.date.localeCompare(b.date)).forEach(match => {
+            const draw = match.scoreHome === match.scoreAway;
+            const homeUnbeaten = draw || match.scoreHome > match.scoreAway;
+            const awayUnbeaten = draw || match.scoreAway > match.scoreHome;
 
-DATA.clubsPerformance.forEach((c) => {
-    const barID = "bar_" + c.club.replace(/\s+/g, "_");
+            [[match.home, homeUnbeaten], [match.away, awayUnbeaten]].forEach(([key, unbeaten]) => {
+                if (!state[key]) return;
+                state[key].current = unbeaten ? state[key].current + 1 : 0;
+                state[key].best = Math.max(state[key].best, state[key].current);
+            });
+        });
 
-    // Création du conteneur
-    const clubDiv = document.createElement("div");
-    clubDiv.className = "club-mini";
+        return Object.entries(state)
+            .map(([key, value]) => ({ key, value: value.best }))
+            .sort((a, b) => b.value - a.value)[0] || { key: clubKeys[0], value: 0 };
+    }
 
-    // Titre + logo
-    const h4 = document.createElement("h4");
-    const img = document.createElement("img");
-    img.src = CLUB_LOGOS(c.club);
-    img.className = "club-icon";
-    img.alt = c.club;
-    h4.appendChild(img);
-    h4.appendChild(document.createTextNode(c.club));
-    clubDiv.appendChild(h4);
+    const playerRecords = buildPlayerRecords();
+    const clubRecords = buildClubRecords();
+    const scorerRanking = categoryRanking(playerRecords, "buts");
+    const passerRanking = categoryRanking(playerRecords, "passes");
+    const defenderRanking = categoryRanking(playerRecords, "defenses");
+    const dribblerRanking = categoryRanking(playerRecords, "dribbles");
+    const mostValuable = [...players].sort((a, b) => b.value - a.value)[0];
+    const topScorer = scorerRanking[0];
 
-    // Conteneur de la barre
-    const container = document.createElement("div");
-    container.className = "mini-bar-container";
+    const totalGoals = matches.reduce((sum, match) => sum + match.scoreHome + match.scoreAway, 0);
+    document.getElementById("archiveMatches").textContent = String(matches.length).padStart(2, "0");
+    document.getElementById("archiveGoals").textContent = String(totalGoals).padStart(2, "0");
+    document.getElementById("archivePlayers").textContent = String(playerRecords.length).padStart(2, "0");
+    function leaderCard(record) {
+        const profile = record.name ? playerProfile(record.name) : null;
+        const href = record.name ? playerHref(record.name) : null;
+        const tag = href ? "a" : "article";
+        const hrefAttribute = href ? ` href="${href}"` : "";
+        const avatar = profile?.avatar || "images/logos/nebula.png";
+        const club = record.name ? playerClub(record.name) : { key: "unknown", name: record.subtitle || "Archive" };
 
-    // Barre
-    const bar = document.createElement("div");
-    bar.className = "mini-bar";
-    bar.id = barID;
+        return `
+            <${tag} class="record-leader-card" style="--record-accent:${record.accent};"${hrefAttribute}>
+                <div class="leader-card-topline"><span>${record.code}</span><span><i></i> RECORD ACTIF</span></div>
+                <div class="leader-card-visual">
+                    <img src="${avatar}" alt="${record.name || record.label}">
+                    <span>${record.watermark}</span>
+                </div>
+                <div class="leader-card-body">
+                    <small>${record.label}</small>
+                    <strong>${record.name || "Aucun"}</strong>
+                    <span>${club.name}</span>
+                    <div><b>${record.value}</b><i>↗</i></div>
+                </div>
+            </${tag}>
+        `;
+    }
 
-    // Dégradé selon le club
-    const colors = CLUB_COLORS[c.club] || { from: "#ddd", to: "#aaa" };
-    bar.style.background = `linear-gradient(90deg, ${colors.from}, ${colors.to})`;
-    bar.style.width = "0%"; // départ pour animation
-
-    container.appendChild(bar);
-    clubDiv.appendChild(container);
-
-    clubsPerf.appendChild(clubDiv);
-
-    // Animation fluide
-    setTimeout(() => {
-        bar.style.width = c.value + "%";
-    }, 50);
-});
-
-const alltimeList = document.getElementById("records-alltime");
-const seasonList = document.getElementById("records-season");
-
-// On sépare les records selon leur type (ici je suppose que tu as All-Time et Saison)
-const allTimeRecords = DATA.records.filter(r => !r.season);
-const seasonRecords = DATA.records.filter(r => r.season);
-
-// Injection
-allTimeRecords.forEach(r => {
-    alltimeList.innerHTML += `<li><strong>${r.title}:</strong> ${r.value}</li>`;
-});
-
-seasonRecords.forEach(r => {
-    seasonList.innerHTML += `<li><strong>${r.title}:</strong> ${r.value}</li>`;
-});
-
-// Toggle boutons
-document.querySelectorAll(".records-toggle .record-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-        document.querySelectorAll(".records-toggle .record-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-
-        const target = btn.getAttribute("data-target");
-        if (target === "alltime") {
-            alltimeList.style.display = "block";
-            seasonList.style.display = "none";
-        } else {
-            alltimeList.style.display = "none";
-            seasonList.style.display = "block";
+    const highlights = [
+        {
+            code: "GLS // 01",
+            label: "Meilleur buteur",
+            name: topScorer?.name,
+            value: topScorer ? plural(topScorer.buts, "but") : "0 but",
+            watermark: "GLS",
+            accent: "#ff5d66"
+        },
+        {
+            code: "AST // 02",
+            label: "Meilleur passeur",
+            name: passerRanking[0]?.name,
+            value: passerRanking[0] ? plural(passerRanking[0].passes, "passe D.", "passes D.") : "0 passe D.",
+            watermark: "AST",
+            accent: "#63e7ff"
+        },
+        {
+            code: "DEF // 03",
+            label: "Meilleur défenseur",
+            name: defenderRanking[0]?.name,
+            value: defenderRanking[0] ? plural(defenderRanking[0].defenses, "défense") : "0 défense",
+            watermark: "DEF",
+            accent: "#43f58b"
+        },
+        {
+            code: "DRB // 04",
+            label: "Meilleur dribbleur",
+            name: dribblerRanking[0]?.name,
+            value: dribblerRanking[0] ? plural(dribblerRanking[0].dribbles, "dribble") : "0 dribble",
+            watermark: "DRB",
+            accent: "#c879ff"
+        },
+        {
+            code: "VAL // 05",
+            label: "Plus forte valeur",
+            name: mostValuable?.name,
+            value: mostValuable ? formatCredits(mostValuable.value) : "0 ¥",
+            watermark: "VAL",
+            accent: "#ffd84d"
         }
+    ];
+    highlightGrid.innerHTML = highlights.map(leaderCard).join("");
+
+    const signalEntries = [
+        {
+            label: "RECORD DE BUTS",
+            name: topScorer?.name || "AUCUN",
+            value: topScorer ? plural(topScorer.buts, "BUT", "BUTS") : "0 BUT",
+            accent: "#ff5d66"
+        },
+        {
+            label: "RECORD DE PASSES",
+            name: passerRanking[0]?.name || "AUCUN",
+            value: passerRanking[0] ? plural(passerRanking[0].passes, "PASSE D.", "PASSES D.") : "0 PASSE D.",
+            accent: "#63e7ff"
+        },
+        {
+            label: "RECORD DE DÉFENSES",
+            name: defenderRanking[0]?.name || "AUCUN",
+            value: defenderRanking[0] ? plural(defenderRanking[0].defenses, "DÉFENSE", "DÉFENSES") : "0 DÉFENSE",
+            accent: "#43f58b"
+        },
+        {
+            label: "RECORD DE DRIBBLES",
+            name: dribblerRanking[0]?.name || "AUCUN",
+            value: dribblerRanking[0] ? plural(dribblerRanking[0].dribbles, "DRIBBLE", "DRIBBLES") : "0 DRIBBLE",
+            accent: "#c879ff"
+        },
+        {
+            label: "RECORD DE VALEUR",
+            name: mostValuable?.name || "AUCUN",
+            value: mostValuable ? formatCredits(mostValuable.value) : "0 ¥",
+            accent: "#ffd84d"
+        }
+    ];
+
+    const signalPanel = document.querySelector(".record-signal");
+    const signalReadout = signalPanel?.querySelector(".record-signal-readout");
+    const signalLabel = document.getElementById("recordSignalLabel");
+    const signalName = document.getElementById("recordSignalName");
+    const signalValue = document.getElementById("recordSignalValue");
+    let signalIndex = 0;
+    let signalTransitionTimer = null;
+
+    function applySignal(entry) {
+        signalPanel?.style.setProperty("--signal-accent", entry.accent);
+        signalLabel.textContent = entry.label;
+        signalName.textContent = entry.name;
+        signalValue.textContent = entry.value;
+        signalReadout?.classList.remove("is-changing");
+    }
+
+    function showSignal(index, immediate = false) {
+        const entry = signalEntries[index];
+        if (!entry) return;
+        if (immediate) {
+            applySignal(entry);
+            return;
+        }
+        signalReadout?.classList.add("is-changing");
+        window.clearTimeout(signalTransitionTimer);
+        signalTransitionTimer = window.setTimeout(() => applySignal(entry), 220);
+    }
+
+    showSignal(signalIndex, true);
+    if (signalEntries.length > 1) {
+        window.setInterval(() => {
+            signalIndex = (signalIndex + 1) % signalEntries.length;
+            showSignal(signalIndex);
+        }, RECORD_SIGNAL_INTERVAL_MS);
+    }
+
+    document.getElementById("clubRecordsBody").innerHTML = clubRecords.map((record, index) => {
+        const info = clubInfo(record.key);
+        const accent = RECORD_CLUB_COLORS[record.key] || "#63e7ff";
+        return `
+            <tr style="--club-accent:${accent};">
+                <td><span class="club-record-rank">${String(index + 1).padStart(2, "0")}</span></td>
+                <td><span class="club-record-identity"><img src="${info.logo}" alt=""><strong>${info.name}</strong></span></td>
+                <td>${record.played}</td>
+                <td><strong>${record.points}</strong></td>
+                <td>${record.wins}–${record.draws}–${record.losses}</td>
+                <td class="${record.diff > 0 ? "positive" : record.diff < 0 ? "negative" : ""}">${record.diff > 0 ? "+" : ""}${record.diff}</td>
+                <td>
+                    <span class="club-winrate"><i style="width:${record.winpct}%"></i></span>
+                    <small>${record.winpct}%</small>
+                </td>
+            </tr>
+        `;
+    }).join("");
+
+    function renderPlayerRanking(category) {
+        const meta = RECORD_CATEGORY_META[category];
+        const records = categoryRanking(playerRecords, category);
+        const maximum = records[0]?.[category] || 1;
+        const leader = records[0];
+
+        document.getElementById("rankingSummary").innerHTML = leader ? `
+          <div class="ranking-summary-code"><span>${meta.code}</span></div>
+            <img src="${playerAvatar(leader.name)}" alt="">
+            <div><small>LEADER // ${meta.label.toUpperCase()}</small><strong>${leader.name}</strong></div>
+            <span>${leader[category]}</span>
+        ` : `<p>Aucune donnée enregistrée.</p>`;
+
+        document.getElementById("playerRecordList").innerHTML = records.map((record, index) => {
+            const club = playerClub(record.name);
+            const href = playerHref(record.name);
+            const tag = href ? "a" : "div";
+            const hrefAttribute = href ? ` href="${href}"` : "";
+            const width = record[category] > 0 ? Math.max(3, (record[category] / maximum) * 100) : 0;
+            return `
+                <${tag} class="player-record-row" style="--category-accent:${meta.accent};"${hrefAttribute}>
+                    <span class="player-record-rank">${String(index + 1).padStart(2, "0")}</span>
+                    <img src="${playerAvatar(record.name)}" alt="">
+                    <span class="player-record-name"><small>${club.name}</small><strong>${record.name}</strong></span>
+                    <span class="player-record-bar"><i style="width:${width}%"></i></span>
+                    <span class="player-record-value"><strong>${record[category]}</strong><small>${meta.code}</small></span>
+                </${tag}>
+            `;
+        }).join("");
+    }
+
+    const categoryTabs = document.getElementById("recordCategoryTabs");
+    categoryTabs.addEventListener("click", event => {
+        const button = event.target.closest("[data-record-category]");
+        if (!button) return;
+        categoryTabs.querySelectorAll("button").forEach(item => {
+            const active = item === button;
+            item.classList.toggle("active", active);
+            item.setAttribute("aria-pressed", String(active));
+        });
+        renderPlayerRanking(button.dataset.recordCategory);
     });
+
+    const prolificMatch = [...matches].sort((a, b) =>
+        (b.scoreHome + b.scoreAway) - (a.scoreHome + a.scoreAway)
+    )[0];
+    const biggestWin = [...matches].sort((a, b) =>
+        Math.abs(b.scoreHome - b.scoreAway) - Math.abs(a.scoreHome - a.scoreAway)
+    )[0];
+    const fastestGoal = fastestGoalRecord();
+    const bestOffense = [...clubRecords].sort((a, b) => b.gf - a.gf)[0];
+    const playedClubRecords = clubRecords.filter(record => record.played > 0);
+    const bestDefense = [...playedClubRecords].sort((a, b) => a.ga - b.ga || b.points - a.points)[0];
+    const unbeaten = longestUnbeatenRecord();
+
+    const vaultRecords = [
+        {
+            code: "MAT–01",
+            label: "Match le plus prolifique",
+            value: prolificMatch
+                ? `${clubInfo(prolificMatch.home).name} ${prolificMatch.scoreHome}–${prolificMatch.scoreAway} ${clubInfo(prolificMatch.away).name}`
+                : "Aucune donnée",
+            detail: prolificMatch ? plural(prolificMatch.scoreHome + prolificMatch.scoreAway, "but") : "0 but"
+        },
+        {
+            code: "MAT–02",
+            label: "Plus grosse victoire",
+            value: biggestWin
+                ? `${clubInfo(biggestWin.home).name} ${biggestWin.scoreHome}–${biggestWin.scoreAway} ${clubInfo(biggestWin.away).name}`
+                : "Aucune donnée",
+            detail: biggestWin ? `Écart de ${Math.abs(biggestWin.scoreHome - biggestWin.scoreAway)} buts` : "Écart de 0"
+        },
+        {
+            code: "PLR–03",
+            label: "But le plus rapide",
+            value: fastestGoal?.scorer || "Aucun",
+            detail: fastestGoal ? fastestGoal.time : "0 seconde"
+        },
+        {
+            code: "CLB–04",
+            label: "Meilleure attaque",
+            value: bestOffense ? clubInfo(bestOffense.key).name : "Aucun",
+            detail: bestOffense ? plural(bestOffense.gf, "but marqué", "buts marqués") : "0 but marqué"
+        },
+        {
+            code: "CLB–05",
+            label: "Meilleure défense",
+            value: bestDefense ? clubInfo(bestDefense.key).name : "Aucun",
+            detail: bestDefense ? plural(bestDefense.ga, "but encaissé", "buts encaissés") : "0 but encaissé"
+        },
+        {
+            code: "CLB–06",
+            label: "Série d’invincibilité",
+            value: clubInfo(unbeaten.key).name,
+            detail: plural(unbeaten.value, "match")
+        },
+        {
+            code: "VID–07",
+            label: "Meilleur but",
+            value: "Archive vidéo",
+            detail: "Ouvrir l’enregistrement",
+            href: "Autre/greatest_goal.html"
+        },
+        {
+            code: "VID–08",
+            label: "Pire raté",
+            value: "Archive vidéo",
+            detail: "Ouvrir l’enregistrement",
+            href: "Autre/worst_goal.html"
+        }
+    ];
+
+    document.getElementById("recordVaultGrid").innerHTML = vaultRecords.map((record, index) => {
+        const tag = record.href ? "a" : "article";
+        const href = record.href ? ` href="${record.href}" target="_blank" rel="noopener"` : "";
+        return `
+            <${tag} class="vault-record ${record.href ? "has-link" : ""}"${href}>
+                <div><span>${record.code}</span><small>${String(index + 1).padStart(2, "0")}</small></div>
+                <strong>${record.label}</strong>
+                <p>${record.value}</p>
+                <span>${record.detail}</span>
+            </${tag}>
+        `;
+    }).join("");
+
+    renderPlayerRanking("buts");
 });
-
-// Exemple pour topScorer
-const topScorerCard = document.getElementById("topScorer");
-topScorerCard.innerHTML = `
-    ${DATA.topScorer.name} (${DATA.topScorer.goals})
-    <img src="${CLUB_LOGOS(DATA.topScorer.club)}" class="stat-card-img" alt="Logo Club">
-`;
-
-// Même principe pour les autres cartes
-const topPasserCard = document.getElementById("topPasser");
-topPasserCard.innerHTML = `
-    ${DATA.topPasser.name} (${DATA.topPasser.passes})
-    <img src="${CLUB_LOGOS(DATA.topPasser.club)}" class="stat-card-img" alt="Logo Club">
-`;
-
-const topDefenderCard = document.getElementById("topDefender");
-topDefenderCard.innerHTML = `
-    ${DATA.topDefender.name} (${DATA.topDefender.defenses})
-    <img src="${CLUB_LOGOS(DATA.topDefender.club)}" class="stat-card-img" alt="Logo Club">
-`;
-
-const topPriceCard = document.getElementById("topPrice");
-topPriceCard.innerHTML = `
-    ${DATA.topPrice.name} (${DATA.topPrice.price})
-    <img src="${CLUB_LOGOS(DATA.topPrice.club)}" class="stat-card-img" alt="Logo Club">
-`;
-
-const topClubCard = document.getElementById("topClub");
-topClubCard.innerHTML = `
-    ${DATA.topClub.name} (${DATA.topClub.titles})
-    <img src="${CLUB_LOGOS(DATA.topClub.club)}" class="stat-card-img" alt="Logo Club">
-`;

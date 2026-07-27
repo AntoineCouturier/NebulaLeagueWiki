@@ -1,179 +1,1115 @@
-/* CONTENEUR PAGE */
-.stats-page {
-    max-width: 1250px;
-    margin: 30px auto;
-    padding: 20px;
+/* ==========================================================================
+   NEBULA LEAGUE — PERMANENT RECORD ARCHIVE
+   ========================================================================== */
+
+body.nebula-page.records-page {
+    --record-acid: #adff2f;
+    --record-cyan: #63e7ff;
+    --record-gold: #ffd84d;
+    --record-line: rgba(255, 255, 255, 0.11);
+    --record-line-soft: rgba(255, 255, 255, 0.065);
+    --record-surface: #070a0e;
+    --record-surface-2: #0a0f15;
+    --record-surface-3: #0d131a;
 }
 
-/* CARDS */
-.stat-cards {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-bottom: 25px;
+body.nebula-page.records-page::after {
+    position: fixed;
+    z-index: -1;
+    inset: 0;
+    content: "";
+    background:
+        linear-gradient(116deg, transparent 0 69%, rgba(99, 231, 255, 0.025) 69% 70%, transparent 70%),
+        radial-gradient(circle at 11% 34%, rgba(99, 231, 255, 0.045), transparent 25rem);
+    pointer-events: none;
 }
 
-.stat-card {
-    background: rgba(20, 20, 20, 0.7);
-    border: 1px solid #b41cff55;
-    padding: 18px;
-    border-radius: 14px;
-    text-align: center;
-    flex: 1;
-    min-width: 220px;
-    box-shadow: 0 0 10px #b41cff33;
-}
-
-.stat-card h4 {
-    margin: 0;
-    color: #ffdbff;
-    font-size: 0.95rem;
-}
-
-.stat-card p {
-    margin: 10px 0 0;
-    font-size: 1.7rem;
-    font-weight: 700;
-    color: #fff;
-}
-
-/* GRID 2 COL */
-.grid-2 {
+.records-intro {
+    position: relative;
     display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 25px;
+    width: min(1440px, calc(100% - 8vw));
+    min-height: 630px;
+    grid-template-columns: minmax(0, 1.35fr) minmax(360px, 0.65fr);
+    margin: 0 auto;
+    overflow: hidden;
+    border-right: 1px solid var(--record-line-soft);
+    border-bottom: 1px solid var(--record-line);
+    border-left: 1px solid var(--record-line-soft);
+    background:
+        linear-gradient(100deg, rgba(99, 231, 255, 0.035), transparent 42%),
+        var(--record-surface);
 }
 
-@media(max-width: 950px) {
-    .grid-2 {
+.records-intro::before {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    content: "";
+    background: linear-gradient(90deg, var(--record-cyan), var(--record-acid) 58%, var(--record-gold));
+}
+
+.records-intro-copy {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+    padding: 88px clamp(32px, 6vw, 96px) 70px;
+}
+
+.records-kicker {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0 0 28px;
+    color: #74808a;
+    font-family: "JetBrains Mono", var(--mono);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+}
+
+.records-kicker::after {
+    width: 72px;
+    height: 1px;
+    content: "";
+    background: var(--record-line);
+}
+
+.records-kicker span {
+    color: var(--record-cyan);
+}
+
+body.nebula-page.records-page .records-intro h1 {
+    margin: 0;
+    color: #f4f7f9;
+    font-family: var(--display);
+    font-size: clamp(3.7rem, 7vw, 7.4rem);
+    font-weight: 900;
+    letter-spacing: -0.075em;
+    line-height: 0.88;
+}
+
+.records-intro h1 em {
+    color: transparent;
+    font-style: normal;
+    -webkit-text-stroke: 1px rgba(244, 247, 249, 0.48);
+}
+
+.records-intro-text {
+    max-width: 690px;
+    margin: 38px 0 0;
+    padding-left: 18px;
+    border-left: 2px solid var(--record-cyan);
+    color: #9ba5ad;
+    font-size: clamp(0.9rem, 1.15vw, 1.05rem);
+    line-height: 1.75;
+}
+
+.records-intro-stats {
+    display: grid;
+    max-width: 750px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-top: 54px;
+    border-top: 1px solid var(--record-line);
+    border-bottom: 1px solid var(--record-line);
+}
+
+.records-intro-stats>div {
+    display: flex;
+    min-width: 0;
+    min-height: 100px;
+    align-items: center;
+    gap: 15px;
+    padding: 14px 21px;
+    border-right: 1px solid var(--record-line);
+}
+
+.records-intro-stats>div:last-child {
+    border-right: 0;
+}
+
+.records-intro-stats strong {
+    color: #f4f7f9;
+    font-family: var(--display);
+    font-size: clamp(1.8rem, 3vw, 2.9rem);
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.records-intro-stats span {
+    max-width: 95px;
+    color: #68737c;
+    font-family: "JetBrains Mono", var(--mono);
+    font-size: 0.54rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
+
+.record-signal {
+    --signal-accent: var(--record-acid);
+    position: relative;
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-left: 1px solid var(--record-line);
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+        radial-gradient(circle, rgba(99, 231, 255, 0.075), transparent 58%);
+    background-size: 42px 42px, 42px 42px, auto;
+}
+
+.record-signal-topline,
+.record-signal-footer {
+    position: absolute;
+    right: 0;
+    left: 0;
+    z-index: 4;
+    display: flex;
+    min-height: 45px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+    color: #647079;
+    font-family: "JetBrains Mono", var(--mono);
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+.record-signal-topline {
+    top: 0;
+    border-bottom: 1px solid var(--record-line);
+}
+
+.record-signal-footer {
+    bottom: 0;
+    border-top: 1px solid var(--record-line);
+}
+
+.record-signal-topline>span:last-child {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--record-acid);
+}
+
+.record-signal-topline i,
+.archive-topline i,
+.leader-card-topline i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--record-acid);
+    box-shadow: 0 0 8px var(--record-acid);
+}
+
+.record-target {
+    position: absolute;
+    width: min(31vw, 430px);
+    aspect-ratio: 1;
+    border: 1px solid rgba(99, 231, 255, 0.2);
+    border-radius: 50%;
+    animation: archiveTarget 26s linear infinite;
+}
+
+.record-target::before,
+.record-target::after {
+    position: absolute;
+    content: "";
+    border: 1px solid rgba(173, 255, 47, 0.13);
+    border-radius: 50%;
+}
+
+.record-target::before {
+    inset: 18%;
+}
+
+.record-target::after {
+    inset: 36%;
+    background: rgba(5, 7, 10, 0.88);
+}
+
+.record-target i {
+    position: absolute;
+    z-index: 2;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--record-cyan);
+    box-shadow: 0 0 16px var(--record-cyan);
+}
+
+.record-target i:nth-child(1) {
+    top: 7%;
+    left: 29%;
+}
+
+.record-target i:nth-child(2) {
+    top: 52%;
+    right: -4px;
+    background: var(--record-acid);
+    box-shadow: 0 0 16px var(--record-acid);
+}
+
+.record-target i:nth-child(3) {
+    bottom: 12%;
+    left: 18%;
+    background: var(--record-gold);
+    box-shadow: 0 0 16px var(--record-gold);
+}
+
+.record-signal-readout {
+    position: relative;
+    z-index: 3;
+    width: min(280px, 74%);
+    padding: 29px 24px;
+    border: 1px solid color-mix(in srgb, var(--signal-accent), transparent 58%);
+    background: rgba(5, 7, 10, 0.91);
+    text-align: center;
+    transition:
+        border-color 220ms ease,
+        opacity 220ms ease,
+        transform 220ms ease;
+}
+
+.record-signal-readout.is-changing {
+    opacity: 0.2;
+    transform: translateY(7px);
+}
+
+.record-signal-readout small,
+.record-signal-readout span {
+    display: block;
+    color: #6c7680;
+    font-family: "JetBrains Mono", var(--mono);
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+.record-signal-readout strong {
+    display: block;
+    margin: 14px 0 11px;
+    overflow: hidden;
+    color: #f3f5f7;
+    font-family: var(--display);
+    font-size: clamp(1.2rem, 2.3vw, 2rem);
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+}
+
+.record-signal-readout span {
+    color: var(--signal-accent);
+}
+
+@keyframes archiveTarget {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+body.nebula-page.records-page .records-archive {
+    display: grid !important;
+    width: min(1440px, calc(100% - 8vw)) !important;
+    gap: 32px;
+    margin: 0 auto !important;
+    padding: 11vh 0 120px !important;
+}
+
+.record-holders,
+.club-archive,
+.individual-archive,
+.record-vault {
+    border: 1px solid var(--record-line);
+    background: var(--record-surface);
+}
+
+.records-section-heading {
+    display: grid;
+    min-height: 108px;
+    grid-template-columns: 104px minmax(0, 1fr) minmax(290px, 0.58fr);
+    align-items: center;
+    border-bottom: 1px solid var(--record-line);
+}
+
+.records-section-index {
+    display: grid;
+    height: 100%;
+    place-items: center;
+    border-right: 1px solid var(--record-line);
+    color: #303943;
+    font-family: var(--display);
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.records-section-heading>div {
+    padding: 22px 28px;
+}
+
+.records-section-heading small {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--record-cyan);
+    font-family: "JetBrains Mono", var(--mono);
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+}
+
+body.nebula-page.records-page .records-section-heading h2 {
+    margin: 0;
+    color: #f2f5f7;
+    font-size: clamp(1.35rem, 2.4vw, 2.25rem);
+    letter-spacing: -0.045em;
+}
+
+.records-section-heading>p {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 22px 30px;
+    border-left: 1px solid var(--record-line);
+    color: #7d8790;
+    font-size: 0.77rem;
+    line-height: 1.6;
+}
+
+.record-highlight-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--record-line);
+}
+
+body.nebula-page.records-page .record-leader-card {
+    --record-accent: var(--record-cyan);
+    position: relative;
+    display: grid;
+    min-width: 0;
+    grid-template-rows: auto 210px auto;
+    overflow: hidden;
+    background: var(--record-surface-2);
+    color: #edf1f3;
+}
+
+body.nebula-page.records-page .record-leader-card::before {
+    position: absolute;
+    z-index: 5;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    content: "";
+    background: var(--record-accent);
+    opacity: 0.6;
+    transform: scaleX(0.3);
+    transform-origin: left;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+body.nebula-page.records-page .record-leader-card:hover::before {
+    opacity: 1;
+    transform: scaleX(1);
+}
+
+.leader-card-topline {
+    display: flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--record-line);
+    color: #5d6872;
+    font-family: "JetBrains Mono", var(--mono);
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.leader-card-topline>span:last-child {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--record-accent);
+}
+
+.leader-card-topline i {
+    background: var(--record-accent);
+    box-shadow: 0 0 8px var(--record-accent);
+}
+
+.leader-card-visual {
+    position: relative;
+    overflow: hidden;
+    background: #090d12;
+}
+
+body.nebula-page.records-page .leader-card-visual img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+    object-position: center 25%;
+    filter: saturate(0.68) contrast(1.07);
+    transition: filter 0.4s ease, transform 0.45s ease;
+}
+
+.record-leader-card:hover .leader-card-visual img {
+    filter: saturate(1) contrast(1.04);
+    transform: scale(1.035);
+}
+
+.leader-card-visual::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background:
+        linear-gradient(180deg, transparent 35%, #0a0f15 100%),
+        linear-gradient(90deg, color-mix(in srgb, var(--record-accent), transparent 85%), transparent 52%);
+}
+
+.leader-card-visual>span {
+    position: absolute;
+    z-index: 2;
+    right: 8px;
+    bottom: -11px;
+    color: rgba(255, 255, 255, 0.09);
+    font-family: var(--display);
+    font-size: 4.8rem;
+    font-weight: 900;
+    letter-spacing: -0.09em;
+}
+
+.leader-card-body {
+    display: grid;
+    min-width: 0;
+    padding: 18px 18px 0;
+}
+
+.leader-card-body>small {
+    color: var(--record-accent);
+    font-family: "JetBrains Mono", var(--mono);
+    font-size: 0.53rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+}
+
+.leader-card-body>strong {
+    margin-top: 8px;
+    overflow: hidden;
+    color: #f2f5f7;
+    font-family: var(--display);
+    font-size: 1rem;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.leader-card-body>span {
+    margin-top: 6px;
+    color: #66717a;
+    font-size: 0.67rem;
+}
+
+.leader-card-body>div {
+    display: flex;
+    min-height: 58px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 16px;
+    border-top: 1px solid var(--record-line);
+}
+
+.leader-card-body b {
+    color: #dfe4e7;
+    font-family: "JetBrains Mono", var(--mono);
+    font-size: 0.66rem;
+}
+
+.leader-card-body i {
+    color: var(--record-accent);
+    font-size: 1rem;
+    font-style: normal;
+}
+
+.archive-topline {
+    display: flex;
+    min-height: 46px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 0 17px;
+    border-bottom: 1px solid var(--record-line);
+    color: #657079;
+    font-family: "JetBrains Mono", var(--mono);
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+}
+
+.archive-topline>span:first-child {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--record-acid);
+}
+
+.club-table-scroll {
+    overflow-x: auto;
+}
+
+.club-record-table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+}
+
+body.nebula-page.records-page .club-record-table th,
+body.nebula-page.records-page .club-record-table td {
+    height: 76px;
+    padding: 12px 18px;
+    border-right: 1px solid var(--record-line);
+    border-bottom: 1px solid var(--record-line);
+    background: transparent;
+    color: #8b959e;
+    font-family: "JetBrains Mono", var(--mono);
+    font-size: 0.66rem;
+    text-align: center;
+    white-space: nowrap;
+}
+
+body.nebula-page.records-page .club-record-table th:last-child,
+body.nebula-page.records-page .club-record-table td:last-child {
+    border-right: 0;
+}
+
+body.nebula-page.records-page .club-record-table thead th {
+    height: 55px;
+    color: #65717a;
+    font-size: 0.52rem;
+    letter-spacing: 0.09em;
+}
+
+body.nebula-page.records-page .club-record-table tbody tr {
+    position: relative;
+    transition: background 0.2s ease;
+}
+
+body.nebula-page.records-page .club-record-table tbody tr:hover {
+    background: color-mix(in srgb, var(--club-accent), transparent 95%);
+}
+
+body.nebula-page.records-page .club-record-table td:nth-child(2),
+body.nebula-page.records-page .club-record-table th:nth-child(2) {
+    min-width: 220px;
+    text-align: left;
+}
+
+.club-record-rank {
+    color: #38434d;
+    font-family: var(--display);
+    font-size: 1rem;
+}
+
+.club-record-identity {
+    display: inline-flex;
+    align-items: center;
+    gap: 13px;
+}
+
+body.nebula-page.records-page .club-record-identity img {
+    width: 38px !important;
+    height: 38px !important;
+    object-fit: contain;
+}
+
+.club-record-identity strong {
+    color: #e9edef;
+    font-family: var(--display);
+    font-size: 0.7rem;
+}
+
+.club-record-table td>strong {
+    color: #f1f4f6;
+    font-family: var(--display);
+    font-size: 0.78rem;
+}
+
+.club-record-table .positive {
+    color: var(--record-acid);
+}
+
+.club-record-table .negative {
+    color: #ff5d66;
+}
+
+.club-winrate {
+    position: relative;
+    display: inline-block;
+    width: 82px;
+    height: 4px;
+    margin-right: 9px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.07);
+    vertical-align: middle;
+}
+
+.club-winrate i {
+    position: absolute;
+    inset: 0 auto 0 0;
+    background: var(--club-accent);
+    box-shadow: 0 0 8px var(--club-accent);
+}
+
+.club-record-table td>small {
+    color: #77818a;
+    font-family: "JetBrains Mono", var(--mono);
+    font-size: 0.56rem;
+}
+
+.record-category-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    padding: 1px 0;
+    background: var(--record-line);
+}
+
+body.nebula-page.records-page .record-category-tabs button {
+    min-width: 0 !important;
+    min-height: 66px;
+    padding: 0 16px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: var(--record-surface-2) !important;
+    box-shadow: none !important;
+    color: #717c85 !important;
+    font-family: "JetBrains Mono", var(--mono) !important;
+    font-size: 0.58rem !important;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+body.nebula-page.records-page .record-category-tabs button:hover {
+    background: rgba(99, 231, 255, 0.07) !important;
+    box-shadow: inset 0 -2px 0 var(--record-cyan) !important;
+    color: var(--record-cyan) !important;
+    transform: none !important;
+}
+
+body.nebula-page.records-page .record-category-tabs button.active {
+    background: rgba(157, 255, 29, 0.16) !important;
+    box-shadow:
+        inset 0 0 0 1px var(--record-acid),
+        inset 0 -2px 0 var(--record-acid) !important;
+    color: var(--record-acid) !important;
+    transform: none !important;
+}
+
+body.nebula-page.records-page .record-category-tabs button.active:hover {
+    background: rgba(157, 255, 29, 0.2) !important;
+}
+
+.player-ranking-shell {
+    display: grid;
+    grid-template-columns: minmax(300px, 0.36fr) minmax(0, 0.64fr);
+    min-height: 520px;
+}
+
+.ranking-summary {
+    display: grid;
+    min-width: 0;
+    align-content: center;
+    justify-items: center;
+    padding: 35px;
+    border-right: 1px solid var(--record-line);
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+        radial-gradient(circle, rgba(99, 231, 255, 0.07), transparent 60%),
+        var(--record-surface-2);
+    background-size: 36px 36px, 36px 36px, auto, auto;
+    text-align: center;
+}
+
+.ranking-summary-code {
+    display: grid;
+    width: 68px;
+    height: 68px;
+    place-items: center;
+    border: 1px solid var(--record-cyan);
+    color: var(--record-cyan);
+    font-family: var(--display);
+    font-size: 0.78rem;
+  transform: rotate(45deg);
+}
+
+.ranking-summary-code > span {
+  display: inline-block;
+  transform: rotate(-45deg);
+}
+
+.ranking-summary-code+img {
+    margin-top: 48px;
+}
+
+body.nebula-page.records-page .ranking-summary img {
+    width: 112px !important;
+    height: 112px !important;
+    border: 1px solid rgba(99, 231, 255, 0.38);
+    object-fit: cover;
+}
+
+.ranking-summary>div:not(.ranking-summary-code) {
+    display: grid;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.ranking-summary small {
+    color: #69747d;
+    font-family: "JetBrains Mono", var(--mono);
+    font-size: 0.52rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+}
+
+.ranking-summary strong {
+    color: #f1f4f6;
+    font-family: var(--display);
+    font-size: 1.1rem;
+    text-transform: uppercase;
+}
+
+.ranking-summary>span {
+    margin-top: 15px;
+    color: var(--record-acid);
+    font-family: var(--display);
+    font-size: 2.2rem;
+}
+
+.player-record-list {
+    display: grid;
+    align-content: start;
+    min-width: 0;
+}
+
+body.nebula-page.records-page .player-record-row {
+    --category-accent: var(--record-cyan);
+    display: grid;
+    min-height: 86px;
+    grid-template-columns: 58px 48px minmax(150px, 0.8fr) minmax(150px, 1fr) 78px;
+    align-items: center;
+    gap: 14px;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--record-line);
+    background: var(--record-surface);
+    transition: background 0.2s ease;
+}
+
+body.nebula-page.records-page .player-record-row:hover {
+    background: color-mix(in srgb, var(--category-accent), var(--record-surface-2) 95%);
+}
+
+.player-record-rank {
+    color: #37424c;
+    font-family: var(--display);
+    font-size: 1rem;
+    text-align: center;
+}
+
+body.nebula-page.records-page .player-record-row>img {
+    width: 44px !important;
+    height: 52px !important;
+    border: 1px solid color-mix(in srgb, var(--category-accent), transparent 55%);
+    object-fit: cover;
+}
+
+.player-record-name {
+    display: grid;
+    min-width: 0;
+    gap: 5px;
+}
+
+.player-record-name small {
+    overflow: hidden;
+    color: #647079;
+    font-family: "JetBrains Mono", var(--mono);
+    font-size: 0.49rem;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.player-record-name strong {
+    overflow: hidden;
+    color: #e8ecee;
+    font-family: var(--display);
+    font-size: 0.7rem;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.player-record-bar {
+    position: relative;
+    height: 4px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.player-record-bar i {
+    position: absolute;
+    inset: 0 auto 0 0;
+    background: var(--category-accent);
+    box-shadow: 0 0 8px var(--category-accent);
+}
+
+.player-record-value {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 7px;
+}
+
+.player-record-value strong {
+    color: #f1f4f6;
+    font-family: var(--display);
+    font-size: 1rem;
+}
+
+.player-record-value small {
+    color: var(--category-accent);
+    font-family: "JetBrains Mono", var(--mono);
+    font-size: 0.48rem;
+    font-weight: 700;
+}
+
+.record-vault-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--record-line);
+}
+
+.vault-record {
+    position: relative;
+    display: grid;
+    min-width: 0;
+    min-height: 210px;
+    align-content: space-between;
+    gap: 13px;
+    padding: 22px;
+    overflow: hidden;
+    background:
+        linear-gradient(135deg, rgba(99, 231, 255, 0.025), transparent 52%),
+        var(--record-surface-2);
+}
+
+.vault-record::after {
+    position: absolute;
+    right: -35px;
+    bottom: -45px;
+    width: 110px;
+    height: 110px;
+    content: "";
+    border: 1px solid rgba(99, 231, 255, 0.08);
+    border-radius: 50%;
+}
+
+.vault-record>div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #606b75;
+    font-family: "JetBrains Mono", var(--mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+}
+
+.vault-record>strong {
+    color: #e7ebed;
+    font-family: var(--display);
+    font-size: 0.94rem;
+    line-height: 1.35;
+    text-transform: uppercase;
+}
+
+.vault-record>p {
+    margin: 0;
+    color: #98a1a9;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.vault-record>span {
+    color: var(--record-cyan);
+    font-family: "JetBrains Mono", var(--mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+
+.vault-record.has-link {
+    box-shadow: inset 0 -2px 0 var(--record-acid);
+}
+
+.vault-record.has-link>span {
+    color: var(--record-acid);
+}
+
+body.nebula-page.records-page .vault-record:hover {
+    background:
+        linear-gradient(135deg, rgba(99, 231, 255, 0.065), transparent 55%),
+        var(--record-surface-3);
+}
+
+@media (max-width: 1180px) {
+    .records-intro {
+        grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+    }
+
+    .record-highlight-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    body.nebula-page.records-page .record-leader-card {
+        grid-template-rows: auto 260px auto;
+    }
+
+    .record-vault-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .records-intro {
+        width: calc(100% - 32px);
+        grid-template-columns: 1fr;
+    }
+
+    .records-intro-copy {
+        padding: 76px 28px 46px;
+    }
+
+    body.nebula-page.records-page .records-intro h1 {
+        font-size: clamp(3rem, 12vw, 5rem);
+    }
+
+    .record-signal {
+        min-height: 460px;
+        border-top: 1px solid var(--record-line);
+        border-left: 0;
+    }
+
+    .record-target {
+        width: min(72vw, 380px);
+    }
+
+    body.nebula-page.records-page .records-archive {
+        width: calc(100% - 32px) !important;
+        padding-top: 72px !important;
+    }
+
+    .records-section-heading {
+        grid-template-columns: 78px 1fr;
+    }
+
+    .records-section-heading>p {
+        grid-column: 1 / -1;
+        padding: 16px 22px;
+        border-top: 1px solid var(--record-line);
+        border-left: 0;
+    }
+
+    .player-ranking-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .ranking-summary {
+        min-height: 410px;
+        border-right: 0;
+        border-bottom: 1px solid var(--record-line);
+    }
+}
+
+@media (max-width: 620px) {
+    .records-intro {
+        width: calc(100% - 20px);
+    }
+
+    .records-intro-copy {
+        padding: 66px 20px 38px;
+    }
+
+    .records-intro-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .records-intro-stats>div {
+        min-height: 76px;
+        border-right: 0;
+        border-bottom: 1px solid var(--record-line);
+    }
+
+    .records-intro-stats>div:last-child {
+        border-bottom: 0;
+    }
+
+    body.nebula-page.records-page .records-archive {
+        width: calc(100% - 20px) !important;
+    }
+
+    .records-section-heading {
+        grid-template-columns: 62px 1fr;
+    }
+
+    .records-section-heading>div {
+        padding: 18px;
+    }
+
+    .record-highlight-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.nebula-page.records-page .record-leader-card {
+        grid-template-rows: auto 300px auto;
+    }
+
+    .record-category-tabs {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    body.nebula-page.records-page .player-record-row {
+        grid-template-columns: 42px 44px minmax(0, 1fr) 62px;
+        min-height: 78px;
+        gap: 9px;
+        padding: 9px;
+    }
+
+    .player-record-bar {
+        display: none;
+    }
+
+    .record-vault-grid {
         grid-template-columns: 1fr;
     }
 }
 
-/* TABLES */
-.table-section {
-    background: rgba(15, 15, 15, 0.6);
-    padding: 14px;
-    border-radius: 12px;
-    border: 1px solid #b41cff33;
-}
-
-.stats-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 8px;
-}
-
-.stats-table th,
-.stats-table td {
-    padding: 8px 10px;
-    border-bottom: 1px solid #ffffff10;
-}
-
-.stats-table th {
-    color: #fff;
-}
-
-.records-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.records-list li {
-    padding: 8px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid #ffffff08;
-    border-radius: 8px;
-    margin-bottom: 6px;
-}
-
-/* COLONNE DROITE — CLUBS */
-.clubs-column {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-
-    position: sticky;
-    top: 30px; /* distance par rapport au haut de la page */
-    align-self: start; /* pour que le sticky fonctionne dans une grid */
-}
-
-.club-mini {
-    background: rgba(20,20,20,0.6);
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid #ffffff15;
-}
-
-.club-mini h4 {
-    margin: 0 0 6px;
-    color: #ffe9ff;
-}
-
-/* MINI-BARRE (HORIZONTALE) */
-.mini-bar-container {
-    background: rgba(255,255,255,0.07);
-    border-radius: 6px;
-    height: 14px;
-    width: 100%;
-    overflow: hidden;
-}
-
-.mini-bar {
-    height: 100%;
-    width: 0%;
-    border-radius: 6px;
-    transition: width 0.4s ease;
-}
-
-.club-icon {
-    width: 30px;
-    height: 30px;
-    object-fit: contain;   /* NE DÉFORME PAS */
-    object-position: center;
-    margin-right: 6px;
-    vertical-align: middle;
-    display: inline-block;
-}
-
-.record-btn {
-    display: inline-block;
-    padding: 6px 14px;
-    background: linear-gradient(135deg, #a600ff, #b41ce6);
-    color: #fff;
-    font-weight: bold;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: 0.2s;
-    margin-left: 10px;
-}
-
-.record-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px #b41cff;
-}
-
-.records-toggle {
-    margin-bottom: 10px;
-}
-
-.records-toggle .record-btn.active {
-    box-shadow: 0 0 15px #b41cff;
-}
-
-.stat-card {
-    position: relative; /* pour placer l'image facilement */
-    text-align: center;
-}
-
-.stat-card-img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #b41cff;
-    position: absolute;
-    top: 10px;
-    right: 10px; /* tu peux changer selon où tu veux l'image */
+@media (prefers-reduced-motion: reduce) {
+    .record-target {
+        animation: none;
+    }
 }

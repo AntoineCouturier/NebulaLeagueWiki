@@ -4,125 +4,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05070a">
     <link rel="icon" type="image/png" href="images/logos/nebula.png">
-    <title>Historique des Matchs</title>
-    <link rel="stylesheet" href="CSS/match.css">
-    <link rel="stylesheet" href="CSS/match-history.css">
+    <title>Nebula League — Centre des Matchs</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="CSS/style.css">
     <link rel="stylesheet" href="CSS/hamburger.css">
     <link rel="stylesheet" href="CSS/global-theme.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
+    <link rel="stylesheet" href="CSS/match.css">
 </head>
 
-<body>
+<body class="nebula-page matches-page match-control-page">
 
-    <header>
-        <div class="header-container">
-            <!-- Hamburger Menu Button -->
-            <div class="hamburger-menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-
-            <h1>Historique des Matchs</h1>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Accueil</a></li>
-                    <li><a href="title.html">Persos et Titres</a></li>
-                    <li><a href="club.html">Clubs</a></li>
-                    <li><a href="players.html">Joueurs</a></li>
-                    <li><a href="valeur.html">Valeurs</a></li>
-                    <li><a href="rules.html">Règles Matchs</a></li>
-                    <li><a href="stats.html">Records</a></li>
-                    <li><a href="matchs.html" class="active">Historique de Matchs</a></li>
-                    <li><a href="headtohead.html">Face à Face</a></li>
-                    <li><a href="saison.html">Historique des Saisons</a></li>
-                    <li><a href="fixtures.html">Calendrier des Matchs</a></li>
-                    <li>
-                        <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
-                            <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
-                            Discord
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+    <header class="site-header" id="top">
+        <a class="brand" href="#top" aria-label="Nebula League, retour en haut">
+            <span class="brand-mark"><span></span></span>
+            <span class="brand-copy"><strong>NEBULA</strong><small>LEAGUE // DATABASE</small></span>
+        </a>
+        <nav class="main-nav" aria-label="Navigation principale">
+            <a href="index.html">Accueil</a>
+            <a href="title.html">Titres</a>
+            <a href="club.html">Clubs</a>
+            <a href="players.html">Joueurs</a>
+            <a href="valeur.html">Valeurs</a>
+            <a href="rules.html">Règles</a>
+            <a href="stats.html">Records</a>
+            <a class="nav-active" href="matchs.html" aria-current="page">Matchs</a>
+            <a href="headtohead.html">Face à face</a>
+            <a href="saison.html">Saisons</a>
+            <a href="fixtures.html">Calendrier</a>
+        </nav>
+        <div class="header-actions">
+            <span class="live-pill"><i></i> SAISON 01</span>
+            <button class="menu-button" type="button" aria-label="Ouvrir le menu"
+                aria-expanded="false"><span></span><span></span></button>
         </div>
     </header>
 
-    <!-- Mobile Navigation Overlay -->
-    <div class="nav-mobile-overlay">
-        <button class="nav-close-btn" aria-label="Close menu">&times;</button>
-        <nav>
-            <ul>
-                <li><a href="index.html">Accueil</a></li>
-                <li><a href="title.html">Persos et Titres</a></li>
-                <li><a href="club.html">Clubs</a></li>
-                <li><a href="players.html">Joueurs</a></li>
-                <li><a href="valeur.html">Valeurs</a></li>
-                <li><a href="rules.html">Règles Matchs</a></li>
-                <li><a href="stats.html">Records</a></li>
-                <li><a href="matchs.html" class="active">Historique de Matchs</a></li>
-                <li><a href="headtohead.html">Face à Face</a></li>
-                <li><a href="saison.html">Historique des Saisons</a></li>
-                <li><a href="fixtures.html">Calendrier des Matchs</a></li>
-            </ul>
-        </nav>
-    </div>
+    <section class="match-command-hero">
+        <div class="match-hero-copy">
+            <p class="match-kicker"><span>NL–08</span> MATCH INTELLIGENCE</p>
+            <h1>CHAQUE BUT<br><em>LAISSE UNE TRACE</em></h1>
+            <p class="match-hero-text">Relisez chaque rencontre comme un signal : évolution du score, impact des
+                joueurs et moments qui ont fait basculer le match.</p>
+            <div class="match-hero-stats" id="matchHeroStats" aria-label="Statistiques générales des matchs"></div>
+        </div>
 
-    <!-- Backdrop for click-outside-to-close -->
-    <div class="nav-backdrop"></div>
-
-    <!-- ============ HERO ============ -->
-    <section class="matches-hero">
-        <h2 class="matches-hero-title">HISTORIQUE DES MATCHS</h2>
-        <p class="matches-hero-subtitle">Tous les matchs joués dans la Nebula League : scores, buteurs, notes des
-            joueurs et vidéos, filtrables par compétition, équipe et date.</p>
+        <aside class="featured-match" id="featuredMatch" aria-label="Dernier match enregistré"></aside>
     </section>
 
-    <!-- ============ TICKER DE RÉSULTATS ============ -->
-    <div class="mp-ticker-wrap" id="mpTicker"></div>
-
-    <!-- ============ STAT CARDS ============ -->
-    <div class="matches-stat-cards" id="matchesStatCards"></div>
-
-    <!-- ============ CONTROLS BAR ============ -->
-    <div class="match-filter-bar">
-        <div class="filter-category">
-            <span class="filter-label">Catégorie :</span>
-            <div class="filter-group" id="categoryFilterGroup">
-                <button class="category-btn all-top active" data-cat="all">Tous</button>
-                <button class="category-btn ligue-top" data-cat="ligue">Ligue</button>
-                <button class="category-btn ncl-top" data-cat="ncl">NCL</button>
-                <button class="category-btn amical-top" data-cat="amical">Amical</button>
+    <main class="match-archive">
+        <section class="match-control">
+            <div class="match-section-heading">
+                <span>01</span>
+                <div><small>ARCHIVE DE DIFFUSION</small>
+                    <h2>CENTRE DES MATCHS</h2>
+                </div>
+                <p>Filtrez les rencontres puis ouvrez le replay pour étudier chaque action et chaque performance.</p>
             </div>
-        </div>
 
-        <div class="filter-club">
-            <span class="filter-label">Équipe :</span>
-            <div class="club-dropdown" id="clubDropdown">
-                <button class="dropdown-current" id="dropdownCurrent" type="button">
-                    <span class="dropdown-current-content">
-                        <span class="dropdown-current-label">Toutes les équipes</span>
-                    </span>
-                    <span class="dropdown-caret">▾</span>
+            <div class="match-filter-bar">
+                <div class="match-filter-category">
+                    <span>COMPÉTITION</span>
+                    <div class="match-category-tabs" id="categoryFilterGroup">
+                        <button type="button" class="match-control-button match-filter-tab active" data-cat="all"
+                            aria-pressed="true">TOUS</button>
+                        <button type="button" class="match-control-button match-filter-tab" data-cat="ligue"
+                            aria-pressed="false">LIGUE</button>
+                        <button type="button" class="match-control-button match-filter-tab" data-cat="ncl"
+                            aria-pressed="false">NCL</button>
+                        <button type="button" class="match-control-button match-filter-tab" data-cat="amical"
+                            aria-pressed="false">AMICAL</button>
+                    </div>
+                </div>
+
+                <div class="match-filter-club">
+                    <span>ÉQUIPE</span>
+                    <div class="match-club-dropdown" id="clubDropdown">
+                        <button type="button" class="match-control-button match-club-trigger" id="dropdownCurrent"
+                            aria-expanded="false" aria-controls="dropdownMenu">
+                            <span class="dropdown-current-content">
+                                <span class="dropdown-current-label">Toutes les équipes</span>
+                            </span>
+                            <span class="match-dropdown-caret">＋</span>
+                        </button>
+                        <div class="match-club-menu" id="dropdownMenu" role="listbox"></div>
+                    </div>
+                </div>
+
+                <button type="button" class="match-control-button match-sort-toggle" id="sortToggle" data-order="desc"
+                    aria-label="Trier les matchs du plus récent au plus ancien">
+                    <span><small>ORDRE DES ARCHIVES</small><strong>DATE</strong></span>
+                    <span class="match-sort-arrow">↓</span>
                 </button>
-                <ul class="dropdown-menu" id="dropdownMenu"></ul>
             </div>
-        </div>
+        </section>
 
-        <button class="sort-toggle" id="sortToggle" data-order="desc">
-            <span class="sort-label">Date</span>
-            <span class="sort-arrow">↓</span>
-        </button>
+        <section class="match-results">
+            <div class="match-results-topline">
+                <span><i></i> ARCHIVE SYNCHRONISÉE</span>
+                <strong id="matchResultCount">00 MATCH</strong>
+            </div>
+            <div class="match-list" id="matchList"></div>
+        </section>
+    </main>
+
+    <div class="match-detail-layer" id="matchDetailLayer" aria-hidden="true">
+        <div class="match-detail-panel" id="matchDetailPanel" role="dialog" aria-modal="true"
+            aria-labelledby="matchDetailTitle"></div>
     </div>
 
-    <main class="match-list" id="matchList"></main>
-
-    <div id="matchPopupsContainer"></div>
-
-    <script src="JavaScript/match.js"></script>
+<script src="JavaScript/nebula-data.js"></script>
+<script src="JavaScript/match.js"></script>
+    <script src="JavaScript/match-page.js"></script>
     <script src="JavaScript/hamburger.js"></script>
 </body>
 

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05070a">
     <link rel="icon" type="image/png" href="images/logos/nebula.png">
     <title>Nebula League - Clubs</title>
 
@@ -18,79 +19,69 @@
     <link rel="stylesheet" href="CSS/global-theme.css">
 </head>
 
-<body>
+<body class="nebula-page club-page">
 
-    <header>
-        <div class="header-container">
-            <!-- Hamburger Menu Button -->
-            <div class="hamburger-menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-
-            <h1>Nebula League - Clubs</h1>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Accueil</a></li>
-                    <li><a href="title.html">Persos et Titres</a></li>
-                    <li><a href="club.html" class="active">Clubs</a></li>
-                    <li><a href="players.html">Joueurs</a></li>
-                    <li><a href="valeur.html">Valeurs</a></li>
-                    <li><a href="rules.html">Règles Matchs</a></li>
-                    <li><a href="stats.html">Records</a></li>
-                    <li><a href="matchs.html">Historique de Matchs</a></li>
-                    <li><a href="headtohead.html">Face à Face</a></li>
-                    <li><a href="saison.html">Historique des Saisons</a></li>
-                    <li><a href="fixtures.html">Calendrier des Matchs</a></li>
-                </ul>
-            </nav>
+    <header class="site-header" id="top">
+        <a class="brand" href="#top" aria-label="Nebula League, retour en haut">
+            <span class="brand-mark"><span></span></span>
+            <span class="brand-copy"><strong>NEBULA</strong><small>LEAGUE // DATABASE</small></span>
+        </a>
+        <nav class="main-nav" aria-label="Navigation principale">
+            <a href="index.html">Accueil</a>
+            <a href="title.html">Titres</a>
+            <a class="nav-active" href="club.html" aria-current="page">Clubs</a>
+            <a href="players.html">Joueurs</a>
+            <a href="valeur.html">Valeurs</a>
+            <a href="rules.html">Règles</a>
+            <a href="stats.html">Records</a>
+            <a href="matchs.html">Matchs</a>
+            <a href="headtohead.html">Face à face</a>
+            <a href="saison.html">Saisons</a>
+            <a href="fixtures.html">Calendrier</a>
+        </nav>
+        <div class="header-actions">
+            <span class="live-pill"><i></i> SAISON 01</span>
+            <button class="menu-button" type="button" aria-label="Ouvrir le menu"
+                aria-expanded="false"><span></span><span></span></button>
         </div>
     </header>
 
-    <!-- Mobile Navigation Overlay -->
-    <div class="nav-mobile-overlay">
-        <button class="nav-close-btn" aria-label="Close menu">&times;</button>
-        <nav>
-            <ul>
-                <li><a href="index.html">Accueil</a></li>
-                <li><a href="title.html">Persos et Titres</a></li>
-                <li><a href="club.html" class="active">Clubs</a></li>
-                <li><a href="players.html">Joueurs</a></li>
-                <li><a href="valeur.html">Valeurs</a></li>
-                <li><a href="rules.html">Règles Matchs</a></li>
-                <li><a href="stats.html">Records</a></li>
-                <li><a href="matchs.html">Historique de Matchs</a></li>
-                <li><a href="headtohead.html">Face à Face</a></li>
-                <li><a href="saison.html">Historique des Saisons</a></li>
-                <li><a href="fixtures.html">Calendrier des Matchs</a></li>
-                <li>
-                    <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
-                        <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
-                        Discord
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-
-    <!-- Backdrop for click-outside-to-close -->
-    <div class="nav-backdrop"></div>
-
-    <!-- ============ HERO ============ -->
-    <section class="clubs-hero">
-        <h2 class="clubs-hero-title">SÉLECTION DES CLUBS</h2>
-        <p class="clubs-hero-subtitle">Chaque joueur appartient à un club. Découvre les effectifs, le style de jeu et
-            les stats de chaque équipe de la Nebula League — clique sur un club pour voir sa fiche complète.</p>
+    <section class="club-intro">
+        <div class="club-intro-copy">
+            <p class="club-kicker"><span>NL–02</span> RÉSEAU TACTIQUE</p>
+            <h1 class="club-intro-title">CHOISISSEZ<br>VOTRE <em>CLUB</em></h1>
+            <p class="club-intro-text">Cinq identités, cinq philosophies. Analysez les formations, repérez les postes
+                vacants et ouvrez le dossier complet de chaque club de la Nebula League.</p>
+        </div>
+        <div class="club-intro-stats" aria-label="État du réseau des clubs">
+            <div><strong id="clubCount">00</strong><span>Clubs connectés</span></div>
+            <div><strong id="registeredCount">00</strong><span>Joueurs enregistrés</span></div>
+            <div><strong id="openSlotCount">00</strong><span>Postes disponibles</span></div>
+        </div>
+        <div class="club-intro-orbit" aria-hidden="true"><span>CLUB NETWORK</span><i></i></div>
     </section>
 
-    <!-- ============ GRILLE DE CARTES CLUB ============ -->
-    <main class="clubs-grid" id="clubsGrid">
-        <!-- Généré dynamiquement par JavaScript/club.js -->
+    <main class="club-command">
+        <section class="club-selector">
+            <div class="club-section-heading">
+                <span class="club-section-number">01</span>
+                <div><small>SÉLECTION ACTIVE</small>
+                    <h2>CENTRE TACTIQUE</h2>
+                </div>
+                <p>Sélectionnez un club pour charger sa formation et ses données.</p>
+            </div>
+            <div class="club-tabs" id="clubTabs" aria-label="Sélectionner un club"></div>
+            <div class="club-stage">
+                <div class="club-stage-field" id="clubStageField"></div>
+                <aside class="club-stage-dossier" id="clubStageDossier" aria-live="polite"></aside>
+            </div>
+        </section>
+
     </main>
 
     <!-- ============ MODAL FICHE CLUB ============ -->
-    <div class="popup-bg" id="clubModal">
+    <div class="popup-bg" id="clubModal" role="dialog" aria-modal="true" aria-hidden="true"
+        aria-label="Fiche détaillée du club">
         <div class="popup-box club-modal-box" id="clubModalBox">
             <button class="modal-close-x" id="clubModalCloseX" aria-label="Fermer">&times;</button>
             <div id="clubModalContent"></div>
@@ -98,7 +89,8 @@
         </div>
     </div>
 
-    <script src="JavaScript/players.js"></script>
+<script src="JavaScript/nebula-data.js"></script>
+<script src="JavaScript/players.js"></script>
     <script src="JavaScript/club.js"></script>
     <script src="JavaScript/hamburger.js"></script>
 </body>

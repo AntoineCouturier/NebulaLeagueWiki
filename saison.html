@@ -4,100 +4,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05070a">
     <link rel="icon" type="image/png" href="images/logos/nebula.png">
-    <title>Historique des Saisons</title>
+    <title>Archives des Saisons - Nebula League</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="CSS/style.css">
-    <link rel="stylesheet" href="CSS/saison.css">
     <link rel="stylesheet" href="CSS/hamburger.css">
     <link rel="stylesheet" href="CSS/global-theme.css">
+    <link rel="stylesheet" href="CSS/saison.css">
 </head>
 
-<body>
-
-    <header>
-        <div class="header-container">
-            <!-- Hamburger Menu Button -->
-            <div class="hamburger-menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-
-            <h1>Historique des Saisons</h1>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Accueil</a></li>
-                    <li><a href="title.html">Persos et Titres</a></li>
-                    <li><a href="club.html">Clubs</a></li>
-                    <li><a href="players.html">Joueurs</a></li>
-                    <li><a href="valeur.html">Valeurs</a></li>
-                    <li><a href="rules.html">Règles Matchs</a></li>
-                    <li><a href="stats.html">Records</a></li>
-                    <li><a href="matchs.html">Historique de Matchs</a></li>
-                    <li><a href="headtohead.html">Face à Face</a></li>
-                    <li><a href="saison.html" class="active">Historique des Saisons</a></li>
-                    <li><a href="fixtures.html">Calendrier des Matchs</a></li>
-                </ul>
-            </nav>
+<body class="nebula-page seasons-page">
+    <header class="site-header" id="top">
+        <a class="brand" href="#top" aria-label="Nebula League, retour en haut">
+            <span class="brand-mark"><span></span></span>
+            <span class="brand-copy"><strong>NEBULA</strong><small>LEAGUE // DATABASE</small></span>
+        </a>
+        <nav class="main-nav" aria-label="Navigation principale">
+            <a href="index.html">Accueil</a>
+            <a href="title.html">Titres</a>
+            <a href="club.html">Clubs</a>
+            <a href="players.html">Joueurs</a>
+            <a href="valeur.html">Valeurs</a>
+            <a href="rules.html">Règles</a>
+            <a href="stats.html">Records</a>
+            <a href="matchs.html">Matchs</a>
+            <a href="headtohead.html">Face à face</a>
+            <a class="nav-active" href="saison.html" aria-current="page">Saisons</a>
+            <a href="fixtures.html">Calendrier</a>
+        </nav>
+        <div class="header-actions">
+            <span class="live-pill"><i></i> SAISON 01</span>
+            <button class="menu-button" type="button" aria-label="Ouvrir le menu"
+                aria-expanded="false"><span></span><span></span></button>
         </div>
     </header>
 
-    <!-- Mobile Navigation Overlay -->
-    <div class="nav-mobile-overlay">
-        <button class="nav-close-btn" aria-label="Close menu">&times;</button>
-        <nav>
-            <ul>
-                <li><a href="index.html">Accueil</a></li>
-                <li><a href="title.html">Persos et Titres</a></li>
-                <li><a href="club.html">Clubs</a></li>
-                <li><a href="players.html">Joueurs</a></li>
-                <li><a href="valeur.html">Valeurs</a></li>
-                <li><a href="rules.html">Règles Matchs</a></li>
-                <li><a href="stats.html">Records</a></li>
-                <li><a href="matchs.html">Historique de Matchs</a></li>
-                <li><a href="headtohead.html">Face à Face</a></li>
-                <li><a href="saison.html" class="active">Historique des Saisons</a></li>
-                <li><a href="fixtures.html">Calendrier des Matchs</a></li>
-                <li>
-                    <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
-                        <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
-                        Discord
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+    <main class="season-command">
+        <section class="season-hero" aria-labelledby="seasonPageTitle">
+            <div class="season-hero-copy">
+                <p class="season-eyebrow"><span>NL–10</span> CHRONOLOGIE OFFICIELLE</p>
+                <h1 id="seasonPageTitle">CHAQUE CYCLE<br><em>LAISSE UNE TRACE.</em></h1>
+                <p class="season-intro">
+                    Explorez chaque édition de la Nebula League, suivez la campagne active et replongez dans les
+                    classements, leaders et distinctions des saisons archivées.
+                </p>
+                <div class="season-hero-stats" id="seasonHeroStats" aria-label="Résumé des archives"></div>
+            </div>
 
-    <!-- Backdrop for click-outside-to-close -->
-    <div class="nav-backdrop"></div>
+            <div class="season-cycle" aria-hidden="true">
+                <span class="season-cycle-ring ring-outer"></span>
+                <span class="season-cycle-ring ring-inner"></span>
+                <span class="season-cycle-axis axis-x"></span>
+                <span class="season-cycle-axis axis-y"></span>
+                <i class="season-cycle-node node-one"></i>
+                <i class="season-cycle-node node-two"></i>
+                <div class="season-cycle-core">
+                    <small id="seasonCycleStatus">CYCLE ACTIF</small>
+                    <strong id="seasonCycleNumber">01</strong>
+                    <span id="seasonCycleProgress">0% SYNCHRONISÉ</span>
+                </div>
+            </div>
+        </section>
 
-    <!-- ============ HERO ============ -->
-    <section class="season-hero">
-        <h2 class="season-hero-title">HISTORIQUE DES SAISONS</h2>
-        <p class="season-hero-subtitle">Retrouvez le classement, les récompenses et les meilleurs joueurs de chaque
-            saison de la Nebula League.</p>
-    </section>
+        <section class="season-console" aria-labelledby="seasonConsoleTitle">
+            <div class="season-section-head">
+                <span class="season-section-index">01</span>
+                <div>
+                    <p class="season-kicker">NAVIGATION TEMPORELLE</p>
+                    <h2 id="seasonConsoleTitle">SÉLECTIONNER UNE SAISON</h2>
+                </div>
+                <p>Chaque dossier est recalculé depuis les résultats enregistrés dans l’historique des matchs.</p>
+            </div>
 
-    <!-- ============ LAYOUT : TIMELINE + CARTES ============ -->
-    <main class="season-layout">
+            <div class="season-switcher" id="seasonSwitcher" role="tablist" aria-label="Saisons disponibles"></div>
+            <div class="season-dossier-host" id="seasonDossier" aria-live="polite"></div>
+        </section>
 
-        <aside class="season-timeline" id="seasonTimeline">
-            <div class="timeline-track"></div>
-            <!-- Générée en JS -->
-        </aside>
-
-        <div class="season-cards-wrap" id="seasonCardsContainer">
-            <!-- Générée en JS -->
-        </div>
-
+        <section class="season-ledger" aria-labelledby="seasonLedgerTitle">
+            <div class="season-section-head">
+                <span class="season-section-index">02</span>
+                <div>
+                    <p class="season-kicker">REGISTRE PERMANENT</p>
+                    <h2 id="seasonLedgerTitle">JOURNAL DES ÉDITIONS</h2>
+                </div>
+                <p>Une ligne temporelle compacte pour comparer l’activité et le leader de chaque cycle.</p>
+            </div>
+            <div class="season-history" id="seasonHistory"></div>
+        </section>
     </main>
 
-    <!-- ============ POPUPS DE SAISON (générés en JS) ============ -->
-    <div id="seasonPopupsContainer"></div>
+    <div class="season-modal" id="seasonModal" hidden>
+        <div class="season-modal-backdrop" data-close-season-modal></div>
+        <section class="season-modal-panel" role="dialog" aria-modal="true" aria-labelledby="seasonModalTitle">
+            <header class="season-modal-head">
+                <div>
+                    <p class="season-kicker">DOSSIER INTÉGRAL</p>
+                    <h2 id="seasonModalTitle">SAISON</h2>
+                </div>
+                <button class="season-control-button season-modal-close" type="button" data-close-season-modal
+                    aria-label="Fermer le dossier">×</button>
+            </header>
+            <div class="season-modal-content" id="seasonModalContent"></div>
+        </section>
+    </div>
 
+<script src="JavaScript/nebula-data.js"></script>
+<script src="JavaScript/players.js"></script>
+    <script src="JavaScript/match.js"></script>
     <script src="JavaScript/saison.js"></script>
     <script src="JavaScript/hamburger.js"></script>
-
 </body>
 
 </html>

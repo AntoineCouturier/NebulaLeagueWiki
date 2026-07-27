@@ -1,397 +1,613 @@
-const buttons = document.querySelectorAll(".dropdown-btn");
+const characters = [
+  {
+    id: "isagi",
+    name: "Isagi",
+    rarity: "commun",
+    rarityLabel: "Commun · 85,1 %",
+    difficulty: 0,
+    ultimate: "Heart of Blue Lock",
+    description:
+      "Le point d’entrée idéal dans la ligue. Isagi transforme la lecture du jeu en arme et récompense les décisions simples, prises au bon moment.",
+    conditions: [
+      "Marquer 10 fois avec Direct Shot",
+      "Marquer 1 fois avec My Direct Shot",
+      "Marquer 1 fois avec Reflex Shot",
+      "Voler 5 fois la balle d’un allié avec « Move It »",
+    ],
+  },
+  {
+    id: "gagamaru",
+    name: "Gagamaru",
+    rarity: "commun",
+    rarityLabel: "Commun · 85,1 %",
+    difficulty: 5,
+    ultimate: "The Overseer",
+    description:
+      "Un gardien sauvage, spectaculaire et totalement imprévisible. Son jeu aérien crée des séquences qu’aucun autre personnage ne peut reproduire.",
+    conditions: [
+      "Marquer 5 fois avec Scorpion",
+      "Sauver 5 tirs avec Diving Header",
+      "Sauver 5 tirs avec Scorpion",
+      "Terminer un match sans encaisser de but",
+    ],
+  },
+  {
+    id: "nagi",
+    name: "Nagi",
+    rarity: "rare",
+    rarityLabel: "Rare · 8,5 %",
+    difficulty: 2,
+    ultimate: "The Fallen Genius",
+    description:
+      "Un contrôle de balle irréel et un moveset parmi les plus complets du jeu. Facile à comprendre, beaucoup plus exigeant à perfectionner.",
+    conditions: [
+      "Marquer 10 fois avec « Heavy »",
+      "Utiliser « Control » en l’air puis marquer 3 fois",
+      "Déclencher l’Auto Goal de « Control »",
+      "Marquer 1 fois avec Jumping Turn",
+      "Marquer avec « Heavy » en ultime",
+      "Réaliser le Five Stage Revolver Shoot",
+    ],
+  },
+  {
+    id: "chigiri",
+    name: "Chigiri",
+    rarity: "rare",
+    rarityLabel: "Rare · 8,5 %",
+    difficulty: 1,
+    ultimate: "The Red Panther",
+    description:
+      "La vitesse à l’état pur. Chigiri fend les lignes, force les duels et possède l’un des ultimes les plus oppressants de la ligue.",
+    conditions: [
+      "Marquer 10 fois avec « Mach Cut-In »",
+      "Marquer 1 fois depuis la Golden Zone",
+      "Voler 5 fois la balle avec « Non-Stop Dribble » en ultime",
+    ],
+  },
+  {
+    id: "bachira",
+    name: "Bachira",
+    rarity: "rare",
+    rarityLabel: "Rare · 8,5 %",
+    difficulty: 2,
+    ultimate: "The Monster",
+    description:
+      "Trois dribbles, un tir instinctif et une créativité permanente. Bachira invite à provoquer chaque défenseur jusqu’à faire sortir le monstre.",
+    conditions: [
+      "Marquer 10 fois avec « Bon! », toutes variantes",
+      "Marquer 5 fois avec Monster Leap",
+      "Marquer 1 fois avec « Bee Shot »",
+      "Marquer 1 fois avec « Monster Trance »",
+      "Réussir 5 contres",
+      "Dribbler toute l’équipe adverse en ultime puis marquer",
+    ],
+  },
+  {
+    id: "shidou",
+    name: "Shidou",
+    rarity: "rare",
+    rarityLabel: "Rare · 8,5 %",
+    difficulty: 5,
+    ultimate: "The Devil",
+    description:
+      "Un finisseur explosif qui dépend des passes et punit chaque ballon bien servi. Difficile à dompter, terrifiant quand le rythme s’installe.",
+    conditions: [
+      "Marquer 10 fois avec « Formless »",
+      "Réussir 5 Diving Header",
+      "Marquer 1 fois avec Big Bang Drive",
+      "Marquer 1 fois avec Dragon Drive",
+      "Marquer 5 fois avec Backheel Shot Pivot",
+      "Déclencher l’Auto Goal",
+    ],
+  }, /*
+  {
+    id: "niko",
+    name: "Niko",
+    rarity: "rare",
+    rarityLabel: "Rare · à venir",
+    difficulty: 3,
+    ultimate: "The Watchtower",
+    description:
+      "Encore en observation. Sa lecture défensive rejoindra bientôt les archives officielles de la Nebula League.",
+    conditions: ["Conditions à découvrir lors de sa sortie."],
+    available: false,
+  }, */
+  {
+    id: "kurona",
+    name: "Kurona",
+    rarity: "legendary",
+    rarityLabel: "Légendaire · 4,3 %",
+    difficulty: 4,
+    ultimate: "Planet Hotline",
+    description:
+      "Un passeur orbital qui crée des circuits impossibles à défendre. Son efficacité grimpe avec la qualité et l’anticipation de ses partenaires.",
+    conditions: [
+      "Voler 10 ballons avec « Guard Dog »",
+      "Voler 5 fois la balle avec « Close Quarter Dribble » en ultime",
+      "Réussir l’Auto Goal de « Orbital Resonance »",
+    ],
+  },
+  {
+    id: "charles",
+    name: "Charles",
+    rarity: "legendary",
+    rarityLabel: "Légendaire · 4,3 %",
+    difficulty: 3,
+    ultimate: "The Imp",
+    description:
+      "L’imprévisible prodige est encore classé confidentiel. Ses défis seront révélés avec sa sortie.",
+    conditions: ["Conditions à découvrir lors de sa sortie."],
+    available: false,
+  },
+  {
+    id: "kunigami",
+    name: "Kunigami",
+    rarity: "mythical",
+    rarityLabel: "Mythique · 1,7 %",
+    difficulty: 3,
+    ultimate: "The Wild Card",
+    description:
+      "Puissance, impact et contrôle physique. Kunigami peut étouffer une action en défense avant de la terminer lui-même en attaque.",
+    conditions: [
+      "Marquer 10 fois avec « Lefty Shot »",
+      "Marquer 5 fois avec « Justice Header »",
+      "Récupérer 10 ballons avec « Hero’s Instinct »",
+      "Voler 5 ballons avec Heroic Clash",
+      "Marquer avec « Demon’s Contract » en ultime",
+      "Déclencher l’Auto Goal",
+    ],
+  },
+  {
+    id: "yukimiya",
+    name: "Yukimiya",
+    rarity: "mythical",
+    rarityLabel: "Mythique · 1,7 %",
+    difficulty: 4,
+    ultimate: "The 1-on-1 Emperor",
+    description:
+      "Un spécialiste du duel qui mêle dribbles précis et Predator Eye. Une fois lancé, chaque un-contre-un devient son terrain de chasse.",
+    conditions: [
+      "Marquer 10 fois avec « Gyro Shot », toutes variantes",
+      "Réussir un contre Street Tag parfait",
+      "Marquer avec « Pacifist Gyro Shot » en ultime",
+      "Dribbler toute l’équipe adverse avec Street-Style puis marquer",
+    ],
+  },
+  {
+    id: "aiku",
+    name: "Aiku",
+    rarity: "mythical",
+    rarityLabel: "Mythique · 1,7 %",
+    difficulty: 3,
+    ultimate: "The Snake",
+    description:
+      "Un pur défenseur, méthodique et venimeux. Bien joué, Aiku ne se contente pas de fermer l’espace : il retourne le match.",
+    conditions: [
+      "Voler 15 ballons avec « Reflex Tackle »",
+      "Intercepter 10 ballons avec « Venom Trap »",
+      "Intercepter 3 ballons avec « Ultimate Defense »",
+      "Marquer 1 fois avec « Former Striker »",
+    ],
+  },
+  {
+    id: "barou",
+    name: "Barou",
+    rarity: "mythical",
+    rarityLabel: "Mythique · 1,7 %",
+    difficulty: 2,
+    ultimate: "The KING",
+    description:
+      "Une machine à buts sans détour. Ses dribbles avancent, ses tirs punissent et son Stealth Shot transforme la moindre ouverture en sentence.",
+    conditions: [
+      "Marquer 10 fois avec « Long Shot »",
+      "Marquer 5 fois avec « Stealth Shot: Apex Predator »",
+      "Voler 3 ballons avec « Predator Eye »",
+      "Réussir l’Auto Goal de « DEVOUR. »",
+    ],
+  },
+  {
+    id: "sae",
+    name: "Sae",
+    rarity: "mythical",
+    rarityLabel: "Mythique · 1,7 %",
+    difficulty: 3,
+    ultimate: "Japan’s Greatest Treasure",
+    description:
+      "Élégant, direct et redoutablement efficace. Ses dribbles protègent, ses passes découpent et ses tirs pardonnent très peu d’erreurs.",
+    conditions: [
+      "Marquer 10 fois avec « Drive Shot », toutes variantes",
+      "Réussir 3 fois le combo Rabona Nutmeg → Magic Pass",
+      "Déclencher l’Auto Goal de « Control »",
+      "Faire 5 passes avec « Magic Pass: Calculated »",
+      "Marquer 1 fois avec « Cross Elastico »",
+    ],
+  },
+  {
+    id: "kiyora",
+    name: "Kiyora",
+    rarity: "mythical",
+    rarityLabel: "Mythique · 1,7 %",
+    difficulty: 4,
+    ultimate: "God’s Unknown Plan",
+    description:
+      "Un dribbleur-passeur aux trajectoires difficiles à lire. Son contrôle du borderline peut créer le génie comme le chaos.",
+    conditions: [
+      "Marquer 10 fois avec « Windmill Shot »",
+      "Faire une passe avec « Twister Pass » en ultime",
+      "Faire une passe avec « Borderline »",
+      "Marquer 1 fois avec « Borderline »",
+      "Réussir la Chemical Reaction avec Kaiser",
+    ],
+  },
+  {
+    id: "karasu",
+    name: "Karasu",
+    rarity: "mythical",
+    rarityLabel: "Mythique · 1,7 %",
+    difficulty: 2,
+    ultimate: "The Crow",
+    description:
+      "Exceptionnel à la récupération, excellent pour casser les lignes. Karasu gagne les duels sales et transforme la défense en première passe.",
+    conditions: [
+      "Étourdir 2 adversaires avec « Wing-Arm Block » puis passer",
+      "Voler 10 fois la balle avec « Silent Steal »",
+      "Voler la balle avec « Silent Steal » en ultime",
+      "Faire une passe décisive avec « New Goal Method »",
+      "Marquer 1 fois avec « Talon’s Grasp »",
+    ],
+  },
+  {
+    id: "otoya",
+    name: "Otoya",
+    rarity: "mythical",
+    rarityLabel: "Mythique · 1,7 %",
+    difficulty: 5,
+    ultimate: "Stealthy Ninja",
+    description:
+      "Polyvalent, mobile et discret. Otoya infiltre les intervalles, mais demande une exécution précise pour convertir son large arsenal.",
+    conditions: [
+      "Marquer 10 fois avec « Shuriken Shot »",
+      "Marquer avec « Kusarigama Slash » sur la passe d’un allié",
+      "Marquer 1 fois avec « Center of The World »",
+      "Marquer 1 fois avec « Extraordinary Combo »",
+      "Récupérer la balle avec « Not Gonna Happen »",
+    ],
+  }, /*
+  {
+    id: "ness",
+    name: "Ness",
+    rarity: "mythical",
+    rarityLabel: "Mythique · à venir",
+    difficulty: 3,
+    ultimate: "The Magician",
+    description:
+      "Le magicien attend encore son entrée officielle. Sa fiche complète sera ouverte dès son arrivée dans la ligue.",
+    conditions: ["Conditions à découvrir lors de sa sortie."],
+    available: false,
+  }, */
+  {
+    id: "kaiser",
+    name: "Kaiser",
+    rarity: "worldclass",
+    rarityLabel: "World Class · 0,4 %",
+    difficulty: 2,
+    ultimate: "The Blue Rose",
+    description:
+      "Un empereur immédiatement dangereux. Facile à prendre en main, il réserve sa véritable exigence à la maîtrise du Magnus.",
+    conditions: [
+      "Marquer 10 fois avec « Heavy »",
+      "Utiliser « Control » en l’air puis marquer 3 fois",
+      "Déclencher l’Auto Goal de « Control »",
+      "Marquer 1 fois avec Jumping Turn",
+      "Marquer avec « Heavy » en ultime",
+      "Réaliser le Five Stage Revolver Shoot",
+    ],
+  },
+  {
+    id: "lorenzo",
+    name: "Lorenzo",
+    rarity: "worldclass",
+    rarityLabel: "World Class · 0,4 %",
+    difficulty: 4,
+    ultimate: "The Zombie",
+    description:
+      "Un défenseur qui devient dangereux à mesure que le duel s’étire. Son ultime dévore les possessions et ouvre la transition.",
+    conditions: [
+      "Marquer 10 fois avec « Heavy »",
+      "Utiliser « Control » en l’air puis marquer 3 fois",
+      "Déclencher l’Auto Goal de « Control »",
+      "Marquer 1 fois avec Jumping Turn",
+      "Marquer avec « Heavy » en ultime",
+      "Réaliser le Five Stage Revolver Shoot",
+    ],
+  },
+  {
+    id: "rin",
+    name: "Rin",
+    rarity: "worldclass",
+    rarityLabel: "World Class · 0,4 %",
+    difficulty: 1,
+    ultimate: "The Beast",
+    description:
+      "Des I-Frames, une courbe terrifiante et un ultime aux possibilités presque abusives. Rin impose son scénario au match.",
+    conditions: [
+      "Marquer 10 fois avec « Heavy »",
+      "Utiliser « Control » en l’air puis marquer 3 fois",
+      "Déclencher l’Auto Goal de « Control »",
+      "Marquer 1 fois avec Jumping Turn",
+      "Marquer avec « Heavy » en ultime",
+      "Réaliser le Five Stage Revolver Shoot",
+    ],
+  },
+  {
+    id: "reo",
+    name: "Reo",
+    rarity: "worldclass",
+    rarityLabel: "World Class · 0,4 %",
+    difficulty: 4,
+    ultimate: "Master of All Trades",
+    description:
+      "Une boîte à outils totale. Reo sait tout faire, mais son nombre de variantes transforme chaque décision en test de maîtrise.",
+    conditions: [
+      "Marquer 10 fois avec « Heavy »",
+      "Utiliser « Control » en l’air puis marquer 3 fois",
+      "Déclencher l’Auto Goal de « Control »",
+      "Marquer 1 fois avec Jumping Turn",
+      "Marquer avec « Heavy » en ultime",
+      "Réaliser le Five Stage Revolver Shoot",
+    ],
+  },
+  {
+    id: "nel-isagi",
+    name: "Isagi",
+    edition: "NEL",
+    rarity: "mastery",
+    rarityLabel: "Mastery",
+    difficulty: 2,
+    ultimate: "Genius of Adaptation",
+    description:
+      "Une évolution silencieuse et létale. Raumdeuter le fait disparaître des radars avant que l’un des meilleurs tirs du jeu ne termine l’action.",
+    conditions: [
+      "Marquer 10 fois avec « Heavy »",
+      "Utiliser « Control » en l’air puis marquer 3 fois",
+      "Déclencher l’Auto Goal de « Control »",
+      "Marquer 1 fois avec Jumping Turn",
+      "Marquer avec « Heavy » en ultime",
+      "Réaliser le Five Stage Revolver Shoot",
+    ],
+  },
+  {
+    id: "hiori",
+    name: "Hiori",
+    rarity: "mastery",
+    rarityLabel: "Mastery",
+    difficulty: 4,
+    ultimate: "Ultra Sadist",
+    description:
+      "Un support chirurgical. Bien piloté, Hiori contrôle le tempo, fabrique les angles et transforme ses alliés en armes.",
+    conditions: [
+      "Marquer 10 fois avec « Heavy »",
+      "Utiliser « Control » en l’air puis marquer 3 fois",
+      "Déclencher l’Auto Goal de « Control »",
+      "Marquer 1 fois avec Jumping Turn",
+      "Marquer avec « Heavy » en ultime",
+      "Réaliser le Five Stage Revolver Shoot",
+    ],
+  },
+  {
+    id: "lorenzo2",
+    name: "Lorenzo",
+    edition: "Mastery",
+    rarity: "mastery",
+    rarityLabel: "Mastery",
+    difficulty: 3,
+    ultimate: "The Ace Eater",
+    description:
+      "Deux fois plus d’options, deux fois plus de danger. Cette maîtrise transforme chaque move de Lorenzo en embranchement défensif.",
+    conditions: [
+      "Marquer 10 fois avec « Heavy »",
+      "Utiliser « Control » en l’air puis marquer 3 fois",
+      "Déclencher l’Auto Goal de « Control »",
+      "Marquer 1 fois avec Jumping Turn",
+      "Marquer avec « Heavy » en ultime",
+      "Réaliser le Five Stage Revolver Shoot",
+    ],
+  },
+  {
+    id: "aiku2",
+    name: "Aiku",
+    edition: "Mastery",
+    rarity: "mastery",
+    rarityLabel: "Mastery",
+    difficulty: 3,
+    ultimate: "The Final Wall",
+    description:
+      "La dernière muraille est encore verrouillée. Son dossier sera déclassifié lors de sa sortie officielle.",
+    conditions: ["Conditions à découvrir lors de sa sortie."],
+  },
+  {
+    id: "kaiser2",
+    name: "Kaiser",
+    edition: "Mastery",
+    rarity: "mastery",
+    rarityLabel: "Mastery",
+    difficulty: 3,
+    ultimate: "Emperor's Chosen One",
+    description:
+      "La dernière muraille est encore verrouillée. Son dossier sera déclassifié lors de sa sortie officielle.",
+    conditions: ["Conditions à découvrir lors de sa sortie."],
+  },
+  {
+    id: "rin2",
+    name: "Rin",
+    edition: "Mastery",
+    rarity: "mastery",
+    rarityLabel: "Mastery",
+    difficulty: 3,
+    ultimate: "The Berserker",
+    description:
+      "La dernière muraille est encore verrouillée. Son dossier sera déclassifié lors de sa sortie officielle.",
+    conditions: ["Conditions à découvrir lors de sa sortie."],
+  },
+];
 
-buttons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    const content = btn.nextElementSibling;
-    const isOpen = content.classList.contains("open");
+window.NEBULA_DATA = window.NEBULA_DATA || {};
+window.NEBULA_DATA.characters = characters;
 
-    // Ferme tous les autres dropdowns
-    document.querySelectorAll(".dropdown-content.open").forEach(openContent => {
-      if (openContent !== content) {
-        openContent.style.maxHeight = openContent.scrollHeight + "px";
-        requestAnimationFrame(() => {
-          openContent.style.maxHeight = "0px";
-          openContent.style.opacity = "0";
-        });
-        openContent.classList.remove("open");
-        openContent.previousElementSibling.classList.remove("active");
-      }
-    });
-
-    // Toggle du dropdown cliqué
-    if (isOpen) {
-      // Ferme le dropdown
-      content.style.maxHeight = content.scrollHeight + "px";
-      requestAnimationFrame(() => {
-        content.style.maxHeight = "0px";
-        content.style.opacity = "0";
-      });
-      content.classList.remove("open");
-      btn.classList.remove("active");
-
-    } else {
-      // Ouvre le dropdown
-      content.classList.add("open");
-      content.style.maxHeight = content.scrollHeight + "px";
-      content.style.opacity = "1";
-      btn.classList.add("active");
-    }
-  });
-});
-
-
-// Animation des catégories (tu le gardes)
-const revealClubs = () => {
-  document.querySelectorAll(".category").forEach(el => {
-    const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight - 50) el.classList.add("reveal");
-  });
+const rarityMeta = {
+  commun: { label: "Commun", accent: "#62f6bd", short: "C" },
+  rare: { label: "Rare", accent: "#63a9ff", short: "R" },
+  legendary: { label: "Légendaire", accent: "#ffd45b", short: "L" },
+  mythical: { label: "Mythique", accent: "#ff71ffff", short: "M" },
+  worldclass: { label: "World Class", accent: "#ff5f5fff", short: "WC" },
+  mastery: { label: "Mastery", accent: "#ffffffff", short: "MX" }
 };
+const imageBase = "images/icons";
+let selectedId = "isagi";
+let activeRarity = "all";
+let searchTerm = "";
 
-window.addEventListener("scroll", revealClubs);
-window.addEventListener("load", revealClubs);
+const grid = document.getElementById("character-grid");
+const playerFile = document.getElementById("player-file");
+const search = document.getElementById("search");
+const resultCount = document.getElementById("result-count");
+const profileCount = document.getElementById("profile-count");
+const challengeCount = document.getElementById("challenge-count");
 
-const tabs = document.querySelectorAll(".char-btn");
-const pages = document.querySelectorAll(".char-page");
+if (grid && playerFile && search && resultCount && profileCount && challengeCount) {
+  profileCount.textContent = String(characters.length).padStart(2, "0");
+  challengeCount.textContent = characters.reduce((sum, character) => sum + character.conditions.length, 0);
 
-tabs.forEach(tab => {
-  tab.addEventListener("click", () => {
-    const target = tab.dataset.target;
-
-    // Active le bouton
-    tabs.forEach(t => t.classList.remove("active"));
-    tab.classList.add("active");
-
-    // Affiche la page correspondante
-    pages.forEach(p => p.classList.remove("active"));
-    document.getElementById(target).classList.add("active");
-  });
-});
-
-// Initialisation : Global actif
-document.getElementById("global").classList.add("active");
-
-const titleLinks = document.querySelectorAll(".title-link");
-
-titleLinks.forEach(link => {
-  link.addEventListener("click", () => {
-    const titleId = link.dataset.title;
-    const detail = document.getElementById(titleId);
-
-    if (detail) {
-      // Retire l'état actif de tous les liens du même perso
-      const parentPage = link.closest(".char-page");
-      if (parentPage) {
-        parentPage.querySelectorAll(".title-link").forEach(l => l.classList.remove("selected"));
-      }
-      link.classList.add("selected");
-
-      // Masquer tous les autres détails
-      document.querySelectorAll(".title-detail").forEach(d => d.style.display = "none");
-
-      // Afficher le détail correspondant
-      detail.style.display = "block";
-
-      // Si ce titre a 2 variantes vidéo (data-video-a / data-video-b), tirage 50/50 à chaque clic
-      const variantFrame = detail.querySelector("iframe[data-video-a][data-video-b]");
-      if (variantFrame) {
-        const pick = Math.random() < 0.5 ? variantFrame.dataset.videoA : variantFrame.dataset.videoB;
-        variantFrame.src = pick;
-      }
-
-      // Scroll jusqu’au détail
-      detail.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  });
-});
-
-/* ==================================================================
-   AMÉLIORATIONS PAGE TITRES : regroupement par rareté,
-   accent visuel selon rareté, badge "bientôt disponible"
-   ================================================================== */
-
-// Ordre d'affichage des rarétés + libellé du séparateur
-const RARITY_ORDER = ["commun", "rare", "legendary", "mythical", "worldclass", "mastery"];
-const RARITY_LABEL = {
-  commun: "Communs",
-  rare: "Rares",
-  legendary: "Légendaires",
-  mythical: "Mythiques",
-  worldclass: "World Class",
-  mastery: "Masteries"
-};
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  // 0) Page Global : compte automatiquement le nombre de titres par catégorie
-  document.querySelectorAll(".category-card").forEach(card => {
-    const count = card.querySelectorAll(".title-item").length;
-    const header = card.querySelector(".category-header");
-    if (header && !header.querySelector(".category-count")) {
-      const badge = document.createElement("span");
-      badge.className = "category-count";
-      badge.textContent = `${count} titre${count > 1 ? "s" : ""}`;
-      header.appendChild(badge);
-    }
-  });
-
-  // 1) Pour chaque page perso, on lit sa rareté réelle (span déjà présent dans le HTML)
-  //    et on l'applique à l'image + au nom, pour un accent visuel cohérent.
-  document.querySelectorAll(".char-page").forEach(page => {
-    if (page.id === "global") return;
-
-    const rareteSpan = page.querySelector(".info-text .star")?.closest(".info-text")
-      ?.querySelector("p:nth-of-type(2) span");
-    if (!rareteSpan) return;
-
-    const rarityClass = RARITY_ORDER.find(r => rareteSpan.classList.contains(r));
-    if (!rarityClass) return;
-
-    page.dataset.rarity = rarityClass;
-
-    const img = page.querySelector(".char-info img");
-    const h2 = page.querySelector("h2");
-    if (img) img.classList.add("rarity-frame", rarityClass);
-    if (h2) h2.classList.add("rarity-name", rarityClass);
-
-    // Nouveau système de titre unique : la couleur de rareté habille le badge + la checklist
-    // en repli, mais chaque titre a maintenant sa PROPRE couleur (title-{id} dans colors.css)
-    // qui prend le dessus grâce au sélecteur [class*="title-"] dans title.css.
-    const prestigeWrap = page.querySelector(".prestige-title-wrap");
-    if (prestigeWrap) prestigeWrap.classList.add(rarityClass, `title-${page.id}`);
-
-    // Associe la même rareté au bouton d'onglet correspondant
-    const btn = document.querySelector(`.char-btn[data-target="${page.id}"]`);
-    if (btn) btn.dataset.rarity = rarityClass;
-
-    // 2) Remplace les "à voir" par un texte placeholder plus lisible
-    //    (le badge "bientôt disponible" et l'estompage ont été retirés)
-    const desc = page.querySelector(".char-description p");
-    if (desc && desc.textContent.includes("n'est pas encore sorti")) {
-      page.querySelectorAll(".title-desc").forEach(p => {
-        if (p.textContent.trim() === "à voir") {
-          p.textContent = "Détails à venir avec la sortie du personnage";
-          p.classList.add("placeholder-text");
-        }
-      });
-    }
-  });
-
-  // 3) Regroupe réellement les onglets par rareté (les déplace dans la barre),
-  //    peu importe leur ordre d'origine dans le HTML : évite les séparateurs en double
-  //    si un perso "changé de rareté" n'est pas physiquement à côté des autres du même groupe.
-  const tabsBar = document.querySelector(".character-tabs");
-  if (tabsBar) {
-    const btns = Array.from(tabsBar.querySelectorAll(".char-btn"));
-    const groups = {};
-
-    btns.forEach(btn => {
-      const rarity = btn.dataset.rarity;
-      if (!rarity) return; // bouton "Global" : reste à sa place, non regroupé
-      if (!groups[rarity]) groups[rarity] = [];
-      groups[rarity].push(btn);
-    });
-
-    // Supprime d'anciens séparateurs éventuels avant de reconstruire
-    tabsBar.querySelectorAll(".tab-divider").forEach(d => d.remove());
-
-    RARITY_ORDER.forEach(rarity => {
-      const group = groups[rarity];
-      if (!group || group.length === 0) return;
-
-      const divider = document.createElement("span");
-      divider.className = `tab-divider ${rarity}`;
-      divider.textContent = RARITY_LABEL[rarity] || rarity;
-      tabsBar.appendChild(divider);
-
-      // Déplace chaque bouton du groupe à la suite du séparateur (ordre interne conservé)
-      group.forEach(btn => tabsBar.appendChild(btn));
-    });
-
-    // Recherche en temps réel dans la liste des personnages
-    const searchInput = document.getElementById("charSearchInput");
-    if (searchInput) {
-      searchInput.addEventListener("input", (e) => {
-        const term = e.target.value.toLowerCase().trim();
-        tabsBar.querySelectorAll(".char-btn").forEach(btn => {
-          if (btn.dataset.target === "global") return;
-          const name = btn.textContent.toLowerCase();
-          const match = name.includes(term);
-          btn.style.display = match ? "inline-block" : "none";
-        });
-
-        // Masquer les séparateurs dont tous les boutons sont cachés
-        tabsBar.querySelectorAll(".tab-divider").forEach(divider => {
-          let next = divider.nextElementSibling;
-          let hasVisible = false;
-          while (next && !next.classList.contains("tab-divider")) {
-            if (next.classList.contains("char-btn") && next.style.display !== "none") {
-              hasVisible = true;
-              break;
-            }
-            next = next.nextElementSibling;
-          }
-          divider.style.display = hasVisible ? "flex" : "none";
-        });
-      });
-    }
+  function getChecked(id) {
+    try { return JSON.parse(localStorage.getItem("nebula-title-progress-" + id) || "[]"); }
+    catch { return []; }
   }
 
-  // 4) Sidebar rétractable : bouton flèche pour épingler/fermer
-  const tabsToggle = document.querySelector(".tabs-toggle");
-  const charTabs = document.querySelector(".character-tabs");
-
-  if (tabsToggle && charTabs) {
-    tabsToggle.addEventListener("click", () => {
-      const isOpen = charTabs.classList.toggle("open");
-      tabsToggle.classList.toggle("open", isOpen);
-      tabsToggle.textContent = isOpen ? "◀" : "▶";
-    });
-
-    // Fermer la sidebar épinglée si on clique ailleurs sur la page
-    document.addEventListener("click", (e) => {
-      const clickedInside = charTabs.contains(e.target) || tabsToggle.contains(e.target);
-      if (!clickedInside && charTabs.classList.contains("open")) {
-        charTabs.classList.remove("open");
-        tabsToggle.classList.remove("open");
-        tabsToggle.textContent = "▶";
-      }
-    });
-
-    // Fermer automatiquement la sidebar (si épinglée) après avoir choisi un perso
-    charTabs.querySelectorAll(".char-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        charTabs.classList.remove("open");
-        tabsToggle.classList.remove("open");
-        tabsToggle.textContent = "▶";
-      });
-    });
+  function saveChecked(id, checked) {
+    localStorage.setItem("nebula-title-progress-" + id, JSON.stringify(checked));
   }
 
-  // 5) NOUVEAU SYSTEME DE TITRES : 1 titre ultime par perso + checklist de conditions
-  //    (remplace l'ancien système de plusieurs petits titres cliquables)
-
-  // Stoppe toute vidéo Google Drive en cours de lecture dans un conteneur donné
-  // (recharger l'iframe sur elle-même coupe la lecture sans perdre l'URL)
-  function stopVideosIn(container) {
-    container.querySelectorAll("iframe").forEach(f => {
-      if (f.src) f.src = f.src;
-    });
-  }
-
-  document.querySelectorAll(".prestige-title-wrap").forEach(wrap => {
-    const trigger = wrap.querySelector(".prestige-title");
-    const panel = wrap.querySelector(".prestige-checklist");
-    if (!trigger || !panel) return;
-
-    const closePanel = () => {
-      panel.classList.remove("open");
-      trigger.setAttribute("aria-expanded", "false");
-      stopVideosIn(panel);
-    };
-
-    trigger.addEventListener("click", () => {
-      const isOpen = panel.classList.contains("open");
-
-      // Ferme tout autre panneau ouvert (sur un autre perso) et stoppe ses vidéos
-      document.querySelectorAll(".prestige-checklist.open").forEach(p => {
-        if (p !== panel) {
-          p.classList.remove("open");
-          const otherTrigger = p.closest(".prestige-title-wrap")?.querySelector(".prestige-title");
-          if (otherTrigger) otherTrigger.setAttribute("aria-expanded", "false");
-          stopVideosIn(p);
-        }
-      });
-
-      if (isOpen) {
-        closePanel();
-      } else {
-        panel.classList.add("open");
-        trigger.setAttribute("aria-expanded", "true");
-        panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }
+  function renderGrid() {
+    const filtered = characters.filter((character) => {
+      const rarityMatch = activeRarity === "all" || character.rarity === activeRarity;
+      const queryMatch = !searchTerm || (character.name + " " + (character.edition || "") + " " + character.ultimate).toLowerCase().includes(searchTerm);
+      return rarityMatch && queryMatch;
     });
 
-    const closeBtn = panel.querySelector(".checklist-close");
-    if (closeBtn) {
-      closeBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        closePanel();
+    resultCount.textContent = String(filtered.length).padStart(2, "0") + " RÉSULTATS";
+    if (!filtered.length) {
+      grid.innerHTML = '<div class="empty-state"><span>404</span><strong>Aucun ego détecté.</strong><button type="button" id="reset-filters">Réinitialiser les filtres</button></div>';
+      document.getElementById("reset-filters").addEventListener("click", () => {
+        search.value = "";
+        searchTerm = "";
+        activeRarity = "all";
+        document.querySelectorAll(".rarity-filters button").forEach((button) => button.classList.toggle("active", button.dataset.rarity === "all"));
+        renderGrid();
       });
+      return;
     }
 
-    // Cases à cocher : progression sauvegardée par perso dans le navigateur (localStorage)
-    const items = Array.from(panel.querySelectorAll(".checklist-item"));
-    const progressBar = panel.querySelector(".checklist-progress-bar");
-    const progressLabel = panel.querySelector(".checklist-progress-label");
-    const storageKey = `nebula_title_progress_${panel.id}`;
+    grid.innerHTML = filtered.map((character) => {
+      const meta = rarityMeta[character.rarity];
+      const index = characters.indexOf(character);
+      return `<button type="button" class="character-card ${selectedId === character.id ? "selected" : ""} ${character.available === false ? "locked" : ""}" style="--accent:${meta.accent}" data-id="${character.id}">
+          <span class="card-index">${String(index + 1).padStart(2, "0")}</span>
+          <span class="card-rarity">${meta.short}</span>
+          <span class="portrait-wrap"><img src="${imageBase}/${character.id}.png" alt="" loading="lazy"></span>
+          <span class="card-scanline"></span>
+          <span class="card-info">
+            <small>${character.rarityLabel}</small>
+            <strong>${character.name}${character.edition ? "<em>" + character.edition + "</em>" : ""}</strong>
+            <span>${character.ultimate}</span>
+          </span>
+          <span class="card-action">${character.available === false ? "DOSSIER SCELLÉ" : "INSPECTER"}<i>↗</i></span>
+        </button>`;
+    }).join("");
 
-    function updateProgress() {
-      const total = items.length;
-      const done = items.filter(i => i.classList.contains("checked")).length;
-      const pct = total ? Math.round((done / total) * 100) : 0;
-      if (progressBar) progressBar.style.width = pct + "%";
-      if (progressLabel) progressLabel.textContent = `${done}/${total} conditions remplies`;
-      panel.classList.toggle("complete", total > 0 && done === total);
-    }
-
-    let saved = {};
-    try { saved = JSON.parse(localStorage.getItem(storageKey) || "{}"); } catch (e) { saved = {}; }
-
-    items.forEach((item, i) => {
-      if (saved[i]) item.classList.add("checked");
-      item.addEventListener("click", () => {
-        item.classList.toggle("checked");
-        saved[i] = item.classList.contains("checked");
-        localStorage.setItem(storageKey, JSON.stringify(saved));
-        updateProgress();
-      });
-    });
-
-    updateProgress();
-  });
-
-  // Change de perso => ferme tout panneau checklist ouvert et stoppe ses vidéos
-  tabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      document.querySelectorAll(".prestige-checklist.open").forEach(p => {
-        p.classList.remove("open");
-        stopVideosIn(p);
-        const t = p.closest(".prestige-title-wrap")?.querySelector(".prestige-title");
-        if (t) t.setAttribute("aria-expanded", "false");
-      });
-    });
-  });
-
-  // 6) SALLE DES TITRES : grille auto-générée à partir des fiches perso existantes.
-  //    Rien à dupliquer à la main : le nom du perso et le nom du titre sont lus
-  //    directement depuis chaque .char-page, donc si un titre change plus tard
-  //    ici la grille suit automatiquement. Les persos pas encore jouables
-  //    (bouton d'onglet commenté, ex: Niko, Kiyora, Ness, Charles) sont ignorés.
-  const hallGrid = document.getElementById("titleHallGrid");
-  if (hallGrid) {
-    document.querySelectorAll(".char-page").forEach(page => {
-      if (page.id === "global") return;
-
-      const tabBtn = document.querySelector(`.char-btn[data-target="${page.id}"]`);
-      if (!tabBtn) return; // perso pas encore sorti / pas d'onglet actif
-
-      const titleNameEl = page.querySelector(".prestige-title-name");
-      const charNameEl = page.querySelector("h2");
-      if (!titleNameEl || !charNameEl) return;
-
-      const card = document.createElement("button");
-      card.type = "button";
-      card.className = `title-hall-card title-${page.id}`;
-      card.innerHTML = `
-        <span class="hall-char-name">${charNameEl.textContent}</span>
-        <span class="hall-title-name">${titleNameEl.textContent}</span>
-      `;
+    grid.querySelectorAll(".character-card").forEach((card) => {
       card.addEventListener("click", () => {
-        tabBtn.click();
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        selectedId = card.dataset.id;
+        renderGrid();
+        renderFile();
+        if (innerWidth < 1080) {
+          playerFile.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          const questSection = playerFile.querySelector(".progress-heading");
+          playerFile.scrollTo({
+            top: Math.max(0, questSection.offsetTop - 56),
+            behavior: "smooth"
+          });
+        }
       });
-      hallGrid.appendChild(card);
     });
   }
-});
+
+  function renderFile() {
+    const character = characters.find((item) => item.id === selectedId) || characters[0];
+    const meta = rarityMeta[character.rarity];
+    const checked = getChecked(character.id);
+    const progress = Math.round((checked.length / character.conditions.length) * 100);
+    const index = characters.indexOf(character);
+    playerFile.style.setProperty("--accent", meta.accent);
+    playerFile.innerHTML = `
+        <div class="file-topline">
+          <span>DOSSIER // ${character.id.toUpperCase()}</span>
+          <span class="file-status"><i></i> ${character.available === false ? "SCELLÉ" : "ACTIF"}</span>
+        </div>
+        <div class="file-visual">
+          <div class="file-number">${String(index + 1).padStart(2, "0")}</div>
+          <div class="file-target" aria-hidden="true"><span></span></div>
+          <img src="${imageBase}/${character.id}.png" alt="${character.name}">
+          <span class="file-rarity-code">${meta.short}</span>
+        </div>
+        <div class="file-identity">
+          <p>${character.rarityLabel}</p>
+          <h3>${character.name}${character.edition ? "<em>" + character.edition + "</em>" : ""}</h3>
+          <div class="difficulty"><span>DIFFICULTÉ</span><div aria-label="${character.difficulty} sur 5">${[1, 2, 3, 4, 5].map((star) => '<i class="' + (star <= character.difficulty ? "filled" : "") + '"></i>').join("")}</div></div>
+          <p class="file-description">${character.description}</p>
+        </div>
+        <div class="ultimate-block"><small>TITRE ULTIME</small><strong>${character.ultimate}</strong></div>
+        <div class="progress-heading"><div><span>PROTOCOLE D’ÉVEIL</span><small>${checked.length}/${character.conditions.length} OBJECTIFS</small></div><strong>${progress}%</strong></div>
+        <div class="progress-track"><span style="width:${progress}%"></span></div>
+        <div class="condition-list">
+          ${character.conditions.map((condition, conditionIndex) => {
+      const done = checked.includes(conditionIndex);
+      return `<button type="button" class="${done ? "done" : ""}" data-condition="${conditionIndex}"><span class="condition-box">${done ? "✓" : ""}</span><span><small>OBJECTIF ${String(conditionIndex + 1).padStart(2, "0")}</small>${condition}</span></button>`;
+    }).join("")}
+        </div>
+        ${progress === 100 && character.available !== false ? `<div class="unlocked-banner"><span>✦</span><div><small>TITRE DÉBLOQUÉ</small><strong>${character.ultimate}</strong></div></div>` : ""}
+      `;
+
+    playerFile.querySelectorAll(".condition-list button").forEach((button) => {
+      button.addEventListener("click", () => {
+        const conditionIndex = Number(button.dataset.condition);
+        const next = checked.includes(conditionIndex) ? checked.filter((item) => item !== conditionIndex) : [...checked, conditionIndex];
+        saveChecked(character.id, next);
+        renderFile();
+      });
+    });
+  }
+
+  search.addEventListener("input", (event) => {
+    searchTerm = event.target.value.trim().toLowerCase();
+    renderGrid();
+  });
+
+  document.querySelectorAll(".rarity-filters button").forEach((button) => {
+    button.addEventListener("click", () => {
+      activeRarity = button.dataset.rarity;
+      document.querySelectorAll(".rarity-filters button").forEach((item) => item.classList.toggle("active", item === button));
+      renderGrid();
+    });
+  });
+
+  const menuButton = document.querySelector(".menu-button");
+  const mainNav = document.querySelector(".main-nav");
+  menuButton.addEventListener("click", () => {
+    const open = mainNav.classList.toggle("open");
+    menuButton.setAttribute("aria-expanded", String(open));
+  });
+
+  renderGrid();
+  renderFile();
+}

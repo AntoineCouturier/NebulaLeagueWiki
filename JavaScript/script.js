@@ -1,59 +1,54 @@
-// Navigation simple via tout le div
-document.querySelectorAll('.card-A').forEach(card => {
-    card.style.cursor = 'pointer'; // montre que c'est cliquable
-    card.addEventListener('click', () => {
-        const link = card.dataset.link;
-        if (link) {
-            window.location.href = link;
-        }
+document.addEventListener("DOMContentLoaded", () => {
+    const year = document.getElementById("current-year");
+    if (year) year.textContent = String(new Date().getFullYear());
+
+    const leagueData = window.NEBULA_DATA || {};
+    const counts = {
+        characters: Array.isArray(leagueData.characters) ? leagueData.characters.length : null,
+        players: Array.isArray(leagueData.players) ? leagueData.players.length : null,
+        clubs: Array.isArray(leagueData.clubs) ? leagueData.clubs.length : null
+    };
+
+    document.querySelectorAll("[data-count]").forEach(element => {
+        const count = counts[element.dataset.count];
+        if (!Number.isFinite(count)) return;
+
+        const padding = Number(element.dataset.pad || 0);
+        element.textContent = String(count).padStart(padding, "0");
     });
-});
 
-// Hamburger menu functionality
-document.addEventListener('DOMContentLoaded', function () {
-    const hamburger = document.querySelector('.hamburger-menu');
-    const mobileNav = document.querySelector('.nav-mobile-overlay');
-    const closeBtn = document.querySelector('.nav-close-btn');
-    const backdrop = document.querySelector('.nav-backdrop');
+    const revealItems = [...document.querySelectorAll(".reveal")];
+    document.body.classList.add("reveal-ready");
 
-    function openMenu() {
-        hamburger.classList.add('active');
-        mobileNav.classList.add('active');
-        if (backdrop) backdrop.classList.add('active');
-        document.body.classList.add('menu-open');
-    }
-
-    function closeMenu() {
-        hamburger.classList.remove('active');
-        mobileNav.classList.remove('active');
-        if (backdrop) backdrop.classList.remove('active');
-        document.body.classList.remove('menu-open');
-    }
-
-    if (hamburger && mobileNav) {
-        // Toggle menu with hamburger button
-        hamburger.addEventListener('click', function () {
-            if (mobileNav.classList.contains('active')) {
-                closeMenu();
-            } else {
-                openMenu();
-            }
+    if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries, currentObserver) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add("is-visible");
+                currentObserver.unobserve(entry.target);
+            });
+        }, {
+            rootMargin: "0px 0px -8% 0px",
+            threshold: 0.12
         });
 
-        // Close menu with close button
-        if (closeBtn) {
-            closeBtn.addEventListener('click', closeMenu);
-        }
-
-        // Close menu when clicking on backdrop
-        if (backdrop) {
-            backdrop.addEventListener('click', closeMenu);
-        }
-
-        // Close menu when clicking on a nav link
-        const navLinks = mobileNav.querySelectorAll('nav ul li a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', closeMenu);
+        revealItems.forEach((item, index) => {
+            item.style.transitionDelay = `${Math.min(index % 4, 3) * 70}ms`;
+            observer.observe(item);
         });
+    } else {
+        revealItems.forEach(item => item.classList.add("is-visible"));
+    }
+
+    const orbit = document.querySelector(".home-orbit");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    if (orbit && !reducedMotion.matches) {
+        window.addEventListener("pointermove", event => {
+            const x = (event.clientX / window.innerWidth - 0.5) * 12;
+            const y = (event.clientY / window.innerHeight - 0.5) * 12;
+            orbit.style.setProperty("--orbit-x", `${x}px`);
+            orbit.style.setProperty("--orbit-y", `${y}px`);
+        }, { passive: true });
     }
 });

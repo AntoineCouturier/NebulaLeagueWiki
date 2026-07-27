@@ -1,48 +1,22 @@
-// ============================================================
-// SOURCE UNIQUE DE VÉRITÉ : liste des joueurs (nom, club, valeur...)
-// Déclarée en dehors du DOMContentLoaded pour être réutilisable
-// par d'autres pages (ex: club.js calcule la valeur totale d'un club
-// à partir de ce même tableau, au lieu d'en garder une copie séparée).
-// ============================================================
-const PLAYERS = [
-    /* Bastard Munchen */
-    { name: "Dylan", club: "bastard", folder: "bm", clubName: "Bastard Munchen", position: "RW", value: 9300000, avatar: "Joueurs/images-joueurs/dylan.jpeg" },
-    { name: "Antoine", club: "bastard", folder: "bm", clubName: "Bastard Munchen", position: "CM", value: 18250000, avatar: "Joueurs/images-joueurs/anto.png" },
-    { name: "Alessio", club: "bastard", folder: "bm", clubName: "Bastard Munchen", position: "CF", value: 0, avatar: "Joueurs/images-joueurs/alessio.png" },
-
-    /* PXG */
-    { name: "Jason", club: "pxg", folder: "pxg", clubName: "PXG", position: "CF", value: 2450000, avatar: "Joueurs/images-joueurs/Jason.png" },
-    { name: "Enzo", club: "pxg", folder: "pxg", clubName: "PXG", position: "CM", value: 2150000, avatar: "Joueurs/images-joueurs/enzo.png" },
-
-    /* Manshine */
-    { name: "William", club: "manshine", folder: "manshine", clubName: "Manshine City", position: "CF", value: 0, avatar: "Joueurs/images-joueurs/william.png" },
-    { name: "Imrane", club: "manshine", folder: "manshine", clubName: "Manshine City", position: "LW", value: 0, avatar: "Joueurs/images-joueurs/imrane.png" },
-    { name: "Elijah", club: "manshine", folder: "manshine", clubName: "Manshine City", position: "RW", value: 0, avatar: "Joueurs/images-joueurs/elijah.png" },
-
-    /* Ubers */
-
-    /* Barcha */
-
-    /* Retraite */
-    { name: "Matheo", club: "retraite", folder: "retraite", clubName: "Retraite", position: "CM", value: 0, avatar: "Joueurs/images-joueurs/matheo.png" },
-    { name: "Theo", club: "retraite", folder: "retraite", clubName: "Retraite", position: "RW", value: 7500000, avatar: "Joueurs/images-joueurs/theo.png" }
-];
+// Les identités, clubs, valeurs, images et liens sont centralisés dans nebula-data.js.
+const PLAYERS = window.NEBULA_DATA?.players || [];
 
 // Logo de club associé à chaque valeur de filtre (utilisé pour le badge en filigrane sur la carte)
-const CLUB_LOGOS = {
-    bastard: "images/clubs_icon/Bastard_Munchen.png",
-    pxg: "images/clubs_icon/PXG.png",
-    ubers: "images/clubs_icon/Ubers.png",
-    barcha: "images/clubs_icon/Barcha.png",
-    manshine: "images/clubs_icon/Manshine_City.png",
-    retraite: null // pas de logo pour Retraite
-};
+const CLUB_LOGOS = Object.fromEntries([
+    ...(window.NEBULA_DATA?.clubs || []),
+    ...Object.values(window.NEBULA_DATA?.groups || {})
+].map(club => [club.key, club.logo]));
+
+const CLUB_ACCENTS = Object.fromEntries([
+    ...(window.NEBULA_DATA?.clubs || []),
+    ...Object.values(window.NEBULA_DATA?.groups || {})
+].map(club => [club.key, club.color]));
+
+const POSITION_LABELS = window.NEBULA_DATA?.positions || {};
 
 document.addEventListener("DOMContentLoaded", () => {
-
-    // Le reste de ce fichier ne concerne que la page players.html.
-    // On ne l'exécute que si ses éléments existent (ex: club.js charge aussi
-    // ce fichier juste pour le tableau PLAYERS, sans avoir cette page).
+    // Le reste de ce fichier ne concerne que players.html. club.html charge aussi
+    // ce script, mais uniquement pour accéder à la source de données PLAYERS.
     const container = document.getElementById("playersContainer");
     if (!container) return;
 
@@ -52,133 +26,222 @@ document.addEventListener("DOMContentLoaded", () => {
     const dropdownLabel = dropdownCurrent.querySelector(".dropdown-current-label");
     const dropdownMenu = document.getElementById("dropdownMenu");
     const sortToggle = document.getElementById("sortToggle");
+    const searchInput = document.getElementById("playerSearch");
+    const positionFilters = document.getElementById("positionFilters");
+    const resetFilters = document.getElementById("resetFilters");
 
     let selectedClub = "all";
-    let sortOrder = "desc"; // desc par défaut, comme avant
+    let selectedPosition = "all";
+    let searchTerm = "";
+    let sortOrder = "desc";
+
+    function formatValue(value) {
+        return value.toLocaleString("fr-FR");
+    }
+
+    function compactValue(value) {
+        if (value >= 1000000000) {
+            return `${(value / 1000000000).toLocaleString("fr-FR", { maximumFractionDigits: 2 })} B`;
+        }
+        if (value >= 1000000) {
+            return `${(value / 1000000).toLocaleString("fr-FR", { maximumFractionDigits: 2 })} M`;
+        }
+        if (value >= 1000) {
+            return `${(value / 1000).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} K`;
+        }
+        return String(value);
+    }
+
+    function normalize(value) {
+        return value
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .trim();
+    }
+
+    function setClubFilter(option) {
+        dropdownMenu.querySelectorAll(".dropdown-option").forEach(item => {
+            const active = item === option;
+            item.classList.toggle("active", active);
+            item.setAttribute("aria-selected", String(active));
+        });
+
+        selectedClub = option.dataset.club;
+        dropdownLabel.textContent = option.dataset.label;
+
+        const currentIcon = dropdownCurrent.querySelector(".dropdown-current-icon");
+        if (currentIcon) currentIcon.remove();
+
+        const optionIcon = option.querySelector(".filter-icon");
+        if (optionIcon) {
+            const icon = optionIcon.cloneNode(true);
+            icon.classList.add("dropdown-current-icon");
+            dropdownCurrent.querySelector(".dropdown-current-content").prepend(icon);
+        }
+    }
+
+    function closeClubDropdown() {
+        clubDropdown.classList.remove("open");
+        dropdownCurrent.setAttribute("aria-expanded", "false");
+    }
 
     function displayPlayers(list) {
-        container.innerHTML = "";
-
         if (list.length === 0) {
             container.innerHTML = `
                 <div class="empty-state">
-                    <div class="empty-state-icon">🔍</div>
-                    <p class="empty-state-title">Aucun joueur pour ce club</p>
-                    <p class="empty-state-sub">Reviens plus tard, l'effectif n'est pas encore complet.</p>
+                    <div class="empty-state-inner">
+                        <span class="empty-state-code">SCAN // 00 RESULT</span>
+                        <p class="empty-state-title">AUCUN PROFIL DÉTECTÉ</p>
+                        <p class="empty-state-sub">Aucun joueur ne correspond à cette combinaison. Modifiez les filtres
+                            ou réinitialisez la console de sélection.</p>
+                    </div>
                 </div>
             `;
             return;
         }
 
-        list.forEach(p => {
-            const card = document.createElement("a");
-            card.classList.add("player-card", p.club);
-            card.href = `Joueurs/${p.folder}/${p.name.toLowerCase()}.html`;
+        container.innerHTML = list.map((player, index) => {
+            const logo = CLUB_LOGOS[player.club];
+            const accent = CLUB_ACCENTS[player.club] || "#63e7ff";
+            const playerNumber = String(PLAYERS.indexOf(player) + 1).padStart(2, "0");
+            const status = player.club === "retraite" ? "RETRAITE" : "ACTIF";
+            const value = player.value === 0 ? "NON COTÉ" : `${formatValue(player.value)} ¥`;
+            const role = POSITION_LABELS[player.position] || player.position;
 
-            const formattedValue = p.value.toLocaleString("en-US");
-            const priceHTML = p.value === 0
-                ? `<span class="price-number zero-value">${formattedValue}</span>¥💎`
-                : `<span class="price-number">${formattedValue}</span>¥💎`;
-
-            const logo = CLUB_LOGOS[p.club];
-            const logoHTML = logo
-                ? `<img src="${logo}" class="card-club-badge" alt="" onerror="this.style.display='none'">`
-                : "";
-
-            card.innerHTML = `
-                ${logoHTML}
-                <div class="avatar-wrap">
-                    <img src="${p.avatar}" alt="${p.name}">
-                    <span class="position-pill position-${p.position.toLowerCase()}">${p.position}</span>
-                </div>
-                <h3>${p.name}</h3>
-                <p class="card-club-name">${p.clubName}</p>
-                <p>Valeur: ${priceHTML}</p>
+            return `
+                <a class="player-card ${player.club}" href="${window.NEBULA_DATA.playerPageHref(player)}"
+                    style="--club-accent:${accent}; animation-delay:${Math.min(index, 8) * 0.055}s"
+                    aria-label="Ouvrir le profil de ${player.name}">
+                    <div class="player-file-topline">
+                        <span>PLAYER FILE // ${playerNumber}</span>
+                        <span class="player-file-status"><i></i>${status}</span>
+                    </div>
+                    <div class="player-card-visual">
+                        <img class="player-avatar" src="${player.avatar}" alt="${player.name}">
+                        ${logo ? `<img src="${logo}" class="card-club-badge" alt="" onerror="this.style.display='none'">` : ""}
+                        <span class="position-pill">${player.position}</span>
+                        <span class="player-index" aria-hidden="true">${playerNumber}</span>
+                    </div>
+                    <div class="player-card-body">
+                        <span class="player-card-club">${player.clubName}</span>
+                        <h3>${player.name}</h3>
+                        <div class="player-card-data">
+                            <div><small>POSTE</small><strong>${role}</strong></div>
+                            <div><small>VALEUR DE MARCHÉ</small><strong class="market-value">${value}</strong></div>
+                        </div>
+                        <span class="player-card-cta">OUVRIR LE DOSSIER <i>↗</i></span>
+                    </div>
+                </a>
             `;
-
-            container.appendChild(card);
-        });
+        }).join("");
     }
 
     function updatePlayers() {
-        let result = PLAYERS.filter(p =>
-            selectedClub === "all" ? true : p.club === selectedClub
-        );
+        const normalizedSearch = normalize(searchTerm);
+        const result = PLAYERS
+            .filter(player => selectedClub === "all" || player.club === selectedClub)
+            .filter(player => selectedPosition === "all" || player.position === selectedPosition)
+            .filter(player => {
+                if (!normalizedSearch) return true;
+                return normalize(`${player.name} ${player.clubName} ${player.position}`).includes(normalizedSearch);
+            })
+            .sort((a, b) => sortOrder === "asc" ? a.value - b.value : b.value - a.value);
 
-        result.sort((a, b) =>
-            sortOrder === "asc" ? a.value - b.value : b.value - a.value
-        );
-
-        countEl.textContent = result.length === 0
-            ? ""
-            : `${result.length} joueur${result.length > 1 ? "s" : ""} affiché${result.length > 1 ? "s" : ""}`;
-
+        countEl.textContent = `${String(result.length).padStart(2, "0")} PROFIL${result.length > 1 ? "S" : ""} AFFICHÉ${result.length > 1 ? "S" : ""}`;
         displayPlayers(result);
     }
 
-    // Dropdown club : ouverture/fermeture
-    dropdownCurrent.addEventListener("click", (e) => {
-        e.stopPropagation();
-        clubDropdown.classList.toggle("open");
+    function resetAllFilters() {
+        const allClubs = dropdownMenu.querySelector('[data-club="all"]');
+        setClubFilter(allClubs);
+        selectedPosition = "all";
+        searchTerm = "";
+        searchInput.value = "";
+        sortOrder = "desc";
+        sortToggle.dataset.order = sortOrder;
+        sortToggle.querySelector(".sort-arrow").textContent = "↓";
+        sortToggle.setAttribute("aria-label", "Trier par valeur décroissante");
+
+        positionFilters.querySelectorAll("button").forEach(button => {
+            const active = button.dataset.position === "all";
+            button.classList.toggle("active", active);
+            button.setAttribute("aria-pressed", String(active));
+        });
+
+        updatePlayers();
+    }
+
+    // Données de synthèse de l'en-tête.
+    const totalValue = PLAYERS.reduce((total, player) => total + player.value, 0);
+    const featuredPlayer = [...PLAYERS].sort((a, b) => b.value - a.value)[0];
+    document.getElementById("playersTotal").textContent = String(PLAYERS.length).padStart(2, "0");
+    document.getElementById("playersValue").textContent = `${compactValue(totalValue)} ¥`;
+    if (featuredPlayer) {
+        document.getElementById("featuredPlayerName").textContent = featuredPlayer.name;
+        document.getElementById("featuredPlayerValue").textContent =
+            featuredPlayer.value === 0 ? "NON COTÉ" : `${formatValue(featuredPlayer.value)} ¥`;
+    }
+
+    dropdownCurrent.addEventListener("click", event => {
+        event.stopPropagation();
+        const open = !clubDropdown.classList.contains("open");
+        clubDropdown.classList.toggle("open", open);
+        dropdownCurrent.setAttribute("aria-expanded", String(open));
     });
 
-    // Sélection d'une option
-    dropdownMenu.querySelectorAll(".dropdown-option").forEach(opt => {
-        opt.addEventListener("click", () => {
-            dropdownMenu.querySelectorAll(".dropdown-option").forEach(o => o.classList.remove("active"));
-            opt.classList.add("active");
-
-            selectedClub = opt.dataset.club;
-            dropdownLabel.textContent = opt.dataset.label;
-
-            // Recopie l'icône du club choisi (s'il y en a une) à côté du label du bouton
-            const icon = opt.querySelector(".filter-icon");
-            const existingIcon = dropdownCurrent.querySelector(".dropdown-current-icon");
-            if (existingIcon) existingIcon.remove();
-            if (icon) {
-                const clone = icon.cloneNode(true);
-                clone.classList.add("dropdown-current-icon");
-                dropdownCurrent.querySelector(".dropdown-current-content").prepend(clone);
-            }
-
-            clubDropdown.classList.remove("open");
+    dropdownMenu.querySelectorAll(".dropdown-option").forEach(option => {
+        option.addEventListener("click", () => {
+            setClubFilter(option);
+            closeClubDropdown();
             updatePlayers();
         });
     });
 
-    // Ferme le dropdown si on clique ailleurs sur la page
-    document.addEventListener("click", (e) => {
-        if (!clubDropdown.contains(e.target)) {
-            clubDropdown.classList.remove("open");
-        }
+    document.addEventListener("click", event => {
+        if (!clubDropdown.contains(event.target)) closeClubDropdown();
     });
 
-    // Tri : un seul bouton qui inverse l'ordre à chaque clic
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape") closeClubDropdown();
+    });
+
+    positionFilters.addEventListener("click", event => {
+        const button = event.target.closest("[data-position]");
+        if (!button) return;
+
+        selectedPosition = button.dataset.position;
+        positionFilters.querySelectorAll("button").forEach(item => {
+            const active = item === button;
+            item.classList.toggle("active", active);
+            item.setAttribute("aria-pressed", String(active));
+        });
+        updatePlayers();
+    });
+
+    searchInput.addEventListener("input", () => {
+        searchTerm = searchInput.value;
+        updatePlayers();
+    });
+
     sortToggle.addEventListener("click", () => {
         sortOrder = sortOrder === "desc" ? "asc" : "desc";
         sortToggle.dataset.order = sortOrder;
         sortToggle.querySelector(".sort-arrow").textContent = sortOrder === "desc" ? "↓" : "↑";
+        sortToggle.setAttribute(
+            "aria-label",
+            sortOrder === "desc" ? "Trier par valeur décroissante" : "Trier par valeur croissante"
+        );
         updatePlayers();
     });
 
-    // Arrivée depuis la page Clubs (lien "Voir l'effectif complet") : ?club=xxx
-    // pré-sélectionne le club correspondant dans le dropdown au chargement.
+    resetFilters.addEventListener("click", resetAllFilters);
+
+    // Un lien players.html?club=xxx pré-sélectionne toujours l'effectif demandé.
     const urlClub = new URLSearchParams(window.location.search).get("club");
     if (urlClub) {
         const matchingOption = dropdownMenu.querySelector(`.dropdown-option[data-club="${urlClub}"]`);
-        if (matchingOption) {
-            dropdownMenu.querySelectorAll(".dropdown-option").forEach(o => o.classList.remove("active"));
-            matchingOption.classList.add("active");
-            selectedClub = matchingOption.dataset.club;
-            dropdownLabel.textContent = matchingOption.dataset.label;
-
-            const icon = matchingOption.querySelector(".filter-icon");
-            if (icon) {
-                const clone = icon.cloneNode(true);
-                clone.classList.add("dropdown-current-icon");
-                dropdownCurrent.querySelector(".dropdown-current-content").prepend(clone);
-            }
-        }
+        if (matchingOption) setClubFilter(matchingOption);
     }
 
     updatePlayers();

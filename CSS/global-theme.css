@@ -1,106 +1,1140 @@
 /* ==========================================================================
-   GLOBAL THEME — Nebula League
-   ==========================================================================
-   Objectif : harmoniser toutes les pages du site sur la DA de player-card.css
-   (Orbitron + Inter, header sticky avec blur, boutons "glassy" avec glow).
-
-   RÈGLE D'OR : ce fichier doit être chargé EN DERNIER dans le <head> de
-   chaque page, après tous les autres <link rel="stylesheet">. C'est ce qui
-   lui permet de surcharger proprement le header/nav/typo sans avoir besoin
-   de !important ni de toucher aux fichiers CSS existants.
+   NEBULA LEAGUE — SYSTEM THEME
+   Couche commune chargée en dernier sur chaque page du site.
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800;900&display=swap");
 
 :root {
-    --nebula-purple: #b41cff;
-    --nebula-purple-2: #6f00ff;
-    --nebula-glow: rgba(180, 28, 255, 0.35);
-    --surface: rgba(14, 14, 18, 0.92);
-    --border: rgba(255, 255, 255, 0.08);
+  --ink: #05070a;
+  --ink-2: #090c11;
+  --surface: #0d1117;
+  --surface-2: #111720;
+  --surface-3: #161d27;
+  --paper: #f4f7f9;
+  --muted: #89939e;
+  --line: rgba(255, 255, 255, 0.11);
+  --line-strong: rgba(255, 255, 255, 0.2);
+  --acid: #adff2f;
+  --cyan: #63e7ff;
+  --cyan-soft: rgba(99, 231, 255, 0.16);
+  --acid-soft: rgba(173, 255, 47, 0.13);
+  --danger: #ff5d66;
+  --display: "Orbitron", "Arial Black", sans-serif;
+  --sans: "Inter", "Segoe UI", Arial, sans-serif;
+  --mono: "Courier New", monospace;
+
+  /* Compatibilité avec les anciens composants */
+  --nebula-purple: var(--cyan);
+  --nebula-purple-2: #138ba2;
+  --nebula-glow: rgba(99, 231, 255, 0.28);
+  --border: var(--line);
+  --text: var(--paper);
+  --text-muted: var(--muted);
 }
 
-/* -------------------- Typographie -------------------- */
-
-body {
-    font-family: 'Inter', 'Arial', sans-serif;
+* {
+  box-sizing: border-box;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.header-container h1,
-nav ul li a,
-.details-btn,
-.calc-btn,
-.calculator select,
-.calculator input,
-.home-btn,
-.category-btn,
-.record-btn,
-.dropdown-btn,
-.section-title,
-.clubs-title,
-.club-name,
-.stat-number,
-.hero-title {
-    font-family: 'Orbitron', sans-serif;
+html {
+  scroll-behavior: smooth;
+  background: var(--ink);
+  color-scheme: dark;
 }
 
-/* -------------------- Header : sticky + blur harmonisé -------------------- */
-
-header {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+body.nebula-page {
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 90% -10%, rgba(99, 231, 255, 0.11), transparent 32rem),
+    radial-gradient(circle at -12% 70%, rgba(120, 75, 255, 0.08), transparent 34rem),
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    var(--ink) !important;
+  background-size: auto, auto, 64px 64px, 64px 64px, auto !important;
+  color: var(--paper);
+  font-family: var(--sans);
 }
 
-/* -------------------- Nav : boutons "glassy" façon player-card -------------------- */
-
-nav ul li a {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border);
-    letter-spacing: 0.3px;
-    transition: 0.25s ease;
+body.nebula-page::before {
+  position: fixed;
+  z-index: -1;
+  top: 16%;
+  right: -220px;
+  width: 560px;
+  height: 560px;
+  content: "";
+  border: 1px solid rgba(99, 231, 255, 0.08);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 70px rgba(99, 231, 255, 0.025),
+    0 0 0 140px rgba(99, 231, 255, 0.018);
+  pointer-events: none;
 }
 
-nav ul li a:hover,
-nav ul li a.active {
-    background: linear-gradient(135deg, var(--nebula-purple-2), var(--nebula-purple));
-    border-color: var(--nebula-purple);
-    box-shadow: 0 0 14px var(--nebula-glow);
-    transform: translateY(-1px);
+body.nebula-page,
+body.nebula-page button,
+body.nebula-page input,
+body.nebula-page select,
+body.nebula-page textarea {
+  font-family: var(--sans);
 }
 
-/* -------------------- Boutons d'action : glow + micro-lift harmonisés -------------------- */
-
-.details-btn:hover,
-.calc-btn:hover,
-.home-btn:hover,
-.record-btn:hover,
-.close-btn:hover,
-.reset-filter-btn:hover,
-.fx-details-btn:hover,
-.details-btn.ligue:hover,
-.details-btn.ncl:hover,
-.details-btn.amical:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px var(--nebula-glow);
+body.nebula-page h1,
+body.nebula-page h2,
+body.nebula-page h3,
+body.nebula-page h4,
+body.nebula-page h5,
+body.nebula-page h6,
+body.nebula-page .section-title,
+body.nebula-page .club-name,
+body.nebula-page .stat-number,
+body.nebula-page .hero-title,
+body.nebula-page [class$="-hero-title"],
+body.nebula-page .page-title {
+  font-family: var(--display) !important;
 }
 
-/* -------------------- Cards : arrondi harmonisé (16-20px, comme player-card) -------------------- */
+body.nebula-page a {
+  color: inherit;
+  text-decoration: none;
+}
 
-.card-A,
-.club,
-.stat-card,
-.season-card,
-.match-card,
-.fx-card,
-.player-card {
-    border-radius: 18px;
+body.nebula-page img {
+  max-width: 100%;
+}
+
+body.nebula-page ::selection {
+  color: var(--ink);
+  background: var(--acid);
+}
+
+body.nebula-page :focus-visible {
+  outline: 2px solid var(--acid);
+  outline-offset: 3px;
+}
+
+body.nebula-page::-webkit-scrollbar,
+body.nebula-page *::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+body.nebula-page::-webkit-scrollbar-track,
+body.nebula-page *::-webkit-scrollbar-track {
+  background: var(--ink);
+}
+
+body.nebula-page::-webkit-scrollbar-thumb,
+body.nebula-page *::-webkit-scrollbar-thumb {
+  background: #35404b;
+  border-radius: 0;
+}
+
+/* -------------------- En-tête historique -------------------- */
+
+body.nebula-page header:not(.site-header) {
+  position: sticky !important;
+  z-index: 1000 !important;
+  top: 0 !important;
+  min-height: 76px;
+  padding: 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  background: rgba(5, 7, 10, 0.91) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(18px);
+}
+
+body.nebula-page header:not(.site-header) .header-container,
+body.nebula-page header:not(.site-header) .nav-container {
+  display: grid !important;
+  grid-template-columns: minmax(185px, auto) 1fr;
+  align-items: center;
+  gap: 26px;
+  width: min(1600px, 100%);
+  min-height: 76px;
+  margin: 0 auto;
+  padding: 0 3vw !important;
+}
+
+body.nebula-page header:not(.site-header) h1 {
+  margin: 0 !important;
+  color: var(--paper) !important;
+  font-family: var(--display) !important;
+  font-size: clamp(0.72rem, 1.15vw, 1rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.04em !important;
+  line-height: 1.2;
+  text-align: left !important;
+  text-shadow: none !important;
+  text-transform: uppercase;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+body.nebula-page header:not(.site-header) h1::before {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 10px;
+  content: "";
+  border-radius: 50%;
+  background: var(--acid);
+  box-shadow: 0 0 13px var(--acid);
+  vertical-align: 1px;
+}
+
+body.nebula-page header:not(.site-header) nav {
+  min-width: 0;
+}
+
+body.nebula-page header:not(.site-header) nav ul {
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: auto;
+  list-style: none;
+  scrollbar-width: none;
+}
+
+body.nebula-page header:not(.site-header) nav ul::-webkit-scrollbar {
+  display: none;
+}
+
+body.nebula-page header:not(.site-header) nav ul li {
+  flex: 0 0 auto;
+  margin: 0 !important;
+}
+
+body.nebula-page header:not(.site-header) nav ul li a {
+  display: block !important;
+  padding: 10px 11px !important;
+  border: 1px solid transparent !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #858f99 !important;
+  font-family: var(--mono) !important;
+  font-size: 0.64rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.055em !important;
+  line-height: 1 !important;
+  text-transform: uppercase;
+  transform: none !important;
+  transition:
+    color 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease !important;
+}
+
+body.nebula-page header:not(.site-header) nav ul li a:hover,
+body.nebula-page header:not(.site-header) nav ul li a.active {
+  border-color: var(--line) !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: #fff !important;
+}
+
+body.nebula-page header:not(.site-header) nav ul li a.active {
+  border-bottom-color: var(--acid) !important;
+  color: var(--acid) !important;
+}
+
+/* -------------------- En-tête principal -------------------- */
+
+body.nebula-page .site-header {
+  position: relative;
+  z-index: 1000;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  width: 100vw;
+  max-width: none;
+  min-height: 88px;
+  margin-right: calc(50% - 50vw);
+  margin-left: calc(50% - 50vw);
+  padding: 0 4vw;
+  border: 0;
+  border-bottom: 1px solid rgba(143, 61, 255, 0.78);
+  background: rgba(5, 7, 10, 0.92);
+  box-shadow:
+    0 1px 0 rgba(143, 61, 255, 0.18),
+    0 6px 16px rgba(111, 0, 255, 0.16);
+  backdrop-filter: blur(18px);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 13px;
+  width: max-content;
+}
+
+.brand-mark {
+  position: relative;
+  display: grid;
+  width: 37px;
+  height: 37px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  transform: rotate(-12deg);
+}
+
+.brand-mark::before,
+.brand-mark::after,
+.brand-mark span {
+  position: absolute;
+  content: "";
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.brand-mark::before {
+  width: 47px;
+  height: 14px;
+  transform: rotate(28deg);
+}
+
+.brand-mark::after {
+  width: 9px;
+  height: 9px;
+  background: var(--acid);
+  border: 0;
+  box-shadow: 0 0 18px var(--acid);
+}
+
+.brand-mark span {
+  width: 15px;
+  height: 43px;
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-copy strong {
+  font-family: var(--display);
+  font-size: 16px;
+  letter-spacing: 0.16em;
+  line-height: 1;
+}
+
+.brand-copy small {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.11em;
+}
+
+.main-nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(14px, 2vw, 30px);
+}
+
+.main-nav a {
+  position: relative;
+  padding: 35px 0 32px;
+  color: #959da8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.main-nav a:hover,
+.main-nav a:focus-visible {
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.main-nav a::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  content: "";
+  background: var(--acid);
+  transform: scaleX(0);
+  transition: transform 180ms ease;
+}
+
+.main-nav a:hover::after,
+.main-nav a:focus-visible::after,
+.main-nav .nav-active::after {
+  transform: scaleX(1);
+}
+
+.main-nav .nav-active {
+  color: #fff;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 11px;
+  border: 1px solid var(--line);
+  color: #b6bec7;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+
+.live-pill i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--acid);
+  box-shadow: 0 0 10px var(--acid);
+  animation: nebula-nav-pulse 2s infinite;
+}
+
+@keyframes nebula-nav-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* -------------------- Navigation mobile -------------------- */
+
+body.nebula-page .hamburger-menu {
+  width: 42px !important;
+  height: 42px !important;
+  padding: 11px 9px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  box-shadow: none !important;
+}
+
+body.nebula-page .hamburger-menu span {
+  height: 1px !important;
+  background: #fff !important;
+}
+
+/* Overlay plein écran : caché par défaut, affiché via la classe .active
+   que hamburger.js bascule au clic. Sans cet état, l'overlay reste dans
+   le flux normal de la page et s'affiche en permanence sous la navbar. */
+body.nebula-page .nav-mobile-overlay {
+  position: fixed;
+  z-index: 2000;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-14px);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+  background:
+    linear-gradient(145deg, rgba(99, 231, 255, 0.08), transparent 30%),
+    rgba(5, 7, 10, 0.98) !important;
+  backdrop-filter: blur(22px);
+}
+
+body.nebula-page .nav-mobile-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+body.nebula-page .nav-mobile-overlay nav {
+  width: 100%;
+  max-width: 440px;
+  padding: 0 26px;
+}
+
+body.nebula-page .nav-mobile-overlay nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body.nebula-page .nav-mobile-overlay nav ul li a {
+  display: block;
+  padding: 14px 4px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #c2c9d0 !important;
+  font-family: var(--mono) !important;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+body.nebula-page .nav-mobile-overlay nav ul li a.active,
+body.nebula-page .nav-mobile-overlay nav ul li a:hover {
+  color: var(--acid) !important;
+}
+
+body.nebula-page .nav-close-btn {
+  position: absolute;
+  z-index: 2001;
+  top: 18px;
+  right: 20px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--paper) !important;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* Fond cliquable derrière l'overlay, lui aussi caché par défaut */
+body.nebula-page .nav-backdrop {
+  position: fixed;
+  z-index: 1999;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+  background: rgba(0, 0, 0, 0.72) !important;
+  backdrop-filter: blur(4px);
+}
+
+body.nebula-page .nav-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Empêche le scroll de la page derrière le menu mobile ouvert
+   (menu-open est ajouté/retiré par hamburger.js sur <body>) */
+body.nebula-page.menu-open {
+  overflow: hidden;
+}
+
+body.nebula-page .discord-btn {
+  border-color: rgba(99, 231, 255, 0.35) !important;
+  background: var(--cyan-soft) !important;
+  color: var(--cyan) !important;
+}
+
+/* -------------------- Largeur et respiration -------------------- */
+
+body.nebula-page>main:not(.characters-page),
+body.nebula-page .cards-container,
+body.nebula-page .clubs-grid,
+body.nebula-page .fixtures-container,
+body.nebula-page .match-list,
+body.nebula-page .stats-page,
+body.nebula-page .ve-page,
+body.nebula-page .season-layout,
+body.nebula-page .ref-dossier {
+  width: min(1440px, calc(100% - 6vw)) !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+
+body.nebula-page .cards-container,
+body.nebula-page .clubs-grid,
+body.nebula-page .fixtures-container,
+body.nebula-page .match-list,
+body.nebula-page .stats-page,
+body.nebula-page .ve-page,
+body.nebula-page .season-layout,
+body.nebula-page .ref-dossier {
+  padding-top: clamp(26px, 5vw, 72px) !important;
+  padding-bottom: clamp(60px, 8vw, 120px) !important;
+}
+
+/* -------------------- Heroes -------------------- */
+
+body.nebula-page .hero-section,
+body.nebula-page [class$="-hero"]:not(.hero) {
+  position: relative;
+  width: min(1440px, calc(100% - 6vw)) !important;
+  min-height: 310px;
+  margin: 0 auto !important;
+  padding: clamp(70px, 9vw, 130px) 0 clamp(45px, 6vw, 90px) !important;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background:
+    linear-gradient(110deg, rgba(99, 231, 255, 0.06), transparent 46%),
+    transparent !important;
+  box-shadow: none !important;
+  text-align: left !important;
+}
+
+body.nebula-page .hero-section::before,
+body.nebula-page [class$="-hero"]:not(.hero)::before {
+  position: absolute !important;
+  top: auto !important;
+  right: 4% !important;
+  bottom: -55% !important;
+  left: auto !important;
+  width: min(43vw, 560px) !important;
+  height: min(43vw, 560px) !important;
+  content: "" !important;
+  border: 1px solid rgba(99, 231, 255, 0.17) !important;
+  border-radius: 50% !important;
+  background:
+    radial-gradient(circle, rgba(99, 231, 255, 0.1), transparent 60%) !important;
+  box-shadow:
+    0 0 0 55px rgba(99, 231, 255, 0.025),
+    0 0 0 110px rgba(99, 231, 255, 0.018) !important;
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+  animation: none !important;
+  pointer-events: none;
+}
+
+body.nebula-page .hero-title,
+body.nebula-page [class$="-hero-title"],
+body.nebula-page .page-title,
+body.nebula-page .ve-title,
+body.nebula-page .dossier-title {
+  position: relative;
+  z-index: 1;
+  max-width: 1000px;
+  margin: 0 0 20px !important;
+  color: var(--paper) !important;
+  background: none !important;
+  font-size: clamp(2.7rem, 7vw, 6.5rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.065em !important;
+  line-height: 0.9 !important;
+  text-align: left !important;
+  text-shadow: none !important;
+  text-transform: uppercase;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: currentColor !important;
+  animation: none !important;
+}
+
+body.nebula-page .hero-title::after,
+body.nebula-page [class$="-hero-title"]::after,
+body.nebula-page .page-title::after,
+body.nebula-page .ve-title::after,
+body.nebula-page .dossier-title::after {
+  display: block;
+  width: 84px;
+  height: 3px;
+  margin-top: 22px;
+  content: "";
+  background: var(--acid);
+  box-shadow: 0 0 14px rgba(173, 255, 47, 0.4);
+}
+
+body.nebula-page .hero-subtitle,
+body.nebula-page [class$="-hero-subtitle"],
+body.nebula-page .page-subtitle,
+body.nebula-page .ve-subtitle,
+body.nebula-page .dossier-subtitle {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 !important;
+  color: #99a3ad !important;
+  font-size: clamp(0.92rem, 1.4vw, 1.1rem) !important;
+  font-weight: 400 !important;
+  line-height: 1.7 !important;
+  text-align: left !important;
+  text-shadow: none !important;
+}
+
+body.nebula-page .hero-stats {
+  position: relative !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  justify-content: flex-start !important;
+  margin-top: 38px !important;
+}
+
+body.nebula-page .stat-item {
+  border: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: rgba(255, 255, 255, 0.025) !important;
+  box-shadow: none !important;
+}
+
+body.nebula-page .stat-item:hover {
+  border-color: rgba(99, 231, 255, 0.42) !important;
+  box-shadow: inset 0 -2px 0 var(--cyan) !important;
+}
+
+body.nebula-page .stat-number {
+  color: var(--cyan) !important;
+  background: none !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+/* -------------------- Titres de sections -------------------- */
+
+body.nebula-page .section-title,
+body.nebula-page .section-heading h2,
+body.nebula-page .h2h-history-title,
+body.nebula-page .ve-section-head h2 {
+  color: var(--paper) !important;
+  background: none !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.035em !important;
+  text-shadow: none !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+body.nebula-page .section-title::after {
+  background: linear-gradient(90deg, var(--acid), transparent) !important;
+}
+
+/* -------------------- Surfaces et cartes -------------------- */
+/* NOTE : les composants de la player-card (.pc-hero, .player-card-main, etc.)
+   sont volontairement EXCLUS de cet aplatissement. Ils gardent leur propre
+   style arrondi + glow défini dans player-card.css (coins arrondis, padding,
+   ombre portée) au lieu d'être aplatis comme le reste du site. */
+
+body.nebula-page :is(.card-A,
+  .card,
+  .club,
+  .stat-card,
+  .season-card,
+  .match-card,
+  .fx-card,
+  .calendar-card,
+  .table-section,
+  .briefing-card,
+  .offense-card,
+  .roster-card,
+  .clock-card,
+  .ve-intro-card,
+  .ve-terminal,
+  .ve-ledger,
+  .h2h-picker,
+  .h2h-results,
+  .h2h-history,
+  .section-header-box) {
+  border: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.025), transparent 45%),
+    var(--surface) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+body.nebula-page :is(.card-A,
+  .card,
+  .club,
+  .stat-card,
+  .season-card,
+  .match-card,
+  .fx-card,
+  .calendar-card,
+  .briefing-card,
+  .offense-card):hover {
+  border-color: rgba(99, 231, 255, 0.45) !important;
+  box-shadow:
+    inset 0 -2px 0 var(--cyan),
+    0 14px 45px rgba(0, 0, 0, 0.25) !important;
+  transform: translateY(-3px);
+}
+
+body.nebula-page .card-A::before,
+body.nebula-page .card::before {
+  opacity: 0.08 !important;
+  background: var(--cyan) !important;
+}
+
+/* -------------------- Boutons et contrôles -------------------- */
+
+body.nebula-page :is(button,
+  .details-btn,
+  .calc-btn,
+  .home-btn,
+  .record-btn,
+  .category-btn,
+  .reset-filter-btn,
+  .fx-cat-btn,
+  .fx-view-btn,
+  .today-btn,
+  .month-nav-btn,
+  .ve-calc-btn):not(.character-card):not(.prestige-title):not(.condition-list button):not(.menu-button):not(.record-category-tab):not(.position-filter-tab):not(.match-control-button):not(.h2h-control-button):not(.season-control-button):not(.fixture-control-button) {
+  border: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  box-shadow: none !important;
+  color: #d4dae0 !important;
+  font-family: var(--mono) !important;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease,
+    transform 160ms ease !important;
+}
+
+body.nebula-page :is(button,
+  .details-btn,
+  .calc-btn,
+  .home-btn,
+  .record-btn,
+  .category-btn,
+  .reset-filter-btn,
+  .fx-cat-btn,
+  .fx-view-btn,
+  .today-btn,
+  .month-nav-btn,
+  .ve-calc-btn):not(.character-card):not(.prestige-title):not(.condition-list button):not(.menu-button):not(.record-category-tab):not(.position-filter-tab):not(.match-control-button):not(.h2h-control-button):not(.season-control-button):not(.fixture-control-button):hover {
+  border-color: var(--acid) !important;
+  background: var(--acid-soft) !important;
+  box-shadow: none !important;
+  color: var(--acid) !important;
+  transform: translateY(-1px);
+}
+
+body.nebula-page :is(input, select, textarea, .dropdown-current) {
+  min-height: 44px;
+  border: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  outline: 0;
+  background: var(--surface) !important;
+  color: var(--paper) !important;
+  box-shadow: none !important;
+}
+
+body.nebula-page :is(input, select, textarea, .dropdown-current):focus {
+  border-color: var(--cyan) !important;
+  box-shadow: 0 0 0 3px var(--cyan-soft) !important;
+}
+
+body.nebula-page .dropdown-menu,
+body.nebula-page .dropdown-option {
+  border-color: var(--line) !important;
+  border-radius: 0 !important;
+  background: var(--surface-2) !important;
+  color: var(--paper) !important;
+}
+
+body.nebula-page .dropdown-option:hover {
+  background: var(--cyan-soft) !important;
+  color: var(--cyan) !important;
+}
+
+/* -------------------- Tableaux, listes et barres -------------------- */
+
+body.nebula-page table {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--line) !important;
+  border-collapse: collapse;
+  background: var(--surface) !important;
+}
+
+body.nebula-page th {
+  border-color: var(--line) !important;
+  background: var(--surface-2) !important;
+  color: var(--cyan) !important;
+  font-family: var(--mono) !important;
+  font-size: 0.72rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+body.nebula-page td {
+  border-color: rgba(255, 255, 255, 0.07) !important;
+  color: #c6cdd4 !important;
+}
+
+body.nebula-page tr:hover td {
+  background: rgba(99, 231, 255, 0.035) !important;
+}
+
+body.nebula-page :is(.filter-group-container,
+  .fixtures-controls-bar,
+  .match-filter-bar,
+  .players-toolbar,
+  .filter-group,
+  .quickref-section) {
+  border: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: rgba(9, 12, 17, 0.9) !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(16px);
+}
+
+body.nebula-page :is(.filter-label, .sort-label, .qr-label, .ve-row-label) {
+  color: var(--muted) !important;
+  font-family: var(--mono) !important;
+  font-size: 0.69rem !important;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+body.nebula-page :is(.ve-meter-fill,
+  .h2h-record-fill,
+  .timeline-track::before,
+  .checklist-progress-bar) {
+  background: linear-gradient(90deg, var(--cyan), var(--acid)) !important;
+  box-shadow: 0 0 14px rgba(99, 231, 255, 0.3) !important;
+}
+
+/* -------------------- Modales -------------------- */
+
+body.nebula-page :is(.popup-bg, .popup-overlay) {
+  background: rgba(2, 3, 5, 0.84) !important;
+  backdrop-filter: blur(9px);
+}
+
+body.nebula-page :is(.popup-box, .club-modal-box, .fixture-modal-box, .modal-content) {
+  max-height: min(88vh, 880px);
+  overflow-y: auto;
+  border: 1px solid var(--line-strong) !important;
+  border-radius: 0 !important;
+  background:
+    linear-gradient(145deg, rgba(99, 231, 255, 0.06), transparent 38%),
+    var(--surface-2) !important;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.55) !important;
+  color: var(--paper) !important;
+}
+
+body.nebula-page :is(.modal-close-x, .close-btn) {
+  border-color: rgba(255, 93, 102, 0.35) !important;
+  background: rgba(255, 93, 102, 0.1) !important;
+  color: #ff8890 !important;
+}
+
+/* -------------------- Tickers et accents -------------------- */
+
+body.nebula-page :is(.mp-ticker-wrap, .ve-ticker-wrap) {
+  border-color: var(--line) !important;
+  background: var(--surface-2) !important;
+}
+
+body.nebula-page :is(.active-dot, .ve-terminal-dot, .roster-dot) {
+  background: var(--acid) !important;
+  box-shadow: 0 0 10px var(--acid) !important;
+}
+
+body.nebula-page :is(.players-count, .tier-chip, .qr-chip, .offense-card-tag) {
+  border-color: var(--line) !important;
+  border-radius: 0 !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: var(--cyan) !important;
+}
+
+/* -------------------- Fiches joueurs -------------------- */
+
+body.nebula-page .player-card-wrapper {
+  width: min(1160px, calc(100% - 6vw)) !important;
+  margin: 0 auto !important;
+  padding-top: clamp(28px, 5vw, 66px) !important;
+}
+
+body.nebula-page .pc-hero {
+  border-top: 2px solid var(--club-primary, var(--cyan)) !important;
+}
+
+body.nebula-page .pc-tabs {
+  border: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: var(--surface) !important;
+}
+
+body.nebula-page .pc-tab-btn {
+  border-radius: 0 !important;
+}
+
+body.nebula-page .pc-tab-btn.active {
+  border-color: var(--club-primary, var(--cyan)) !important;
+  background: color-mix(in srgb, var(--club-primary, var(--cyan)), transparent 86%) !important;
+  color: #fff !important;
+}
+
+/* -------------------- Responsive -------------------- */
+
+@media (max-width: 1100px) {
+
+  body.nebula-page header:not(.site-header) .header-container,
+  body.nebula-page header:not(.site-header) .nav-container {
+    grid-template-columns: 1fr auto;
+  }
+
+  body.nebula-page header:not(.site-header) nav {
+    display: none;
+  }
+
+  body.nebula-page .hamburger-menu {
+    display: block !important;
+    justify-self: end;
+  }
+}
+
+@media (max-width: 1250px) {
+  body.nebula-page .site-header {
+    padding: 0 3vw;
+  }
+
+  .main-nav {
+    gap: 14px;
+  }
+
+  .main-nav a {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 960px) {
+  body.nebula-page .site-header {
+    min-height: 74px;
+  }
+
+  .brand-copy small,
+  .live-pill {
+    display: none;
+  }
+
+  .main-nav {
+    position: absolute;
+    top: 74px;
+    right: 0;
+    left: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    padding: 12px 3vw 20px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(5, 7, 10, 0.97);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px);
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease;
+  }
+
+  .main-nav.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .main-nav a {
+    padding: 15px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .main-nav a::after {
+    display: none;
+  }
+
+  .header-actions {
+    justify-self: end;
+  }
+}
+
+@media (max-width: 720px) {
+  body.nebula-page::before {
+    display: none;
+  }
+
+  body.nebula-page header:not(.site-header) {
+    min-height: 66px;
+  }
+
+  body.nebula-page header:not(.site-header) .header-container,
+  body.nebula-page header:not(.site-header) .nav-container {
+    min-height: 66px;
+    padding: 0 18px !important;
+  }
+
+  body.nebula-page header:not(.site-header) h1 {
+    max-width: 240px;
+    overflow: hidden;
+    font-size: 0.68rem !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  body.nebula-page .site-header {
+    padding: 0 18px;
+  }
+
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+  }
+
+  body.nebula-page>main:not(.characters-page),
+  body.nebula-page .cards-container,
+  body.nebula-page .clubs-grid,
+  body.nebula-page .fixtures-container,
+  body.nebula-page .match-list,
+  body.nebula-page .stats-page,
+  body.nebula-page .ve-page,
+  body.nebula-page .season-layout,
+  body.nebula-page .ref-dossier,
+  body.nebula-page .hero-section,
+  body.nebula-page [class$="-hero"]:not(.hero),
+  body.nebula-page .player-card-wrapper {
+    width: calc(100% - 36px) !important;
+  }
+
+  body.nebula-page .hero-section,
+  body.nebula-page [class$="-hero"]:not(.hero) {
+    min-height: 260px;
+    padding-top: 70px !important;
+  }
+
+  body.nebula-page .hero-title,
+  body.nebula-page [class$="-hero-title"],
+  body.nebula-page .page-title,
+  body.nebula-page .ve-title,
+  body.nebula-page .dossier-title {
+    font-size: clamp(2.35rem, 13vw, 4.3rem) !important;
+  }
+
+  body.nebula-page table {
+    min-width: 640px;
+  }
+
+  body.nebula-page .table-section,
+  body.nebula-page .ve-ledger-wrap {
+    overflow-x: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  body.nebula-page *,
+  body.nebula-page *::before,
+  body.nebula-page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

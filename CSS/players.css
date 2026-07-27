@@ -1,565 +1,1195 @@
-.player-card {
-    background: rgba(10, 10, 10, 0.8);
-    border: 2px solid #b41cff;
-    padding: 20px;
-    border-radius: 15px;
-    width: 250px;
-    box-shadow: 0 0 15px #b41cff80;
-    transition: 0.3s;
-    cursor: pointer;
-    text-align: center;
+/* ==========================================================================
+   NEBULA LEAGUE — PLAYER REGISTRY
+   ========================================================================== */
+
+body.nebula-page.players-page {
+    --players-line: rgba(255, 255, 255, 0.11);
+    --players-line-soft: rgba(255, 255, 255, 0.065);
+    --players-surface: #070a0e;
+    --players-surface-2: #0a0f15;
+    --players-acid: #adff2f;
+    --players-cyan: #63e7ff;
+}
+
+body.nebula-page.players-page::after {
+    position: fixed;
+    z-index: -1;
+    inset: 0;
+    content: "";
+    background:
+        linear-gradient(115deg, transparent 0 68%, rgba(99, 231, 255, 0.025) 68% 69%, transparent 69%),
+        radial-gradient(circle at 8% 34%, rgba(173, 255, 47, 0.045), transparent 21rem);
+    pointer-events: none;
+}
+
+.players-intro {
     position: relative;
+    display: grid;
+    width: min(1440px, calc(100% - 8vw));
+    min-height: 610px;
+    grid-template-columns: minmax(0, 1.35fr) minmax(330px, 0.65fr);
+    margin: 0 auto;
     overflow: hidden;
+    border-right: 1px solid var(--players-line-soft);
+    border-bottom: 1px solid var(--players-line);
+    border-left: 1px solid var(--players-line-soft);
+    background:
+        linear-gradient(90deg, rgba(99, 231, 255, 0.035), transparent 38%),
+        var(--players-surface);
 }
 
-.player-card:hover {
-    box-shadow: 0 0 25px #b41cff, 0 0 45px #b41cffaa;
-    transform: translateY(-8px) scale(1.03);
+.players-intro::before {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    content: "";
+    background: linear-gradient(90deg, var(--players-acid), var(--players-cyan) 48%, #8a5cff);
 }
 
-.player-card img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-bottom: 10px;
+.players-intro::after {
+    position: absolute;
+    top: 0;
+    right: 31%;
+    width: 1px;
+    height: 100%;
+    content: "";
+    background: linear-gradient(transparent, var(--players-line), transparent);
 }
 
-.player-card h3 {
-    margin: 0;
-    color: #df9fff;
-}
-
-.player-card {
-    margin: 5px 0 0;
-    color: #e0d6ff;
-    font-size: 0.9rem;
-    text-decoration: none;
-}
-
-.bastard {
-    background: rgba(10, 10, 10, 0.8);
-    border: 2px solid #ff0000;
-    padding: 20px;
-    border-radius: 15px;
-    width: 250px;
-    box-shadow: 0 0 15px #ff1c1c80;
-    transition: 0.3s;
-    cursor: pointer;
-    text-align: center;
-}
-
-.bastard:hover {
-    box-shadow: 0 0 25px #ff1c1c, 0 0 45px #ff1c1caa;
-    transform: translateY(-4px);
-}
-
-.pxg {
-    background: rgba(10, 10, 10, 0.8);
-    border: 2px solid #001eff;
-    padding: 20px;
-    border-radius: 15px;
-    width: 250px;
-    box-shadow: 0 0 15px #1c27ff80;
-    transition: 0.3s;
-    cursor: pointer;
-    text-align: center;
-}
-
-.pxg:hover {
-    box-shadow: 0 0 25px #1c3eff, 0 0 45px #1c20ffaa;
-    transform: translateY(-4px);
-}
-
-.ubers {
-    background: rgba(10, 10, 10, 0.8);
-    border: 2px solid #2bff00;
-    padding: 20px;
-    border-radius: 15px;
-    width: 250px;
-    box-shadow: 0 0 15px #55ff1c80;
-    transition: 0.3s;
-    cursor: pointer;
-    text-align: center;
-}
-
-.ubers:hover {
-    box-shadow: 0 0 25px #49ff1c, 0 0 45px #13f213aa;
-    transform: translateY(-4px);
-}
-
-.barcha {
-    background: rgba(10, 10, 10, 0.8);
-    border: 2px solid #ffdd00;
-    padding: 20px;
-    border-radius: 15px;
-    width: 250px;
-    box-shadow: 0 0 15px #fff01c80;
-    transition: 0.3s;
-    cursor: pointer;
-    text-align: center;
-}
-
-.barcha:hover {
-    box-shadow: 0 0 25px #ffe11c, 0 0 45px #ffe81caa;
-    transform: translateY(-4px);
-}
-
-.manshine {
-    background: rgba(10, 10, 10, 0.8);
-    border: 2px solid #00c8ff;
-    padding: 20px;
-    border-radius: 15px;
-    width: 250px;
-    box-shadow: 0 0 15px #1cb7ff80;
-    transition: 0.3s;
-    cursor: pointer;
-    text-align: center;
-}
-
-.manshine:hover {
-    box-shadow: 0 0 25px #1cb7ff, 0 0 45px #1cc6ffaa;
-    transform: translateY(-4px);
-}
-
-.retraite {
-    background: rgba(10, 10, 10, 0.8);
-    border: 2px solid #c800ff;
-    padding: 20px;
-    border-radius: 15px;
-    width: 250px;
-    box-shadow: 0 0 15px #b71cff80;
-    transition: 0.3s;
-    cursor: pointer;
-    text-align: center;
-}
-
-.retraite:hover {
-    box-shadow: 0 0 25px #e11cff, 0 0 45px #d91cffaa;
-    transform: translateY(-4px);
-}
-
-.players-toolbar {
+.players-hero-copy {
+    position: relative;
+    z-index: 2;
     display: flex;
-    justify-content: space-between;
+    max-width: 900px;
+    flex-direction: column;
+    justify-content: center;
+    padding: 90px clamp(32px, 6vw, 96px) 70px;
+}
+
+.players-kicker {
+    display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    gap: 14px;
+    margin: 0 0 28px;
+    color: #7a858f;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+}
+
+.players-kicker::after {
+    width: 74px;
+    height: 1px;
+    content: "";
+    background: var(--players-line);
+}
+
+.players-kicker span {
+    color: var(--players-acid);
+}
+
+body.nebula-page.players-page .players-intro h1 {
+    max-width: 950px;
+    margin: 0;
+    color: #f4f7f9;
+    font-size: clamp(3.8rem, 7.2vw, 7.5rem);
+    font-weight: 900;
+    letter-spacing: -0.075em;
+    line-height: 0.88;
+}
+
+.players-intro h1 em {
+    color: transparent;
+    font-style: normal;
+    -webkit-text-stroke: 1px rgba(244, 247, 249, 0.48);
+}
+
+.players-hero-text {
+    max-width: 720px;
+    margin: 38px 0 0;
+    padding-left: 18px;
+    border-left: 2px solid var(--players-acid);
+    color: #a0a9b1;
+    font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+    line-height: 1.75;
+}
+
+.players-hero-stats {
+    display: grid;
+    max-width: 760px;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    margin-top: 52px;
+    border-top: 1px solid var(--players-line);
+    border-bottom: 1px solid var(--players-line);
+}
+
+.players-hero-stats>div {
+    display: flex;
+    min-width: 0;
+    min-height: 100px;
+    align-items: center;
     gap: 15px;
-    max-width: 1100px;
-    margin: 25px auto 0;
-    padding: 12px 18px;
-    background: rgba(10, 10, 10, 0.6);
-    border: 1px solid rgba(180, 28, 255, 0.3);
-    border-radius: 16px;
-    box-shadow: 0 0 15px rgba(180, 28, 255, 0.15);
+    padding: 14px 22px;
+    border-right: 1px solid var(--players-line);
+}
+
+.players-hero-stats>div:last-child {
+    border-right: 0;
+}
+
+.players-hero-stats strong {
+    color: #f4f7f9;
+    font-family: var(--display);
+    font-size: clamp(1.8rem, 3vw, 3rem);
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.players-hero-stats span {
+    max-width: 90px;
+    color: #6f7a84;
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
+
+.players-scan {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        radial-gradient(circle, rgba(99, 231, 255, 0.085), transparent 58%);
+    background-size: 42px 42px, 42px 42px, auto;
+}
+
+.players-scan::before,
+.players-scan::after {
+    position: absolute;
+    content: "";
+    background: rgba(99, 231, 255, 0.24);
+}
+
+.players-scan::before {
+    top: 50%;
+    right: 10%;
+    left: 10%;
+    height: 1px;
+}
+
+.players-scan::after {
+    top: 10%;
+    bottom: 10%;
+    left: 50%;
+    width: 1px;
+}
+
+.scan-orbit {
+    position: absolute;
+    width: min(31vw, 430px);
+    aspect-ratio: 1;
+    border: 1px solid rgba(99, 231, 255, 0.2);
+    border-radius: 50%;
+    animation: registryOrbit 22s linear infinite;
+}
+
+.scan-orbit::before,
+.scan-orbit::after {
+    position: absolute;
+    content: "";
+    border: 1px solid rgba(173, 255, 47, 0.13);
+    border-radius: 50%;
+}
+
+.scan-orbit::before {
+    inset: 16%;
+}
+
+.scan-orbit::after {
+    inset: 36%;
+    background: rgba(5, 7, 10, 0.86);
+}
+
+.scan-orbit i {
+    position: absolute;
+    z-index: 2;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--players-acid);
+    box-shadow: 0 0 18px var(--players-acid);
+}
+
+.scan-orbit i:nth-child(1) {
+    top: 8%;
+    left: 27%;
+}
+
+.scan-orbit i:nth-child(2) {
+    top: 52%;
+    right: -4px;
+    background: var(--players-cyan);
+    box-shadow: 0 0 18px var(--players-cyan);
+}
+
+.scan-orbit i:nth-child(3) {
+    bottom: 12%;
+    left: 18%;
+    background: #8a5cff;
+    box-shadow: 0 0 18px #8a5cff;
+}
+
+.scan-readout {
+    position: relative;
+    z-index: 3;
+    width: min(270px, 70%);
+    padding: 28px;
+    border: 1px solid rgba(99, 231, 255, 0.3);
+    background: rgba(5, 7, 10, 0.9);
+    text-align: center;
+}
+
+.scan-readout span,
+.scan-readout small {
+    display: block;
+    color: #66717b;
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+.scan-readout strong {
+    display: block;
+    margin: 15px 0 11px;
+    overflow: hidden;
+    color: #f4f7f9;
+    font-family: var(--display);
+    font-size: clamp(1.2rem, 2.2vw, 2rem);
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+}
+
+.scan-readout small {
+    color: var(--players-acid);
+}
+
+.players-scan>p {
+    position: absolute;
+    right: 22px;
+    bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: #65707a;
+    font-family: var(--mono);
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+.players-scan>p span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--players-acid);
+    box-shadow: 0 0 8px var(--players-acid);
+}
+
+@keyframes registryOrbit {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+body.nebula-page.players-page .players-registry {
+    width: min(1440px, calc(100% - 8vw)) !important;
+    margin: 0 auto !important;
+    padding: 11vh 0 110px !important;
+}
+
+.registry-console,
+.players-results {
+    border: 1px solid var(--players-line);
+    background: var(--players-surface);
+}
+
+.registry-console {
+    position: relative;
+    z-index: 20;
+    overflow: visible;
+}
+
+.players-results {
+    position: relative;
+    z-index: 1;
+}
+
+.players-section-heading {
+    display: grid;
+    min-height: 108px;
+    grid-template-columns: 104px minmax(0, 1fr) minmax(280px, 0.58fr);
+    align-items: center;
+    border-bottom: 1px solid var(--players-line);
+}
+
+.section-index {
+    display: grid;
+    height: 100%;
+    place-items: center;
+    border-right: 1px solid var(--players-line);
+    color: #303944;
+    font-family: var(--display);
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.players-section-heading>div {
+    padding: 22px 28px;
+}
+
+.players-section-heading small,
+.players-toolbar>label>span:first-child,
+.club-filter-block>span,
+.position-filter-block>span {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--players-acid);
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+body.nebula-page.players-page .players-section-heading h2 {
+    margin: 0;
+    color: #f2f5f7;
+    font-size: clamp(1.35rem, 2.4vw, 2.25rem);
+    letter-spacing: -0.045em;
+}
+
+.players-section-heading>p {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 22px 30px;
+    border-left: 1px solid var(--players-line);
+    color: #7d8790;
+    font-size: 0.78rem;
+    line-height: 1.6;
+}
+
+body.nebula-page.players-page .players-toolbar {
+    position: relative;
+    z-index: 30;
+    display: grid !important;
+    max-width: none !important;
+    grid-template-columns: minmax(220px, 1.2fr) minmax(210px, 0.9fr) minmax(300px, 1fr) 150px;
+    align-items: end !important;
+    gap: 1px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: var(--players-line) !important;
+    box-shadow: none !important;
+}
+
+.player-search,
+.club-filter-block,
+.position-filter-block {
+    min-width: 0;
+    height: 100%;
+    padding: 22px;
+    background: var(--players-surface-2);
+}
+
+.club-filter-block {
+    position: relative;
+    z-index: 40;
+    overflow: visible;
+}
+
+.search-input-wrap {
+    display: flex;
+    min-height: 54px;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #39434d;
+}
+
+.search-input-wrap i {
+    position: relative;
+    width: 15px;
+    height: 15px;
+    flex: 0 0 auto;
+    border: 1px solid #75808a;
+    border-radius: 50%;
+}
+
+.search-input-wrap i::after {
+    position: absolute;
+    right: -5px;
+    bottom: -3px;
+    width: 6px;
+    height: 1px;
+    content: "";
+    background: #75808a;
+    transform: rotate(45deg);
+}
+
+body.nebula-page.players-page #playerSearch {
+    width: 100%;
+    min-width: 0;
+    padding: 14px 0 !important;
+    border: 0 !important;
+    outline: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #f4f7f9 !important;
+    font-size: 0.82rem;
+}
+
+#playerSearch::placeholder {
+    color: #59636d;
 }
 
 .club-dropdown {
     position: relative;
+    z-index: 50;
 }
 
-.dropdown-current {
-    display: flex;
+body.nebula-page.players-page .dropdown-current {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 54px;
     align-items: center;
-    gap: 10px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 10px;
-    padding: 8px 14px;
-    color: #e6e6e6;
-    font-size: 0.9rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.25s ease;
-    min-width: 200px;
     justify-content: space-between;
+    gap: 12px;
+    padding: 0 15px !important;
+    border: 1px solid #303944 !important;
+    border-radius: 0 !important;
+    background: #080c11 !important;
+    box-shadow: none !important;
+    color: #dce2e6 !important;
+    font-family: var(--mono) !important;
+    font-size: 0.68rem !important;
+    font-weight: 700;
+    text-align: left;
 }
 
-.dropdown-current:hover {
-    border-color: rgba(180, 28, 255, 0.6);
-    background: rgba(180, 28, 255, 0.1);
-}
-
-.club-dropdown.open .dropdown-current {
-    border-color: #b41ce6;
-    box-shadow: 0 0 10px rgba(180, 28, 255, 0.5);
+body.nebula-page.players-page .dropdown-current:hover,
+body.nebula-page.players-page .club-dropdown.open .dropdown-current {
+    border-color: var(--players-cyan) !important;
+    background: rgba(99, 231, 255, 0.045) !important;
+    transform: none !important;
 }
 
 .dropdown-current-content {
     display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.dropdown-current-icon {
-    width: 18px;
-    height: 18px;
-    object-fit: contain;
-    border-radius: 4px;
-}
-
-.dropdown-caret {
-    color: #b0b0b0;
-    transition: transform 0.25s ease;
-}
-
-.club-dropdown.open .dropdown-caret {
-    transform: rotate(180deg);
-    color: #d89aff;
-}
-
-.dropdown-menu {
-    list-style: none;
-    margin: 0;
-    padding: 6px;
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    min-width: 220px;
-    background: rgba(8, 8, 14, 0.98);
-    border: 1px solid rgba(180, 28, 255, 0.4);
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-    z-index: 50;
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: max-height 0.25s ease, opacity 0.2s ease;
-}
-
-.club-dropdown.open .dropdown-menu {
-    max-height: 400px;
-    opacity: 1;
-}
-
-.dropdown-option {
-    display: flex;
+    min-width: 0;
     align-items: center;
     gap: 10px;
-    padding: 9px 12px;
-    border-radius: 8px;
-    color: #e6e6e6;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s ease;
 }
 
-.dropdown-option:hover {
-    background: rgba(180, 28, 255, 0.15);
-}
-
-.dropdown-option.active {
-    background: linear-gradient(135deg, rgba(166, 0, 255, 0.35), rgba(180, 28, 230, 0.35));
-    color: #fff;
-}
-
-.dropdown-option .filter-icon {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-    border-radius: 4px;
-}
-
-.sort-toggle {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    padding: 7px 16px;
-    color: #e6e6e6;
-    font-size: 0.85rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.25s ease;
+.dropdown-current-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.sort-toggle:hover {
-    border-color: rgba(180, 28, 255, 0.6);
-    background: rgba(180, 28, 255, 0.1);
+.dropdown-current-icon,
+.dropdown-option .filter-icon {
+    width: 23px !important;
+    height: 23px !important;
+    flex: 0 0 auto;
+    object-fit: contain;
+}
+
+.dropdown-caret {
+    color: var(--players-cyan);
+    font-size: 1rem;
+    transition: transform 0.2s ease;
+}
+
+.club-dropdown.open .dropdown-caret {
+    transform: rotate(45deg);
+}
+
+body.nebula-page.players-page .dropdown-menu {
+    position: absolute;
+    z-index: 50;
+    top: calc(100% + 7px);
+    right: 0;
+    left: 0;
+    display: grid;
+    max-height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid transparent !important;
+    border-radius: 0 !important;
+    background: rgba(5, 7, 10, 0.98) !important;
+    box-shadow: 0 24px 55px rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: max-height 0.25s ease, opacity 0.2s ease, transform 0.2s ease;
+}
+
+body.nebula-page.players-page .club-dropdown.open .dropdown-menu {
+    max-height: 430px;
+    padding: 6px;
+    border-color: #33404a !important;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+body.nebula-page.players-page .dropdown-option {
+    display: flex !important;
+    width: 100% !important;
+    min-height: 43px;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 8px 10px !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--players-line-soft) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #929ca5 !important;
+    font-family: var(--mono) !important;
+    font-size: 0.62rem !important;
+    font-weight: 700;
+    text-align: left;
+}
+
+body.nebula-page.players-page .dropdown-option:hover,
+body.nebula-page.players-page .dropdown-option.active {
+    background: rgba(99, 231, 255, 0.07) !important;
+    color: #f1f4f6 !important;
+    transform: none !important;
+}
+
+.position-filters {
+    display: grid;
+    min-height: 54px;
+    grid-template-columns: repeat(5, 1fr);
+    border: 1px solid #303944;
+}
+
+body.nebula-page.players-page .position-filters button {
+    min-width: 0 !important;
+    padding: 0 8px !important;
+    border: 0 !important;
+    border-right: 1px solid #303944 !important;
+    border-radius: 0 !important;
+    background: #080c11 !important;
+    box-shadow: none !important;
+    color: #6d7781 !important;
+    font-family: var(--mono) !important;
+    font-size: 0.61rem !important;
+    font-weight: 700;
+}
+
+body.nebula-page.players-page .position-filters button:last-child {
+    border-right: 0 !important;
+}
+
+body.nebula-page.players-page .position-filters button:hover,
+body.nebula-page.players-page .position-filters button.active {
+    background: var(--players-acid) !important;
+    color: #05070a !important;
+    transform: none !important;
+}
+
+body.nebula-page.players-page .sort-toggle {
+    display: flex !important;
+    min-width: 0 !important;
+    min-height: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin: 0 !important;
+    padding: 22px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #0b1117 !important;
+    box-shadow: none !important;
+    color: #f2f5f7 !important;
+    text-align: left;
+}
+
+.sort-toggle>span:first-child {
+    display: grid;
+    gap: 5px;
+}
+
+.sort-toggle small {
+    color: #65717b;
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+}
+
+.sort-toggle strong {
+    font-family: var(--display);
+    font-size: 0.72rem;
 }
 
 .sort-arrow {
-    font-size: 1rem;
-    transition: transform 0.25s ease;
+    color: var(--players-cyan);
+    font-family: var(--display);
+    font-size: 1.4rem;
 }
 
-.players-count {
-    text-align: center;
-    color: #b0b0b0;
-    font-size: 0.9rem;
-    margin: 14px 0 0;
+body.nebula-page.players-page .sort-toggle:hover {
+    background: rgba(99, 231, 255, 0.08) !important;
+    transform: none !important;
 }
 
-/* ---- Badge du club en filigrane sur la carte ---- */
-.player-card img.card-club-badge {
-    position: absolute !important;
-    top: 10px !important;
-    right: 10px !important;
-    left: auto !important;
-    width: 42px !important;
-    height: 42px !important;
+.players-results {
+    margin-top: 28px;
+}
+
+.results-topline {
+    display: flex;
+    min-height: 72px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--players-line);
+}
+
+.results-topline>div {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.results-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--players-acid);
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+.results-live i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--players-acid);
+    box-shadow: 0 0 8px var(--players-acid);
+}
+
+body.nebula-page.players-page .players-count {
     margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: #737e88 !important;
+    font-family: var(--mono);
+    font-size: 0.63rem !important;
+    text-align: left !important;
 }
 
-.card-club-name {
-    font-size: 0.85rem;
-    color: #c9c9c9;
-    margin: 2px 0 6px;
+body.nebula-page.players-page .reset-filters {
+    padding: 8px 0 !important;
+    border: 0 !important;
+    border-bottom: 1px solid #47515a !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #77818a !important;
+    font-family: var(--mono) !important;
+    font-size: 0.56rem !important;
+    font-weight: 700;
+    letter-spacing: 0.08em;
 }
 
-/* ---- Avatar + pastille de poste ---- */
-.avatar-wrap {
+body.nebula-page.players-page .reset-filters:hover {
+    border-color: var(--players-acid) !important;
+    color: var(--players-acid) !important;
+    transform: none !important;
+}
+
+body.nebula-page.players-page .cards-container {
+    display: grid !important;
+    width: 100% !important;
+    max-width: none !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+    gap: 1px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: var(--players-line);
+}
+
+body.nebula-page.players-page .player-card {
+    --club-accent: var(--players-cyan);
     position: relative;
-    display: inline-block;
+    display: grid !important;
+    width: 100% !important;
+    min-width: 0;
+    grid-template-rows: auto minmax(270px, 1fr) auto;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #080c11 !important;
+    box-shadow: none !important;
+    color: #edf1f3 !important;
+    text-align: left !important;
+    opacity: 0;
+    transform: translateY(22px);
+    animation: playerFileIn 0.55s ease forwards;
+}
+
+body.nebula-page.players-page .player-card::before {
+    position: absolute;
+    z-index: 6;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 2px;
+    content: "";
+    background: var(--club-accent);
+    opacity: 0.72;
+    transform: scaleX(0.25);
+    transform-origin: left;
+    transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+body.nebula-page.players-page .player-card:hover {
+    background: #0b1117 !important;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--club-accent), transparent 50%) !important;
+    transform: translateY(-5px) !important;
+}
+
+body.nebula-page.players-page .player-card:hover::before {
+    opacity: 1;
+    transform: scaleX(1);
+}
+
+.player-file-topline {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    min-height: 43px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--players-line);
+    color: #58636d;
+    font-family: var(--mono);
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+.player-file-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--club-accent);
+}
+
+.player-file-status i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--club-accent);
+    box-shadow: 0 0 8px var(--club-accent);
+}
+
+.player-card-visual {
+    position: relative;
+    min-height: 270px;
+    overflow: hidden;
+    background: #090d12;
+}
+
+body.nebula-page.players-page .player-card img.player-avatar {
+    position: absolute !important;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    object-fit: cover;
+    object-position: center 24%;
+    filter: saturate(0.72) contrast(1.06);
+    box-shadow: none !important;
+    transition: filter 0.45s ease, transform 0.55s ease;
+}
+
+body.nebula-page.players-page .player-card:hover img.player-avatar {
+    border: 0 !important;
+    filter: saturate(1) contrast(1.03);
+    transform: scale(1.035);
+}
+
+.player-card-visual::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background:
+        linear-gradient(180deg, transparent 40%, rgba(5, 7, 10, 0.25) 64%, #080c11 100%),
+        linear-gradient(90deg, color-mix(in srgb, var(--club-accent), transparent 86%), transparent 45%);
+    pointer-events: none;
+}
+
+.player-index {
+    position: absolute;
+    z-index: 2;
+    right: 13px;
+    bottom: -8px;
+    color: rgba(255, 255, 255, 0.09);
+    font-family: var(--display);
+    font-size: clamp(4rem, 8vw, 7rem);
+    font-weight: 900;
+    letter-spacing: -0.08em;
+    line-height: 1;
+}
+
+body.nebula-page.players-page .player-card img.card-club-badge {
+    position: absolute !important;
+    z-index: 3;
+    top: 15px !important;
+    right: 15px !important;
+    left: auto !important;
+    width: 48px !important;
+    height: 48px !important;
+    margin: 0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 0 !important;
+    background: rgba(5, 7, 10, 0.72);
+    object-fit: contain;
+    padding: 8px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35) !important;
 }
 
 .position-pill {
     position: absolute;
-    bottom: -4px;
-    right: -4px;
-    background: linear-gradient(135deg, #a600ff, #b41ce6);
-    color: rgb(0, 0, 0);
-    font-size: 0.7rem;
-    font-weight: 800;
-    padding: 3px 8px;
-    border-radius: 20px;
-    border: 2px solid rgba(10, 10, 10, 0.9);
-    box-shadow: 0 0 8px rgba(180, 28, 255, 0.6);
-}
-
-/* Avant-centre */
-.position-cf {
-    background: linear-gradient(135deg, #ff3b3b, #d60000);
-    box-shadow: 0 0 8px rgba(255, 59, 59, 0.7);
-}
-
-/* Milieu */
-.position-cm {
-    background: linear-gradient(135deg, #15ff00, #7bff00);
-    box-shadow: 0 0 8px rgba(43, 255, 0, 0.7);
-}
-
-/* Ailier droit */
-.position-rw {
-    background: linear-gradient(135deg, #fbff00, #ffe600);
-    box-shadow: 0 0 8px rgba(255, 230, 0, 0.7);
-}
-
-/* Ailier gauche */
-.position-lw {
-    background: linear-gradient(135deg, #007ed2, #005c99);
-    box-shadow: 0 0 8px rgba(0, 126, 210, 0.7);
-}
-
-/* ---- État vide ---- */
-.empty-state {
-    grid-column: 1 / -1;
+    z-index: 3;
+    bottom: 15px;
+    left: 15px;
+    min-width: 42px;
+    padding: 7px 10px;
+    border: 1px solid color-mix(in srgb, var(--club-accent), white 18%);
+    background: var(--club-accent);
+    color: #05070a;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
     text-align: center;
-    padding: 60px 20px;
-    color: #b0b0b0;
 }
 
-.empty-state-icon {
-    font-size: 2.5rem;
-    margin-bottom: 12px;
-    opacity: 0.7;
+.player-card-body {
+    position: relative;
+    z-index: 3;
+    padding: 19px 19px 0;
 }
 
-.empty-state-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #d89aff;
-    margin: 0 0 6px;
+.player-card-club {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--club-accent);
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
 }
 
-.empty-state-sub {
-    font-size: 0.9rem;
-    margin: 0;
+body.nebula-page.players-page .player-card h3 {
+    margin: 0 !important;
+    overflow: hidden;
+    color: #f4f7f9 !important;
+    font-size: clamp(1.25rem, 2vw, 1.8rem);
+    letter-spacing: -0.045em;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
 }
 
-@media (max-width: 700px) {
-    .players-toolbar {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .sort-toggle {
-        justify-content: center;
-    }
+.player-card-data {
+    display: grid;
+    grid-template-columns: 0.72fr 1.28fr;
+    margin-top: 19px;
+    border-top: 1px solid var(--players-line);
+    border-bottom: 1px solid var(--players-line);
 }
 
-/* Ajoutez à players.css */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
+.player-card-data>div {
+    display: grid;
+    min-width: 0;
+    min-height: 70px;
+    align-content: center;
+    gap: 7px;
+    padding: 10px 13px;
+    border-right: 1px solid var(--players-line);
+}
 
+.player-card-data>div:last-child {
+    border-right: 0;
+}
+
+.player-card-data small {
+    color: #5e6973;
+    font-family: var(--mono);
+    font-size: 0.53rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.player-card-data strong {
+    overflow: hidden;
+    color: #dfe4e7;
+    font-family: var(--display);
+    font-size: 0.72rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.player-card-data .market-value {
+    color: var(--players-acid);
+}
+
+.player-card-cta {
+    display: flex;
+    min-height: 57px;
+    align-items: center;
+    justify-content: space-between;
+    color: #929ca5;
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+}
+
+.player-card-cta i {
+    color: var(--club-accent);
+    font-size: 1rem;
+    font-style: normal;
+    transition: transform 0.25s ease;
+}
+
+.player-card:hover .player-card-cta {
+    color: #f4f7f9;
+}
+
+.player-card:hover .player-card-cta i {
+    transform: translate(3px, -3px);
+}
+
+@keyframes playerFileIn {
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-.player-card {
-    animation: fadeInUp 0.5s ease forwards;
-    opacity: 0;
+.empty-state {
+    grid-column: 1 / -1;
+    display: grid;
+    min-height: 360px;
+    place-items: center;
+    padding: 45px;
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        var(--players-surface);
+    background-size: 42px 42px;
+    text-align: center;
 }
 
-/* Délai progressif pour chaque carte */
-.player-card:nth-child(1) {
-    animation-delay: 0.1s;
+.empty-state-inner {
+    max-width: 440px;
 }
 
-.player-card:nth-child(2) {
-    animation-delay: 0.2s;
+.empty-state-code {
+    color: var(--players-acid);
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
 }
 
-.player-card:nth-child(3) {
-    animation-delay: 0.3s;
+.empty-state-title {
+    margin: 14px 0 8px;
+    color: #eef2f4;
+    font-family: var(--display);
+    font-size: 1.3rem;
 }
 
-.player-card:nth-child(4) {
-    animation-delay: 0.4s;
+.empty-state-sub {
+    margin: 0;
+    color: #79848e;
+    font-size: 0.8rem;
+    line-height: 1.6;
 }
 
-.player-card:nth-child(5) {
-    animation-delay: 0.5s;
-}
-
-/* Continuez selon le besoin */
-
-/* Ajoutez à players.css */
-/* Style de base pour toutes les images */
-.player-card img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-bottom: 10px;
-    border: 2px solid transparent;
-    transition: 0.3s ease;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-}
-
-/* Effets spécifiques selon le club */
-.bastard img {
-    box-shadow: 0 0 10px rgba(255, 28, 28, 0.3);
-}
-
-.pxg img {
-    box-shadow: 0 0 10px rgba(28, 31, 255, 0.3);
-}
-
-.ubers img {
-    box-shadow: 0 0 10px rgba(43, 255, 0, 0.3);
-}
-
-.barcha img {
-    box-shadow: 0 0 10px rgba(255, 221, 0, 0.3);
-}
-
-.manshine img {
-    box-shadow: 0 0 10px rgba(0, 200, 255, 0.3);
-}
-
-.retraite img {
-    box-shadow: 0 0 10px rgba(200, 0, 255, 0.3);
-}
-
-/* Effets au survol selon le club */
-.bastard:hover img {
-    border-color: #ff0000;
-    box-shadow: 0 0 20px rgba(255, 28, 28, 0.7);
-    transform: scale(1.1);
-}
-
-.pxg:hover img {
-    border-color: #001eff;
-    box-shadow: 0 0 20px rgba(28, 31, 255, 0.7);
-    transform: scale(1.1);
-}
-
-.ubers:hover img {
-    border-color: #2bff00;
-    box-shadow: 0 0 20px rgba(43, 255, 0, 0.7);
-    transform: scale(1.1);
-}
-
-.barcha:hover img {
-    border-color: #ffdd00;
-    box-shadow: 0 0 20px rgba(255, 221, 0, 0.7);
-    transform: scale(1.1);
-}
-
-.manshine:hover img {
-    border-color: #00c8ff;
-    box-shadow: 0 0 20px rgba(0, 200, 255, 0.7);
-    transform: scale(1.1);
-}
-
-.retraite:hover img {
-    border-color: #c800ff;
-    box-shadow: 0 0 20px rgba(200, 0, 255, 0.7);
-    transform: scale(1.1);
-}
-
-/* Style pour le prix - seulement le nombre */
-.player-card p:last-child {
-    font-weight: bold;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-}
-
-/* Effet "bling" seulement sur le nombre */
-.price-number {
-    background: linear-gradient(90deg, #8afffd, #fff, #8afffd);
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: shimmer 2s infinite linear;
-}
-
-/* Animation du shimmer */
-@keyframes shimmer {
-    0% {
-        background-position: -200% 0;
+@media (max-width: 1180px) {
+    .players-intro {
+        grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
     }
 
-    100% {
-        background-position: 200% 0;
+    body.nebula-page.players-page .players-toolbar {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    body.nebula-page.players-page .sort-toggle {
+        min-height: 98px;
+    }
+
+    body.nebula-page.players-page .cards-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     }
 }
 
-/* Pour les valeurs à 0 */
-.price-number.zero-value {
-    color: #888 !important;
-    animation: none !important;
-    background: none !important;
-    -webkit-background-clip: unset !important;
-    background-clip: unset !important;
-}
-
-.price-number.zero-value::after {
-    content: " (Sans valeur)";
-    font-size: 0.8em;
-    color: #ff6b6b;
-}
-
-@keyframes shimmer {
-    0% {
-        background-position: -200% 0;
+@media (max-width: 820px) {
+    .players-intro {
+        width: calc(100% - 32px);
+        grid-template-columns: 1fr;
     }
 
-    100% {
-        background-position: 200% 0;
+    .players-intro::after {
+        display: none;
+    }
+
+    .players-hero-copy {
+        padding: 76px 28px 46px;
+    }
+
+    body.nebula-page.players-page .players-intro h1 {
+        font-size: clamp(3.1rem, 12vw, 5rem);
+    }
+
+    .players-scan {
+        min-height: 430px;
+        border-top: 1px solid var(--players-line);
+    }
+
+    .scan-orbit {
+        width: min(72vw, 370px);
+    }
+
+    body.nebula-page.players-page .players-registry {
+        width: calc(100% - 32px) !important;
+        padding-top: 72px !important;
+    }
+
+    .players-section-heading {
+        grid-template-columns: 78px 1fr;
+    }
+
+    .players-section-heading>p {
+        grid-column: 1 / -1;
+        padding: 16px 22px;
+        border-top: 1px solid var(--players-line);
+        border-left: 0;
+    }
+}
+
+@media (max-width: 620px) {
+    .players-intro {
+        width: calc(100% - 20px);
+    }
+
+    .players-hero-copy {
+        padding: 66px 20px 38px;
+    }
+
+    .players-hero-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .players-hero-stats>div {
+        min-height: 76px;
+        border-right: 0;
+        border-bottom: 1px solid var(--players-line);
+    }
+
+    .players-hero-stats>div:last-child {
+        border-bottom: 0;
+    }
+
+    body.nebula-page.players-page .players-registry {
+        width: calc(100% - 20px) !important;
+    }
+
+    .players-section-heading {
+        grid-template-columns: 62px 1fr;
+    }
+
+    .players-section-heading>div {
+        padding: 18px;
+    }
+
+    body.nebula-page.players-page .players-toolbar {
+        grid-template-columns: 1fr;
+    }
+
+    body.nebula-page.players-page .sort-toggle {
+        min-height: 82px;
+    }
+
+    .position-filters {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .results-topline {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .results-topline>div {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    body.nebula-page.players-page .cards-container {
+        grid-template-columns: 1fr !important;
+    }
+
+    body.nebula-page.players-page .player-card {
+        grid-template-rows: auto minmax(310px, 1fr) auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .scan-orbit,
+    body.nebula-page.players-page .player-card {
+        animation: none;
+    }
+
+    body.nebula-page.players-page .player-card {
+        opacity: 1;
+        transform: none;
     }
 }

@@ -1,98 +1,246 @@
-// Ordre des paliers = ordre des <option> du select #typeMatch
-const TIER_VALUES = ["0.5", "1", "2", "3", "4"];
+const VALUE_TIERS = [
+    { key: "amical", label: "Amical", shortLabel: "AMICAL", multiplier: 0.5, victory: 2500000 },
+    { key: "ligue", label: "Ligue", shortLabel: "LIGUE", multiplier: 1, victory: 5000000 },
+    { key: "ncl", label: "NCL", shortLabel: "NCL", multiplier: 2, victory: 10000000 },
+    { key: "third", label: "3ᵉ Place", shortLabel: "3ᵉ PLACE", multiplier: 3, victory: 15000000 },
+    { key: "finale", label: "Finale NCL", shortLabel: "FINALE", multiplier: 4, victory: 20000000 }
+];
 
-function calculValeur() {
-    const type = Number(document.getElementById("typeMatch").value);
+const VALUE_ACTIONS = [
+    { key: "victoire", code: "WIN", label: "Victoire", base: 0 },
+    { key: "buts", code: "GLS", label: "But", base: 1500000 },
+    { key: "passes", code: "AST", label: "Passe décisive", base: 1000000 },
+    { key: "def", code: "DEF", label: "Défense", base: 200000 },
+    { key: "dribbles", code: "DRB", label: "Dribble", base: 200000 },
+    { key: "mvp", code: "MVP", label: "MVP", base: 10000000 }
+];
 
-    const victoire = Number(document.getElementById("victoire").value); // 0 ou 1
-    const buts = Number(document.getElementById("buts").value);
-    const passes = Number(document.getElementById("passes").value);
-    const def = Number(document.getElementById("def").value);
-    const dribbles = Number(document.getElementById("dribbles").value);
-    const mvp = Number(document.getElementById("mvp").value);
+const VALUE_BONUSES = [
+    { code: "PSK", label: "Prix Puskás", value: 50000000 },
+    { code: "NCL", label: "Trophée NCL", value: 100000000 },
+    { code: "GSH", label: "Golden Shoe", value: 150000000 },
+    { code: "BDO", label: "Ballon d’Or", value: 250000000, premium: true }
+];
 
-    // Gains de base (par action) pour un match AMICAL
-    const base = {
-        but: 1500000,
-        passe: 1000000,
-        def: 200000,
-        dribbles: 200000,
-        mvp: 10000000
-    };
+const MARKET_CLUB_COLORS = Object.fromEntries([
+    ...(window.NEBULA_DATA?.clubs || []),
+    ...Object.values(window.NEBULA_DATA?.groups || {})
+].map(club => [club.key, club.color]));
 
-    // Gains de victoire fixes selon type (ne pas confondre avec multiplicateur)
-    const victoireGainByType = {
-        0.5: 2500000,
-        1: 5000000,
-        2: 10000000,
-        3: 15000000,
-        4: 20000000
-    };
+function formatCredits(value) {
+    return `${Math.round(value).toLocaleString("fr-FR")} ¥`;
+}
 
-    let total =
-        (buts * base.but * type) +
-        (passes * base.passe * type) +
-        (def * base.def * type) +
-        (dribbles * base.dribbles * type) +
-        (mvp * base.mvp * type);
-
-    if (victoire === 1) {
-        const gainVictoire = victoireGainByType[type] || 0;
-        total += gainVictoire;
+function formatCompactCredits(value) {
+    if (value >= 1000000000) {
+        return `${(value / 1000000000).toLocaleString("fr-FR", { maximumFractionDigits: 2 })} B ¥`;
     }
-
-    document.getElementById("resultValeur").textContent =
-        total.toLocaleString("en-US") + "¥";
+    if (value >= 1000000) {
+        return `${(value / 1000000).toLocaleString("fr-FR", { maximumFractionDigits: 2 })} M ¥`;
+    }
+    if (value >= 1000) {
+        return `${(value / 1000).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} K ¥`;
+    }
+    return `${value} ¥`;
 }
 
-// ------------------------------------------------------------
-// Jauge de multiplicateur (signature visuelle) : place le curseur
-// et remplit la barre en fonction du palier sélectionné.
-// ------------------------------------------------------------
-function updateMeter() {
-    const select = document.getElementById("typeMatch");
-    if (!select) return;
-
-    const idx = TIER_VALUES.indexOf(select.value);
-    const pct = idx === -1 ? 0 : (idx / (TIER_VALUES.length - 1)) * 100;
-
-    const fill = document.getElementById("meterFill");
-    const dot = document.getElementById("meterDot");
-    if (fill) fill.style.width = pct + "%";
-    if (dot) dot.style.left = pct + "%";
-
-    highlightLedgerTier(idx);
-}
-
-// ------------------------------------------------------------
-// Surligne, dans le Grand Livre, la colonne correspondant au palier
-// actuellement sélectionné dans le simulateur.
-// ------------------------------------------------------------
-function highlightLedgerTier(idx) {
-    document.querySelectorAll('[data-tier]').forEach(cell => {
-        const isActive = Number(cell.dataset.tier) === idx;
-        cell.classList.toggle('tier-active', isActive);
-    });
+function tierGain(action, tier) {
+    return action.key === "victoire" ? tier.victory : action.base * tier.multiplier;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    const ranking = document.getElementById("marketRanking");
+    if (!ranking) return;
+
+    const players = window.NEBULA_DATA?.players || [];
     const typeMatch = document.getElementById("typeMatch");
-    if (typeMatch) {
-        typeMatch.addEventListener("change", updateMeter);
-        updateMeter(); // état initial
+    const tierSelector = document.getElementById("tierSelector");
+    const ledgerHead = document.getElementById("ledgerHead");
+    const ledgerBody = document.getElementById("ledgerBody");
+    const bonusGrid = document.getElementById("bonusGrid");
+    const simulator = document.getElementById("valueSimulator");
+
+    function renderMarket() {
+        const sortedPlayers = [...players].sort((a, b) => b.value - a.value);
+        const totalValue = sortedPlayers.reduce((total, player) => total + player.value, 0);
+        const valuedPlayers = sortedPlayers.filter(player => player.value > 0);
+        const leader = sortedPlayers[0];
+        const maximumValue = leader?.value || 1;
+
+        document.getElementById("marketTotal").textContent = formatCompactCredits(totalValue);
+        document.getElementById("valuedProfiles").textContent = String(valuedPlayers.length).padStart(2, "0");
+        document.getElementById("marketProfileCount").textContent =
+            `${String(sortedPlayers.length).padStart(2, "0")} PROFIL${sortedPlayers.length > 1 ? "S" : ""}`;
+
+        if (leader) {
+            document.getElementById("marketLeaderName").textContent = leader.name;
+            document.getElementById("marketLeaderValue").textContent =
+                leader.value > 0 ? formatCredits(leader.value) : "NON COTÉ";
+        }
+
+        ranking.innerHTML = sortedPlayers.map((player, index) => {
+            const accent = MARKET_CLUB_COLORS[player.club] || "#63e7ff";
+            const width = player.value > 0 ? Math.max(4, (player.value / maximumValue) * 100) : 0;
+            const status = player.value > 0 ? "COTÉ" : "NON COTÉ";
+            const href = window.NEBULA_DATA.playerPageHref(player);
+
+            return `
+                <a class="market-player-row" href="${href}" style="--market-accent:${accent};">
+                    <span class="market-rank">${String(index + 1).padStart(2, "0")}</span>
+                    <img src="${player.avatar}" alt="" class="market-player-avatar">
+                    <span class="market-player-identity">
+                        <small>${player.clubName} // ${player.position}</small>
+                        <strong>${player.name}</strong>
+                    </span>
+                    <span class="market-player-progress" aria-hidden="true"><i style="width:${width}%"></i></span>
+                    <span class="market-player-value">
+                        <small>${status}</small>
+                        <strong>${player.value > 0 ? formatCredits(player.value) : "—"}</strong>
+                    </span>
+                    <span class="market-row-arrow">↗</span>
+                </a>
+            `;
+        }).join("");
     }
 
-    document.querySelectorAll(".stepper-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const input = document.getElementById(btn.dataset.target);
-            if (!input) return;
+    function renderTierSelector(activeIndex) {
+        tierSelector.innerHTML = VALUE_TIERS.map((tier, index) => `
+            <button type="button" class="tier-option ${index === activeIndex ? "active" : ""}"
+                data-tier-index="${index}" aria-pressed="${index === activeIndex}">
+                <span>${String(index + 1).padStart(2, "0")}</span>
+                <div><small>${tier.label}</small><strong>×${tier.multiplier}</strong></div>
+            </button>
+        `).join("");
+    }
 
-            const min = Number(input.min) || 0;
-            let value = Number(input.value) || 0;
+    function renderLedger(activeIndex) {
+        ledgerHead.innerHTML = `
+            <tr>
+                <th class="ledger-action-heading">ACTION</th>
+                ${VALUE_TIERS.map((tier, index) => `
+                    <th class="${index === activeIndex ? "active-tier" : ""}">
+                        <span>×${tier.multiplier}</span>${tier.shortLabel}
+                    </th>
+                `).join("")}
+            </tr>
+        `;
 
-            value = btn.classList.contains("stepper-plus") ? value + 1 : Math.max(min, value - 1);
+        ledgerBody.innerHTML = VALUE_ACTIONS.map(action => `
+            <tr>
+                <th><span>${action.code}</span>${action.label}</th>
+                ${VALUE_TIERS.map((tier, index) => `
+                    <td class="${index === activeIndex ? "active-tier" : ""}">${formatCredits(tierGain(action, tier))}</td>
+                `).join("")}
+            </tr>
+        `).join("");
+    }
 
-            input.value = value;
+    function renderBonuses() {
+        bonusGrid.innerHTML = VALUE_BONUSES.map((bonus, index) => `
+            <article class="bonus-file ${bonus.premium ? "premium" : ""}">
+                <span>${String(index + 1).padStart(2, "0")} // ${bonus.code}</span>
+                <strong>${bonus.label}</strong>
+                <small>+${formatCredits(bonus.value)}</small>
+            </article>
+        `).join("");
+    }
+
+    function activeTierIndex() {
+        const index = VALUE_TIERS.findIndex(tier => String(tier.multiplier) === typeMatch.value);
+        return index < 0 ? 0 : index;
+    }
+
+    function updateTierInterface() {
+        const index = activeTierIndex();
+        const tier = VALUE_TIERS[index];
+        const percentage = (index / (VALUE_TIERS.length - 1)) * 100;
+
+        renderTierSelector(index);
+        renderLedger(index);
+        document.getElementById("activeTierLabel").textContent = `${tier.shortLabel} ×${tier.multiplier}`;
+        document.getElementById("meterRate").textContent = `×${tier.multiplier}`;
+        document.getElementById("meterFill").style.width = `${percentage}%`;
+        document.getElementById("meterDot").style.left = `${percentage}%`;
+    }
+
+    function sanitizedValue(id) {
+        const input = document.getElementById(id);
+        const value = Math.max(Number(input.value) || 0, Number(input.min) || 0);
+        input.value = value;
+        return value;
+    }
+
+    function calculValeur() {
+        const tier = VALUE_TIERS[activeTierIndex()];
+        const stats = {
+            victoire: Number(document.getElementById("victoire").value),
+            buts: sanitizedValue("buts"),
+            passes: sanitizedValue("passes"),
+            def: sanitizedValue("def"),
+            dribbles: sanitizedValue("dribbles"),
+            mvp: Number(document.getElementById("mvp").value)
+        };
+
+        const breakdown = VALUE_ACTIONS.map(action => {
+            const quantity = stats[action.key];
+            return {
+                ...action,
+                quantity,
+                total: quantity * tierGain(action, tier)
+            };
+        });
+        const total = breakdown.reduce((sum, item) => sum + item.total, 0);
+
+        document.getElementById("resultValeur").textContent = formatCredits(total);
+        document.getElementById("calculationBreakdown").innerHTML = breakdown.map(item => `
+            <div class="${item.total === 0 ? "inactive" : ""}">
+                <span>${item.code} <small>×${item.quantity}</small></span>
+                <strong>${formatCredits(item.total)}</strong>
+            </div>
+        `).join("");
+    }
+
+    function selectTier(index) {
+        const tier = VALUE_TIERS[index];
+        if (!tier) return;
+        typeMatch.value = String(tier.multiplier);
+        updateTierInterface();
+        calculValeur();
+    }
+
+    tierSelector.addEventListener("click", event => {
+        const button = event.target.closest("[data-tier-index]");
+        if (button) selectTier(Number(button.dataset.tierIndex));
+    });
+
+    typeMatch.addEventListener("change", () => {
+        updateTierInterface();
+        calculValeur();
+    });
+
+    simulator.addEventListener("input", calculValeur);
+    simulator.addEventListener("change", calculValeur);
+
+    document.querySelectorAll(".stepper-btn").forEach(button => {
+        button.addEventListener("click", () => {
+            const input = document.getElementById(button.dataset.target);
+            const minimum = Number(input.min) || 0;
+            const current = Number(input.value) || 0;
+            input.value = button.classList.contains("stepper-plus")
+                ? current + 1
+                : Math.max(minimum, current - 1);
+            calculValeur();
         });
     });
+
+    document.getElementById("resetSimulator").addEventListener("click", () => {
+        simulator.reset();
+        updateTierInterface();
+        calculValeur();
+    });
+
+    renderMarket();
+    renderBonuses();
+    updateTierInterface();
+    calculValeur();
 });

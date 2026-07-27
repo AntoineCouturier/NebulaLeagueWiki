@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#05070a">
   <link rel="icon" type="image/png" href="images/logos/nebula.png">
   <title>Nebula League – Joueurs</title>
   <link rel="stylesheet" href="CSS/style.css">
@@ -12,116 +13,153 @@
   <link rel="stylesheet" href="CSS/global-theme.css">
 </head>
 
-<body>
+<body class="nebula-page players-page">
 
-  <header>
-    <div class="header-container">
-      <!-- Hamburger Menu Button -->
-      <div class="hamburger-menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-
-      <h1>Nebula League – Joueurs</h1>
-      <nav>
-        <ul>
-          <li><a href="index.html">Accueil</a></li>
-          <li><a href="title.html">Persos et Titres</a></li>
-          <li><a href="club.html">Clubs</a></li>
-          <li><a href="players.html" class="active">Joueurs</a></li>
-          <li><a href="valeur.html">Valeurs</a></li>
-          <li><a href="rules.html">Règles Matchs</a></li>
-          <li><a href="stats.html">Records</a></li>
-          <li><a href="matchs.html">Historique de Matchs</a></li>
-          <li><a href="headtohead.html">Face à Face</a></li>
-          <li><a href="saison.html">Historique des Saisons</a></li>
-          <li><a href="fixtures.html">Calendrier des Matchs</a></li>
-          <li>
-            <a href="https://discord.gg/Ab9tFpzm" target="_blank" class="discord-btn">
-              <img src="images/logos/discord.png" alt="Discord Logo" class="discord-logo">
-              Discord
-            </a>
-          </li>
-        </ul>
-      </nav>
+  <header class="site-header" id="top">
+    <a class="brand" href="#top" aria-label="Nebula League, retour en haut">
+      <span class="brand-mark"><span></span></span>
+      <span class="brand-copy"><strong>NEBULA</strong><small>LEAGUE // DATABASE</small></span>
+    </a>
+    <nav class="main-nav" aria-label="Navigation principale">
+      <a href="index.html">Accueil</a>
+      <a href="title.html">Titres</a>
+      <a href="club.html">Clubs</a>
+      <a class="nav-active" href="players.html" aria-current="page">Joueurs</a>
+      <a href="valeur.html">Valeurs</a>
+      <a href="rules.html">Règles</a>
+      <a href="stats.html">Records</a>
+      <a href="matchs.html">Matchs</a>
+      <a href="headtohead.html">Face à face</a>
+      <a href="saison.html">Saisons</a>
+      <a href="fixtures.html">Calendrier</a>
+    </nav>
+    <div class="header-actions">
+      <span class="live-pill"><i></i> SAISON 01</span>
+      <button class="menu-button" type="button" aria-label="Ouvrir le menu"
+        aria-expanded="false"><span></span><span></span></button>
     </div>
   </header>
 
-  <!-- Mobile Navigation Overlay -->
-  <div class="nav-mobile-overlay">
-    <button class="nav-close-btn" aria-label="Close menu">&times;</button>
-    <nav>
-      <ul>
-        <li><a href="index.html">Accueil</a></li>
-        <li><a href="title.html">Persos et Titres</a></li>
-        <li><a href="club.html">Clubs</a></li>
-        <li><a href="players.html" class="active">Joueurs</a></li>
-        <li><a href="valeur.html">Valeurs</a></li>
-        <li><a href="rules.html">Règles Matchs</a></li>
-        <li><a href="stats.html">Records</a></li>
-        <li><a href="matchs.html">Historique de Matchs</a></li>
-        <li><a href="headtohead.html">Face à Face</a></li>
-        <li><a href="saison.html">Historique des Saisons</a></li>
-        <li><a href="fixtures.html">Calendrier des Matchs</a></li>
-      </ul>
-    </nav>
-  </div>
+  <section class="players-intro">
+    <div class="players-hero-copy">
+      <p class="players-kicker"><span>NL–03</span> REGISTRE DES PROFILS</p>
+      <h1>LES JOUEURS<br></h1>
+      <p class="players-hero-text">Explorez les profils enregistrés dans la Nebula League, comparez leur valeur et
+        isolez instantanément une équipe ou un poste.</p>
 
-  <!-- Backdrop for click-outside-to-close -->
-  <div class="nav-backdrop"></div>
-
-  <div class="players-toolbar">
-    <div class="club-dropdown" id="clubDropdown">
-      <button class="dropdown-current" id="dropdownCurrent" type="button">
-        <span class="dropdown-current-content">
-          <span class="dropdown-current-label">Tous les clubs</span>
-        </span>
-        <span class="dropdown-caret">▾</span>
-      </button>
-      <ul class="dropdown-menu" id="dropdownMenu">
-        <li class="dropdown-option active" data-club="all" data-label="Tous les clubs">
-          Tous les clubs
-        </li>
-        <li class="dropdown-option" data-club="bastard" data-label="Bastard Munchen">
-          <img src="images/clubs_icon/Bastard_Munchen.png" class="filter-icon" onerror="this.style.display='none'">
-          Bastard Munchen
-        </li>
-        <li class="dropdown-option" data-club="pxg" data-label="PXG">
-          <img src="images/clubs_icon/PXG.png" class="filter-icon" onerror="this.style.display='none'">
-          PXG
-        </li>
-        <li class="dropdown-option" data-club="ubers" data-label="Ubers">
-          <img src="images/clubs_icon/Ubers.png" class="filter-icon" onerror="this.style.display='none'">
-          Ubers
-        </li>
-        <li class="dropdown-option" data-club="barcha" data-label="Barcha">
-          <img src="images/clubs_icon/Barcha.png" class="filter-icon" onerror="this.style.display='none'">
-          Barcha
-        </li>
-        <li class="dropdown-option" data-club="manshine" data-label="Manshine City">
-          <img src="images/clubs_icon/Manshine_City.png" class="filter-icon" onerror="this.style.display='none'">
-          Manshine City
-        </li>
-        <li class="dropdown-option" data-club="retraite" data-label="Retraite">
-          Retraite
-        </li>
-      </ul>
+      <div class="players-hero-stats" aria-label="Statistiques des joueurs">
+        <div><strong id="playersTotal">00</strong><span>Profils indexés</span></div>
+        <div><strong id="playersValue">0</strong><span>Valeur cumulée</span></div>
+      </div>
     </div>
 
-    <button class="sort-toggle" id="sortToggle" data-order="desc" aria-label="Trier par valeur">
-      <span class="sort-label">Valeur</span>
-      <span class="sort-arrow">↓</span>
-    </button>
-  </div>
+    <aside class="players-scan" aria-label="Profil ayant la valeur la plus élevée">
+      <div class="scan-orbit" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="scan-readout">
+        <span>TOP MARKET PROFILE</span>
+        <strong id="featuredPlayerName">—</strong>
+        <small id="featuredPlayerValue">0 ¥</small>
+      </div>
+      <p><span></span> DATABASE ONLINE</p>
+    </aside>
+  </section>
 
-  <p class="players-count" id="playersCount"></p>
+  <main class="players-registry">
+    <section class="registry-console">
+      <div class="players-section-heading">
+        <span class="section-index">01</span>
+        <div><small>RECHERCHE MULTI-CRITÈRES</small>
+          <h2>CONSOLE DE SÉLECTION</h2>
+        </div>
+        <p>Filtrez les profils par identité, club ou rôle sur le terrain.</p>
+      </div>
 
-  <main class="cards-container" id="playersContainer"></main>
+      <div class="players-toolbar">
+        <label class="player-search" for="playerSearch">
+          <span>RECHERCHER UN JOUEUR</span>
+          <span class="search-input-wrap"><i aria-hidden="true"></i>
+            <input id="playerSearch" type="search" placeholder="Nom ou club…" autocomplete="off">
+          </span>
+        </label>
+
+        <div class="club-filter-block">
+          <span>FILTRER PAR CLUB</span>
+          <div class="club-dropdown" id="clubDropdown">
+            <button class="dropdown-current" id="dropdownCurrent" type="button" aria-expanded="false"
+              aria-controls="dropdownMenu">
+              <span class="dropdown-current-content">
+                <span class="dropdown-current-label">Tous les clubs</span>
+              </span>
+              <span class="dropdown-caret">＋</span>
+            </button>
+            <div class="dropdown-menu" id="dropdownMenu" role="listbox">
+              <button type="button" class="dropdown-option active" data-club="all" data-label="Tous les clubs"
+                role="option" aria-selected="true">Tous les clubs</button>
+              <button type="button" class="dropdown-option" data-club="bastard" data-label="Bastard Munchen"
+                role="option" aria-selected="false">
+                <img loading="lazy" src="images/clubs_icon/Bastard_Munchen.png" class="filter-icon" alt=""
+                  onerror="this.style.display='none'">Bastard Munchen
+              </button>
+              <button type="button" class="dropdown-option" data-club="pxg" data-label="PXG" role="option"
+                aria-selected="false">
+                <img loading="lazy" src="images/clubs_icon/PXG.png" class="filter-icon" alt=""
+                  onerror="this.style.display='none'">PXG
+              </button>
+              <button type="button" class="dropdown-option" data-club="ubers" data-label="Ubers" role="option"
+                aria-selected="false">
+                <img loading="lazy" src="images/clubs_icon/Ubers.png" class="filter-icon" alt=""
+                  onerror="this.style.display='none'">Ubers
+              </button>
+              <button type="button" class="dropdown-option" data-club="barcha" data-label="Barcha" role="option"
+                aria-selected="false">
+                <img loading="lazy" src="images/clubs_icon/Barcha.png" class="filter-icon" alt=""
+                  onerror="this.style.display='none'">Barcha
+              </button>
+              <button type="button" class="dropdown-option" data-club="manshine" data-label="Manshine City"
+                role="option" aria-selected="false">
+                <img loading="lazy" src="images/clubs_icon/Manshine_City.png" class="filter-icon" alt=""
+                  onerror="this.style.display='none'">Manshine City
+              </button>
+              <button type="button" class="dropdown-option" data-club="retraite" data-label="Retraite" role="option"
+                aria-selected="false">Retraite</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="position-filter-block">
+          <span>FILTRER PAR POSTE</span>
+          <div class="position-filters" id="positionFilters">
+            <button type="button" class="position-filter-tab active" data-position="all"
+              aria-pressed="true">TOUS</button>
+            <button type="button" class="position-filter-tab" data-position="CF" aria-pressed="false">CF</button>
+            <button type="button" class="position-filter-tab" data-position="LW" aria-pressed="false">LW</button>
+            <button type="button" class="position-filter-tab" data-position="RW" aria-pressed="false">RW</button>
+            <button type="button" class="position-filter-tab" data-position="CM" aria-pressed="false">CM</button>
+          </div>
+        </div>
+
+        <button class="sort-toggle" id="sortToggle" data-order="desc" aria-label="Trier par valeur décroissante">
+          <span><small>TRI ACTIF</small><strong>VALEUR</strong></span>
+          <span class="sort-arrow">↓</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="players-results">
+      <div class="results-topline">
+        <div><span class="results-live"><i></i> REGISTRE ACTIF</span>
+          <p class="players-count" id="playersCount"></p>
+        </div>
+        <button type="button" class="reset-filters" id="resetFilters">RÉINITIALISER LES FILTRES</button>
+      </div>
+      <div class="cards-container" id="playersContainer"></div>
+    </section>
+  </main>
 
 
 
-  <script src="JavaScript/players.js"></script>
+<script src="JavaScript/nebula-data.js"></script>
+<script src="JavaScript/players.js"></script>
   <script src="JavaScript/hamburger.js"></script>
 
 </body>
