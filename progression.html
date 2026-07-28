@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05070a">
+    <meta name="description" content="Évolution et progression des joueurs de la Nebula League.">
+    <link rel="icon" type="image/png" href="images/logos/nebula.png">
+    <title>Progression des joueurs — Nebula League</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="CSS/hamburger.css">
+    <link rel="stylesheet" href="CSS/global-theme.css">
+    <link rel="stylesheet" href="CSS/legacy-pages.css">
+</head>
+
+<body class="nebula-page legacy-page progression-page">
+    <header class="site-header" id="top">
+        <a class="brand" href="index.html"><span class="brand-mark"><span></span></span><span
+                class="brand-copy"><strong>NEBULA</strong><small>LEAGUE // DATABASE</small></span></a>
+        <nav class="main-nav" aria-label="Navigation principale">
+            <a href="index.html">Accueil</a><a href="title.html">Titres</a><a href="club.html">Clubs</a>
+            <a href="players.html">Joueurs</a><a href="matchs.html">Matchs</a><a href="saison.html">Saisons</a>
+            <a href="fixtures.html">Calendrier</a><a href="headtohead.html">Face à Face</a>
+            <a href="valeur.html">Valeurs</a><a href="rules.html">Règles</a><a href="stats.html">Records</a>
+            <a class="nav-active" aria-current="page" href="progression.html">Progression</a>
+            <a href="hall-of-fame.html">Hall of Fame</a>
+            <a href="dream-team.html">Équipes Idéales</a>
+        </nav>
+        <div class="header-actions"><span class="live-pill"><i></i> SAISON 01</span><button class="menu-button"
+                type="button" aria-label="Ouvrir le menu" aria-expanded="false"><span></span><span></span></button></div>
+    </header>
+
+    <main class="legacy-shell">
+        <section class="legacy-hero">
+            <div class="legacy-hero-copy">
+                <p class="legacy-kicker"><span>NL—11</span> TRAJECTOIRES INDIVIDUELLES</p>
+                <h1>CHAQUE MATCH<br><em>LAISSE UNE MARQUE.</em></h1>
+                <p>Observe l’évolution d’un joueur, son impact cumulé, sa valeur et les performances qui ont changé sa
+                    trajectoire.</p>
+            </div>
+            <div class="legacy-hero-signal progression-signal" aria-hidden="true">
+                <i></i><i></i><i></i><i></i><i></i><strong>↗</strong>
+            </div>
+        </section>
+
+        <section class="progress-selector">
+            <div class="progress-selector-head">
+                <span>01</span>
+                <div><small>PROTOCOLE DE SÉLECTION</small>
+                    <h2>CHOISIR UNE TRAJECTOIRE</h2>
+                </div>
+                <label><span>PÉRIODE ANALYSÉE</span><select id="progressSeason"></select></label>
+            </div>
+
+            <div class="progress-selection-slot" id="progressSelectionSlot"></div>
+
+            <div class="progress-entity-head">
+                <p>JOUEURS DISPONIBLES</p>
+                <div>
+                    <small>CLIQUEZ SUR UN PROFIL POUR CHARGER SON DOSSIER</small>
+                    <button type="button" id="progressReset">RÉINITIALISER</button>
+                </div>
+            </div>
+            <div class="progress-player-grid" id="progressPlayerGrid"></div>
+        </section>
+
+        <section id="progressProfile" class="progress-profile"></section>
+
+        <section class="legacy-panel" id="progressChartPanel" hidden>
+            <div class="legacy-panel-title"><span>02</span>
+                <div><small>COURBE CUMULÉE</small>
+                    <h2>TRAJECTOIRE DE VALEUR</h2>
+                </div>
+                <p id="progressChartCaption">Valeur générée par les performances enregistrées.</p>
+            </div>
+            <div class="progress-chart" id="progressChart"></div>
+        </section>
+
+        <section class="legacy-panel" id="progressTimelinePanel" hidden>
+            <div class="legacy-panel-title"><span>03</span>
+                <div><small>JOURNAL D’IMPACT</small>
+                    <h2>MATCH PAR MATCH</h2>
+                </div>
+                <p>Les entrées les plus récentes apparaissent en premier.</p>
+            </div>
+            <div class="progress-timeline" id="progressTimeline"></div>
+        </section>
+
+        <nav class="legacy-crosslinks" aria-label="Autres archives">
+            <a href="hall-of-fame.html"><span>ARCHIVES ABSOLUES</span><strong>HALL OF FAME</strong><i>↗</i></a>
+            <a href="dream-team.html"><span>SÉLECTION AUTOMATIQUE</span><strong>ÉQUIPES IDÉALES</strong><i>↗</i></a>
+        </nav>
+    </main>
+
+    <script src="JavaScript/nebula-data.js"></script>
+    <script src="JavaScript/progression.js"></script>
+    <script src="JavaScript/hamburger.js"></script>
+</body>
+
+</html>

@@ -328,6 +328,10 @@ body.nebula-page.fixtures-page :is(.indexed-section-head,
     color: var(--fixture-red);
 }
 
+.next-fixture-topline b.is-finale {
+    color: var(--fixture-violet);
+}
+
 .next-fixture-stage {
     margin: 0;
     padding: 20px 20px 0;
@@ -989,6 +993,13 @@ body.nebula-page.fixtures-page .calendar-header {
     background: var(--fixture-acid);
 }
 
+.calendar-day-signals i.is-finale,
+.legend-dot.is-finale,
+.milestone-breakdown i.is-finale {
+    color: var(--fixture-violet);
+    background: var(--fixture-violet);
+}
+
 .calendar-legend {
     display: flex;
     flex-wrap: wrap;
@@ -1069,6 +1080,7 @@ body.nebula-page.fixtures-page .fixture-list-head {
 }
 
 .fixture-card {
+    --fixture-category: var(--fixture-cyan);
     position: relative;
     display: grid;
     grid-template-columns: 86px minmax(0, 1fr);
@@ -1089,20 +1101,26 @@ body.nebula-page.fixtures-page .fixture-list-head {
     bottom: 0;
     left: 0;
     width: 2px;
-    background: var(--fixture-cyan);
+    background: var(--fixture-category);
     content: "";
+    box-shadow: 0 0 13px color-mix(in srgb, var(--fixture-category), transparent 40%);
 }
 
-.fixture-card.is-ncl::before {
-    background: var(--fixture-red);
+.fixture-card.is-ncl {
+    --fixture-category: var(--fixture-red);
 }
 
-.fixture-card.is-amical::before {
-    background: var(--fixture-acid);
+.fixture-card.is-amical {
+    --fixture-category: var(--fixture-acid);
+}
+
+.fixture-card.is-finale {
+    --fixture-category: var(--fixture-violet);
 }
 
 .fixture-card:hover {
-    background: rgba(89, 231, 255, 0.035);
+    border-color: color-mix(in srgb, var(--fixture-category), transparent 58%);
+    background: color-mix(in srgb, var(--fixture-category), transparent 96%);
 }
 
 .fixture-card-rail {
@@ -1183,6 +1201,10 @@ body.nebula-page.fixtures-page .fixture-list-head {
 
 .fixture-category-tag.is-amical {
     color: var(--fixture-acid);
+}
+
+.fixture-category-tag.is-finale {
+    color: var(--fixture-violet);
 }
 
 .fixture-versus {
@@ -1608,6 +1630,15 @@ body.nebula-page.fixtures-page .fixture-modal-head {
 
 .fixture-modal-summary.is-ncl::before {
     background: var(--fixture-red);
+}
+
+.fixture-modal-summary.is-amical::before {
+    background: var(--fixture-acid);
+}
+
+.fixture-modal-summary.is-finale::before {
+    background: var(--fixture-violet);
+    box-shadow: 0 0 15px color-mix(in srgb, var(--fixture-violet), transparent 35%);
 }
 
 .fixture-modal-date {

@@ -588,7 +588,7 @@ body.nebula-page.players-page .dropdown-option.active {
 .position-filters {
     display: grid;
     min-height: 54px;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     border: 1px solid #303944;
 }
 
@@ -1159,7 +1159,8 @@ body.nebula-page.players-page .player-card h3 {
     }
 
     .position-filters {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        min-height: 108px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
     .results-topline {

@@ -109,8 +109,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }).format(parseDate(dateString)).replace(".", "").toUpperCase();
     }
 
-    function categoryClass(category) {
+    function isNclFinal(match) {
+        if (!match || typeof match !== "object" || match.category !== "ncl") return false;
+        const stage = String(match.stage || "").trim().toLowerCase();
+        return String(match.valueTier || "").toLowerCase() === "finale" || stage === "finale";
+    }
+
+    function visualCategory(match) {
+        return isNclFinal(match) ? "finale" : match.category;
+    }
+
+    function categoryClass(categoryOrMatch) {
+        const category = typeof categoryOrMatch === "object"
+            ? visualCategory(categoryOrMatch)
+            : categoryOrMatch;
         return `is-${category}`;
+    }
+
+    function categoryLabel(match) {
+        return isNclFinal(match) ? "FINALE NCL" : CATEGORY_LABELS[match.category];
     }
 
     function getBaseFilteredFixtures() {
@@ -166,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
         dom.nextMatch.innerHTML = `
             <div class="next-fixture-topline">
                 <span>PROCHAINE TRANSMISSION</span>
-                <b class="${categoryClass(nextFixture.category)}">${CATEGORY_LABELS[nextFixture.category]}</b>
+                <b class="${categoryClass(nextFixture)}">${categoryLabel(nextFixture)}</b>
             </div>
             <p class="next-fixture-stage">${escapeHtml(nextFixture.stage)}</p>
             <div class="next-fixture-matchup">
@@ -264,7 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const upcomingCategories = [...new Set(
                 dayMatches
                     .filter(match => match.status !== "finished")
-                    .map(match => match.category)
+                    .map(match => visualCategory(match))
             )];
             const isCurrentMonth = cellDate.getMonth() === month;
             const isSelected = selectedDate === key;
@@ -343,7 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
             : `<strong>${escapeHtml(match.time)}</strong><small>HEURE LOCALE</small>`;
 
         return `
-            <article class="fixture-card ${categoryClass(match.category)}">
+            <article class="fixture-card ${categoryClass(match)}">
                 <div class="fixture-card-rail">
                     <span>${String(index + 1).padStart(2, "0")}</span>
                     <b>${String(date.getDate()).padStart(2, "0")}</b>
@@ -351,8 +368,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <div class="fixture-card-main">
                     <header class="fixture-card-meta">
-                        <span class="fixture-category-tag ${categoryClass(match.category)}">
-                            ${CATEGORY_LABELS[match.category]}
+                        <span class="fixture-category-tag ${categoryClass(match)}">
+                            ${categoryLabel(match)}
                         </span>
                         <span>${escapeHtml(match.stage)}</span>
                         <time datetime="${escapeHtml(match.date)}T${escapeHtml(match.time)}">
@@ -433,9 +450,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!match) return;
 
         const isFinished = match.status === "finished";
-        dom.modalTitle.textContent = `${CATEGORY_LABELS[match.category]} // ${match.stage.toUpperCase()}`;
+        dom.modalTitle.textContent = `${categoryLabel(match)} // ${match.stage.toUpperCase()}`;
         dom.modalContent.innerHTML = `
-            <div class="fixture-modal-summary ${categoryClass(match.category)}">
+            <div class="fixture-modal-summary ${categoryClass(match)}">
                 <div class="fixture-modal-date">
                     <span>${formatShortDate(match.date)}</span>
                     <strong>${isFinished ? "RÉSULTAT FINAL" : match.time}</strong>
@@ -461,7 +478,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="fixture-modal-grid">
                 <div><small>DATE OFFICIELLE</small><strong>${formatLongDate(match.date).toUpperCase()}</strong></div>
                 <div><small>COUP D’ENVOI</small><strong>${escapeHtml(match.time)}</strong></div>
-                <div><small>COMPÉTITION</small><strong>${CATEGORY_LABELS[match.category]}</strong></div>
+                <div><small>COMPÉTITION</small><strong>${categoryLabel(match)}</strong></div>
                 <div><small>ÉTAT DU SIGNAL</small><strong>${isFinished ? "ARCHIVÉ" : "PROGRAMMÉ"}</strong></div>
             </div>
             <div class="fixture-modal-note">

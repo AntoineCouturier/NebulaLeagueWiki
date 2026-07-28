@@ -32,6 +32,74 @@ const TECHNICAL_TITLE_RULES = window.NEBULA_DATA?.technicalTitleRules || [];
 const CAREER_TITLE_TRACKS = window.NEBULA_DATA?.careerTitleTracks || [];
 const VALUE_TITLE_TRACK = window.NEBULA_DATA?.valueTitleTrack || null;
 
+/* ===================== NOMS DES TITRES ULTIMES =====================
+   La clé correspond au champ `character` de nebula-data.js, sans espace.
+   ================================================================== */
+const CHARACTER_ULTIMATE_TITLES = {
+    isagi: 'Heart of Blue Lock',
+    gagamaru: 'The Overseer',
+    nagi: 'The Fallen Genius',
+    chigiri: 'The Red Panther',
+    bachira: 'The Monster',
+    shidou: 'The Devil',
+    niko: 'The Watchtower',
+    kurona: 'Planet Hotline',
+    charles: 'The Imp',
+    kunigami: 'The Wild Card',
+    yukimiya: 'The 1-on-1 Emperor',
+    aiku: 'The Snake',
+    barou: 'The KING',
+    sae: "Japan's Greatest Treasure",
+    kiyora: "God's Unknown Plan",
+    karasu: 'The Crow',
+    otoya: 'Stealthy Ninja',
+    ness: 'The Magician',
+    kaiser: 'The Blue Rose',
+    lorenzo: 'The Zombie',
+    rin: 'The Beast',
+    reo: 'Master of All Trades',
+    nelisagi: 'Genius of Adaptation',
+    hiori: 'Ultra Sadist',
+    lorenzomastery: 'The Ace Eater',
+    aikumastery: 'The Final Wall',
+    kaisermastery: "Emperor's Chosen One",
+    rinmastery: 'The Berserker'
+};
+
+/* ===================== COULEURS DES TITRES ULTIMES =====================
+   Modifier ici les trois couleurs d'un personnage :
+   accentSecondary → début, accent → centre, accentTertiary → fin.
+   ====================================================================== */
+const CHARACTER_ULTIMATE_PALETTES = {
+    isagi: { accent: '#0075faff', accentSecondary: '#7cff87ff', accentTertiary: '#f0ff98ff' },
+    gagamaru: { accent: '#78caf0ff', accentSecondary: '#d3dafdff', accentTertiary: '#ffffffff' },
+    nagi: { accent: '#b6dcffff', accentSecondary: '#11edf5ff', accentTertiary: '#a8a8a8ff' },
+    chigiri: { accent: '#ff0080ff', accentSecondary: '#ff6d91ff', accentTertiary: '#ffffffff' },
+    bachira: { accent: '#ffd900ff', accentSecondary: '#755600ff', accentTertiary: '#000000ff' },
+    shidou: { accent: '#ff3f87', accentSecondary: '#d818ffff', accentTertiary: '#cd4dffff' },
+    kurona: { accent: '#9300c0ff', accentSecondary: '#63e7ff', accentTertiary: '#1a042eff' },
+    charles: { accent: '#fada5eff', accentSecondary: '#89cff0', accentTertiary: '#feffbbff' },
+    kunigami: { accent: '#ff6b35', accentSecondary: '#ffd84d', accentTertiary: '#a73500ff' },
+    yukimiya: { accent: '#ff9900ff', accentSecondary: '#a200ffff', accentTertiary: '#00eeffff' },
+    aiku: { accent: '#2bff00ff', accentSecondary: '#119200ff', accentTertiary: '#5e0000ff' },
+    barou: { accent: '#ff0000ff', accentSecondary: '#000000ff', accentTertiary: '#6d0000ff' },
+    sae: { accent: '#4df3ffff', accentSecondary: '#d300c1ff', accentTertiary: '#c670ffff' },
+    kiyora: { accent: '#78caf0ff', accentSecondary: '#d3dafdff', accentTertiary: '#ff819cff' },
+    karasu: { accent: '#000280ff', accentSecondary: '#000000ff', accentTertiary: '#020068ff' },
+    otoya: { accent: '#c1ffbbff', accentSecondary: '#8aff80ff', accentTertiary: '#1dac00ff' },
+    kaiser: { accent: '#9ab5ffff', accentSecondary: '#0033dbff', accentTertiary: '#fff389ff' },
+    lorenzo: { accent: '#5c00a7ff', accentSecondary: '#21ff7dff', accentTertiary: '#046d00ff' },
+    rin: { accent: '#00d3baff', accentSecondary: '#336affff', accentTertiary: '#001f8dff' },
+    reo: { accent: '#6200ffff', accentSecondary: '#00f7ffff', accentTertiary: '#37ff1cff' },
+    nelisagi: { accent: '#ffffffff', accentSecondary: '#4d4c9bff', accentTertiary: '#3b39acff' },
+    hiori: { accent: '#00ccffff', accentSecondary: '#00f7ffff', accentTertiary: '#ffffffff' },
+    lorenzomastery: { accent: '#5c00a7ff', accentSecondary: '#fff021ff', accentTertiary: '#046d00ff' },
+    aikumastery: { accent: '#1eff00ff', accentSecondary: '#9728ffff', accentTertiary: '#073800ff' },
+    kaisermastery: { accent: '#e8ff80ff', accentSecondary: '#4169e1ff', accentTertiary: '#ff9191ff' },
+    rinmastery: { accent: '#007488ff', accentSecondary: '#000000ff', accentTertiary: '#080080ff' },
+    default: { accent: '#c879ff', accentSecondary: '#63e7ff', accentTertiary: '#ff5c8a' }
+};
+
 let radarChart = null;
 let inlineRadarChart = null;
 let clubData = CLUBS.bastard;
@@ -243,6 +311,36 @@ function getMatchStat(matchStats, aliases) {
     return 0;
 }
 
+function getCharacterUltimateKey() {
+    const character = playerData?.character || parseInfoField('Personnage');
+    return normalizeLabel(character).replace(/[^a-z0-9]/g, '');
+}
+
+function getCharacterUltimatePalette() {
+    return CHARACTER_ULTIMATE_PALETTES[getCharacterUltimateKey()]
+        || CHARACTER_ULTIMATE_PALETTES.default;
+}
+
+function getUnlockedCharacterUltimateTitles() {
+    if (playerData?.Ult !== true) return [];
+
+    const titleName = CHARACTER_ULTIMATE_TITLES[getCharacterUltimateKey()];
+    if (!titleName) return [];
+
+    const palette = getCharacterUltimatePalette();
+    return [{
+        name: titleName,
+        requirement: `Titre ultime de ${playerData.character}`,
+        code: 'ULT',
+        accent: palette.accent,
+        accentSecondary: palette.accentSecondary,
+        accentTertiary: palette.accentTertiary,
+        priority: 900,
+        source: 'ultimate',
+        category: 'Titre ultime de personnage'
+    }];
+}
+
 function extractManualTitles() {
     const container = document.querySelector('.player-card-trophies');
     if (!container) return [];
@@ -256,13 +354,20 @@ function extractManualTitles() {
             const name = li.textContent.trim();
             if (!name) return;
             const strong = li.querySelector('strong');
+            const isUltimate = li.dataset.titleType === 'ultimate';
+            const ultimatePalette = isUltimate
+                ? getCharacterUltimatePalette()
+                : CHARACTER_ULTIMATE_PALETTES.default;
             titles.push({
                 name,
-                requirement: 'Titre attribué manuellement',
-                code: 'ARC',
-                accent: '#c879ff',
-                priority: 40,
-                source: 'manual',
+                requirement: isUltimate ? 'Maîtrise ultime du personnage' : 'Titre attribué manuellement',
+                code: isUltimate ? 'ULT' : 'ARC',
+                accent: isUltimate ? ultimatePalette.accent : '#c879ff',
+                accentSecondary: isUltimate ? ultimatePalette.accentSecondary : '#c879ff',
+                accentTertiary: isUltimate ? ultimatePalette.accentTertiary : '#c879ff',
+                priority: isUltimate ? 900 : 40,
+                source: isUltimate ? 'ultimate' : 'manual',
+                category: isUltimate ? 'Titre ultime de personnage' : 'Palmarès',
                 legacyHTML: strong ? strong.outerHTML : li.innerHTML
             });
         });
@@ -286,17 +391,17 @@ function getSeasonRewardTitles() {
             : (season.rewards || []);
 
         return rewards
-        .filter(reward => normalizeLabel(reward.value) === currentPlayer)
-        .map(reward => ({
-            name: `${reward.label} Saison ${season.number}`,
-            requirement: `Attribué lors de la Saison ${season.number}`,
-            code: reward.code || 'RWD',
-            accent: rewardAccents[reward.code] || '#ffd84d',
-            priority: 1000 + Number(season.number || 0),
-            source: 'season',
-            category: 'Récompense officielle',
-            season: season.number
-        }));
+            .filter(reward => normalizeLabel(reward.value) === currentPlayer)
+            .map(reward => ({
+                name: `${reward.label} Saison ${season.number}`,
+                requirement: `Attribué lors de la Saison ${season.number}`,
+                code: reward.code || 'RWD',
+                accent: rewardAccents[reward.code] || '#ffd84d',
+                priority: 1000 + Number(season.number || 0),
+                source: 'season',
+                category: 'Récompense officielle',
+                season: season.number
+            }));
     });
 }
 
@@ -379,6 +484,7 @@ function mergePlayerTitles(automaticTitles, manualTitles) {
 }
 
 function getFIFARating(value) {
+    if (value >= 100) return 'Z';
     if (value >= 95) return 'SSS';
     if (value >= 90) return 'SS';
     if (value >= 85) return 'S';
@@ -393,12 +499,17 @@ function getFIFARating(value) {
 }
 
 function calculateGlobalAverage(stats) {
-    const values = Object.entries(stats)
-        .filter(([k]) => ['defense', 'passe', 'dribble', 'tir', 'offense', 'position'].includes(k))
-        .map(([, v]) => v)
-        .filter(v => v !== null && !isNaN(v));
-    if (!values.length) return null;
-    return Math.round(values.reduce((a, b) => a + b, 0) / values.length);
+    if (typeof window.NEBULA_DATA?.calculateTechnicalOverall === 'function') {
+        return window.NEBULA_DATA.calculateTechnicalOverall(stats);
+    }
+
+    const rawValues = ['defense', 'passe', 'dribble', 'tir', 'offense', 'position']
+        .map(key => stats[key]);
+    if (rawValues.some(value => value === null || value === undefined || value === '')) return null;
+
+    const values = rawValues.map(Number);
+    if (values.some(value => !Number.isFinite(value))) return null;
+    return Math.round(values.reduce((total, value) => total + value, 0) / values.length);
 }
 
 function showToast(message) {
@@ -411,6 +522,87 @@ function showToast(message) {
     toast.textContent = message;
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function getTechnicalTitleIllustration(title) {
+    const metric = title?.category === 'Statistique' ? title.metric : null;
+    const illustrations = {
+        defense: `
+            <svg class="pc-technical-title-art crown-illustration" viewBox="0 0 160 90" aria-hidden="true" focusable="false">
+                <path class="glyph-faint" d="M89 20l8-9 8 9 9-7 4 18H76l4-18z" />
+                <path d="M97 27l25 9v18c0 16-10 24-25 29-15-5-25-13-25-29V36z" />
+                <circle class="glyph-ball" cx="18" cy="55" r="6" />
+                <path class="glyph-motion glyph-dash" d="M26 55h34" />
+                <path d="M61 46v18m8-18v18" />
+            </svg>`,
+        passe: `
+            <svg class="pc-technical-title-art passes-illustration" viewBox="0 0 160 90" aria-hidden="true" focusable="false">
+                <circle class="glyph-ball" cx="18" cy="68" r="6" />
+                <circle class="glyph-ball glyph-support-player" cx="80" cy="18" r="4.5" />
+                <circle class="glyph-ball glyph-support-player glyph-secondary" cx="142" cy="67" r="4.5" />
+                <path class="glyph-motion glyph-dash" d="M25 65Q48 19 76 19" />
+                <path class="glyph-motion glyph-secondary" d="M24 70Q76 44 138 65" />
+                <path class="glyph-faint" d="M66 17l10 2-6 8m59 34l9 4-8 6" />
+            </svg>`,
+        dribble: `
+            <svg class="pc-technical-title-art butterfly-illustration" viewBox="0 0 160 90" aria-hidden="true" focusable="false">
+                <circle class="glyph-ball" cx="80" cy="48" r="6" />
+                <path d="M74 46C58 19 31 16 35 40c2 14 17 19 35 13" />
+                <path d="M86 46c16-27 43-30 39-6-2 14-17 19-35 13" />
+                <path class="glyph-faint" d="M73 52C60 77 43 78 45 61c2-9 12-12 25-11" />
+                <path class="glyph-faint" d="M87 52c13 25 30 26 28 9-2-9-12-12-25-11" />
+                <path class="glyph-motion glyph-dash" d="M80 82c-16-11 17-20 0-34s14-20 0-38" />
+                <rect class="glyph-faint" x="21" y="63" width="8" height="8" transform="rotate(45 25 67)" />
+                <rect class="glyph-faint" x="131" y="63" width="8" height="8" transform="rotate(45 135 67)" />
+            </svg>`,
+        tir: `
+            <svg class="pc-technical-title-art predator-illustration" viewBox="0 0 160 90" aria-hidden="true" focusable="false">
+                <path d="M18 46Q80 5 142 46Q80 86 18 46z" />
+                <circle cx="80" cy="46" r="17" />
+                <circle class="glyph-node" cx="80" cy="46" r="5" />
+                <path class="glyph-faint" d="M80 19v15m0 24v15M53 46h15m24 0h15" />
+                <path class="glyph-motion glyph-dash" d="M96 40l33-21" />
+                <rect class="goal-frame" x="124" y="14" width="25" height="28" />
+                <path class="goal-net" d="M149 14l8 6v28l-8-6m0 0l8 6m0-28l-8-6" />
+                <rect class="goal-target" x="124" y="14" width="10" height="10" />
+            </svg>`,
+        offense: `
+            <svg class="pc-technical-title-art speed-illustration" viewBox="0 0 160 90" aria-hidden="true" focusable="false">
+                <circle class="glyph-ball" cx="120" cy="45" r="13" />
+                <path class="glyph-motion" d="M17 28h69l-12-9m12 9-12 9" />
+                <path class="glyph-motion glyph-dash" d="M8 45h88" />
+                <path class="glyph-motion" d="M23 62h63l-12-9m12 9-12 9" />
+                <path class="glyph-faint" d="M102 22l12 7m-12 39l12-7" />
+                <path class="glyph-speed-ticks" d="M101 37h8m-13 8h11m-6 8h8" />
+            </svg>`,
+        position: `
+            <svg class="pc-technical-title-art vision-illustration" viewBox="0 0 160 90" aria-hidden="true" focusable="false">
+                <path class="glyph-faint" d="M18 45Q80 8 142 45Q80 82 18 45z" />
+                <circle class="vision-ring vision-ring-outer" cx="80" cy="45" r="31" />
+                <circle class="vision-ring vision-ring-middle" cx="80" cy="45" r="23" />
+                <circle class="vision-ring vision-ring-inner" cx="80" cy="45" r="15" />
+                <circle class="glyph-node" cx="80" cy="45" r="4" />
+                <path d="M80 14v13m0 36v13M49 45h13m36 0h13" />
+                <path class="glyph-faint" d="M59 24l10 10m22 22l10 10m0-42L91 34M69 56L59 66M68 18l5 12m14 30l5 12m-36-7l12-6m24-12l12-6" />
+                <path class="glyph-motion glyph-dash" d="M80 45l21-21" />
+            </svg>`,
+        global: `
+            <svg class="pc-technical-title-art machinery-illustration" viewBox="0 0 260 90" aria-hidden="true" focusable="false">
+                <polygon points="130,25 148,35 148,55 130,65 112,55 112,35" />
+                <circle class="glyph-node" cx="130" cy="45" r="5" />
+                <path class="glyph-faint" d="M130 25V8M148 35l33-18M148 55l33 18M130 65v17M112 55L79 73M112 35L79 17" />
+                <circle cx="130" cy="8" r="6" />
+                <circle cx="181" cy="17" r="6" />
+                <circle cx="181" cy="73" r="6" />
+                <circle cx="130" cy="82" r="6" />
+                <circle cx="79" cy="73" r="6" />
+                <circle cx="79" cy="17" r="6" />
+                <path class="glyph-motion glyph-dash" d="M98 8h64M194 28v34M98 82h64M66 28v34" />
+                <path class="glyph-faint" d="M124 29l-4-8M136 29l4-8M148 41l9-3M148 49l9 3M124 61l-4 8M136 61l4 8M112 49l-9 3M112 41l-9-3" />
+            </svg>`
+    };
+
+    return illustrations[metric] || '';
 }
 
 /* ===================== HERO BUILD ===================== */
@@ -432,9 +624,15 @@ function buildHero(club, stats, titles) {
             rankHTML = span ? span.textContent.trim() : getFIFARating(typeof ovr === 'number' ? ovr : 0);
         }
     }
+    const displayedRank = rankHTML || (typeof ovr === 'number' ? getFIFARating(ovr) : 'N/A');
+    const rankClass = displayedRank === 'Z' ? 'z' : '';
 
     const featuredTitle = titles[0];
-    const featuredStyle = featuredTitle ? ` style="--title-accent:${featuredTitle.accent}"` : '';
+    const featuredTitleIllustration = getTechnicalTitleIllustration(featuredTitle);
+    const featuredStyle = featuredTitle
+        ? ` style="--title-accent:${featuredTitle.accent};--title-accent-secondary:${featuredTitle.accentSecondary || featuredTitle.accent};--title-accent-tertiary:${featuredTitle.accentTertiary || featuredTitle.accent}"`
+        : '';
+    const featuredSourceClass = featuredTitle?.source ? ` ${featuredTitle.source}` : '';
     const clubLabel = clubData.name || parseInfoField('Club');
     const profileCode = playerName.replace(/\s+/g, '-').toUpperCase();
 
@@ -455,7 +653,8 @@ function buildHero(club, stats, titles) {
             <p class="pc-hero-eyebrow"><span>${parseInfoField('Position')}</span> ${clubLabel}</p>
             <h2 class="pc-hero-name">${playerName}</h2>
             <p class="pc-hero-alias">${parseInfoField('Pseudo')} // ${parseInfoField('Personnage')}</p>
-            <div class="pc-signature-title${featuredTitle ? ' unlocked' : ''}"${featuredStyle}>
+            <div class="pc-signature-title${featuredTitle ? ' unlocked' : ''}${featuredTitleIllustration ? ' has-technical-illustration' : ''}${featuredSourceClass}"${featuredStyle}>
+                ${featuredTitleIllustration}
                 <small>${featuredTitle ? 'TITRE ACTIF // SYNCHRONISÉ' : 'TITRE ACTIF // NON ATTRIBUÉ'}</small>
                 <strong>${featuredTitle ? featuredTitle.name : 'AUCUN SEUIL ATTEINT'}</strong>
                 ${featuredTitle ? `<span>${featuredTitle.requirement}</span>` : '<span>Continuez votre progression</span>'}
@@ -465,7 +664,7 @@ function buildHero(club, stats, titles) {
             <div class="pc-ovr-readout">
                 <span class="pc-ovr-label">NOTE GLOBALE</span>
                 <strong class="pc-ovr-value">${ovr}</strong>
-                <span class="pc-ovr-rank">${rankHTML || (typeof ovr === 'number' ? getFIFARating(ovr) : 'N/A')}</span>
+                <span class="pc-ovr-rank ${rankClass}">${displayedRank}</span>
             </div>
             ${(clubData.logo || clubLogoEl) ? `<img class="pc-hero-club-logo" src="${clubData.logo || clubLogoEl.src}" alt="${clubLabel}">` : ''}
         </div>
@@ -602,7 +801,11 @@ function copyStatsToClipboard() {
     const stats = extractStatsFromHTML();
     const matchStats = parseMatchStats();
     const titles = mergePlayerTitles(
-        [...evaluatePlayerTitles(stats, matchStats, playerData?.value), ...getSeasonRewardTitles()],
+        [
+            ...evaluatePlayerTitles(stats, matchStats, playerData?.value),
+            ...getSeasonRewardTitles(),
+            ...getUnlockedCharacterUltimateTitles()
+        ],
         extractManualTitles()
     );
     const lines = [
@@ -703,14 +906,17 @@ function buildTrophiesPanel(titles) {
             ? 'AUTO'
             : title.source === 'season'
                 ? `SAISON ${String(title.season).padStart(2, '0')}`
-                : 'ARCHIVE';
+                : title.source === 'ultimate'
+                    ? 'ULTIME'
+                    : 'ARCHIVE';
+        const titleStyle = `--title-accent:${title.accent};--title-accent-secondary:${title.accentSecondary || title.accent};--title-accent-tertiary:${title.accentTertiary || title.accent}`;
         const proof = title.metric === 'value' && Number.isFinite(title.value) && Number.isFinite(title.threshold)
             ? `${formatPlayerValue(title.value)} / ${formatPlayerValue(title.threshold)}`
             : Number.isFinite(title.value) && Number.isFinite(title.threshold)
                 ? `${title.value} / ${title.threshold}`
-            : title.requirement;
+                : title.requirement;
         titlesHTML += `
-            <li class="pc-title-card ${title.source}" style="--title-accent:${title.accent}">
+            <li class="pc-title-card ${title.source}" style="${titleStyle}">
                 <span class="pc-title-index">${String(index + 1).padStart(2, '0')}</span>
                 <span class="pc-title-code">${title.code}</span>
                 <div>
@@ -966,8 +1172,9 @@ function initPlayerCard() {
     const manualTitles = extractManualTitles();
     const automaticTitles = evaluatePlayerTitles(stats, matchStats, playerData?.value);
     const seasonRewardTitles = getSeasonRewardTitles();
+    const characterUltimateTitles = getUnlockedCharacterUltimateTitles();
     const unlockedTitles = mergePlayerTitles(
-        [...automaticTitles, ...seasonRewardTitles],
+        [...automaticTitles, ...seasonRewardTitles, ...characterUltimateTitles],
         manualTitles
     );
 

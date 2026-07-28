@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05070a">
+    <meta name="description" content="Le Hall of Fame officiel de la Nebula League.">
+    <link rel="icon" type="image/png" href="images/logos/nebula.png">
+    <title>Hall of Fame — Nebula League</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="CSS/hamburger.css">
+    <link rel="stylesheet" href="CSS/global-theme.css">
+    <link rel="stylesheet" href="CSS/legacy-pages.css">
+</head>
+
+<body class="nebula-page legacy-page hall-page">
+    <header class="site-header" id="top">
+        <a class="brand" href="index.html"><span class="brand-mark"><span></span></span><span
+                class="brand-copy"><strong>NEBULA</strong><small>LEAGUE // DATABASE</small></span></a>
+        <nav class="main-nav" aria-label="Navigation principale">
+            <a href="index.html">Accueil</a><a href="title.html">Titres</a><a href="club.html">Clubs</a>
+            <a href="players.html">Joueurs</a><a href="matchs.html">Matchs</a><a href="saison.html">Saisons</a>
+            <a href="fixtures.html">Calendrier</a><a href="headtohead.html">Face à Face</a>
+            <a href="valeur.html">Valeurs</a><a href="rules.html">Règles</a><a href="stats.html">Records</a>
+            <a href="progression.html">Progression</a>
+            <a class="nav-active" aria-current="page" href="hall-of-fame.html">Hall of Fame</a>
+            <a href="dream-team.html">Équipes Idéales</a>
+        </nav>
+        <div class="header-actions"><span class="live-pill"><i></i> SAISON 01</span><button class="menu-button"
+                type="button" aria-label="Ouvrir le menu" aria-expanded="false"><span></span><span></span></button>
+        </div>
+    </header>
+
+    <main class="legacy-shell">
+        <section class="legacy-hero hall-hero">
+            <div class="legacy-hero-copy">
+                <p class="legacy-kicker"><span>NL—12</span> MÉMOIRE ABSOLUE</p>
+                <h1>ILS ONT MARQUÉ<br><em>LA NEBULA.</em></h1>
+                <p>Champions, détenteurs de distinctions et performances historiques : une archive réservée à ceux
+                    qui ont laissé une trace durable.</p>
+            </div>
+            <div class="hall-crown" aria-hidden="true"><i></i><i></i><i></i><strong>HOF</strong></div>
+        </section>
+
+        <section class="legacy-panel">
+            <div class="legacy-panel-title"><span>01</span>
+                <div><small>EXPLOITS INSTANTANÉS</small>
+                    <h2>PANTHÉON DES JOUEURS</h2>
+                </div>
+                <p>La meilleure performance réalisée par un joueur au cours d’un seul match.</p>
+            </div>
+            <div class="hall-player-grid" id="hallPlayers"></div>
+        </section>
+
+        <section class="legacy-panel">
+            <div class="legacy-panel-title"><span>02</span>
+                <div><small>DYNASTIES COLLECTIVES</small>
+                    <h2>CLUBS DE LÉGENDE</h2>
+                </div>
+                <p>Palmarès NCL, saisons et domination sportive.</p>
+            </div>
+            <div class="hall-club-grid" id="hallClubs"></div>
+        </section>
+    </main>
+
+    <script src="JavaScript/nebula-data.js"></script>
+    <script src="JavaScript/hall-of-fame.js"></script>
+    <script src="JavaScript/hamburger.js"></script>
+</body>
+
+</html>

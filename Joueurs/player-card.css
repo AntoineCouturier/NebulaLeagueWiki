@@ -871,7 +871,10 @@ body.player-card-page nav ul li a:hover {
     background-size: 300%;
     animation: shine 3s linear infinite;
     -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
     color: transparent;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.48));
 }
 
 .sss {
@@ -1236,6 +1239,103 @@ body.nebula-page.player-card-page .pc-dossier .pc-hero-name {
     box-shadow: 0 0 16px var(--title-accent);
 }
 
+.pc-signature-title.has-technical-illustration {
+    padding-right: 190px;
+}
+
+.pc-technical-title-art {
+    position: absolute;
+    z-index: 0;
+    top: 50%;
+    right: 12px;
+    width: 168px;
+    height: 86px;
+    overflow: visible;
+    color: var(--title-accent);
+    opacity: 0.38;
+    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--title-accent), transparent 68%));
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.pc-signature-title.has-technical-illustration small,
+.pc-signature-title.has-technical-illustration strong,
+.pc-signature-title.has-technical-illustration>span {
+    position: relative;
+    z-index: 1;
+}
+
+.pc-technical-title-art path,
+.pc-technical-title-art circle,
+.pc-technical-title-art rect,
+.pc-technical-title-art polygon {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.55;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+}
+
+.pc-technical-title-art .glyph-faint {
+    opacity: 0.42;
+}
+
+.pc-technical-title-art .glyph-dash {
+    stroke-dasharray: 5 5;
+}
+
+.pc-technical-title-art .glyph-node {
+    fill: currentColor;
+    stroke: none;
+}
+
+.pc-technical-title-art .glyph-ball {
+    fill: #090c10;
+    stroke-width: 1.8;
+}
+
+.pc-technical-title-art.passes-illustration .glyph-secondary {
+    opacity: 0.72;
+}
+
+.pc-technical-title-art.predator-illustration .goal-frame,
+.pc-technical-title-art.predator-illustration .goal-target {
+    stroke-width: 1.8;
+}
+
+.pc-technical-title-art.predator-illustration .goal-net {
+    opacity: 0.42;
+}
+
+.pc-technical-title-art.predator-illustration .goal-target {
+    fill: currentColor;
+    opacity: 0.24;
+}
+
+.pc-technical-title-art.speed-illustration .glyph-speed-ticks {
+    opacity: 0.72;
+    stroke-width: 1.8;
+}
+
+.pc-technical-title-art.vision-illustration .vision-ring {
+    stroke-dasharray: 5 4;
+}
+
+.pc-technical-title-art.vision-illustration .vision-ring-middle {
+    opacity: 0.7;
+    stroke-dasharray: 3 3;
+}
+
+.pc-technical-title-art.vision-illustration .vision-ring-inner {
+    opacity: 0.9;
+    stroke-dasharray: 2 2;
+}
+
+.pc-technical-title-art.machinery-illustration {
+    width: 215px;
+}
+
 .pc-signature-title small {
     color: var(--title-accent);
     font-family: 'Courier New', monospace;
@@ -1259,6 +1359,53 @@ body.nebula-page.player-card-page .pc-dossier .pc-hero-name {
     font-family: 'Courier New', monospace;
     font-size: 0.68rem;
     text-transform: uppercase;
+}
+
+.pc-signature-title.ultimate {
+    border-color: color-mix(in srgb, var(--title-accent), transparent 38%);
+    background:
+        radial-gradient(circle at 88% 50%, color-mix(in srgb, var(--title-accent-tertiary), transparent 82%), transparent 42%),
+        linear-gradient(110deg,
+            color-mix(in srgb, var(--title-accent-secondary), transparent 88%),
+            color-mix(in srgb, var(--title-accent), transparent 91%) 52%,
+            color-mix(in srgb, var(--title-accent-tertiary), transparent 90%)),
+        rgba(255, 255, 255, 0.018);
+    box-shadow: inset 0 0 30px color-mix(in srgb, var(--title-accent), transparent 92%);
+}
+
+.pc-signature-title.ultimate::before {
+    background: linear-gradient(180deg,
+        var(--title-accent-secondary),
+        var(--title-accent),
+        var(--title-accent-tertiary));
+    box-shadow: 0 0 18px var(--title-accent);
+}
+
+.pc-signature-title.ultimate small,
+.pc-signature-title.ultimate strong {
+    color: transparent;
+    background: linear-gradient(90deg,
+        var(--title-accent-secondary),
+        #f5f2ff 46%,
+        var(--title-accent-tertiary));
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+@media (max-width: 720px) {
+    .pc-signature-title.has-technical-illustration {
+        padding-right: 92px;
+    }
+
+    .pc-technical-title-art {
+        right: 6px;
+        width: 92px;
+        opacity: 0.24;
+    }
+
+    .pc-technical-title-art.machinery-illustration {
+        width: 110px;
+    }
 }
 
 body.nebula-page.player-card-page .pc-dossier .pc-hero-rating {
@@ -1306,6 +1453,10 @@ body.nebula-page.player-card-page .pc-dossier .pc-ovr-rank {
     color: var(--club-primary);
     font-family: 'Courier New', monospace;
     font-size: 0.72rem;
+}
+
+body.nebula-page.player-card-page .pc-dossier .pc-ovr-rank.z {
+    color: transparent;
 }
 
 body.nebula-page.player-card-page .pc-dossier .pc-hero-club-logo {
@@ -1823,6 +1974,80 @@ body.nebula-page.player-card-page .pc-title-card:hover {
     font-family: 'Courier New', monospace;
     font-size: 0.62rem;
     white-space: nowrap;
+}
+
+body.nebula-page.player-card-page .pc-title-card.ultimate {
+    --title-accent-secondary: #63e7ff;
+    --title-accent-tertiary: #ff5c8a;
+    background:
+        radial-gradient(circle at 90% 50%, color-mix(in srgb, var(--title-accent-tertiary), transparent 82%), transparent 38%),
+        linear-gradient(112deg,
+            color-mix(in srgb, var(--title-accent-secondary), transparent 88%),
+            color-mix(in srgb, var(--title-accent), transparent 92%) 48%,
+            color-mix(in srgb, var(--title-accent-tertiary), transparent 89%)),
+        var(--pc-surface);
+    box-shadow:
+        inset 0 1px 0 color-mix(in srgb, var(--title-accent-secondary), transparent 58%),
+        inset 0 -1px 0 color-mix(in srgb, var(--title-accent-tertiary), transparent 65%);
+}
+
+.pc-title-card.ultimate::before {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 2px;
+    content: "";
+    background: linear-gradient(90deg,
+        var(--title-accent-secondary),
+        var(--title-accent),
+        var(--title-accent-tertiary));
+    box-shadow: 0 0 16px color-mix(in srgb, var(--title-accent), transparent 35%);
+}
+
+body.nebula-page.player-card-page .pc-title-card.ultimate:hover {
+    box-shadow:
+        inset 0 -2px 0 var(--title-accent),
+        0 0 24px color-mix(in srgb, var(--title-accent), transparent 82%);
+}
+
+.pc-title-card.ultimate::after {
+    width: 3px;
+    background: linear-gradient(180deg,
+        var(--title-accent-secondary),
+        var(--title-accent),
+        var(--title-accent-tertiary));
+    opacity: 1;
+}
+
+.pc-title-card.ultimate .pc-title-index {
+    color: color-mix(in srgb, var(--title-accent-secondary), #fff 28%);
+}
+
+.pc-title-card.ultimate .pc-title-code {
+    border: 1px solid transparent;
+    color: #fff;
+    background:
+        linear-gradient(var(--pc-surface), var(--pc-surface)) padding-box,
+        linear-gradient(135deg,
+            var(--title-accent-secondary),
+            var(--title-accent),
+            var(--title-accent-tertiary)) border-box;
+    text-shadow:
+        0 0 8px var(--title-accent-secondary),
+        0 0 12px var(--title-accent-tertiary);
+}
+
+.pc-title-card.ultimate>div small,
+.pc-title-card.ultimate>div strong {
+    color: transparent;
+    background: linear-gradient(90deg,
+        var(--title-accent-secondary),
+        #f5f2ff 48%,
+        var(--title-accent-tertiary));
+    background-clip: text;
+    -webkit-background-clip: text;
 }
 
 body.nebula-page.player-card-page .pc-titles-empty {

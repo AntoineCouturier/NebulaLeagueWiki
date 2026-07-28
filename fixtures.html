@@ -36,7 +36,11 @@
             <a class="nav-active" href="fixtures.html" aria-current="page">Calendrier</a>
             <a href="headtohead.html">Face à Face</a>
             <a href="valeur.html">Valeurs</a>
+            <a href="rules.html">Règles</a>
             <a href="stats.html">Records</a>
+            <a href="progression.html">Progression</a>
+            <a href="hall-of-fame.html">Hall of Fame</a>
+            <a href="dream-team.html">Équipes Idéales</a>
         </nav>
         <div class="header-actions">
             <span class="live-pill"><i></i> SAISON 01</span>
@@ -48,7 +52,7 @@
     <main class="fixture-command">
         <section class="fixture-hero" aria-labelledby="fixture-page-title">
             <div class="fixture-hero-copy">
-                <p class="fixture-eyebrow"><span>NL–11</span> PLANIFICATION OFFICIELLE</p>
+                <p class="fixture-eyebrow"><span>NL–06</span> PLANIFICATION OFFICIELLE</p>
                 <h1 id="fixture-page-title">LE TEMPS<br><em>DE LA LIGUE.</em></h1>
                 <p class="fixture-intro">
                     Chaque journée, chaque affiche, chaque échéance. La saison complète est synchronisée
@@ -89,12 +93,12 @@
                     <div class="fixture-category-tabs" role="tablist" aria-label="Filtrer par compétition">
                         <button class="fixture-control-button fx-cat-btn is-active" type="button" data-cat="all"
                             role="tab" aria-selected="true">TOUT <b id="cat-count-all">00</b></button>
-                        <button class="fixture-control-button fx-cat-btn" type="button" data-cat="ligue"
-                            role="tab" aria-selected="false">LIGUE <b id="cat-count-ligue">00</b></button>
-                        <button class="fixture-control-button fx-cat-btn" type="button" data-cat="ncl"
-                            role="tab" aria-selected="false">NCL <b id="cat-count-ncl">00</b></button>
-                        <button class="fixture-control-button fx-cat-btn" type="button" data-cat="amical"
-                            role="tab" aria-selected="false">AMICAL <b id="cat-count-amical">00</b></button>
+                        <button class="fixture-control-button fx-cat-btn" type="button" data-cat="ligue" role="tab"
+                            aria-selected="false">LIGUE <b id="cat-count-ligue">00</b></button>
+                        <button class="fixture-control-button fx-cat-btn" type="button" data-cat="ncl" role="tab"
+                            aria-selected="false">NCL <b id="cat-count-ncl">00</b></button>
+                        <button class="fixture-control-button fx-cat-btn" type="button" data-cat="amical" role="tab"
+                            aria-selected="false">AMICAL <b id="cat-count-amical">00</b></button>
                     </div>
                 </div>
 
@@ -110,8 +114,8 @@
                     <div class="fixture-view-tabs">
                         <button id="view-calendar-btn" class="fixture-control-button fx-view-btn is-active"
                             type="button" aria-pressed="true">MOIS</button>
-                        <button id="view-list-btn" class="fixture-control-button fx-view-btn"
-                            type="button" aria-pressed="false">CHRONOLOGIE</button>
+                        <button id="view-list-btn" class="fixture-control-button fx-view-btn" type="button"
+                            aria-pressed="false">CHRONOLOGIE</button>
                     </div>
                 </div>
             </div>
@@ -142,6 +146,7 @@
                         <footer class="calendar-legend">
                             <span><i class="legend-dot is-ligue"></i>LIGUE</span>
                             <span><i class="legend-dot is-ncl"></i>NCL</span>
+                            <span><i class="legend-dot is-finale"></i>FINALE NCL</span>
                             <span><i class="legend-dot is-amical"></i>AMICAL</span>
                             <span><i class="legend-completed"></i>TERMINÉ</span>
                             <span><i class="legend-frame"></i>DATE ACTIVE</span>
@@ -155,8 +160,8 @@
                             <small id="fixtures-result-count">00 RENCONTRE</small>
                             <h3 id="fixtures-section-title">PROGRAMME DU MOIS</h3>
                         </div>
-                        <button id="reset-date-filter-btn" class="fixture-control-button reset-filter-btn"
-                            type="button" hidden>EFFACER LA DATE ×</button>
+                        <button id="reset-date-filter-btn" class="fixture-control-button reset-filter-btn" type="button"
+                            hidden>EFFACER LA DATE ×</button>
                     </header>
                     <div id="fixtures-cards-container" class="fixtures-cards-container" aria-live="polite"></div>
                 </section>

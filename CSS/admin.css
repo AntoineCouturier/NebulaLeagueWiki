@@ -1,0 +1,581 @@
+:root {
+    --admin-acid: #a8ff25;
+    --admin-cyan: #52dcff;
+    --admin-red: #ff5368;
+    --admin-ink: #05080b;
+    --admin-panel: #090e13;
+    --admin-panel-2: #0c1218;
+    --admin-line: rgba(168, 197, 216, 0.17);
+    --admin-muted: #7d8e9a;
+    --admin-paper: #f1f5f7;
+}
+
+body.nebula-page.admin-page {
+    min-height: 100vh;
+    color: var(--admin-paper);
+    background:
+        linear-gradient(rgba(82, 220, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(82, 220, 255, 0.035) 1px, transparent 1px),
+        radial-gradient(circle at 85% 12%, rgba(82, 220, 255, 0.07), transparent 28rem),
+        var(--admin-ink);
+    background-size: 64px 64px, 64px 64px, auto, auto;
+}
+
+.admin-shell {
+    width: min(1440px, calc(100% - 44px));
+    margin: 0 auto;
+    padding: 48px 0 90px;
+}
+
+.admin-hero {
+    display: grid;
+    min-height: 430px;
+    grid-template-columns: minmax(0, 1.45fr) minmax(310px, 0.55fr);
+    border: 1px solid var(--admin-line);
+    background: rgba(5, 8, 11, 0.86);
+}
+
+.admin-hero>div:first-child {
+    display: flex;
+    justify-content: center;
+    padding: clamp(48px, 7vw, 96px);
+    flex-direction: column;
+}
+
+.admin-kicker {
+    margin: 0 0 22px;
+    color: var(--admin-muted);
+    font: 700 0.58rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.15em;
+}
+
+.admin-kicker span {
+    margin-right: 15px;
+    color: var(--admin-acid);
+}
+
+.admin-hero h1 {
+    margin: 0;
+    font: 900 clamp(3.4rem, 7vw, 7rem)/0.82 "Orbitron", sans-serif;
+    letter-spacing: -0.075em;
+}
+
+.admin-hero h1 em {
+    color: transparent;
+    font-style: normal;
+    -webkit-text-stroke: 1px #77838c;
+}
+
+.admin-hero>div:first-child>p:last-child {
+    max-width: 720px;
+    margin: 38px 0 0;
+    padding-left: 20px;
+    border-left: 2px solid var(--admin-acid);
+    color: #a4afb7;
+    font: 400 0.92rem/1.8 "Inter", sans-serif;
+}
+
+.admin-hero code {
+    color: var(--admin-cyan);
+}
+
+.admin-hero-status {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+    border-left: 1px solid var(--admin-line);
+    background:
+        radial-gradient(circle, rgba(82, 220, 255, 0.06), transparent 48%),
+        rgba(8, 13, 18, 0.78);
+    flex-direction: column;
+}
+
+.admin-hero-status span,
+.admin-hero-status small {
+    color: var(--admin-muted);
+    font: 600 0.54rem/1.6 "Orbitron", sans-serif;
+    letter-spacing: 0.12em;
+}
+
+.admin-hero-status strong {
+    margin: 24px 0;
+    color: var(--admin-cyan);
+    font: 800 clamp(1.7rem, 3vw, 3rem)/1.15 "Orbitron", sans-serif;
+}
+
+.admin-workspace,
+.admin-output {
+    margin-top: 28px;
+    border: 1px solid var(--admin-line);
+    background: rgba(7, 11, 15, 0.95);
+}
+
+.admin-section-title {
+    display: grid;
+    min-height: 100px;
+    grid-template-columns: 100px minmax(0, 1fr) minmax(240px, 0.7fr);
+    align-items: center;
+    border-bottom: 1px solid var(--admin-line);
+}
+
+.admin-section-title>span {
+    align-self: stretch;
+    display: grid;
+    place-items: center;
+    border-right: 1px solid var(--admin-line);
+    color: transparent;
+    font: 900 2.3rem/1 "Orbitron", sans-serif;
+    -webkit-text-stroke: 1px #3d4a55;
+}
+
+.admin-section-title>div:nth-child(2) {
+    padding: 22px 28px;
+}
+
+.admin-section-title small,
+.admin-section-title p {
+    color: var(--admin-muted);
+    font: 600 0.52rem/1.6 "Orbitron", sans-serif;
+    letter-spacing: 0.11em;
+}
+
+.admin-section-title small {
+    color: var(--admin-acid);
+}
+
+.admin-section-title h2 {
+    margin: 8px 0 0;
+    font: 800 clamp(1.25rem, 2.5vw, 2rem)/1 "Orbitron", sans-serif;
+}
+
+.admin-section-title>p {
+    margin: 0;
+    padding: 28px;
+    border-left: 1px solid var(--admin-line);
+}
+
+.admin-fields {
+    display: grid;
+    gap: 1px;
+    background: var(--admin-line);
+}
+
+.admin-fields-main {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.admin-fields label,
+.team-select {
+    display: flex;
+    min-width: 0;
+    padding: 20px;
+    background: var(--admin-panel);
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-fields label span,
+.team-select span {
+    color: var(--admin-muted);
+    font: 700 0.5rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.12em;
+}
+
+.admin-field-wide {
+    grid-column: span 6;
+}
+
+.admin-page input,
+.admin-page select {
+    width: 100%;
+    min-width: 0;
+    height: 45px;
+    padding: 0 12px;
+    border: 1px solid #28323b;
+    border-radius: 0;
+    outline: 0;
+    color: var(--admin-paper);
+    background: #0d1319;
+    font: 600 0.7rem/1 "Orbitron", sans-serif;
+}
+
+.admin-page input:focus,
+.admin-page select:focus {
+    border-color: var(--admin-cyan);
+    box-shadow: 0 0 0 1px rgba(82, 220, 255, 0.2);
+}
+
+.admin-versus {
+    display: grid;
+    grid-template-columns: 1fr 270px 1fr;
+    border-top: 1px solid var(--admin-line);
+    border-bottom: 1px solid var(--admin-line);
+}
+
+.team-select {
+    justify-content: center;
+    min-height: 145px;
+    padding-inline: 34px;
+}
+
+.team-home {
+    background: linear-gradient(90deg, rgba(255, 83, 104, 0.06), transparent), var(--admin-panel);
+}
+
+.team-away {
+    background: linear-gradient(270deg, rgba(82, 220, 255, 0.06), transparent), var(--admin-panel);
+}
+
+.admin-score {
+    display: grid;
+    place-content: center;
+    border-inline: 1px solid var(--admin-line);
+    text-align: center;
+}
+
+.admin-score small {
+    color: var(--admin-muted);
+    font: 600 0.48rem/1 "Orbitron", sans-serif;
+}
+
+.admin-score strong {
+    display: flex;
+    align-items: center;
+    margin-top: 14px;
+    gap: 14px;
+    font: 900 2.4rem/1 "Orbitron", sans-serif;
+}
+
+.admin-score strong span:first-child {
+    color: var(--admin-red);
+}
+
+.admin-score strong span:last-child {
+    color: var(--admin-cyan);
+}
+
+.admin-score i {
+    color: #56636e;
+    font-style: normal;
+}
+
+.admin-inner-title {
+    margin-top: 0;
+}
+
+.admin-inline-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px !important;
+    gap: 10px;
+}
+
+.admin-button {
+    min-height: 44px;
+    padding: 0 17px;
+    border: 1px solid #303b44;
+    border-radius: 0;
+    color: #cbd3d8;
+    background: #0c1217;
+    cursor: pointer;
+    font: 700 0.55rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.07em;
+}
+
+.admin-button:hover,
+.admin-button:focus-visible {
+    border-color: var(--admin-acid);
+    color: var(--admin-acid);
+}
+
+.admin-button-home {
+    border-color: rgba(255, 83, 104, 0.5);
+    color: var(--admin-red);
+}
+
+.admin-button-away {
+    border-color: rgba(82, 220, 255, 0.5);
+    color: var(--admin-cyan);
+}
+
+.goal-events {
+    min-height: 105px;
+}
+
+.goal-empty {
+    display: grid;
+    min-height: 105px;
+    place-items: center;
+    color: #596874;
+    font: 600 0.56rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.1em;
+}
+
+.goal-row {
+    display: grid;
+    min-height: 76px;
+    grid-template-columns: 80px 130px 1fr 1fr 60px;
+    align-items: center;
+    border-bottom: 1px solid var(--admin-line);
+    gap: 12px;
+    padding: 14px 20px;
+}
+
+.goal-side {
+    color: var(--goal-accent);
+    font: 800 0.55rem/1 "Orbitron", sans-serif;
+}
+
+.goal-row input,
+.goal-row select {
+    height: 42px;
+}
+
+.goal-remove {
+    width: 42px;
+    height: 42px;
+    border: 1px solid #3b2830;
+    color: var(--admin-red);
+    background: transparent;
+    cursor: pointer;
+}
+
+.admin-notes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.notes-team+.notes-team {
+    border-left: 1px solid var(--admin-line);
+}
+
+.notes-team-title {
+    display: flex;
+    min-height: 56px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--admin-line);
+    color: var(--admin-paper);
+    background: var(--admin-panel-2);
+    font: 700 0.6rem/1 "Orbitron", sans-serif;
+}
+
+.notes-team-title small {
+    color: var(--admin-muted);
+    font-size: 0.46rem;
+}
+
+.note-row {
+    display: grid;
+    min-height: 63px;
+    grid-template-columns: 1fr 88px 88px 88px;
+    align-items: center;
+    border-bottom: 1px solid var(--admin-line);
+    gap: 8px;
+    padding: 10px 16px;
+}
+
+.note-row strong {
+    overflow: hidden;
+    color: #bac4cb;
+    font: 700 0.6rem/1 "Orbitron", sans-serif;
+    text-overflow: ellipsis;
+}
+
+.note-row input {
+    height: 38px;
+    text-align: center;
+}
+
+.notes-empty {
+    display: grid;
+    min-height: 126px;
+    place-items: center;
+    color: var(--admin-muted);
+    font: 600 0.52rem/1 "Orbitron", sans-serif;
+}
+
+.admin-builder-actions {
+    display: flex;
+    padding: 20px;
+    border-top: 1px solid var(--admin-line);
+    gap: 10px;
+}
+
+.admin-generate {
+    min-width: 280px;
+    justify-content: space-between;
+    border-color: var(--admin-acid);
+    color: #071005;
+    background: var(--admin-acid);
+}
+
+.admin-generate:hover {
+    color: #071005;
+    background: #c0ff5d;
+}
+
+.admin-danger {
+    margin-left: auto;
+    color: var(--admin-red);
+}
+
+.admin-output .admin-section-title {
+    grid-template-columns: 100px 1fr auto;
+}
+
+.admin-output .admin-section-title>.admin-button {
+    margin-right: 24px;
+}
+
+.admin-feedback {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--admin-line);
+}
+
+.admin-feedback span {
+    color: var(--admin-muted);
+    font: 800 0.55rem/1 "Orbitron", sans-serif;
+}
+
+.admin-feedback p {
+    margin: 0;
+    color: #87949e;
+    font: 400 0.84rem/1.6 "Inter", sans-serif;
+}
+
+.admin-feedback.is-error span {
+    color: var(--admin-red);
+}
+
+.admin-feedback.is-success span {
+    color: var(--admin-acid);
+}
+
+.admin-code {
+    min-height: 240px;
+    max-height: 680px;
+    margin: 0;
+    padding: 28px;
+    overflow: auto;
+    color: #bcecff;
+    background: #030609;
+    font: 500 0.76rem/1.7 Consolas, monospace;
+    white-space: pre;
+}
+
+@media (max-width: 1050px) {
+    .admin-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-hero-status {
+        min-height: 220px;
+        border-top: 1px solid var(--admin-line);
+        border-left: 0;
+    }
+
+    .admin-fields-main {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .admin-field-wide {
+        grid-column: span 3;
+    }
+
+    .admin-section-title {
+        grid-template-columns: 80px 1fr;
+    }
+
+    .admin-section-title>p,
+    .admin-inline-actions {
+        grid-column: 1 / -1;
+        border-top: 1px solid var(--admin-line);
+        border-left: 0;
+    }
+
+    .admin-output .admin-section-title {
+        grid-template-columns: 80px 1fr auto;
+    }
+}
+
+@media (max-width: 720px) {
+    .admin-shell {
+        width: calc(100% - 20px);
+        padding-top: 20px;
+    }
+
+    .admin-hero>div:first-child {
+        padding: 42px 24px;
+    }
+
+    .admin-fields-main,
+    .admin-notes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-field-wide {
+        grid-column: auto;
+    }
+
+    .admin-versus {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-score {
+        min-height: 125px;
+        border-block: 1px solid var(--admin-line);
+        border-inline: 0;
+    }
+
+    .notes-team+.notes-team {
+        border-top: 1px solid var(--admin-line);
+        border-left: 0;
+    }
+
+    .goal-row {
+        grid-template-columns: 70px 1fr 1fr;
+    }
+
+    .goal-row select {
+        grid-column: span 1;
+    }
+
+    .goal-remove {
+        grid-column: 3;
+    }
+
+    .note-row {
+        grid-template-columns: 1fr repeat(3, 62px);
+    }
+
+    .admin-builder-actions {
+        flex-direction: column;
+    }
+
+    .admin-generate {
+        min-width: 0;
+    }
+
+    .admin-danger {
+        margin-left: 0;
+    }
+
+    .admin-output .admin-section-title {
+        grid-template-columns: 64px 1fr;
+    }
+
+    .admin-output .admin-section-title>.admin-button {
+        grid-column: 1 / -1;
+        margin: 0 15px 15px;
+    }
+
+    .admin-feedback {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+}

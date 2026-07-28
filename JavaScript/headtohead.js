@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const slotB = document.getElementById("h2hSlotB");
     const results = document.getElementById("h2hResults");
     const empty = document.getElementById("h2hEmpty");
+    const playerStatToggle = document.getElementById("h2hPlayerStatToggle");
     if (!entityGrid || !slotA || !slotB || !results || !empty) return;
 
     const CLUB_COLORS = Object.fromEntries(
@@ -36,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     let mode = "clubs";
+    let playerComparisonMode = "match";
 
     function escapeHtml(value) {
         return String(value ?? "")
@@ -327,6 +329,24 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         document.getElementById("h2hModeLabel").textContent = mode === "clubs" ? "CLUBS" : "JOUEURS";
         document.getElementById("h2hRadarMode").textContent = mode === "clubs" ? "MODE CLUBS" : "MODE JOUEURS";
+
+        if (playerStatToggle) {
+            playerStatToggle.hidden = mode !== "players";
+            playerStatToggle.querySelectorAll("[data-player-comparison]").forEach(button => {
+                const active = button.dataset.playerComparison === playerComparisonMode;
+                button.classList.toggle("is-active", active);
+                button.setAttribute("aria-selected", String(active));
+            });
+        }
+
+        const analysisTitle = document.getElementById("h2hAnalysisTitle");
+        if (analysisTitle) {
+            analysisTitle.textContent = mode === "clubs"
+                ? "MATRICE DE PERFORMANCE"
+                : playerComparisonMode === "technical"
+                    ? "COMPARATIF TECHNIQUE"
+                    : "IMPACT EN MATCH";
+        }
     }
 
     function renderSlot(target, id, side) {
@@ -389,7 +409,8 @@ document.addEventListener("DOMContentLoaded", () => {
             color: METRIC_COLORS[options.color || "neutral"],
             format: options.format || (value => formatNumber(value)),
             precision: options.precision || 0,
-            context: options.context || ""
+            context: options.context || "",
+            scaleMax: Number.isFinite(options.scaleMax) ? options.scaleMax : null
         };
     }
 
@@ -397,8 +418,22 @@ document.addEventListener("DOMContentLoaded", () => {
         if (mode === "players") {
             const a = participantData(aId);
             const b = participantData(bId);
+
+            if (playerComparisonMode === "technical") {
+                const aTechnical = a.profile.technical || {};
+                const bTechnical = b.profile.technical || {};
+                return [
+                    makeMetric("Note globale", aTechnical.global, bTechnical.global, { color: "rating", scaleMax: 100 }),
+                    makeMetric("Défense", aTechnical.defense, bTechnical.defense, { color: "defenses", scaleMax: 100 }),
+                    makeMetric("Passe", aTechnical.passe, bTechnical.passe, { color: "assists", scaleMax: 100 }),
+                    makeMetric("Dribble", aTechnical.dribble, bTechnical.dribble, { color: "dribbles", scaleMax: 100 }),
+                    makeMetric("Tir", aTechnical.tir, bTechnical.tir, { color: "goals", scaleMax: 100 }),
+                    makeMetric("Offense", aTechnical.offense, bTechnical.offense, { color: "value", scaleMax: 100 }),
+                    makeMetric("Positionnement", aTechnical.position, bTechnical.position, { scaleMax: 100 })
+                ];
+            }
+
             return [
-                makeMetric("Valeur actuelle", a.profile.value, b.profile.value, { color: "value", format: formatCompactValue }),
                 makeMetric("Matchs joués", a.matches, b.matches),
                 makeMetric("Buts", a.buts, b.buts, { color: "goals" }),
                 makeMetric("Passes décisives", a.passes, b.passes, { color: "assists" }),
@@ -471,9 +506,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderMetrics(metrics) {
         document.getElementById("h2hMetricGrid").innerHTML = metrics.map((metric, index) => {
-            const magnitude = Math.max(Math.abs(metric.aValue), Math.abs(metric.bValue), 1);
-            const aWidth = Math.max(metric.aValue === 0 ? 0 : 4, (Math.abs(metric.aValue) / magnitude) * 100);
-            const bWidth = Math.max(metric.bValue === 0 ? 0 : 4, (Math.abs(metric.bValue) / magnitude) * 100);
+            const magnitude = metric.scaleMax
+                || Math.max(Math.abs(metric.aValue), Math.abs(metric.bValue), 1);
+            const aWidth = Math.min(100, Math.max(metric.aValue === 0 ? 0 : 4, (Math.abs(metric.aValue) / magnitude) * 100));
+            const bWidth = Math.min(100, Math.max(metric.bValue === 0 ? 0 : 4, (Math.abs(metric.bValue) / magnitude) * 100));
             const winner = metric.aValue === metric.bValue ? "tie" : metric.aValue > metric.bValue ? "a" : "b";
             return `
                 <div class="h2h-metric-row" style="--metric-color:${metric.color}">
@@ -631,6 +667,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!button || button.dataset.mode === mode) return;
         mode = button.dataset.mode;
         renderAll();
+    });
+
+    playerStatToggle?.addEventListener("click", event => {
+        const button = event.target.closest("[data-player-comparison]");
+        if (!button || button.dataset.playerComparison === playerComparisonMode) return;
+        playerComparisonMode = button.dataset.playerComparison;
+        renderMode();
+        renderResults();
     });
 
     entityGrid.addEventListener("click", event => {

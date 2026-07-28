@@ -1,7 +1,8 @@
 const MATCH_PAGE_CATEGORY_META = {
-    ligue: { label: "Ligue", code: "LG", accent: "#adff2f" },
-    ncl: { label: "NCL", code: "NC", accent: "#63e7ff" },
-    amical: { label: "Amical", code: "AM", accent: "#c879ff" }
+    ligue: { key: "ligue", label: "Ligue", code: "LG", accent: "#59e7ff" },
+    ncl: { key: "ncl", label: "NCL", code: "NC", accent: "#ff5365" },
+    amical: { key: "amical", label: "Amical", code: "AM", accent: "#adff2f" },
+    finale: { key: "finale", label: "Finale NCL", code: "FN", accent: "#a968ff" }
 };
 
 const MATCH_PAGE_CLUB_COLORS = Object.fromEntries(
@@ -41,8 +42,26 @@ document.addEventListener("DOMContentLoaded", () => {
         return MATCH_PAGE_CLUB_COLORS[key] || "#63e7ff";
     }
 
-    function categoryMeta(key) {
-        return MATCH_PAGE_CATEGORY_META[key] || { label: key || "Archive", code: "AR", accent: "#adff2f" };
+    function categoryMeta(matchOrKey) {
+        if (matchOrKey && typeof matchOrKey === "object") {
+            const isFinal = matchOrKey.category === "ncl"
+                && String(matchOrKey.valueTier || "").toLowerCase() === "finale";
+            return isFinal
+                ? MATCH_PAGE_CATEGORY_META.finale
+                : (MATCH_PAGE_CATEGORY_META[matchOrKey.category] || {
+                    key: "archive",
+                    label: matchOrKey.category || "Archive",
+                    code: "AR",
+                    accent: "#adff2f"
+                });
+        }
+
+        return MATCH_PAGE_CATEGORY_META[matchOrKey] || {
+            key: "archive",
+            label: matchOrKey || "Archive",
+            code: "AR",
+            accent: "#adff2f"
+        };
     }
 
     function shortDate(date) {
@@ -169,11 +188,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const match = [...matches].sort((a, b) => b.date.localeCompare(a.date))[0];
         const home = getClub(match.home);
         const away = getClub(match.away);
-        const meta = categoryMeta(match.category);
+        const meta = categoryMeta(match);
         const matchMvp = bestRatedPlayer(match);
 
         featuredMatch.style.setProperty("--home-accent", clubColor(match.home));
         featuredMatch.style.setProperty("--away-accent", clubColor(match.away));
+        featuredMatch.style.setProperty("--category-accent", meta.accent);
+        featuredMatch.dataset.matchCategory = meta.key;
         featuredMatch.innerHTML = `
             <div class="featured-topline">
                 <span>DERNIER SIGNAL // ${meta.code}</span>
@@ -233,7 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderMatchCard(match, index) {
         const home = getClub(match.home);
         const away = getClub(match.away);
-        const meta = categoryMeta(match.category);
+        const meta = categoryMeta(match);
         const homeWin = match.scoreHome > match.scoreAway;
         const awayWin = match.scoreAway > match.scoreHome;
         const goals = combinedTimeline(match);
@@ -242,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const topScorer = bestScorer(match);
 
         return `
-            <article class="match-dossier" style="--home-accent:${clubColor(match.home)}; --away-accent:${clubColor(match.away)}; --category-accent:${meta.accent};">
+            <article class="match-dossier match-category-${meta.key}" style="--home-accent:${clubColor(match.home)}; --away-accent:${clubColor(match.away)}; --category-accent:${meta.accent};">
                 <div class="match-dossier-topline">
                     <span>REPLAY FILE // ${String(index + 1).padStart(2, "0")}</span>
                     <span>${meta.code} — ${meta.label.toUpperCase()}</span>
@@ -357,11 +378,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderMatchDetail(match) {
         const home = getClub(match.home);
         const away = getClub(match.away);
-        const meta = categoryMeta(match.category);
+        const meta = categoryMeta(match);
         const matchMvp = bestRatedPlayer(match);
 
         detailPanel.style.setProperty("--home-accent", clubColor(match.home));
         detailPanel.style.setProperty("--away-accent", clubColor(match.away));
+        detailPanel.style.setProperty("--category-accent", meta.accent);
+        detailPanel.dataset.matchCategory = meta.key;
         detailPanel.innerHTML = `
             <div class="match-detail-topline">
                 <span>NEBULA REPLAY // ${match.id.toUpperCase()}</span>

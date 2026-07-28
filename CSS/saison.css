@@ -660,7 +660,10 @@ body.nebula-page.seasons-page .season-switch.is-selected {
     border-left: 1px solid var(--season-line);
 }
 
-.season-ranking-panel > header {
+body.nebula-page.seasons-page .season-ranking-panel > header {
+    position: static !important;
+    z-index: auto !important;
+    top: auto !important;
     min-height: 82px;
     display: flex;
     align-items: center;

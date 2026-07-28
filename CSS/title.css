@@ -687,6 +687,7 @@ main {
 
 .stat-title::after {
   position: absolute;
+  z-index: 0;
   top: 18px;
   right: -13px;
   content: attr(data-code);
@@ -694,6 +695,137 @@ main {
   font-family: var(--display);
   font-size: 76px;
   line-height: 1;
+}
+
+.stat-illustration {
+  position: absolute;
+  z-index: 0;
+  top: 46px;
+  right: 13px;
+  width: min(46%, 145px);
+  height: 82px;
+  overflow: visible;
+  color: var(--stat-accent);
+  opacity: 0.48;
+  filter: drop-shadow(0 0 7px color-mix(in srgb, var(--stat-accent), transparent 72%));
+  pointer-events: none;
+  transform-origin: center;
+  transition:
+    opacity 180ms ease,
+    transform 220ms ease,
+    filter 220ms ease;
+}
+
+.stat-illustration path,
+.stat-illustration circle,
+.stat-illustration rect,
+.stat-illustration line,
+.stat-illustration polygon,
+.stat-illustration polyline {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.55;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.stat-illustration .glyph-faint {
+  opacity: 0.42;
+}
+
+.stat-illustration .glyph-dash {
+  stroke-dasharray: 5 5;
+}
+
+.stat-illustration .glyph-node {
+  fill: currentColor;
+  stroke: none;
+}
+
+.stat-illustration .glyph-ball {
+  fill: #090c10;
+  stroke-width: 1.8;
+}
+
+.passes-illustration .glyph-secondary {
+  color: #65b5ff;
+}
+
+.passes-illustration .glyph-support-player {
+  stroke-width: 1.45;
+}
+
+.speed-illustration .glyph-speed-ticks {
+  opacity: 0.72;
+  stroke-width: 1.8;
+}
+
+.predator-illustration .goal-frame {
+  stroke-width: 1.8;
+}
+
+.predator-illustration .goal-net {
+  opacity: 0.42;
+}
+
+.predator-illustration .goal-target {
+  fill: currentColor;
+  opacity: 0.24;
+  stroke-width: 1.8;
+}
+
+.vision-illustration .vision-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 500ms ease;
+}
+
+.vision-illustration .vision-ring-outer {
+  stroke-dasharray: 15 4 6 5;
+}
+
+.vision-illustration .vision-ring-middle {
+  stroke-dasharray: 7 3 12 4;
+}
+
+.vision-illustration .vision-ring-inner {
+  stroke-dasharray: 4 3 8 3;
+}
+
+.stat-title:hover .vision-ring-outer {
+  transform: rotate(14deg);
+}
+
+.stat-title:hover .vision-ring-middle {
+  transform: rotate(-18deg);
+}
+
+.stat-title:hover .vision-ring-inner {
+  transform: rotate(24deg);
+}
+
+.stat-overall .stat-illustration {
+  top: 42px;
+  right: 28px;
+  width: min(54%, 260px);
+  height: 90px;
+}
+
+.stat-title:hover .stat-illustration {
+  opacity: 0.82;
+  filter: drop-shadow(0 0 11px color-mix(in srgb, var(--stat-accent), transparent 58%));
+  transform: translateY(-2px) scale(1.025);
+}
+
+.stat-title:hover .stat-illustration .glyph-dash {
+  animation: statGlyphFlow 1.2s linear infinite;
+}
+
+@keyframes statGlyphFlow {
+  to {
+    stroke-dashoffset: -20;
+  }
 }
 
 .stat-defense {
@@ -892,12 +1024,16 @@ main {
 
 .career-track li:not(:last-child)::before {
   position: absolute;
-  top: 39px;
-  bottom: -22px;
+  top: 32px;
+  bottom: -33px;
   left: 17.5px;
   width: 1px;
   content: "";
   background: color-mix(in srgb, var(--track-accent), transparent 72%);
+}
+
+.career-track li:nth-last-child(2)::before {
+  bottom: -41px;
 }
 
 .career-track li>i {
@@ -997,30 +1133,84 @@ main {
 }
 
 .goat-title::before {
-  position: absolute;
-  top: 27px;
-  left: 50%;
-  width: 112px;
-  height: 112px;
-  content: "";
-  border: 1px solid rgba(255, 218, 83, 0.35);
-  border-radius: 50%;
-  box-shadow:
-    0 0 0 17px rgba(255, 218, 83, 0.035),
-    0 0 55px rgba(255, 218, 83, 0.12);
-  transform: translateX(-50%);
+  content: none;
 }
 
 .goat-title::after {
+  content: none;
+}
+
+.goat-cosmos {
   position: absolute;
-  top: 69px;
+  top: 8px;
   left: 50%;
-  width: 13px;
-  height: 13px;
-  content: "";
-  background: #ffdc5b;
-  box-shadow: 0 0 22px #ffdc5b;
-  transform: translateX(-50%) rotate(45deg);
+  width: min(88%, 230px);
+  height: 145px;
+  overflow: visible;
+  color: #ffdc5b;
+  filter: drop-shadow(0 0 11px rgba(255, 220, 91, 0.16));
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.goat-cosmos path,
+.goat-cosmos circle,
+.goat-cosmos ellipse {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.goat-cosmos .cosmos-orbit {
+  opacity: 0.34;
+  stroke-width: 1;
+}
+
+.goat-cosmos .cosmos-orbit-two {
+  opacity: 0.2;
+  stroke-dasharray: 4 7;
+}
+
+.goat-cosmos .cosmos-axis {
+  opacity: 0.08;
+  stroke-dasharray: 2 8;
+}
+
+.goat-cosmos .cosmos-core circle:first-child {
+  opacity: 0.16;
+  stroke-width: 5;
+}
+
+.goat-cosmos .cosmos-core circle:nth-child(2) {
+  opacity: 0.7;
+  stroke-width: 1.2;
+}
+
+.goat-cosmos .cosmos-core path {
+  fill: rgba(255, 220, 91, 0.12);
+  stroke-width: 1.4;
+}
+
+.goat-cosmos .cosmos-core-dot {
+  fill: currentColor;
+  stroke: none;
+  filter: drop-shadow(0 0 9px currentColor);
+}
+
+.goat-cosmos .cosmos-trophy>circle {
+  fill: #090c10;
+  opacity: 0.95;
+  stroke-width: 1.2;
+}
+
+.goat-cosmos .cosmos-trophy path {
+  opacity: 0.82;
+  stroke-width: 1.1;
+}
+
+.goat-cosmos .cosmos-trophy {
+  filter: drop-shadow(0 0 5px rgba(255, 220, 91, 0.22));
 }
 
 .goat-title>span,
@@ -1496,16 +1686,30 @@ main {
 }
 
 .card-info>span {
+  width: 100%;
   max-width: 100%;
-  margin-top: 9px;
+  margin-top: 10px;
   overflow: hidden;
-  color: #8f98a3;
+  color: #b9c1ca;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 700;
   letter-spacing: 0.06em;
+  text-align: center;
+  text-shadow: 0 0 12px color-mix(in srgb, var(--accent), transparent 78%);
   text-overflow: ellipsis;
   text-transform: uppercase;
+  transform: translateY(10px);
   white-space: nowrap;
+}
+
+.character-card[data-id="lorenzo2"] .portrait-wrap::after {
+  bottom: -72px;
+  height: 95%;
+  background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(9, 12, 16, 0.76) 38%,
+      #090c10 70%);
 }
 
 .card-action {

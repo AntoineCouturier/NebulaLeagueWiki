@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05070a">
+    <meta name="description" content="Les équipes idéales automatiques de la Nebula League.">
+    <link rel="icon" type="image/png" href="images/logos/nebula.png">
+    <title>Équipes idéales — Nebula League</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="CSS/hamburger.css">
+    <link rel="stylesheet" href="CSS/global-theme.css">
+    <link rel="stylesheet" href="CSS/legacy-pages.css">
+</head>
+
+<body class="nebula-page legacy-page dream-page">
+    <header class="site-header" id="top">
+        <a class="brand" href="index.html"><span class="brand-mark"><span></span></span><span
+                class="brand-copy"><strong>NEBULA</strong><small>LEAGUE // DATABASE</small></span></a>
+        <nav class="main-nav" aria-label="Navigation principale">
+            <a href="index.html">Accueil</a><a href="title.html">Titres</a><a href="club.html">Clubs</a>
+            <a href="players.html">Joueurs</a><a href="matchs.html">Matchs</a><a href="saison.html">Saisons</a>
+            <a href="fixtures.html">Calendrier</a><a href="headtohead.html">Face à Face</a>
+            <a href="valeur.html">Valeurs</a><a href="rules.html">Règles</a><a href="stats.html">Records</a>
+            <a href="progression.html">Progression</a>
+            <a href="hall-of-fame.html">Hall of Fame</a>
+            <a class="nav-active" aria-current="page" href="dream-team.html">Équipes Idéales</a>
+        </nav>
+        <div class="header-actions"><span class="live-pill"><i></i> SAISON 01</span><button class="menu-button"
+                type="button" aria-label="Ouvrir le menu" aria-expanded="false"><span></span><span></span></button>
+        </div>
+    </header>
+
+    <main class="legacy-shell">
+        <section class="legacy-hero">
+            <div class="legacy-hero-copy">
+                <p class="legacy-kicker"><span>NL—13</span> SÉLECTION ÉLITE</p>
+                <h1>L'EQUIPE QUI<br><em>DOMINE LE TERRAIN.</em></h1>
+                <p>Une formation 3–2 recalculée selon la période et la méthode choisies. Chaque poste revient au joueur
+                    le plus performant disponible.</p>
+            </div>
+            <div class="dream-formation-mark" aria-hidden="true"><span>3</span><i>—</i><span>2</span></div>
+        </section>
+
+        <section class="dream-controls">
+            <div class="dream-mode-tabs" id="dreamModes">
+                <button type="button" data-dream-mode="day">DERNIÈRE JOURNÉE</button>
+                <button type="button" data-dream-mode="season" class="is-active">SAISON ACTIVE</button>
+                <button type="button" data-dream-mode="all">HISTORIQUE</button>
+                <button type="button" data-dream-mode="technical">TECHNIQUE</button>
+            </div>
+            <label><span>SAISON</span><select id="dreamSeason"></select></label>
+            <div class="dream-method"><small>MÉTHODE</small><strong id="dreamMethodLabel">IMPACT EN MATCH</strong></div>
+        </section>
+
+        <section class="dream-stage">
+            <div class="dream-pitch" id="dreamPitch"></div>
+            <aside class="dream-dossier" id="dreamDossier"></aside>
+        </section>
+
+        <section class="legacy-panel">
+            <div class="legacy-panel-title"><span>02</span>
+                <div><small>PROFONDEUR D’EFFECTIF</small>
+                    <h2>BANC D’ÉLITE</h2>
+                </div>
+                <p>Les trois meilleures alternatives hors du cinq titulaire.</p>
+            </div>
+            <div class="dream-bench" id="dreamBench"></div>
+        </section>
+
+        <section class="dream-formula">
+            <span>FORMULE DE SÉLECTION</span>
+            <p id="dreamFormula">Notes, buts, passes, défenses, dribbles et distinctions de joueur du match.</p>
+        </section>
+
+        <nav class="legacy-crosslinks" aria-label="Autres archives">
+            <a href="progression.html"><span>TRAJECTOIRES</span><strong>PROGRESSION</strong><i>↗</i></a>
+            <a href="hall-of-fame.html"><span>ARCHIVES ABSOLUES</span><strong>HALL OF FAME</strong><i>↗</i></a>
+        </nav>
+    </main>
+
+    <script src="JavaScript/nebula-data.js"></script>
+    <script src="JavaScript/dream-team.js"></script>
+    <script src="JavaScript/hamburger.js"></script>
+</body>
+
+</html>

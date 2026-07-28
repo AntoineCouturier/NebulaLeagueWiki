@@ -688,7 +688,7 @@ body.home-page .home-hero::after {
 .home-portals {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(4, minmax(270px, auto));
+  grid-template-rows: repeat(5, minmax(270px, auto));
   gap: 14px;
 }
 
@@ -891,6 +891,103 @@ body.home-page .home-hero::after {
   grid-column: 10 / 13;
   grid-row: 4;
 }
+
+.portal-progression {
+  --portal-accent: var(--home-cyan);
+  grid-column: 1 / 5;
+  grid-row: 5;
+}
+
+.portal-hall {
+  --portal-accent: #ffd45b;
+  grid-column: 5 / 9;
+  grid-row: 5;
+}
+
+.portal-dream {
+  --portal-accent: var(--home-acid);
+  grid-column: 9 / 13;
+  grid-row: 5;
+}
+
+.portal-progress-symbol,
+.portal-hall-symbol,
+.portal-team-symbol {
+  position: absolute;
+  top: 45px;
+  right: 28px;
+  width: 145px;
+  height: 110px;
+  opacity: 0.72;
+}
+
+.portal-progress-symbol {
+  border-bottom: 1px solid color-mix(in srgb, var(--portal-accent), transparent 55%);
+}
+
+.portal-progress-symbol::before {
+  position: absolute;
+  inset: 18px 9px 12px;
+  content: "";
+  border-top: 1px solid var(--portal-accent);
+  transform: skewY(-24deg);
+}
+
+.portal-progress-symbol i {
+  position: absolute;
+  bottom: calc(8px + var(--step) * 18px);
+  left: calc(8px + var(--step) * 36px);
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--portal-accent);
+  border-radius: 50%;
+  background: var(--home-panel);
+}
+
+.portal-progress-symbol i:nth-child(1) { --step: 0; }
+.portal-progress-symbol i:nth-child(2) { --step: 1; }
+.portal-progress-symbol i:nth-child(3) { --step: 2; }
+.portal-progress-symbol i:nth-child(4) { --step: 3; }
+
+.portal-hall-symbol {
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--portal-accent), transparent 72%);
+  transform: rotate(45deg);
+}
+
+.portal-hall-symbol strong {
+  color: var(--portal-accent);
+  font: 800 22px/1 var(--display);
+  transform: rotate(-45deg);
+}
+
+.portal-hall-symbol i {
+  position: absolute;
+  inset: 17px;
+  border: 1px solid color-mix(in srgb, var(--portal-accent), transparent 62%);
+}
+
+.portal-team-symbol {
+  background:
+    linear-gradient(transparent 49%, color-mix(in srgb, var(--portal-accent), transparent 68%) 50%, transparent 51%),
+    radial-gradient(circle, transparent 0 25px, color-mix(in srgb, var(--portal-accent), transparent 68%) 26px 27px, transparent 28px);
+}
+
+.portal-team-symbol i {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border: 1px solid var(--portal-accent);
+  background: var(--home-panel);
+  transform: rotate(45deg);
+}
+
+.portal-team-symbol i:nth-child(1) { top: 8px; left: 66px; }
+.portal-team-symbol i:nth-child(2) { top: 40px; left: 16px; }
+.portal-team-symbol i:nth-child(3) { top: 40px; right: 16px; }
+.portal-team-symbol i:nth-child(4) { bottom: 8px; left: 40px; }
+.portal-team-symbol i:nth-child(5) { right: 40px; bottom: 8px; }
 
 .portal-orbit {
   position: absolute;
@@ -1485,7 +1582,10 @@ body.home-page .home-hero::after {
   .portal-rules,
   .portal-headtohead,
   .portal-seasons,
-  .portal-calendar {
+  .portal-calendar,
+  .portal-progression,
+  .portal-hall,
+  .portal-dream {
     grid-column: auto;
     grid-row: auto;
   }

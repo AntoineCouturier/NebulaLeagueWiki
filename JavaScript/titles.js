@@ -7,7 +7,7 @@ const characters = [
     difficulty: 0,
     ultimate: "Heart of Blue Lock",
     description:
-      "Le point d’entrée idéal dans la ligue. Isagi transforme la lecture du jeu en arme et récompense les décisions simples, prises au bon moment.",
+      "« Become the one who chooses, not the one waiting to be chosen. »",
     conditions: [
       "Marquer 10 fois avec Direct Shot",
       "Marquer 1 fois avec My Direct Shot",
@@ -23,7 +23,7 @@ const characters = [
     difficulty: 5,
     ultimate: "The Overseer",
     description:
-      "Un gardien sauvage, spectaculaire et totalement imprévisible. Son jeu aérien crée des séquences qu’aucun autre personnage ne peut reproduire.",
+      "« My greatest weapon is my close-quarter plays. »",
     conditions: [
       "Marquer 5 fois avec Scorpion",
       "Sauver 5 tirs avec Diving Header",
@@ -39,7 +39,7 @@ const characters = [
     difficulty: 2,
     ultimate: "The Fallen Genius",
     description:
-      "Un contrôle de balle irréel et un moveset parmi les plus complets du jeu. Facile à comprendre, beaucoup plus exigeant à perfectionner.",
+      "« You sure bark a lot for a loser. I’ll win and make you my servant. »",
     conditions: [
       "Marquer 10 fois avec « Heavy »",
       "Utiliser « Control » en l’air puis marquer 3 fois",
@@ -57,7 +57,7 @@ const characters = [
     difficulty: 1,
     ultimate: "The Red Panther",
     description:
-      "La vitesse à l’état pur. Chigiri fend les lignes, force les duels et possède l’un des ultimes les plus oppressants de la ligue.",
+      "« The best striker in the world, is me! »",
     conditions: [
       "Marquer 10 fois avec « Mach Cut-In »",
       "Marquer 1 fois depuis la Golden Zone",
@@ -72,7 +72,7 @@ const characters = [
     difficulty: 2,
     ultimate: "The Monster",
     description:
-      "Trois dribbles, un tir instinctif et une créativité permanente. Bachira invite à provoquer chaque défenseur jusqu’à faire sortir le monstre.",
+      "« My creativity cannot stop! »",
     conditions: [
       "Marquer 10 fois avec « Bon! », toutes variantes",
       "Marquer 5 fois avec Monster Leap",
@@ -90,7 +90,7 @@ const characters = [
     difficulty: 5,
     ultimate: "The Devil",
     description:
-      "Un finisseur explosif qui dépend des passes et punit chaque ballon bien servi. Difficile à dompter, terrifiant quand le rythme s’installe.",
+      "« RIGHT IN THE WOMB! »",
     conditions: [
       "Marquer 10 fois avec « Formless »",
       "Réussir 5 Diving Header",
@@ -120,7 +120,7 @@ const characters = [
     difficulty: 4,
     ultimate: "Planet Hotline",
     description:
-      "Un passeur orbital qui crée des circuits impossibles à défendre. Son efficacité grimpe avec la qualité et l’anticipation de ses partenaires.",
+      "« Let’s go. Blue Lock.. Domination... »",
     conditions: [
       "Voler 10 ballons avec « Guard Dog »",
       "Voler 5 fois la balle avec « Close Quarter Dribble » en ultime",
@@ -135,7 +135,7 @@ const characters = [
     difficulty: 3,
     ultimate: "The Imp",
     description:
-      "L’imprévisible prodige est encore classé confidentiel. Ses défis seront révélés avec sa sortie.",
+      "« Alright! I Will... GIVE YOU THE NASTIEST PASS!! »",
     conditions: ["Conditions à découvrir lors de sa sortie."],
     available: false,
   },
@@ -147,7 +147,7 @@ const characters = [
     difficulty: 3,
     ultimate: "The Wild Card",
     description:
-      "Puissance, impact et contrôle physique. Kunigami peut étouffer une action en défense avant de la terminer lui-même en attaque.",
+      "« I'm not a Hero Anymore. I Left that Immature Joke Back in Hell »",
     conditions: [
       "Marquer 10 fois avec « Lefty Shot »",
       "Marquer 5 fois avec « Justice Header »",
@@ -165,7 +165,7 @@ const characters = [
     difficulty: 4,
     ultimate: "The 1-on-1 Emperor",
     description:
-      "Un spécialiste du duel qui mêle dribbles précis et Predator Eye. Une fois lancé, chaque un-contre-un devient son terrain de chasse.",
+      "« God only gives us trials that we can overcome. »",
     conditions: [
       "Marquer 10 fois avec « Gyro Shot », toutes variantes",
       "Réussir un contre Street Tag parfait",
@@ -181,10 +181,11 @@ const characters = [
     difficulty: 3,
     ultimate: "The Snake",
     description:
-      "Un pur défenseur, méthodique et venimeux. Bien joué, Aiku ne se contente pas de fermer l’espace : il retourne le match.",
+      "« For the rebirth of Japanese football, I am the final wall! »",
     conditions: [
       "Voler 15 ballons avec « Reflex Tackle »",
-      "Intercepter 10 ballons avec « Venom Trap »",
+      "Intercepter 10 ballons ennemis avec « Venom Trap »",
+      "Voler la balle 3 fois avec « Flow Steal »",
       "Intercepter 3 ballons avec « Ultimate Defense »",
       "Marquer 1 fois avec « Former Striker »",
     ],
@@ -197,7 +198,7 @@ const characters = [
     difficulty: 2,
     ultimate: "The KING",
     description:
-      "Une machine à buts sans détour. Ses dribbles avancent, ses tirs punissent et son Stealth Shot transforme la moindre ouverture en sentence.",
+      "« On the field, I’m the King. »",
     conditions: [
       "Marquer 10 fois avec « Long Shot »",
       "Marquer 5 fois avec « Stealth Shot: Apex Predator »",
@@ -213,12 +214,12 @@ const characters = [
     difficulty: 3,
     ultimate: "Japan’s Greatest Treasure",
     description:
-      "Élégant, direct et redoutablement efficace. Ses dribbles protègent, ses passes découpent et ses tirs pardonnent très peu d’erreurs.",
+      "« Only the Idiots who can follow me... Get to see the Scenery that comes Next »",
     conditions: [
       "Marquer 10 fois avec « Drive Shot », toutes variantes",
       "Réussir 3 fois le combo Rabona Nutmeg → Magic Pass",
       "Déclencher l’Auto Goal de « Control »",
-      "Faire 5 passes avec « Magic Pass: Calculated »",
+      "Faire 3 passes avec « Magic Pass: Calculated »",
       "Marquer 1 fois avec « Cross Elastico »",
     ],
   },
@@ -230,7 +231,7 @@ const characters = [
     difficulty: 4,
     ultimate: "God’s Unknown Plan",
     description:
-      "Un dribbleur-passeur aux trajectoires difficiles à lire. Son contrôle du borderline peut créer le génie comme le chaos.",
+      "« Sharpen your blade, and prepare for the battle. »",
     conditions: [
       "Marquer 10 fois avec « Windmill Shot »",
       "Faire une passe avec « Twister Pass » en ultime",
@@ -247,7 +248,7 @@ const characters = [
     difficulty: 2,
     ultimate: "The Crow",
     description:
-      "Exceptionnel à la récupération, excellent pour casser les lignes. Karasu gagne les duels sales et transforme la défense en première passe.",
+      "« If you can't prove your value, there's no meaning to you playing. »",
     conditions: [
       "Étourdir 2 adversaires avec « Wing-Arm Block » puis passer",
       "Voler 10 fois la balle avec « Silent Steal »",
@@ -264,7 +265,7 @@ const characters = [
     difficulty: 5,
     ultimate: "Stealthy Ninja",
     description:
-      "Polyvalent, mobile et discret. Otoya infiltre les intervalles, mais demande une exécution précise pour convertir son large arsenal.",
+      "« I've Seen that move more than my own parents. »",
     conditions: [
       "Marquer 10 fois avec « Shuriken Shot »",
       "Marquer avec « Kusarigama Slash » sur la passe d’un allié",
@@ -293,14 +294,13 @@ const characters = [
     difficulty: 2,
     ultimate: "The Blue Rose",
     description:
-      "Un empereur immédiatement dangereux. Facile à prendre en main, il réserve sa véritable exigence à la maîtrise du Magnus.",
+      "« Get on your damn knees, Blue Lock. »",
     conditions: [
-      "Marquer 10 fois avec « Heavy »",
-      "Utiliser « Control » en l’air puis marquer 3 fois",
-      "Déclencher l’Auto Goal de « Control »",
-      "Marquer 1 fois avec Jumping Turn",
-      "Marquer avec « Heavy » en ultime",
-      "Réaliser le Five Stage Revolver Shoot",
+      "Marquer 10 fois avec « Kaiser Impact »",
+      "Marquer 5 fois avec « Kaiser Impact: Magnus »",
+      "Marquer 3 fois avec « Insta-Kill Flash »",
+      "Marquer 1 fois avec « Kaiser Impact: Beinschuss »",
+      "Marquer 1 fois avec « Super-Star »",
     ],
   },
   {
@@ -311,14 +311,11 @@ const characters = [
     difficulty: 4,
     ultimate: "The Zombie",
     description:
-      "Un défenseur qui devient dangereux à mesure que le duel s’étire. Son ultime dévore les possessions et ouvre la transition.",
+      "« Yo, Michael... »",
     conditions: [
-      "Marquer 10 fois avec « Heavy »",
-      "Utiliser « Control » en l’air puis marquer 3 fois",
-      "Déclencher l’Auto Goal de « Control »",
-      "Marquer 1 fois avec Jumping Turn",
-      "Marquer avec « Heavy » en ultime",
-      "Réaliser le Five Stage Revolver Shoot",
+      "Bloquer/Intercepter 10 Ballons avec soit « Defensive Stence » ou « Horrific Intercept »",
+      "Marquer 1 fois avec « Ace Eater »",
+      "Voler la Balle 3 fois avec « Yo Michael »",
     ],
   },
   {
@@ -329,14 +326,14 @@ const characters = [
     difficulty: 1,
     ultimate: "The Beast",
     description:
-      "Des I-Frames, une courbe terrifiante et un ultime aux possibilités presque abusives. Rin impose son scénario au match.",
+      "« Disgusting, it makes me want to puke… I’LL MANGLE YOU! »",
     conditions: [
-      "Marquer 10 fois avec « Heavy »",
-      "Utiliser « Control » en l’air puis marquer 3 fois",
-      "Déclencher l’Auto Goal de « Control »",
-      "Marquer 1 fois avec Jumping Turn",
-      "Marquer avec « Heavy » en ultime",
-      "Réaliser le Five Stage Revolver Shoot",
+      "Marquer 10 fois avec « Curve Shot »",
+      "Marquer 5 fois avec « Curve Shot: Obliterate »",
+      "Marquer 1 fois avec « Crash Shot »",
+      "Marquer 1 fois avec « Kill. »",
+      "Marquer 1 fois avec « VIP Seat »",
+      "Detruire 3 Joueurs avec « Center of Gravity: Full-Burst »",
     ],
   },
   {
@@ -347,33 +344,35 @@ const characters = [
     difficulty: 4,
     ultimate: "Master of All Trades",
     description:
-      "Une boîte à outils totale. Reo sait tout faire, mais son nombre de variantes transforme chaque décision en test de maîtrise.",
+      "« Even God... Decided to become my Ally..! »",
     conditions: [
-      "Marquer 10 fois avec « Heavy »",
-      "Utiliser « Control » en l’air puis marquer 3 fois",
-      "Déclencher l’Auto Goal de « Control »",
-      "Marquer 1 fois avec Jumping Turn",
-      "Marquer avec « Heavy » en ultime",
-      "Réaliser le Five Stage Revolver Shoot",
+      "Contrer 5 fois avec « Cross Elastico »",
+      "Faire un Pressing sur 5 Joueurs qui se la font apres voler par un mate grace à « Dobermann Press »",
+      "Marquer 5 fois avec « Draconic Shot »",
+      "Intercepter 3 Ballons avec l'activation d'Ulti Defensif",
+      "Marquer 1 fois avec « Panther Shot: Mirror Shot »",
+      "Marquer 1 fois avec Un Move d'Ulti copié",
+      "Marquer 1 fois avec « Chameleon Volley »",
+      "Voler la balle 1 fois avec « Breakdancing Tackle »",
+      "Voler la balle 1 fois avec « Meta-Vision! »"
     ],
   },
   {
     id: "nel-isagi",
-    name: "Isagi",
-    edition: "NEL",
+    name: "NEL Isagi",
     rarity: "mastery",
     rarityLabel: "Mastery",
     difficulty: 2,
     ultimate: "Genius of Adaptation",
     description:
-      "Une évolution silencieuse et létale. Raumdeuter le fait disparaître des radars avant que l’un des meilleurs tirs du jeu ne termine l’action.",
+      "« Keep Playing Crazy Soccer you Damn Geniuses... You'll Never Outsmart Us. »",
     conditions: [
-      "Marquer 10 fois avec « Heavy »",
-      "Utiliser « Control » en l’air puis marquer 3 fois",
-      "Déclencher l’Auto Goal de « Control »",
-      "Marquer 1 fois avec Jumping Turn",
-      "Marquer avec « Heavy » en ultime",
-      "Réaliser le Five Stage Revolver Shoot",
+      "Marquer 10 fois avec « Neo-Direct Shot »",
+      "Marquer 3 fois avec « Neo-Volley Shot »",
+      "Intercepter 3 Ballons avec « Meta-Burst Point Trap »",
+      "Reussir 3 fois « Feint »",
+      "Marquer 1 fois avec « Lefty Shot »",
+      "Marquer 1 fois avec « Rebirt » ou « Two-Gun Volley »",
     ],
   },
   {
@@ -384,14 +383,12 @@ const characters = [
     difficulty: 4,
     ultimate: "Ultra Sadist",
     description:
-      "Un support chirurgical. Bien piloté, Hiori contrôle le tempo, fabrique les angles et transforme ses alliés en armes.",
+      "« For the first time in my life, I'm going to believe in myself. »",
     conditions: [
-      "Marquer 10 fois avec « Heavy »",
-      "Utiliser « Control » en l’air puis marquer 3 fois",
-      "Déclencher l’Auto Goal de « Control »",
-      "Marquer 1 fois avec Jumping Turn",
-      "Marquer avec « Heavy » en ultime",
-      "Réaliser le Five Stage Revolver Shoot",
+      "Bloquer 5 Tirs avec « Frost Guard »",
+      "Marquer 3 fois avec « Solo Link Up »",
+      "Contrer 3 fois avec « Chilling Counter »",
+      "Faire une Passe qui Menera à une passe Decisive avec « No-Look Alley Cross »",
     ],
   },
   {
@@ -403,14 +400,14 @@ const characters = [
     difficulty: 3,
     ultimate: "The Ace Eater",
     description:
-      "Deux fois plus d’options, deux fois plus de danger. Cette maîtrise transforme chaque move de Lorenzo en embranchement défensif.",
+      "« There's Nothin' in this World that Money Can't Buy, 'Kay? »",
     conditions: [
-      "Marquer 10 fois avec « Heavy »",
-      "Utiliser « Control » en l’air puis marquer 3 fois",
-      "Déclencher l’Auto Goal de « Control »",
-      "Marquer 1 fois avec Jumping Turn",
-      "Marquer avec « Heavy » en ultime",
-      "Réaliser le Five Stage Revolver Shoot",
+      "Contrer 3 fois avec « Zombie Step Feint »",
+      "Bloquer/Intercepter 10 Ballons avec soit « Defensive Stence » ou « Horrific Intercept »",
+      "Bloquer 1 tir avec « Penalty Flow Awakening »",
+      "Voler la Balle 3 fois avec « Yo Michael »",
+      "Reussir les 2 Dribbles puis marquer avec « Ace Eater »",
+      "Voler la balle Grace à « Chow Time »",
     ],
   },
   {
@@ -422,8 +419,17 @@ const characters = [
     difficulty: 3,
     ultimate: "The Final Wall",
     description:
-      "La dernière muraille est encore verrouillée. Son dossier sera déclassifié lors de sa sortie officielle.",
-    conditions: ["Conditions à découvrir lors de sa sortie."],
+      "That Kind of Shitty Bluff, Won't Work on me Lil' Burglar!",
+    conditions: [
+      "Degager 3 Balles avec  « Serpentine Clear »",
+      "Voler 15 ballons avec « Reflex Tackle »",
+      "Intercepter 10 Ballons ennemis avec « Venom Trap »",
+      "Reussir 5 Pressing avec « Snake's Grasp »",
+      "Voler la balle 3 fois avec « Flow Steal »",
+      "Intercepter 1 ballons avec « Ultimate Defense »",
+      "Voler 3 fois avec « Blooming Halt »",
+      "Voler 3 fois avec « Ultimate Snake's Grasp »",
+    ],
   },
   {
     id: "kaiser2",
@@ -434,8 +440,9 @@ const characters = [
     difficulty: 3,
     ultimate: "Emperor's Chosen One",
     description:
-      "La dernière muraille est encore verrouillée. Son dossier sera déclassifié lors de sa sortie officielle.",
+      "« Eat Shit, you Fucking Losers. »",
     conditions: ["Conditions à découvrir lors de sa sortie."],
+    available: false
   },
   {
     id: "rin2",
@@ -446,8 +453,9 @@ const characters = [
     difficulty: 3,
     ultimate: "The Berserker",
     description:
-      "La dernière muraille est encore verrouillée. Son dossier sera déclassifié lors de sa sortie officielle.",
+      "« HAVE YOU EVER PLAYED FOOTBALL WITH YOUR LIFE ON THE LINE?!! »",
     conditions: ["Conditions à découvrir lors de sa sortie."],
+    available: false
   },
 ];
 
@@ -578,7 +586,7 @@ if (grid && playerFile && search && resultCount && profileCount && challengeCoun
           <span class="card-scanline"></span>
           <span class="card-info">
             <small>${character.rarityLabel}</small>
-            <strong>${character.name}${character.edition ? "<em>" + character.edition + "</em>" : ""}</strong>
+            <strong>${character.name}${character.edition && character.edition.toLowerCase() !== "mastery" ? "<em>" + character.edition + "</em>" : ""}</strong>
             <span>${character.ultimate}</span>
           </span>
           <span class="card-action">${character.available === false ? "DOSSIER SCELLÉ" : "INSPECTER"}<i>↗</i></span>
@@ -623,7 +631,7 @@ if (grid && playerFile && search && resultCount && profileCount && challengeCoun
         </div>
         <div class="file-identity">
           <p>${character.rarityLabel}</p>
-          <h3>${character.name}${character.edition ? "<em>" + character.edition + "</em>" : ""}</h3>
+          <h3>${character.name}${character.edition && character.edition.toLowerCase() !== "mastery" ? "<em>" + character.edition + "</em>" : ""}</h3>
           <div class="difficulty"><span>DIFFICULTÉ</span><div aria-label="${character.difficulty} sur 5">${[1, 2, 3, 4, 5].map((star) => '<i class="' + (star <= character.difficulty ? "filled" : "") + '"></i>').join("")}</div></div>
           <p class="file-description">${character.description}</p>
         </div>

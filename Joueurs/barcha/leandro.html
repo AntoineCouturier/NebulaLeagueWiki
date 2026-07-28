@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#05070a">
     <link rel="icon" type="image/png" href="../../images/logos/nebula.png">
-    <title>Carte Joueur - Elijah</title>
+    <title>Carte Joueur - Leandro</title>
     <link rel="stylesheet" href="../player-card.css">
     <link rel="stylesheet" href="../../CSS/colors.css">
     <link rel="stylesheet" href="../../CSS/hamburger.css">
@@ -49,39 +49,42 @@
 
         <!-- Carte principale -->
         <div class="player-card-main">
-            <div class="player-header-manshine">
-                <img loading="lazy" src="../images-joueurs/elijah.png" alt="@Sell">
-                <h2>Elijah</h2>
+            <div class="player-header-bastard">
+                <img loading="lazy" src="../images-joueurs/leandro.png" alt="Leandro">
+                <h2>Leandro</h2>
             </div>
 
-            <div class="player-club-logo-manshine">
-                <img loading="lazy" src="../../images/clubs_icon/Manshine_City.png" alt="BM Club Logo">
+            <div class="player-club-logo-bastard">
+                <img loading="lazy" src="../../images/clubs_icon/barcha.png" alt="BM Club Logo">
             </div>
 
             <div class="player-info">
-                <p><strong class="info-manshine">Pseudo :</strong> Elijah</p>
-                <p><strong class="info-manshine">Club :</strong> Manshine City</p>
-                <p><strong class="info-manshine">Position :</strong> RW</p>
-                <p><strong class="info-manshine">Personnage :</strong> Shidou</p>
-                <p><strong class="info-manshine">Valeur :</strong> 0¥💎</p>
+                <p><strong class="info-bastard">Pseudo :</strong> Leandro</p>
+                <p><strong class="info-bastard">Club :</strong> Barcha</p>
+                <p><strong class="info-bastard">Position :</strong> RW</p>
+                <p><strong class="info-bastard">Personnage :</strong> Kaiser</p>
+                <p><strong class="info-bastard">Valeur :</strong> 18,250,000¥💎</p>
             </div>
         </div>
 
         <!-- Cube Stats FIFA -->
         <div class="player-card-fifa-stats">
             <h3>Stats techniques</h3>
-            <p><strong class="stats">🛡️ Defense :</strong> 72 | <span class="c">C</span></p>
-            <p><strong class="stats">⭐ Passe :</strong> 74 | <span class="c">C</span></p>
-            <p><strong class="stats">🌟 Dribble :</strong> 83 | <span class="a">A</span></p>
-            <p><strong class="stats">⚽ Tir :</strong> 82 | <span class="a">A</span></p>
-            <p><strong class="stats">💥 Offense :</strong> 77 | <span class="b">B</span></p>
-            <p><strong class="stats">👋 Positionement :</strong> 78 | <span class="b">B</span></p>
+            <p><strong class="stats">🛡️ Defense :</strong> 94 | <span class="ss">SS</span></p>
+            <p><strong class="stats">⭐ Passe :</strong> 100 | <span class="z" data-text="Rang Ultime">Z</span>
+            </p>
+            <p><strong class="stats">🌟 Dribble :</strong> 95 | <span class="sss">SSS</span></p>
+            <p><strong class="stats">⚽ Tir :</strong> 88 | <span class="s">S</span></p>
+            <p><strong class="stats">💥 Offense :</strong> 93 | <span class="ss">SS</span></p>
+            <p><strong class="stats">👋 Positionement :</strong> 94 | <span class="ss">SS</span></p>
             <br>
             <br>
-            <p><strong class="stats">👤 Global :</strong> 78 | <span class="b">Rang B</span></p>
-            <button class="radar-btn manshine-season" id="openRadarPopup">
+            <p><strong class="stats">👤 Global :</strong> 94 | <span class="ss">Rang SS</span></p>
+            <br>
+            <button class="radar-btn bastard-season" id="openRadarPopup">
                 📊 Voir graphique radar
             </button>
+
         </div>
 
         <!-- Cube Stats matchs -->
@@ -109,7 +112,7 @@
             </ul>
             <h3>Titres</h3>
             <ul>
-                <!-- Titres à mettre quand debloquer -->
+                <!-- Le titre ultime est contrôlé par `Ult` dans nebula-data.js. -->
             </ul>
         </div>
 
@@ -117,8 +120,8 @@
 
     <!-- POPUP RADAR AGRANDI -->
     <div class="popup-overlay" id="popupRadar">
-        <div class="popup-box manshine-box" id="radarPopupBox">
-            <h2>📊 Graphique Radar - Elijah</h2>
+        <div class="popup-box bastard-box" id="radarPopupBox">
+            <h2>📊 Graphique Radar - Antoine</h2>
 
             <div class="radar-container">
                 <canvas id="skillsRadarChart"></canvas>
@@ -127,7 +130,7 @@
             <!-- Infos additionnelles -->
             <div class="radar-info" style="text-align: center; margin: 20px 0;">
                 <p style="color: #fff; font-size: 1.1rem; margin-bottom: 5px;">
-                    <strong>Note Globale : 77 | B</strong>
+                    <strong>Note Globale : 93 | SS</strong>
                 </p>
                 <p style="color: #aaa; font-size: 0.9rem;">
                     Statistiques techniques

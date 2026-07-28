@@ -10,9 +10,8 @@ const CLUBS = (window.NEBULA_DATA?.clubs || []).map(club => ({
         || { played: 0, points: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 },
     titles: window.NEBULA_DATA?.getClubTitleCount?.(club.key) || 0
 }));
-const ACTIVE_SEASON = window.NEBULA_DATA?.getActiveSeason?.() || null;
-
-const CLUB_ROLES = ["CF", "LW", "RW", "CM"];
+const CLUB_ROLES = ["CF", "LW", "RW", "LM", "RM"];
+const CLUB_CAPACITY = CLUB_ROLES.length;
 
 function buildClubRoster(clubKey) {
     const roster = Object.fromEntries(CLUB_ROLES.map(role => [role, null]));
@@ -37,24 +36,23 @@ CLUBS.forEach(club => {
     club.roster = buildClubRoster(club.key);
 });
 
-// Position des 4 postes sur le mini-terrain (en % du conteneur)
+// Position des 5 postes de la formation 3–2 sur le mini-terrain (en % du conteneur)
 const PITCH_POSITIONS = {
     CF: { top: "18%", left: "50%" },
     LW: { top: "34%", left: "16%" },
     RW: { top: "34%", left: "84%" },
-    CM: { top: "74%", left: "50%" }
+    LM: { top: "74%", left: "30%" },
+    RM: { top: "74%", left: "70%" }
 };
 
-const ROLE_LABEL = { CF: "CF", LW: "LW", RW: "RW", CM: "CM" };
+const ROLE_LABEL = { CF: "CF", LW: "LW", RW: "RW", LM: "LM", RM: "RM" };
 
 document.addEventListener("DOMContentLoaded", () => {
 
     const tabs = document.getElementById("clubTabs");
     const stageField = document.getElementById("clubStageField");
     const stageDossier = document.getElementById("clubStageDossier");
-    const modal = document.getElementById("clubModal");
-    const modalContent = document.getElementById("clubModalContent");
-    if (!tabs || !stageField || !stageDossier || !modal) return;
+    if (!tabs || !stageField || !stageDossier) return;
 
     /* ============================================================
        UTILITAIRES
@@ -66,10 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function filledCount(roster) {
         return Object.values(roster).filter(Boolean).length;
-    }
-
-    function diff(s) {
-        return s.gf - s.ga;
     }
 
     function clubIndex(club) {
@@ -90,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* ============================================================
-       TERRAIN VISUEL (centre tactique et modal)
+       TERRAIN VISUEL DU CENTRE TACTIQUE
        ============================================================ */
     function renderPitch(club, big) {
         const slots = Object.entries(club.roster).map(([role, player]) => {
@@ -125,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     style="--club-color:${club.color};" aria-pressed="${active}">
                     <span>${clubIndex(club)}</span>
                     <img src="${club.logo}" alt="" onerror="this.style.visibility='hidden'">
-                    <div><strong>${club.name}</strong><small>${count}/4 JOUEURS</small></div>
+                    <div><strong>${club.name}</strong><small>${count}/${CLUB_CAPACITY} JOUEURS</small></div>
                 </button>
             `;
         }).join("");
@@ -133,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderStage(club) {
         const count = filledCount(club.roster);
-        const openSlots = 4 - count;
+        const openSlots = CLUB_CAPACITY - count;
         const value = formatValue(clubValue(club.key));
         const s = club.standings;
 
@@ -141,8 +135,8 @@ document.addEventListener("DOMContentLoaded", () => {
         stageDossier.style.setProperty("--club-color", club.color);
         stageField.innerHTML = `
             <div class="stage-field-topline">
-                <span>FORMATION // 3–0–1</span>
-                <span>${count}/4 POSTES OCCUPÉS</span>
+                <span>FORMATION // 3–2</span>
+                <span>${count}/${CLUB_CAPACITY} POSTES OCCUPÉS</span>
             </div>
             ${renderPitch(club, true)}
             <div class="stage-field-footer">
@@ -162,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
             <blockquote>${club.style}</blockquote>
             <div class="stage-data-grid">
-                <div><small>JOUEURS</small><strong>${count}<span>/04</span></strong></div>
+                <div><small>JOUEURS</small><strong>${count}<span>/${String(CLUB_CAPACITY).padStart(2, "0")}</span></strong></div>
                 <div><small>POSTES LIBRES</small><strong>${openSlots}</strong></div>
                 <div><small>POINTS</small><strong>${s.points}</strong></div>
                 <div class="stage-value"><small>VALEUR</small><strong>${value}<span>¥</span></strong></div>
@@ -178,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* ============================================================
-       MODAL DÉTAILLÉ
+       COMPOSITION DU CLUB
        ============================================================ */
     function renderRosterList(club) {
         const rows = Object.entries(club.roster).map(([role, player]) => `
@@ -191,103 +185,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         return `<ul class="roster-list">${rows}</ul>`;
     }
-
-    function renderModal(club) {
-        const s = club.standings;
-        const value = formatValue(clubValue(club.key));
-        const count = filledCount(club.roster);
-
-        modalContent.innerHTML = `
-            <div class="modal-file-topline">
-                <span>CLUB DOSSIER // ${clubIndex(club)}</span>
-                <span><i></i> ARCHIVE ACTIVE</span>
-            </div>
-            <div class="modal-club-head">
-                <img src="${club.logo}" alt="${club.name}" class="modal-club-logo" onerror="this.style.visibility='hidden'">
-                <div>
-                    <small>${club.fullName || "NEBULA LEAGUE CLUB"}</small>
-                    <h2 class="modal-club-name ${club.cls}">${club.name}</h2>
-                </div>
-                ${club.titles > 0 ? `<span class="modal-title-badge">${club.titles} TITRE${club.titles > 1 ? "S" : ""}</span>` : ""}
-            </div>
-
-            <div class="modal-grid">
-                <div class="modal-col">
-                    <h4>Formation</h4>
-                    ${renderPitch(club, true)}
-                </div>
-
-                <div class="modal-col">
-                    <h4>Effectif (${count}/4)</h4>
-                    ${renderRosterList(club)}
-                    <a class="view-roster-link" href="players.html?club=${club.key}">Voir l'effectif complet →</a>
-
-                    <h4 style="margin-top:22px;">Statistiques — Saison ${ACTIVE_SEASON?.number ?? "en cours"}</h4>
-                    <div class="modal-stat-grid">
-                        <div class="modal-stat"><span>Points</span><strong>${s.points}</strong></div>
-                        <div class="modal-stat"><span>V / N / D</span><strong>${s.w}/${s.d}/${s.l}</strong></div>
-                        <div class="modal-stat"><span>Buts marqués</span><strong>${s.gf}</strong></div>
-                        <div class="modal-stat"><span>Buts encaissés</span><strong>${s.ga}</strong></div>
-                        <div class="modal-stat"><span>Différence</span><strong>${diff(s) > 0 ? "+" : ""}${diff(s)}</strong></div>
-                        <div class="modal-stat"><span>Valeur totale</span><strong>${value}¥</strong></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-style-block">
-                <h4>Style de jeu</h4>
-                <blockquote class="style-quote">${club.style}</blockquote>
-            </div>
-        `;
-    }
-
-    let lastFocusedElement = null;
-
-    function syncClubUrl(clubKey) {
-        const url = new URL(window.location.href);
-        if (clubKey) {
-            url.searchParams.set("club", clubKey);
-        } else {
-            url.searchParams.delete("club");
-        }
-        window.history.replaceState({}, "", url);
-    }
-
-    function openModal(clubKey, updateUrl = true) {
-        const club = CLUBS.find(c => c.key === clubKey);
-        if (!club) return;
-
-        selectClub(club.key);
-        lastFocusedElement = document.activeElement;
-        renderModal(club);
-        modal.style.setProperty("--club-color", club.color);
-        modal.style.display = "flex";
-        modal.setAttribute("aria-hidden", "false");
-        document.body.classList.add("club-modal-open");
-        if (updateUrl) syncClubUrl(club.key);
-
-        requestAnimationFrame(() => {
-            document.getElementById("clubModalCloseX").focus();
-        });
-    }
-
-    function closeModal() {
-        modal.style.display = "none";
-        modal.setAttribute("aria-hidden", "true");
-        document.body.classList.remove("club-modal-open");
-        syncClubUrl(null);
-
-        if (lastFocusedElement instanceof HTMLElement) {
-            lastFocusedElement.focus();
-        }
-    }
-
-    document.getElementById("clubModalCloseX").addEventListener("click", closeModal);
-    document.getElementById("clubModalCloseBtn").addEventListener("click", closeModal);
-    modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
-    document.addEventListener("keydown", e => {
-        if (e.key === "Escape" && modal.style.display === "flex") closeModal();
-    });
 
     /* ============================================================
        RENDU INITIAL
@@ -316,7 +213,4 @@ document.addEventListener("DOMContentLoaded", () => {
     const requestedClub = new URLSearchParams(window.location.search).get("club");
     const initialClub = CLUBS.some(club => club.key === requestedClub) ? requestedClub : CLUBS[0].key;
     selectClub(initialClub);
-    if (requestedClub && requestedClub === initialClub) {
-        openModal(requestedClub, false);
-    }
 });

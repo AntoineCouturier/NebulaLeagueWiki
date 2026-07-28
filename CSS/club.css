@@ -1404,7 +1404,10 @@ body.nebula-page.club-page .pitch-vacant {
     margin-left: 3px;
     color: var(--club-color);
     font-family: var(--mono);
-    font-size: 0.62rem;
+    font-size: 0.86rem;
+    font-weight: 900;
+    line-height: 1;
+    vertical-align: 0.08em;
 }
 
 .stage-roster {

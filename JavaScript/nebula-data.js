@@ -142,140 +142,157 @@
        name       = prénom/pseudo affiché, avec la casse définitive
        club       = `key` d'un club ou d'un groupe déclaré plus haut
        folder     = dossier de sa fiche dans Joueurs/
-       position   = CF, LW, RW ou CM
+       position   = CF, LW, RW, LM ou RM
        baseValue  = valeur de départ facultative ; généralement 0
        discordId  = identifiant utilisateur Discord facultatif pour synchroniser la PFP
        avatarPath = image depuis la racine du projet
        character  = personnage représenté sur sa fiche
-       technical  = notes techniques affichées sur sa player-card
+       Ult        = true si le titre ultime du personnage est débloqué, sinon false
+       technical  = les 6 notes techniques affichées sur sa player-card
+
+       La note globale n'est pas renseignée : elle correspond automatiquement
+       à la moyenne arrondie des 6 statistiques techniques.
 
        Après l'ajout, les listes, compteurs, valeurs et effectifs se mettent à
        jour seuls. La fiche HTML individuelle doit encore être créée en copiant
        une fiche existante dans le bon dossier.
        ---------------------------------------------------------------------- */
+    const technicalStatKeys = ["defense", "passe", "dribble", "tir", "offense", "position"];
+
+    function calculateTechnicalOverall(technical = {}) {
+        const rawValues = technicalStatKeys.map(key => technical[key]);
+        if (rawValues.some(value => value === null || value === undefined || value === "")) return null;
+
+        const values = rawValues.map(Number);
+        if (values.some(value => !Number.isFinite(value))) return null;
+        return Math.round(values.reduce((total, value) => total + value, 0) / values.length);
+    }
+
     const players = [
         /* ========================== Bastard München ========================== */
         {
-            name: "Antoine", club: "bastard", folder: "bm", position: "CM", baseValue: 0, discordId: "725931972802904115", avatarPath: "Joueurs/images-joueurs/anto.png", character: "Kurona", technical:
+            name: "Antoine", club: "bastard", folder: "bm", position: "RM", baseValue: 0, discordId: "725931972802904115", avatarPath: "Joueurs/images-joueurs/anto.png", character: "Kurona", Ult: false, technical:
             {
-                defense: 94,
+                defense: 96,
                 passe: 100,
                 dribble: 95,
-                tir: 88,
+                tir: 84,
                 offense: 93,
-                position: 94,
-                global: 94
+                position: 94
             }
         },
         {
-            name: "Dylan", club: "bastard", folder: "bm", position: "RW", baseValue: 0, discordId: "469446272235995141", avatarPath: "Joueurs/images-joueurs/dylan.jpeg", character: "Kiyora", technical:
+            name: "Dylan", club: "bastard", folder: "bm", position: "RW", baseValue: 0, discordId: "469446272235995141", avatarPath: "Joueurs/images-joueurs/dylan.jpeg", character: "Kiyora", Ult: false, technical:
             {
                 defense: 78,
-                passe: 85,
-                dribble: 85,
-                tir: 79,
+                passe: 91,
+                dribble: 89,
+                tir: 84,
                 offense: 83,
-                position: 84,
-                global: 82
+                position: 84
             }
         },
         {
-            name: "Alessio", club: "bastard", folder: "bm", position: "CF", baseValue: 0, discordId: "748818822290604032", avatarPath: "Joueurs/images-joueurs/alessio.png", character: "Rin", technical:
+            name: "Alessio", club: "bastard", folder: "bm", position: "CF", baseValue: 0, discordId: "748818822290604032", avatarPath: "Joueurs/images-joueurs/alessio.png", character: "Rin", Ult: false, technical:
             {
                 defense: 74,
                 passe: 77,
                 dribble: 81,
                 tir: 82,
                 offense: 76,
-                position: 80,
-                global: 78
+                position: 80
             }
         },
         /* ========================== PxG ========================== */
         {
-            name: "Jason", club: "pxg", folder: "pxg", position: "CF", baseValue: 0, discordId: "771124358311051284", avatarPath: "Joueurs/images-joueurs/Jason.png", character: "Shidou", technical:
+            name: "Jason", club: "pxg", folder: "pxg", position: "CF", baseValue: 0, discordId: "771124358311051284", avatarPath: "Joueurs/images-joueurs/Jason.png", character: "Shidou", Ult: false, technical:
             {
                 defense: null,
                 passe: null,
                 dribble: null,
                 tir: null,
                 offense: null,
-                position: null,
-                global: null
+                position: null
             }
         },
         {
-            name: "Enzo", club: "pxg", folder: "pxg", position: "CM", baseValue: 0, discordId: "775004632576950272", avatarPath: "Joueurs/images-joueurs/enzo.png", character: "Chigiri", technical:
+            name: "Enzo", club: "pxg", folder: "pxg", position: "LM", baseValue: 0, discordId: "775004632576950272", avatarPath: "Joueurs/images-joueurs/enzo.png", character: "Chigiri", Ult: false, technical:
             {
                 defense: 71,
                 passe: 75,
                 dribble: 67,
                 tir: 68,
                 offense: 75,
-                position: 72,
-                global: 71
+                position: 72
             }
         },
         /* ========================== Manshine City ========================== */
         {
-            name: "William", club: "manshine", folder: "manshine", position: "CF", baseValue: 0, discordId: "915917842602405888", avatarPath: "Joueurs/images-joueurs/william.png", character: "Nagi", technical:
+            name: "William", club: "manshine", folder: "manshine", position: "CF", baseValue: 0, discordId: "915917842602405888", avatarPath: "Joueurs/images-joueurs/william.png", character: "Nagi", Ult: false, technical:
             {
                 defense: 77,
                 passe: 79,
                 dribble: 78,
                 tir: 82,
                 offense: 77,
-                position: 84,
-                global: 80
+                position: 84
             }
         },
         {
-            name: "Imrane", club: "manshine", folder: "manshine", position: "LW", baseValue: 0, discordId: "1049719803725750302", avatarPath: "Joueurs/images-joueurs/imrane.png", character: "Reo", technical:
+            name: "Imrane", club: "manshine", folder: "manshine", position: "LW", baseValue: 0, discordId: "1049719803725750302", avatarPath: "Joueurs/images-joueurs/imrane.png", character: "Reo", Ult: false, technical:
             {
                 defense: 88,
                 passe: 84,
                 dribble: 93,
                 tir: 100,
-                offense: 94,
-                position: 85,
-                global: 91
+                offense: 96,
+                position: 85
             }
         },
         {
-            name: "Elijah", club: "manshine", folder: "manshine", position: "RW", baseValue: 0, discordId: "827952021239889940", avatarPath: "Joueurs/images-joueurs/elijah.png", character: "Shidou", technical:
+            name: "Elijah", club: "manshine", folder: "manshine", position: "RW", baseValue: 0, discordId: "827952021239889940", avatarPath: "Joueurs/images-joueurs/elijah.png", character: "Shidou", Ult: false, technical:
             {
                 defense: 72,
                 passe: 74,
                 dribble: 83,
                 tir: 82,
                 offense: 77,
-                position: 78,
-                global: 78
+                position: 78
             }
         },
-        /* ========================== Retraite ========================== */
+        /* ========================== Barcha ========================== */
         {
-            name: "Matheo", club: "retraite", folder: "retraite", position: "CM", baseValue: 0, discordId: "506800771417767938", avatarPath: "Joueurs/images-joueurs/matheo.png", character: "Lorenzo", technical:
-            {
-                defense: 82,
-                passe: 80,
-                dribble: 74,
-                tir: 73,
-                offense: 79,
-                position: 82,
-                global: 78
-            }
-        },
-        {
-            name: "Theo", club: "retraite", folder: "retraite", position: "RW", baseValue: 0, discordId: "414493257775448075", avatarPath: "Joueurs/images-joueurs/theo.png", character: "Kunigami", technical:
+            name: "Leandro", club: "barcha", folder: "barcha", position: "RW", baseValue: 0, discordId: "1051860042690871356", avatarPath: "Joueurs/images-joueurs/leandro.png", character: "Kaiser", Ult: false, technical:
             {
                 defense: null,
                 passe: null,
                 dribble: null,
                 tir: null,
                 offense: null,
-                position: null,
-                global: null
+                position: null
+            }
+        },
+        /* ========================== Retraite ========================== */
+        {
+            name: "Matheo", club: "retraite", folder: "retraite", position: "LM", baseValue: 0, discordId: "506800771417767938", avatarPath: "Joueurs/images-joueurs/matheo.png", character: "Lorenzo", Ult: false, technical:
+            {
+                defense: 82,
+                passe: 80,
+                dribble: 74,
+                tir: 73,
+                offense: 79,
+                position: 82
+            }
+        },
+        {
+            name: "Theo", club: "retraite", folder: "retraite", position: "RW", baseValue: 0, discordId: "414493257775448075", avatarPath: "Joueurs/images-joueurs/theo.png", character: "Kunigami", Ult: false, technical:
+            {
+                defense: null,
+                passe: null,
+                dribble: null,
+                tir: null,
+                offense: null,
+                position: null
             }
         },
 
@@ -284,6 +301,12 @@
         const profilePath = `Joueurs/${player.folder}/${player.name.toLowerCase()}.html`;
         return {
             ...player,
+            technical: player.technical
+                ? {
+                    ...player.technical,
+                    global: calculateTechnicalOverall(player.technical)
+                }
+                : null,
             clubName: club?.name || player.club,
             avatar: assetUrl(player.avatarPath),
             profilePath,
@@ -410,7 +433,7 @@
     const matches = [
         // EXEMPLE DE MATCH À COPIER
         //
-        // Retirez les `//`, adaptez les valeurs et ajoutez une virgule entre
+        // Retirez les `/* */`, adaptez les valeurs et ajoutez une virgule entre
         // deux matchs. Les totaux des buteurs doivent correspondre au score.
         /* {
             id: "m1",
@@ -421,34 +444,56 @@
             season: 1,
             home: "bastard",
             away: "manshine",
-            scoreHome: 2,
-            scoreAway: 1,
+            scoreHome: 12,
+            scoreAway: 10,
             videoUrl: null,
             scorersHome: [
-                { name: "Antoine", count: 1 },
-                { name: "Dylan", count: 1 }
+                { name: "Antoine", count: 5 },
+                { name: "Dylan", count: 4 },
+                { name: "Alessio", count: 3 }
             ],
             scorersAway: [
-                { name: "William", count: 1 }
+                { name: "Imrane", count: 6 },
+                { name: "William", count: 3 },
+                { name: "Elijah", count: 1 }
             ],
             timelineHome: [
-                { time: "2'10\"", scorer: "Antoine", assist: "Dylan" },
-                { time: "8'42\"", scorer: "Dylan", assist: "Antoine" }
+                { time: "0'14\"", scorer: "Antoine", assist: "Alessio" },
+                { time: "0'33\"", scorer: "Antoine", assist: "Dylan" },
+                { time: "2'00\"", scorer: "Alessio", assist: "Antoine" },
+                { time: "4'12\"", scorer: "Dylan", assist: "Antoine" },
+                { time: "5'26\"", scorer: "Antoine", assist: "Alessio" },
+                { time: "6'16\"", scorer: "Alessio", assist: "Antoine" },
+                { time: "6'49\"", scorer: "Antoine", assist: "Alessio" },
+                { time: "7'11\"", scorer: "Dylan", assist: "Antoine" },
+                { time: "7'40\"", scorer: "Dylan", assist: "Antoine" },
+                { time: "9'05\"", scorer: "Antoine", assist: "Dylan" },
+                { time: "11'12\"", scorer: "Dylan", assist: "Antoine" },
+                { time: "11'50\"", scorer: "Alessio", assist: "Dylan" }
             ],
             timelineAway: [
-                { time: "5'16\"", scorer: "William", assist: "Elijah" }
+                { time: "1'10\"", scorer: "Imrane", assist: "Elijah" },
+                { time: "1'32\"", scorer: "William", assist: "Elijah" },
+                { time: "2'25\"", scorer: "Imrane", assist: "Elijah" },
+                { time: "2'53\"", scorer: "William", assist: "Imrane" },
+                { time: "3'32\"", scorer: "Imrane", assist: "Elijah" },
+                { time: "4'48\"", scorer: "Imrane", assist: "William" },
+                { time: "8'03\"", scorer: "William", assist: "Elijah" },
+                { time: "8'42\"", scorer: "Imrane", assist: "Elijah" },
+                { time: "9'57\"", scorer: "Imrane", assist: "Elijah" },
+                { time: "10'24\"", scorer: "Elijah", assist: "William" }
             ],
             notesHome: [
-                { name: "Antoine", note: 9.2, defenses: 4, dribbles: 8 },
-                { name: "Dylan", note: 8.8, defenses: 2, dribbles: 10 },
-                { name: "Alessio", note: 7.5, defenses: 8, dribbles: 6 },
+                { name: "Antoine", note: 9.9, defenses: 10, dribbles: 10 },
+                { name: "Dylan", note: 9.3, defenses: 5, dribbles: 10 },
+                { name: "Alessio", note: 8.9, defenses: 9, dribbles: 5 }
             ],
             notesAway: [
-                { name: "William", note: 8.1, defenses: 3, dribbles: 6 },
-                { name: "Elijah", note: 7.4, defenses: 5, dribbles: 7 },
-                { name: "Imrane", note: 7.1, defenses: 3, dribbles: 6 }
-            ]
-        }, */
+                { name: "William", note: 9.1, defenses: 3, dribbles: 6 },
+                { name: "Elijah", note: 9.4, defenses: 5, dribbles: 7 },
+                { name: "Imrane", note: 9.8, defenses: 3, dribbles: 6 }
+            ],
+        } */
     ];
 
     /* ----------------------------------------------------------------------
@@ -461,26 +506,29 @@
        ---------------------------------------------------------------------- */
     const leagueSchedule = [
         /* ==================================================== SAISON 1 ==================================================== */
+        /* Phase aller */
         ["2026-09-02", "bastard", "manshine"],
-        ["2026-09-05", "pxg", "barcha"],
-        ["2026-09-09", "manshine", "ubers"],
-        ["2026-09-12", "bastard", "pxg"],
-        ["2026-09-16", "barcha", "manshine"],
-        ["2026-09-19", "ubers", "barcha"],
-        ["2026-09-23", "pxg", "bastard"],
-        ["2026-09-26", "ubers", "bastard"],
-        ["2026-09-30", "barcha", "bastard"],
-        ["2026-10-03", "ubers", "bastard"],
+        ["2026-09-05", "pxg", "ubers"],
+        ["2026-09-09", "bastard", "barcha"],
+        ["2026-09-12", "manshine", "ubers"],
+        ["2026-09-16", "bastard", "ubers"],
+        ["2026-09-19", "barcha", "pxg"],
+        ["2026-09-23", "bastard", "pxg"],
+        ["2026-09-26", "manshine", "barcha"],
+        ["2026-09-30", "pxg", "manshine"],
+        ["2026-10-03", "ubers", "barcha"],
+
+        /* Phase retour */
         ["2026-10-07", "manshine", "bastard"],
-        ["2026-10-10", "pxg", "barcha"],
-        ["2026-10-14", "manshine", "ubers"],
-        ["2026-10-17", "bastard", "pxg"],
-        ["2026-10-21", "barcha", "manshine"],
-        ["2026-10-24", "ubers", "barcha"],
+        ["2026-10-10", "ubers", "pxg"],
+        ["2026-10-14", "barcha", "bastard"],
+        ["2026-10-17", "ubers", "manshine"],
+        ["2026-10-21", "ubers", "bastard"],
+        ["2026-10-24", "pxg", "barcha"],
         ["2026-10-28", "pxg", "bastard"],
-        ["2026-10-31", "ubers", "bastard"],
-        ["2026-11-04", "barcha", "bastard"],
-        ["2026-11-07", "ubers", "bastard"]
+        ["2026-10-31", "barcha", "manshine"],
+        ["2026-11-04", "manshine", "pxg"],
+        ["2026-11-07", "barcha", "ubers"]
         /* ==================================================== SAISON 2 ==================================================== */
     ];
 
@@ -490,7 +538,11 @@
        Format d'une ligne :
        ["AAAA-MM-JJ", "Nom de la phase"]
 
-       Les clubs restent inconnus (`???`) jusqu'à leur qualification.
+       Les quatre premiers de la Ligue sont injectés automatiquement :
+       - demi-finale 01 : 1er contre 4e
+       - demi-finale 02 : 2e contre 3e
+       - petite finale : les deux perdants
+       - finale         : les deux vainqueurs
        ---------------------------------------------------------------------- */
     const nclSchedule = [
         /* ==================================================== SAISON 1 ==================================================== */
@@ -499,6 +551,108 @@
         ["2026-11-21", "Petite finale"],
         ["2026-11-25", "Finale"]
         /* ==================================================== SAISON 2 ==================================================== */
+    ];
+
+    const nclSeasonNumber = 1;
+
+    function buildLeagueStandings(seasonNumber) {
+        const table = new Map(clubs.map(club => [club.key, {
+            club: club.key,
+            points: 0,
+            played: 0,
+            wins: 0,
+            draws: 0,
+            losses: 0,
+            goalsFor: 0,
+            goalsAgainst: 0
+        }]));
+
+        matches
+            .filter(match => match.category === "ligue" && Number(match.season) === Number(seasonNumber))
+            .forEach(match => {
+                const home = table.get(match.home);
+                const away = table.get(match.away);
+                if (!home || !away) return;
+
+                const scoreHome = Number(match.scoreHome || 0);
+                const scoreAway = Number(match.scoreAway || 0);
+                home.played += 1;
+                away.played += 1;
+                home.goalsFor += scoreHome;
+                home.goalsAgainst += scoreAway;
+                away.goalsFor += scoreAway;
+                away.goalsAgainst += scoreHome;
+
+                if (scoreHome > scoreAway) {
+                    home.wins += 1;
+                    away.losses += 1;
+                    home.points += 3;
+                } else if (scoreAway > scoreHome) {
+                    away.wins += 1;
+                    home.losses += 1;
+                    away.points += 3;
+                } else {
+                    home.draws += 1;
+                    away.draws += 1;
+                    home.points += 1;
+                    away.points += 1;
+                }
+            });
+
+        return [...table.values()].sort((a, b) =>
+            b.points - a.points
+            || (b.goalsFor - b.goalsAgainst) - (a.goalsFor - a.goalsAgainst)
+            || b.goalsFor - a.goalsFor
+            || clubMeta[a.club].name.localeCompare(clubMeta[b.club].name, "fr")
+        );
+    }
+
+    const leagueSeasonIsComplete = leagueSchedule.every(([date, home, away]) =>
+        matches.some(match =>
+            match.category === "ligue"
+            && Number(match.season) === nclSeasonNumber
+            && match.date === date
+            && match.home === home
+            && match.away === away
+        )
+    );
+
+    const nclQualifiedClubs = leagueSeasonIsComplete
+        ? buildLeagueStandings(nclSeasonNumber).slice(0, 4).map(row => row.club)
+        : [];
+
+    function nclResultOn(date) {
+        return matches.find(match =>
+            match.category === "ncl"
+            && Number(match.season) === nclSeasonNumber
+            && match.date === date
+        ) || null;
+    }
+
+    function nclOutcome(match) {
+        if (!match || Number(match.scoreHome) === Number(match.scoreAway)) return null;
+        const homeWon = Number(match.scoreHome) > Number(match.scoreAway);
+        return {
+            winner: homeWon ? match.home : match.away,
+            loser: homeWon ? match.away : match.home
+        };
+    }
+
+    const nclSemiFinalOne = nclOutcome(nclResultOn(nclSchedule[0][0]));
+    const nclSemiFinalTwo = nclOutcome(nclResultOn(nclSchedule[1][0]));
+    const nclSemiFinalsComplete = Boolean(nclSemiFinalOne && nclSemiFinalTwo);
+
+    const nclBracketTeams = [
+        { home: nclQualifiedClubs[0] || null, away: nclQualifiedClubs[3] || null },
+        { home: nclQualifiedClubs[1] || null, away: nclQualifiedClubs[2] || null },
+        {
+            home: nclSemiFinalsComplete ? nclSemiFinalOne.loser : null,
+            away: nclSemiFinalsComplete ? nclSemiFinalTwo.loser : null
+        },
+        {
+            home: nclSemiFinalsComplete ? nclSemiFinalOne.winner : null,
+            away: nclSemiFinalsComplete ? nclSemiFinalTwo.winner : null
+        }
     ];
 
     /* ----------------------------------------------------------------------
@@ -515,16 +669,26 @@
     const fixtureFromMatch = match => {
         const home = clubMeta[match.home];
         const away = clubMeta[match.away];
+        const nclStage = match.category === "ncl"
+            ? nclSchedule.find(([date]) => date === match.date)?.[1]
+            : null;
         return {
             id: `archive-${match.id}`,
             sourceMatchId: match.id,
             date: match.date,
             time: match.time || "20:00",
             category: match.category,
+            valueTier: match.valueTier || null,
             status: "finished",
             season: match.season,
-            competitionLabel: `${match.category === "amical" ? "Amical" : "Ligue"} — Saison ${match.season}`,
-            stage: "Archive",
+            competitionLabel: `${match.valueTier === "finale"
+                ? "Finale NCL"
+                : match.category === "ncl"
+                    ? "Nebula Champions League"
+                    : match.category === "amical"
+                        ? "Amical"
+                        : "Ligue"} — Saison ${match.season}`,
+            stage: nclStage || (match.valueTier === "finale" ? "Finale" : "Archive"),
             home: match.home,
             away: match.away,
             homeTeam: home?.name || match.home,
@@ -555,24 +719,33 @@
         scoreAway: null
     }));
 
-    const scheduledNclFixtures = nclSchedule.map(([date, stage], index) => ({
-        id: `ncl-s1-${String(index + 1).padStart(2, "0")}`,
-        date,
-        time: "18:00",
-        category: "ncl",
-        status: "upcoming",
-        season: 1,
-        competitionLabel: "Nebula Champions League — Saison 1",
-        stage,
-        home: null,
-        away: null,
-        homeTeam: "???",
-        awayTeam: "???",
-        homeLogo: assetUrl("images/clubs_icon/placeholder.png"),
-        awayLogo: assetUrl("images/clubs_icon/placeholder.png"),
-        scoreHome: null,
-        scoreAway: null
-    }));
+    const scheduledNclFixtures = nclSchedule.map(([date, stage], index) => {
+        const bracket = nclBracketTeams[index];
+        const home = bracket?.home || null;
+        const away = bracket?.away || null;
+        const homeClub = home ? clubMeta[home] : null;
+        const awayClub = away ? clubMeta[away] : null;
+
+        return {
+            id: `ncl-s1-${String(index + 1).padStart(2, "0")}`,
+            date,
+            time: "18:00",
+            category: "ncl",
+            valueTier: index === 2 ? "third" : index === 3 ? "finale" : null,
+            status: "upcoming",
+            season: nclSeasonNumber,
+            competitionLabel: "Nebula Champions League — Saison 1",
+            stage,
+            home,
+            away,
+            homeTeam: homeClub?.name || "???",
+            awayTeam: awayClub?.name || "???",
+            homeLogo: homeClub?.logo || assetUrl("images/clubs_icon/placeholder.png"),
+            awayLogo: awayClub?.logo || assetUrl("images/clubs_icon/placeholder.png"),
+            scoreHome: null,
+            scoreAway: null
+        };
+    });
 
     function hasCompletedResult(fixture) {
         return matches.some(match => {
@@ -584,8 +757,12 @@
                 return false;
             }
 
-            // Les affiches NCL du calendrier utilisent encore des clubs inconnus.
-            // Dans ce cas, la date et la compétition suffisent pour les remplacer.
+            // Une seule affiche NCL est prévue par date : son résultat remplace
+            // toujours le créneau planifié, même si l'ordre des clubs diffère.
+            if (fixture.category === "ncl") return true;
+
+            // Pour les autres affiches encore inconnues, la date et la
+            // compétition suffisent également.
             if (!fixture.home || !fixture.away) return true;
             return match.home === fixture.home && match.away === fixture.away;
         });
@@ -615,13 +792,14 @@
        Quand `reward.value` correspond à un joueur, sa fiche ajoute
        automatiquement un titre comme « Ballon d’Or Saison 3 ».
 
-       Exception : la récompense GLD (Soulier d’Or / Golden Shoe) est toujours
-       attribuée automatiquement au meilleur buteur de la saison.
+       Exception : la récompense GLD (Soulier d’Or / Golden Shoe) est attribuée
+       automatiquement au meilleur buteur uniquement lorsque le nombre de
+       matchs de la saison atteint `expectedMatches`.
        ---------------------------------------------------------------------- */
     const emptySeasonRewards = [
+        { code: "GLD", label: "Soulier d’Or", value: "NON ATTRIBUÉ" }, // Automatique
+        { code: "NCL", label: "Club gagnant NCL", value: "NON ATTRIBUÉ" }, // Automatique
         { code: "PUS", label: "Prix Puskas", value: "NON ATTRIBUÉ" },
-        { code: "GLD", label: "Soulier d’Or", value: "NON ATTRIBUÉ" },
-        { code: "NCL", label: "Club gagnant NCL", value: "NON ATTRIBUÉ" },
         { code: "BDO", label: "Ballon d’Or", value: "NON ATTRIBUÉ" }
     ];
 
@@ -641,7 +819,9 @@
 
         Ajoutez une virgule après la saison précédente, puis copiez cet objet.
         Une seule saison doit normalement avoir le statut `active`.
+        */
 
+        /*
         {
             id: "s2",
             number: 2,
@@ -714,7 +894,14 @@
 
     function resolveSeasonRewards(season) {
         if (!season) return [];
-        const goldenShoeWinner = season.status === "finished"
+        const playedMatches = matches.filter(match => (
+            Number(match.season) === Number(season.number)
+        )).length;
+        const expectedMatches = Number(season.expectedMatches);
+        const seasonIsComplete = Number.isFinite(expectedMatches)
+            && expectedMatches > 0
+            && playedMatches >= expectedMatches;
+        const goldenShoeWinner = seasonIsComplete
             ? getSeasonTopScorer(season.number)
             : null;
 
@@ -804,6 +991,7 @@
             side,
             goals,
             assists,
+            note: Number(note?.note || 0),
             defenses: Number(note?.defenses || 0),
             dribbles: Number(note?.dribbles || 0),
             mvp: normalizeRewardOwner(matchMvp) === normalizedPlayerName ? 1 : 0,
@@ -861,6 +1049,8 @@
 
         matches
             .filter(match => (
+                match.category === "ligue"
+                &&
                 (match.home === clubKey || match.away === clubKey)
                 && (seasonNumber === null || seasonNumber === undefined || Number(match.season) === Number(seasonNumber))
             ))
@@ -982,10 +1172,11 @@
        visuelle sur le terrain dans JavaScript/club.js.
        ---------------------------------------------------------------------- */
     const positions = {
-        CF: "Attaquant central",
-        LW: "Ailier gauche",
-        RW: "Ailier droit",
-        CM: "Milieu central"
+        CF: "Attaquant Central",
+        LW: "Ailier Gauche",
+        RW: "Ailier Droit",
+        LM: "Milieu Gauche",
+        RM: "Milieu Droit"
     };
 
     /* ----------------------------------------------------------------------
@@ -1073,10 +1264,12 @@
        getSeasonTopScorer(n)= retrouver le meilleur buteur d'une saison
        resolveSeasonRewards = résoudre les récompenses automatiques
        getPlayerTrophyCounts= compter les trophées d'un joueur
+       getPlayerMatchPerformance = lire la performance d'un joueur sur un match
        getPlayerMatchStats   = cumuler les statistiques de matchs d'un joueur
        getClubMatchStats     = calculer le bilan du club sur une saison
        getClubTitleCount     = compter les trophées NCL du club
        getPlayerMarketValue  = calculer la valeur totale d'un joueur
+       calculateTechnicalOverall = calculer automatiquement la note globale
        playerPageHref(obj)  = lien vers une fiche joueur
        clubPageHref(key)    = lien vers un dossier club
        ---------------------------------------------------------------------- */
@@ -1100,11 +1293,13 @@
         technicalTitleRules,
         careerTitleTracks,
         valueTitleTrack,
+        calculateTechnicalOverall,
         getClub: key => clubMeta[key] || groups[key] || null,
         getPlayer: name => players.find(player => player.name === name) || null,
         getSeasonTopScorer,
         resolveSeasonRewards,
         getPlayerTrophyCounts,
+        getPlayerMatchPerformance,
         getPlayerMatchStats,
         getActiveSeason,
         getClubMatchStats,

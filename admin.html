@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05070a">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="images/logos/nebula.png">
+    <title>Centre de gestion local — Nebula League</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="CSS/hamburger.css">
+    <link rel="stylesheet" href="CSS/global-theme.css">
+    <link rel="stylesheet" href="CSS/admin.css">
+</head>
+
+<body class="nebula-page admin-page">
+    <header class="site-header" id="top">
+        <a class="brand" href="index.html" aria-label="Retour à l'accueil">
+            <span class="brand-mark"><span></span></span>
+            <span class="brand-copy"><strong>NEBULA</strong><small>LOCAL // CONTROL</small></span>
+        </a>
+        <nav class="main-nav" aria-label="Navigation principale">
+            <a href="index.html">Accueil</a>
+            <a href="title.html">Titres</a>
+            <a href="club.html">Clubs</a>
+            <a href="players.html">Joueurs</a>
+            <a href="matchs.html">Matchs</a>
+            <a href="saison.html">Saisons</a>
+            <a href="fixtures.html">Calendrier</a>
+            <a href="headtohead.html">Face à Face</a>
+            <a href="valeur.html">Valeurs</a>
+            <a href="rules.html">Règles</a>
+            <a href="stats.html">Records</a>
+            <a href="progression.html">Progression</a>
+            <a href="hall-of-fame.html">Hall of Fame</a>
+            <a href="dream-team.html">Équipes Idéales</a>
+        </nav>
+        <div class="header-actions">
+            <span class="live-pill"><i></i> MODE LOCAL</span>
+            <button class="menu-button" type="button" aria-label="Ouvrir le menu"
+                aria-expanded="false"><span></span><span></span></button>
+        </div>
+    </header>
+
+    <main class="admin-shell">
+        <section class="admin-hero">
+            <div>
+                <p class="admin-kicker"><span>NL—CTRL</span> OUTIL DE SAISIE</p>
+                <h1>CENTRE DE<br><em>GESTION LOCAL.</em></h1>
+                <p>Prépare un résultat, vérifie sa cohérence et récupère le bloc exact à ajouter dans
+                    <code>nebula-data.js</code>. Cette page ne modifie jamais tes fichiers toute seule.</p>
+            </div>
+            <div class="admin-hero-status">
+                <span>REGISTRE CHARGÉ</span>
+                <strong id="adminDataSummary">--</strong>
+                <small>Le brouillon est conservé uniquement dans ce navigateur.</small>
+            </div>
+        </section>
+
+        <section class="admin-workspace">
+            <div class="admin-section-title">
+                <span>01</span>
+                <div><small>IDENTIFICATION</small>
+                    <h2>DOSSIER DU MATCH</h2>
+                </div>
+                <p>Les scores sont calculés depuis les événements de buts.</p>
+            </div>
+
+            <form id="matchBuilder" novalidate>
+                <div class="admin-fields admin-fields-main">
+                    <label><span>ID UNIQUE</span><input id="matchId" name="id" placeholder="m1" autocomplete="off"></label>
+                    <label><span>SAISON</span><input id="matchSeason" name="season" type="number" min="1" value="1"></label>
+                    <label><span>DATE</span><input id="matchDate" name="date" type="date"></label>
+                    <label><span>HEURE</span><input id="matchTime" name="time" type="time" value="20:00"></label>
+                    <label><span>CATÉGORIE</span>
+                        <select id="matchCategory" name="category">
+                            <option value="ligue">Ligue</option>
+                            <option value="amical">Amical</option>
+                            <option value="ncl">NCL</option>
+                        </select>
+                    </label>
+                    <label><span>PHASE SPÉCIALE</span>
+                        <select id="matchTier" name="valueTier">
+                            <option value="">Aucune</option>
+                            <option value="third">Petite finale</option>
+                            <option value="finale">Finale NCL</option>
+                        </select>
+                    </label>
+                    <label class="admin-field-wide"><span>VIDÉO (FACULTATIF)</span><input id="matchVideo"
+                            name="videoUrl" type="url" placeholder="https://..."></label>
+                </div>
+
+                <div class="admin-versus">
+                    <label class="team-select team-home"><span>DOMICILE</span><select id="homeClub"></select></label>
+                    <div class="admin-score">
+                        <small>SCORE GÉNÉRÉ</small>
+                        <strong><span id="homeScore">00</span><i>—</i><span id="awayScore">00</span></strong>
+                    </div>
+                    <label class="team-select team-away"><span>EXTÉRIEUR</span><select id="awayClub"></select></label>
+                </div>
+
+                <div class="admin-section-title admin-inner-title">
+                    <span>02</span>
+                    <div><small>CHRONOLOGIE</small>
+                        <h2>ÉVÉNEMENTS DE BUTS</h2>
+                    </div>
+                    <div class="admin-inline-actions">
+                        <button type="button" class="admin-button admin-button-home" data-add-goal="home">+ BUT DOM.</button>
+                        <button type="button" class="admin-button admin-button-away" data-add-goal="away">+ BUT EXT.</button>
+                    </div>
+                </div>
+                <div class="goal-events" id="goalEvents"></div>
+
+                <div class="admin-section-title admin-inner-title">
+                    <span>03</span>
+                    <div><small>PERFORMANCES</small>
+                        <h2>NOTES DES JOUEURS</h2>
+                    </div>
+                    <p>Une ligne vide n’est pas exportée.</p>
+                </div>
+                <div class="admin-notes-grid">
+                    <section class="notes-team">
+                        <div class="notes-team-title"><span id="homeNotesName">DOMICILE</span><small>NOTE / DEF / DRB</small></div>
+                        <div id="homeNotes"></div>
+                    </section>
+                    <section class="notes-team">
+                        <div class="notes-team-title"><span id="awayNotesName">EXTÉRIEUR</span><small>NOTE / DEF / DRB</small></div>
+                        <div id="awayNotes"></div>
+                    </section>
+                </div>
+
+                <div class="admin-builder-actions">
+                    <button type="submit" class="admin-button admin-generate">GÉNÉRER LE MATCH <span>↘</span></button>
+                    <button type="button" class="admin-button" id="saveDraft">SAUVEGARDER LE BROUILLON</button>
+                    <button type="button" class="admin-button admin-danger" id="resetBuilder">RÉINITIALISER</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="admin-output">
+            <div class="admin-section-title">
+                <span>04</span>
+                <div><small>EXPORT CONTRÔLÉ</small>
+                    <h2>BLOC PRÊT À COPIER</h2>
+                </div>
+                <button class="admin-button" type="button" id="copyOutput" disabled>COPIER</button>
+            </div>
+            <div class="admin-feedback" id="adminFeedback" aria-live="polite">
+                <span>EN ATTENTE</span>
+                <p>Complète le match puis lance la génération.</p>
+            </div>
+            <pre class="admin-code"><code id="matchOutput">// Le match généré apparaîtra ici.</code></pre>
+        </section>
+    </main>
+
+    <script src="JavaScript/nebula-data.js"></script>
+    <script src="JavaScript/admin.js"></script>
+    <script src="JavaScript/hamburger.js"></script>
+</body>
+
+</html>

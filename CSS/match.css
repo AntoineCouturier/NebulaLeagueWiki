@@ -178,6 +178,7 @@ body.nebula-page.matches-page .match-hero-copy h1 {
 .featured-match {
     --home-accent: var(--match-cyan);
     --away-accent: var(--match-purple);
+    --category-accent: var(--match-cyan);
     position: relative;
     display: grid;
     min-width: 0;
@@ -189,6 +190,19 @@ body.nebula-page.matches-page .match-hero-copy h1 {
         radial-gradient(circle at 50% 45%, rgba(99, 231, 255, 0.065), transparent 56%),
         #06090d;
     background-size: 42px 42px, 42px 42px, auto, auto;
+}
+
+.featured-match::after {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 4px;
+    content: "";
+    background: var(--category-accent);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--category-accent), transparent 30%);
+    pointer-events: none;
 }
 
 .featured-topline,
@@ -206,6 +220,16 @@ body.nebula-page.matches-page .match-hero-copy h1 {
     font-size: 0.55rem;
     font-weight: 700;
     letter-spacing: 0.1em;
+}
+
+.featured-topline {
+    background: linear-gradient(90deg,
+            color-mix(in srgb, var(--category-accent), transparent 88%),
+            transparent 44%);
+}
+
+.featured-topline>span:first-child {
+    color: var(--category-accent);
 }
 
 .featured-topline>span:last-child {
@@ -978,8 +1002,13 @@ body.nebula-page.matches-page .match-sort-toggle:hover {
     --category-accent: var(--match-acid);
     position: relative;
     min-width: 0;
-    border: 1px solid var(--match-line);
-    background: var(--match-surface-2);
+    border: 1px solid color-mix(in srgb, var(--category-accent), var(--match-line) 68%);
+    background:
+        linear-gradient(90deg,
+            color-mix(in srgb, var(--category-accent), transparent 97%),
+            transparent 18%),
+        var(--match-surface-2);
+    box-shadow: inset 0 0 34px color-mix(in srgb, var(--category-accent), transparent 97%);
 }
 
 .match-dossier::before {
@@ -993,11 +1022,62 @@ body.nebula-page.matches-page .match-sort-toggle:hover {
     background: linear-gradient(90deg, var(--home-accent), #fff 50%, var(--away-accent));
 }
 
+.match-dossier::after {
+    position: absolute;
+    z-index: 11;
+    top: -1px;
+    bottom: -1px;
+    left: -1px;
+    width: 4px;
+    content: "";
+    background: var(--category-accent);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--category-accent), transparent 32%);
+    pointer-events: none;
+}
+
+.match-dossier-topline {
+    background: linear-gradient(90deg,
+            color-mix(in srgb, var(--category-accent), transparent 86%),
+            transparent 40%);
+}
+
+.match-dossier-topline>span:nth-child(2) {
+    padding: 6px 11px;
+    border: 1px solid color-mix(in srgb, var(--category-accent), transparent 56%);
+    color: var(--category-accent);
+    background: color-mix(in srgb, var(--category-accent), transparent 92%);
+    box-shadow: inset 0 0 12px color-mix(in srgb, var(--category-accent), transparent 92%);
+}
+
 .match-dossier-topline>span:last-child {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     color: #828c95;
+}
+
+.match-dossier .goal-curve-topline span:first-child {
+    color: var(--category-accent);
+}
+
+.match-dossier .match-replay-button {
+    box-shadow: inset 4px 0 0 var(--category-accent) !important;
+}
+
+.match-dossier .match-replay-button>span,
+.match-dossier-actions>a>span {
+    color: var(--category-accent);
+}
+
+.match-dossier .match-replay-button:hover,
+.match-dossier-actions>a:hover {
+    background: var(--category-accent) !important;
+    color: #05070a !important;
+}
+
+.match-dossier .match-replay-button:hover>span,
+.match-dossier-actions>a:hover>span {
+    color: #05070a;
 }
 
 .match-scoreboard {
@@ -1297,6 +1377,8 @@ body.nebula-page.matches-page .match-sort-toggle:hover {
 .match-detail-panel {
     --home-accent: var(--match-cyan);
     --away-accent: var(--match-purple);
+    --category-accent: var(--match-cyan);
+    position: relative;
     width: min(1500px, 100%);
     max-height: 94vh;
     overflow: auto;
@@ -1309,6 +1391,28 @@ body.nebula-page.matches-page .match-sort-toggle:hover {
     box-shadow: 0 40px 120px rgba(0, 0, 0, 0.72);
     transform: translateY(18px) scale(0.985);
     transition: transform 220ms ease;
+}
+
+.match-detail-panel::before {
+    position: absolute;
+    z-index: 101;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 3px;
+    content: "";
+    background: var(--category-accent);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--category-accent), transparent 35%);
+    pointer-events: none;
+}
+
+.match-detail-topline>span:nth-child(2),
+.match-detail-panel .detail-section-title small {
+    color: var(--category-accent);
+}
+
+.match-detail-panel .goal-curve-topline span:first-child {
+    color: var(--category-accent);
 }
 
 .match-detail-layer.open .match-detail-panel {

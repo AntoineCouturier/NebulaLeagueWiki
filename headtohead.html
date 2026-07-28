@@ -35,7 +35,11 @@
             <a href="fixtures.html">Calendrier</a>
             <a class="nav-active" href="headtohead.html" aria-current="page">Face à Face</a>
             <a href="valeur.html">Valeurs</a>
+            <a href="rules.html">Règles</a>
             <a href="stats.html">Records</a>
+            <a href="progression.html">Progression</a>
+            <a href="hall-of-fame.html">Hall of Fame</a>
+            <a href="dream-team.html">Équipes Idéales</a>
         </nav>
         <div class="header-actions">
             <span class="live-pill"><i></i> SAISON 01</span>
@@ -47,7 +51,7 @@
     <main class="h2h-lab">
         <section class="h2h-command-hero" aria-labelledby="h2hPageTitle">
             <div class="h2h-hero-copy">
-                <p class="h2h-eyebrow"><span>NL–09</span> SIMULATEUR COMPARATIF</p>
+                <p class="h2h-eyebrow"><span>NL–07</span> SIMULATEUR COMPARATIF</p>
                 <h1 id="h2hPageTitle">DEUX PROFILS.<br><span>UN SEUL VERDICT.</span></h1>
                 <p class="h2h-intro">
                     Opposez deux clubs ou deux joueurs. Toutes les données sont recalculées depuis les effectifs et
@@ -82,14 +86,32 @@
             </div>
 
             <div class="h2h-mode-tabs" id="h2hModeTabs" role="tablist" aria-label="Type de comparaison">
-                <button class="h2h-control-button h2h-mode-tab is-active" type="button" role="tab"
-                    aria-selected="true" data-mode="clubs">
+                <button class="h2h-control-button h2h-mode-tab is-active" type="button" role="tab" aria-selected="true"
+                    data-mode="clubs">
                     <span>01</span> CLUBS
                 </button>
-                <button class="h2h-control-button h2h-mode-tab" type="button" role="tab"
-                    aria-selected="false" data-mode="players">
+                <button class="h2h-control-button h2h-mode-tab" type="button" role="tab" aria-selected="false"
+                    data-mode="players">
                     <span>02</span> JOUEURS
                 </button>
+            </div>
+
+            <div class="h2h-player-stat-toggle" id="h2hPlayerStatToggle" hidden>
+                <div class="h2h-player-stat-toggle-copy">
+                    <small>MATRICE UTILISÉE</small>
+                    <strong>TYPE DE COMPARAISON JOUEURS</strong>
+                </div>
+                <div class="h2h-player-stat-toggle-controls" role="tablist"
+                    aria-label="Données utilisées pour comparer les joueurs">
+                    <button class="h2h-player-stat-tab is-active" type="button" role="tab" aria-selected="true"
+                        data-player-comparison="match">
+                        <span>01</span> STATS DE MATCHS
+                    </button>
+                    <button class="h2h-player-stat-tab" type="button" role="tab" aria-selected="false"
+                        data-player-comparison="technical">
+                        <span>02</span> STATS TECHNIQUES
+                    </button>
+                </div>
             </div>
 
             <div class="h2h-versus-deck">
@@ -145,8 +167,8 @@
         </section>
     </main>
 
-<script src="JavaScript/nebula-data.js"></script>
-<script src="JavaScript/players.js"></script>
+    <script src="JavaScript/nebula-data.js"></script>
+    <script src="JavaScript/players.js"></script>
     <script src="JavaScript/match.js"></script>
     <script src="JavaScript/headtohead.js"></script>
     <script src="JavaScript/hamburger.js"></script>

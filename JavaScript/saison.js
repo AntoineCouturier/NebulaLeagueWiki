@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
         matches.forEach(match => {
             const home = standings.get(match.home);
             const away = standings.get(match.away);
-            if (home && away) {
+            if (match.category === "ligue" && home && away) {
                 home.gf += Number(match.scoreHome || 0);
                 home.ga += Number(match.scoreAway || 0);
                 away.gf += Number(match.scoreAway || 0);
