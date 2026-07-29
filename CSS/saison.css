@@ -34,6 +34,13 @@ body.season-modal-open {
     overflow: hidden;
 }
 
+body.nebula-page.seasons-page .season-command header:not(.site-header),
+body.nebula-page.seasons-page .season-modal header {
+    position: static !important;
+    z-index: auto !important;
+    top: auto !important;
+}
+
 body.nebula-page.seasons-page [hidden] {
     display: none !important;
 }
@@ -410,6 +417,97 @@ body.nebula-page.seasons-page .season-switch.is-selected {
     transform: scaleX(1);
 }
 
+.season-competition-toggle {
+    display: grid;
+    min-height: 74px;
+    grid-template-columns: minmax(260px, 1fr) 190px 190px;
+    border-bottom: 1px solid var(--season-line);
+    background: #070b0f;
+}
+
+.season-competition-toggle > div {
+    display: flex;
+    justify-content: center;
+    padding: 17px 25px;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.season-competition-toggle small {
+    color: #647682;
+    font: 600 0.45rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.13em;
+}
+
+.season-competition-toggle strong {
+    color: #dfe7ea;
+    font: 700 0.66rem/1 "Orbitron", sans-serif;
+}
+
+body.nebula-page.seasons-page .season-competition-toggle button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+    margin: 0;
+    padding: 0 20px;
+    border: 0;
+    border-left: 1px solid var(--season-line);
+    border-radius: 0;
+    color: #788995;
+    background: rgba(255, 255, 255, 0.012);
+    font: 700 0.6rem/1 "Orbitron", sans-serif;
+    cursor: pointer;
+}
+
+body.nebula-page.seasons-page .season-competition-toggle button::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    content: "";
+    background: var(--season-acid);
+    transform: scaleX(0);
+}
+
+body.nebula-page.seasons-page .season-competition-toggle button:last-child::after {
+    background: var(--season-violet);
+}
+
+.season-competition-toggle button span {
+    color: #40505b;
+}
+
+body.nebula-page.seasons-page .season-competition-toggle button:hover,
+body.nebula-page.seasons-page .season-competition-toggle button.is-active {
+    color: #f0f4f6;
+    background: rgba(173, 255, 47, 0.045);
+}
+
+body.nebula-page.seasons-page .season-competition-toggle button:last-child:hover,
+body.nebula-page.seasons-page .season-competition-toggle button:last-child.is-active {
+    background: rgba(167, 107, 255, 0.08);
+}
+
+body.nebula-page.seasons-page .season-competition-toggle button.is-active::after {
+    transform: scaleX(1);
+}
+
+.season-competition-toggle button.is-active span {
+    color: var(--season-acid);
+}
+
+.season-competition-toggle button:last-child.is-active span {
+    color: var(--season-violet);
+}
+
+body.nebula-page.seasons-page .season-competition-toggle button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
 .season-dossier-host {
     min-height: 600px;
 }
@@ -648,6 +746,410 @@ body.nebula-page.seasons-page .season-switch.is-selected {
     color: #6e7f8b;
     font: 600 0.45rem/1.4 "Orbitron", sans-serif;
     letter-spacing: 0.08em;
+}
+
+.ncl-dossier {
+    --ncl-accent: var(--season-violet);
+}
+
+.ncl-dossier .season-dossier-head p {
+    color: var(--ncl-accent);
+}
+
+.ncl-dossier .season-dossier-number {
+    -webkit-text-stroke-color: rgba(167, 107, 255, 0.65);
+}
+
+.ncl-overview {
+    display: grid;
+    grid-template-columns: minmax(300px, 1fr) minmax(310px, 0.8fr) minmax(330px, 1fr);
+    border-bottom: 1px solid var(--season-line);
+    background:
+        radial-gradient(circle at 16% 30%, rgba(167, 107, 255, 0.08), transparent 22rem),
+        #070b0f;
+}
+
+.ncl-status-card {
+    min-height: 205px;
+    display: grid;
+    grid-template-columns: 86px minmax(0, 1fr);
+    align-items: center;
+    gap: 22px;
+    padding: 32px 30px;
+}
+
+.ncl-status-card > span,
+.ncl-status-card > img {
+    width: 82px;
+    height: 82px;
+}
+
+.ncl-status-card > span {
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(167, 107, 255, 0.7);
+    color: var(--season-violet);
+    background: rgba(167, 107, 255, 0.06);
+    box-shadow: 0 0 28px rgba(167, 107, 255, 0.12);
+    font: 800 0.72rem/1 "Orbitron", sans-serif;
+    transform: rotate(45deg);
+}
+
+.ncl-status-card > img {
+    padding: 8px;
+    border: 1px solid var(--club-accent);
+    background: #05090c;
+    object-fit: contain;
+    filter: drop-shadow(0 0 18px color-mix(in srgb, var(--club-accent) 40%, transparent));
+}
+
+.ncl-status-card > div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+}
+
+.ncl-status-card small,
+.ncl-status-card em {
+    color: #6f818d;
+    font: 600 0.48rem/1.45 "Orbitron", sans-serif;
+    font-style: normal;
+    letter-spacing: 0.08em;
+}
+
+.ncl-status-card strong {
+    margin: 11px 0;
+    color: #edf1f3;
+    font: 700 clamp(0.85rem, 1.4vw, 1.25rem)/1.15 "Orbitron", sans-serif;
+}
+
+.ncl-bracket-panel {
+    border-bottom: 1px solid var(--season-line);
+    background:
+        linear-gradient(rgba(167, 107, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(167, 107, 255, 0.025) 1px, transparent 1px),
+        #070b0f;
+    background-size: 46px 46px;
+}
+
+body.nebula-page.seasons-page .ncl-bracket-panel > header {
+    position: static !important;
+    z-index: auto !important;
+    top: auto !important;
+    min-height: 86px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 25px !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--season-line) !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    text-align: left !important;
+}
+
+.ncl-bracket-panel > header small,
+.ncl-bracket-panel > header > span,
+.ncl-round-label span {
+    color: #687985;
+    font: 600 0.45rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.11em;
+}
+
+.ncl-bracket-panel > header small {
+    color: var(--season-violet);
+}
+
+.ncl-bracket-panel > header h3 {
+    margin: 9px 0 0;
+    font: 700 1.05rem/1 "Orbitron", sans-serif;
+}
+
+.ncl-bracket {
+    display: block;
+    padding: 34px;
+}
+
+.ncl-main-flow {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) 150px minmax(280px, 1fr);
+    align-items: stretch;
+}
+
+.ncl-round {
+    display: grid;
+    align-content: start;
+    gap: 18px;
+}
+
+.ncl-final-round {
+    align-self: center;
+}
+
+.ncl-convergence {
+    position: relative;
+    min-height: 454px;
+}
+
+.ncl-wire {
+    position: absolute;
+    display: block;
+    background: linear-gradient(90deg, var(--season-cyan), var(--season-violet));
+}
+
+.ncl-wire.wire-top,
+.ncl-wire.wire-bottom {
+    left: 0;
+    width: 50%;
+    height: 1px;
+}
+
+.ncl-wire.wire-top {
+    top: 151px;
+}
+
+.ncl-wire.wire-bottom {
+    top: 359px;
+}
+
+.ncl-wire.wire-spine {
+    top: 151px;
+    left: 50%;
+    width: 1px;
+    height: 208px;
+    background: linear-gradient(var(--season-cyan), var(--season-violet));
+}
+
+.ncl-wire.wire-output {
+    top: 255px;
+    right: 0;
+    left: 50%;
+    height: 1px;
+}
+
+.ncl-wire.wire-output::after {
+    position: absolute;
+    top: -4px;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    border-top: 1px solid var(--season-violet);
+    border-right: 1px solid var(--season-violet);
+    content: "";
+    transform: rotate(45deg);
+}
+
+.ncl-convergence > span {
+    position: absolute;
+    top: 250px;
+    left: calc(50% - 5px);
+    width: 11px;
+    height: 11px;
+    border: 1px solid var(--season-violet);
+    background: #090e13;
+    box-shadow: 0 0 13px rgba(167, 107, 255, 0.65);
+    transform: rotate(45deg);
+}
+
+.ncl-convergence > b {
+    position: absolute;
+    top: 270px;
+    right: 8px;
+    color: #566671;
+    font: 600 0.38rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.08em;
+}
+
+.ncl-third-branch {
+    width: min(540px, 44%);
+    display: grid;
+    margin: 18px 4% 4px auto;
+    padding-top: 23px;
+    border-top: 1px solid rgba(255, 216, 77, 0.34);
+    gap: 18px;
+}
+
+.ncl-third-branch .ncl-round-label {
+    padding-inline: 4px;
+}
+
+.ncl-third-branch .ncl-round-label span {
+    color: #8e7d46;
+}
+
+.ncl-third-branch .ncl-round-label strong {
+    color: var(--season-gold);
+}
+
+.ncl-round-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 38px;
+    padding: 0 4px;
+}
+
+.ncl-round-label strong {
+    color: #dce4e8;
+    font: 700 0.62rem/1 "Orbitron", sans-serif;
+}
+
+body.nebula-page.seasons-page .ncl-match-card {
+    position: relative;
+    width: 100%;
+    min-height: 190px;
+    display: block;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid rgba(99, 231, 255, 0.18);
+    border-radius: 0;
+    color: inherit;
+    background:
+        linear-gradient(105deg, rgba(99, 231, 255, 0.035), transparent 62%),
+        #090e13;
+    text-align: left;
+    cursor: pointer;
+}
+
+body.nebula-page.seasons-page .ncl-match-card::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    content: "";
+    background: var(--season-cyan);
+    box-shadow: 0 0 14px var(--season-cyan);
+}
+
+body.nebula-page.seasons-page .ncl-match-card.is-third::before {
+    background: var(--season-gold);
+    box-shadow: 0 0 14px var(--season-gold);
+}
+
+body.nebula-page.seasons-page .ncl-match-card.is-final {
+    border-color: rgba(167, 107, 255, 0.38);
+    background:
+        radial-gradient(circle at 84% 20%, rgba(167, 107, 255, 0.16), transparent 12rem),
+        linear-gradient(105deg, rgba(167, 107, 255, 0.08), transparent 62%),
+        #0a0d14;
+}
+
+body.nebula-page.seasons-page .ncl-match-card.is-final::before {
+    background: var(--season-violet);
+    box-shadow: 0 0 18px var(--season-violet);
+}
+
+body.nebula-page.seasons-page .ncl-match-card:hover {
+    border-color: rgba(99, 231, 255, 0.52);
+    transform: translateY(-2px);
+}
+
+body.nebula-page.seasons-page .ncl-match-card.is-final:hover {
+    border-color: rgba(167, 107, 255, 0.75);
+}
+
+body.nebula-page.seasons-page .ncl-match-card > header,
+.ncl-match-card > footer {
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--season-line);
+}
+
+body.nebula-page.seasons-page .ncl-match-card > header {
+    position: static !important;
+    z-index: auto !important;
+    top: auto !important;
+    min-height: 38px !important;
+    padding: 0 16px !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--season-line) !important;
+    background: rgba(3, 6, 9, 0.72) !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    text-align: left !important;
+}
+
+body.nebula-page.seasons-page .ncl-match-card > footer {
+    min-height: 38px;
+    margin: 0 !important;
+    padding: 0 16px !important;
+    border: 0 !important;
+    border-top: 1px solid var(--season-line) !important;
+    background: rgba(255, 255, 255, 0.025) !important;
+    text-align: left !important;
+}
+
+.ncl-match-card > header span,
+.ncl-match-card > header em,
+.ncl-match-card > footer span,
+.ncl-match-card > footer i {
+    color: #687985;
+    font: 600 0.42rem/1 "Orbitron", sans-serif;
+    font-style: normal;
+    letter-spacing: 0.08em;
+}
+
+.ncl-match-card > header span,
+.ncl-match-card > footer i {
+    color: var(--season-cyan);
+}
+
+.ncl-match-card.is-final > header span,
+.ncl-match-card.is-final > footer i {
+    color: var(--season-violet);
+}
+
+.ncl-match-card.is-complete > header em {
+    color: var(--season-acid);
+}
+
+.ncl-match-team {
+    height: 56px;
+    min-height: 56px;
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) 42px;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+}
+
+.ncl-match-team + .ncl-match-team {
+    border-top: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.ncl-match-team img {
+    width: 31px;
+    height: 31px;
+    object-fit: contain;
+}
+
+.ncl-match-team strong {
+    overflow: hidden;
+    color: #e1e8eb;
+    font: 700 0.63rem/1 "Orbitron", sans-serif;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ncl-match-team b {
+    color: #f1f5f7;
+    font: 800 1.15rem/1 "Orbitron", sans-serif;
+    text-align: right;
+}
+
+.ncl-rankings {
+    background: #070b0f;
+}
+
+body.nebula-page.seasons-page .ncl-details-button {
+    color: #f5f1ff;
+    background: linear-gradient(90deg, #7040b6, var(--season-violet));
 }
 
 .season-rankings {
@@ -1227,6 +1729,198 @@ body.nebula-page.seasons-page .season-modal-close:hover {
     text-align: center;
 }
 
+.ncl-modal-bracket .ncl-bracket-panel {
+    border-bottom: 0;
+}
+
+.ncl-modal-bracket .ncl-bracket-panel > header {
+    display: none;
+}
+
+.ncl-modal-bracket .ncl-bracket {
+    padding: 24px;
+}
+
+.ncl-season-table {
+    min-width: 760px;
+}
+
+.ncl-match-report {
+    background:
+        radial-gradient(circle at 50% 10%, rgba(167, 107, 255, 0.08), transparent 30rem),
+        #070b0f;
+}
+
+.ncl-report-status {
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    border-bottom: 1px solid var(--season-line);
+}
+
+.ncl-report-status span,
+.ncl-report-status strong {
+    color: #70818d;
+    font: 600 0.47rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.1em;
+}
+
+.ncl-report-status strong {
+    color: var(--season-violet);
+}
+
+.ncl-report-score {
+    min-height: 270px;
+    display: grid;
+    grid-template-columns: 1fr 220px 1fr;
+    align-items: center;
+    border-bottom: 1px solid var(--season-line);
+}
+
+.ncl-report-score > div {
+    display: grid;
+    justify-items: center;
+    padding: 30px;
+    gap: 10px;
+}
+
+.ncl-report-score img {
+    width: 82px;
+    height: 82px;
+    margin-bottom: 7px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 18px rgba(99, 231, 255, 0.14));
+}
+
+.ncl-report-score small {
+    color: #647580;
+    font: 600 0.45rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.1em;
+}
+
+.ncl-report-score strong {
+    color: #eef3f5;
+    font: 800 clamp(0.9rem, 1.7vw, 1.35rem)/1.05 "Orbitron", sans-serif;
+    text-align: center;
+}
+
+.ncl-report-score > span {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-inline: 1px solid var(--season-line);
+    gap: 18px;
+}
+
+.ncl-report-score > span b {
+    color: #f2f5f7;
+    font: 900 3.5rem/1 "Orbitron", sans-serif;
+}
+
+.ncl-report-score > span em {
+    color: var(--season-violet);
+    font: 700 0.7rem/1 "Orbitron", sans-serif;
+    font-style: normal;
+}
+
+.ncl-report-highlights {
+    display: grid;
+    grid-template-columns: 1fr 0.75fr 1fr;
+    border-bottom: 1px solid var(--season-line);
+}
+
+.ncl-report-highlights > div {
+    min-height: 145px;
+    padding: 22px 25px;
+    border-right: 1px solid var(--season-line);
+}
+
+.ncl-report-highlights > div:last-child {
+    border-right: 0;
+}
+
+.ncl-report-highlights small {
+    display: block;
+    margin-bottom: 16px;
+    color: #697a86;
+    font: 600 0.44rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.08em;
+}
+
+.ncl-report-highlights > div > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 27px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.ncl-report-highlights div strong,
+.ncl-report-highlights div em {
+    color: #dce4e8;
+    font: 600 0.53rem/1 "Orbitron", sans-serif;
+    font-style: normal;
+}
+
+.ncl-report-highlights div em {
+    color: var(--season-cyan);
+    font-size: 0.43rem;
+}
+
+.ncl-report-mvp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(167, 107, 255, 0.045);
+    flex-direction: column;
+}
+
+.ncl-report-mvp small {
+    color: var(--season-violet);
+}
+
+.ncl-report-mvp strong {
+    margin: 4px 0 11px;
+    color: #f0ebff !important;
+    font-size: 0.8rem !important;
+}
+
+.ncl-report-waiting {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 58px 25px;
+    color: #81919c;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    text-align: center;
+}
+
+body.nebula-page.seasons-page .ncl-modal-back {
+    width: 100%;
+    min-height: 60px;
+    margin: 0;
+    border: 0;
+    border-top: 1px solid var(--season-line);
+    border-radius: 0;
+    color: #c8b1ed;
+    background: rgba(167, 107, 255, 0.055);
+    font: 700 0.52rem/1 "Orbitron", sans-serif;
+    cursor: pointer;
+}
+
+body.nebula-page.seasons-page .ncl-modal-back:hover {
+    color: #fff;
+    background: rgba(167, 107, 255, 0.12);
+}
+
+.ncl-performance-table td:nth-child(2),
+.ncl-performance-table th:nth-child(2) {
+    text-align: left;
+}
+
 @keyframes season-dossier-in {
     from {
         opacity: 0;
@@ -1262,11 +1956,13 @@ body.nebula-page.seasons-page .season-modal-close:hover {
         padding-inline: 42px;
     }
 
-    .season-overview {
+    .season-overview,
+    .ncl-overview {
         grid-template-columns: 1fr 1fr;
     }
 
-    .season-metric-grid {
+    .season-overview .season-metric-grid,
+    .ncl-overview .season-metric-grid {
         grid-column: 1 / -1;
         grid-template-columns: repeat(4, 1fr);
         border-top: 1px solid var(--season-line);
@@ -1373,6 +2069,22 @@ body.nebula-page.seasons-page .season-modal-close:hover {
         border-right: 0;
         border-bottom: 1px solid var(--season-line);
     }
+
+    .ncl-bracket {
+        padding: 22px;
+    }
+
+    .ncl-main-flow {
+        grid-template-columns: minmax(230px, 1fr) 90px minmax(230px, 1fr);
+    }
+
+    .ncl-third-branch {
+        width: min(520px, 54%);
+    }
+
+    .ncl-report-score {
+        grid-template-columns: 1fr 170px 1fr;
+    }
 }
 
 @media (max-width: 620px) {
@@ -1442,7 +2154,8 @@ body.nebula-page.seasons-page .season-modal-close:hover {
         padding-inline: 18px;
     }
 
-    .season-overview {
+    .season-overview,
+    .ncl-overview {
         grid-template-columns: 1fr;
     }
 
@@ -1455,6 +2168,95 @@ body.nebula-page.seasons-page .season-modal-close:hover {
     .season-progress-module {
         border-top: 1px solid var(--season-line);
         border-inline: 0;
+    }
+
+    .season-competition-toggle {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .season-competition-toggle > div {
+        grid-column: 1 / -1;
+        min-height: 68px;
+        border-bottom: 1px solid var(--season-line);
+    }
+
+    body.nebula-page.seasons-page .season-competition-toggle button:first-of-type {
+        border-left: 0;
+    }
+
+    .ncl-bracket {
+        padding: 16px;
+    }
+
+    .ncl-main-flow {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .ncl-convergence {
+        min-height: 92px;
+    }
+
+    .ncl-wire.wire-top,
+    .ncl-wire.wire-bottom,
+    .ncl-wire.wire-spine {
+        display: none;
+    }
+
+    .ncl-wire.wire-output {
+        top: 0;
+        right: auto;
+        bottom: 0;
+        left: 50%;
+        width: 1px;
+        height: 100%;
+        background: linear-gradient(var(--season-cyan), var(--season-violet));
+    }
+
+    .ncl-wire.wire-output::after {
+        top: auto;
+        right: -4px;
+        bottom: 0;
+        transform: rotate(135deg);
+    }
+
+    .ncl-convergence > span {
+        top: 40px;
+        left: calc(50% - 5px);
+    }
+
+    .ncl-convergence > b {
+        top: 41px;
+        right: calc(50% + 14px);
+    }
+
+    .ncl-third-branch {
+        width: 90%;
+        margin: 22px 0 0 auto;
+    }
+
+    .ncl-report-score {
+        min-height: 0;
+        grid-template-columns: 1fr;
+    }
+
+    .ncl-report-score > span {
+        min-height: 110px;
+        border-block: 1px solid var(--season-line);
+        border-inline: 0;
+    }
+
+    .ncl-report-highlights {
+        grid-template-columns: 1fr;
+    }
+
+    .ncl-report-highlights > div {
+        border-right: 0;
+        border-bottom: 1px solid var(--season-line);
+    }
+
+    .ncl-report-highlights > div:last-child {
+        border-bottom: 0;
     }
 
     .season-metric-grid {

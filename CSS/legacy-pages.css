@@ -760,19 +760,26 @@ body.nebula-page.legacy-page {
 }
 
 .progress-chart {
+    position: relative;
     min-height: 410px;
+    overflow: visible;
     padding: 32px;
 }
 
 .progress-svg {
     width: 100%;
     height: 330px;
-    overflow: visible;
+    overflow: hidden;
 }
 
 .progress-svg .grid {
     stroke: rgba(168, 197, 216, 0.1);
     stroke-width: 1;
+}
+
+.progress-svg .grid.zero {
+    stroke: rgba(238, 243, 246, 0.32);
+    stroke-width: 1.5;
 }
 
 .progress-svg .path {
@@ -790,6 +797,52 @@ body.nebula-page.legacy-page {
     fill: var(--legacy-ink);
     stroke: var(--legacy-acid);
     stroke-width: 3;
+    cursor: help;
+    transition: r 140ms ease, fill 140ms ease, filter 140ms ease;
+}
+
+.progress-svg .node:hover,
+.progress-svg .node:focus,
+.progress-svg .node.is-pinned {
+    r: 8px;
+    fill: var(--legacy-acid);
+    filter: drop-shadow(0 0 8px rgba(168, 255, 37, 0.75));
+    outline: none;
+}
+
+.progress-point-tooltip {
+    position: absolute;
+    z-index: 8;
+    display: grid;
+    min-width: 165px;
+    justify-items: center;
+    padding: 13px 16px;
+    border: 1px solid var(--legacy-acid);
+    color: var(--legacy-paper);
+    background: rgba(3, 8, 11, 0.97);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55), 0 0 18px rgba(168, 255, 37, 0.12);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, calc(-100% - 15px));
+    transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.progress-point-tooltip.is-visible {
+    opacity: 1;
+    transform: translate(-50%, calc(-100% - 11px));
+}
+
+.progress-point-tooltip small,
+.progress-point-tooltip span {
+    color: #71838f;
+    font: 700 0.46rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.08em;
+}
+
+.progress-point-tooltip strong {
+    margin: 9px 0;
+    color: var(--legacy-acid);
+    font: 800 1rem/1 "Orbitron", sans-serif;
 }
 
 .progress-chart-labels {
@@ -849,259 +902,6 @@ body.nebula-page.legacy-page {
     margin-top: 10px;
     color: var(--legacy-paper);
     font: 800 1.1rem/1 "Orbitron", sans-serif;
-}
-
-/* Hall of Fame */
-.hall-page {
-    --legacy-acid: var(--legacy-gold);
-}
-
-.hall-hero {
-    background:
-        radial-gradient(circle at 76% 48%, rgba(255, 212, 84, 0.09), transparent 27rem),
-        rgba(5, 8, 11, 0.94);
-}
-
-.hall-crown {
-    position: relative;
-    display: grid;
-    place-items: center;
-    border-left: 1px solid var(--legacy-line);
-}
-
-.hall-crown::before,
-.hall-crown::after {
-    position: absolute;
-    content: "";
-    border: 1px solid rgba(255, 212, 84, 0.23);
-    border-radius: 50%;
-}
-
-.hall-crown::before {
-    width: 290px;
-    height: 290px;
-    box-shadow: 0 0 80px rgba(255, 212, 84, 0.07);
-}
-
-.hall-crown::after {
-    width: 190px;
-    height: 190px;
-}
-
-.hall-crown strong {
-    z-index: 2;
-    color: var(--legacy-gold);
-    font: 900 4.3rem/1 "Orbitron", sans-serif;
-    letter-spacing: -0.07em;
-}
-
-.hall-crown i {
-    position: absolute;
-    z-index: 1;
-    top: 31%;
-    width: 42px;
-    height: 42px;
-    border: 1px solid var(--legacy-gold);
-    transform: rotate(45deg);
-}
-
-.hall-crown i:nth-child(1) {
-    margin-left: -120px;
-}
-
-.hall-crown i:nth-child(3) {
-    margin-left: 120px;
-}
-
-.hall-honours {
-    display: grid;
-    margin-top: 18px;
-    grid-template-columns: repeat(4, 1fr);
-    border: 1px solid var(--legacy-line);
-}
-
-.hall-honour {
-    min-height: 220px;
-    padding: 26px;
-    border-right: 1px solid var(--legacy-line);
-    background: var(--legacy-panel);
-}
-
-.hall-honour:last-child {
-    border-right: 0;
-}
-
-.hall-honour>span {
-    color: var(--honour-accent, var(--legacy-gold));
-    font: 800 0.52rem/1 "Orbitron", sans-serif;
-}
-
-.hall-honour strong {
-    display: block;
-    margin-top: 72px;
-    font: 900 clamp(2rem, 3.5vw, 3.3rem)/0.9 "Orbitron", sans-serif;
-}
-
-.hall-honour small {
-    display: block;
-    margin-top: 13px;
-    color: #6e7e89;
-    font: 600 0.48rem/1.5 "Orbitron", sans-serif;
-}
-
-.hall-player-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-}
-
-.hall-club-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-}
-
-.hall-player {
-    position: relative;
-    min-height: 420px;
-    overflow: hidden;
-    border-right: 1px solid var(--legacy-line);
-    background: var(--legacy-panel);
-}
-
-.hall-player:last-child {
-    border-right: 0;
-}
-
-.hall-player-empty .legacy-empty span {
-    color: var(--card-accent);
-}
-
-.hall-player-image {
-    height: 230px;
-    overflow: hidden;
-}
-
-.hall-player-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: saturate(0.75);
-    transition: transform 280ms ease, filter 280ms ease;
-}
-
-.hall-player:hover img {
-    filter: saturate(1);
-    transform: scale(1.035);
-}
-
-.hall-player-body {
-    padding: 22px;
-}
-
-.hall-player-body>span {
-    color: var(--card-accent, var(--legacy-gold));
-    font: 700 0.5rem/1 "Orbitron", sans-serif;
-}
-
-.hall-player-body h3 {
-    margin: 11px 0 7px;
-    font: 800 1.5rem/1 "Orbitron", sans-serif;
-}
-
-.hall-player-body small {
-    color: #687a87;
-    font: 500 0.55rem/1 "Orbitron", sans-serif;
-}
-
-.hall-player-value {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-top: 26px;
-    padding-top: 17px;
-    border-top: 1px solid var(--legacy-line);
-}
-
-.hall-player-value strong {
-    color: var(--card-accent, var(--legacy-gold));
-    font: 800 1.35rem/1 "Orbitron", sans-serif;
-}
-
-.hall-player-value span {
-    color: #697985;
-    font: 600 0.46rem/1 "Orbitron", sans-serif;
-}
-
-.hall-club {
-    display: grid;
-    min-height: 210px;
-    grid-template-columns: 100px 1fr;
-    align-items: center;
-    padding: 25px;
-    border-right: 1px solid var(--legacy-line);
-    background: linear-gradient(145deg, color-mix(in srgb, var(--club-accent), transparent 94%), transparent);
-}
-
-.hall-club:last-child {
-    border-right: 0;
-}
-
-.hall-club img {
-    width: 72px;
-    height: 72px;
-    object-fit: contain;
-}
-
-.hall-club small {
-    color: var(--club-accent);
-    font: 700 0.48rem/1 "Orbitron", sans-serif;
-}
-
-.hall-club h3 {
-    margin: 12px 0;
-    font: 800 1rem/1.1 "Orbitron", sans-serif;
-}
-
-.hall-club strong {
-    color: #8d9aa3;
-    font: 600 0.52rem/1 "Orbitron", sans-serif;
-}
-
-.hall-season-row {
-    display: grid;
-    min-height: 105px;
-    grid-template-columns: 110px 1fr repeat(4, minmax(135px, 0.45fr));
-    align-items: center;
-    border-bottom: 1px solid var(--legacy-line);
-}
-
-.hall-season-row:last-child {
-    border-bottom: 0;
-}
-
-.hall-season-number {
-    align-self: stretch;
-    display: grid;
-    place-items: center;
-    border-right: 1px solid var(--legacy-line);
-    color: var(--legacy-gold);
-    font: 800 1.4rem/1 "Orbitron", sans-serif;
-}
-
-.hall-season-row>div {
-    padding: 20px;
-    border-right: 1px solid var(--legacy-line);
-}
-
-.hall-season-row small {
-    display: block;
-    color: #677985;
-    font: 600 0.44rem/1 "Orbitron", sans-serif;
-}
-
-.hall-season-row strong {
-    display: block;
-    margin-top: 10px;
-    font: 700 0.62rem/1.2 "Orbitron", sans-serif;
 }
 
 /* Dream team */
@@ -1388,7 +1188,6 @@ body.nebula-page.legacy-page {
     }
 
     .legacy-hero-signal,
-    .hall-crown,
     .dream-formation-mark {
         min-height: 330px;
         border-top: 1px solid var(--legacy-line);
@@ -1433,21 +1232,6 @@ body.nebula-page.legacy-page {
     .dream-pitch {
         border-right: 0;
         border-bottom: 1px solid var(--legacy-line);
-    }
-
-    .hall-player-grid,
-    .hall-club-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .hall-player:nth-child(2),
-    .hall-club:nth-child(2) {
-        border-right: 0;
-    }
-
-    .hall-player:nth-child(n+3),
-    .hall-club:nth-child(n+3) {
-        border-top: 1px solid var(--legacy-line);
     }
 
     .progress-entry {
@@ -1601,29 +1385,15 @@ body.nebula-page.legacy-page {
         display: none;
     }
 
-    .hall-honours,
-    .hall-player-grid,
-    .hall-club-grid,
     .dream-bench,
     .legacy-crosslinks {
         grid-template-columns: 1fr;
     }
 
-    .hall-honour,
-    .hall-player,
-    .hall-club,
     .dream-bench-player,
     .legacy-crosslinks a {
         border-right: 0;
         border-bottom: 1px solid var(--legacy-line);
-    }
-
-    .hall-season-row {
-        grid-template-columns: 70px 1fr;
-    }
-
-    .hall-season-row>div:nth-child(n+3) {
-        display: none;
     }
 
     .dream-mode-tabs {

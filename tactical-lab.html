@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05070a">
+    <meta name="description"
+        content="Le laboratoire tactique de la Nebula League : composez votre cinq, testez un plan de jeu et analysez son équilibre.">
+    <link rel="icon" type="image/png" href="images/logos/nebula.png">
+    <title>Laboratoire tactique — Nebula League</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="CSS/hamburger.css">
+    <link rel="stylesheet" href="CSS/global-theme.css">
+    <link rel="stylesheet" href="CSS/tactical-lab.css">
+</head>
+
+<body class="nebula-page tactical-page">
+    <header class="site-header" id="top">
+        <a class="brand" href="index.html"><span class="brand-mark"><span></span></span><span
+                class="brand-copy"><strong>NEBULA</strong><small>LEAGUE // DATABASE</small></span></a>
+        <nav class="main-nav" aria-label="Navigation principale">
+            <a href="index.html">Accueil</a><a href="title.html">Titres</a><a href="club.html">Clubs</a>
+            <a href="players.html">Joueurs</a><a href="matchs.html">Matchs</a><a href="saison.html">Saisons</a>
+            <a href="fixtures.html">Calendrier</a><a href="headtohead.html">Face à Face</a>
+            <a href="valeur.html">Valeurs</a><a href="rules.html">Règles</a><a href="stats.html">Records</a>
+            <a href="progression.html">Progression</a>
+            <a class="nav-active" aria-current="page" href="tactical-lab.html">Labo Tactique</a>
+            <a href="dream-team.html">Équipes Idéales</a>
+        </nav>
+        <div class="header-actions"><span class="live-pill"><i></i> SAISON 01</span><button class="menu-button"
+                type="button" aria-label="Ouvrir le menu" aria-expanded="false"><span></span><span></span></button>
+        </div>
+    </header>
+
+    <main class="tactical-shell">
+        <section class="lab-hero">
+            <div class="lab-hero-copy">
+                <p class="lab-kicker"><span>NL—12</span> SIMULATION DE COMPOSITION</p>
+                <h1>CONSTRUIS TON CINQ.<br><em>IMPOSE TON PLAN.</em></h1>
+                <p>Sélectionnez librement cinq joueurs, attribuez leurs rôles et mesurez instantanément l’identité,
+                    l’équilibre et la valeur de votre formation.</p>
+            </div>
+            <div class="lab-hero-system" aria-hidden="true">
+                <div class="lab-system-orbit"></div>
+                <i class="node node-one">CF</i><i class="node node-two">LW</i><i class="node node-three">RW</i>
+                <i class="node node-four">LM</i><i class="node node-five">RM</i>
+                <strong>5</strong><span>UNITÉS CONNECTÉES</span>
+            </div>
+        </section>
+
+        <section class="lab-command" aria-label="Commandes tactiques">
+            <div class="lab-command-label"><small>PLAN DE JEU</small><strong id="labPlanLabel">ÉQUILIBRÉ</strong></div>
+            <div class="lab-plan-tabs" id="labPlanTabs">
+                <button class="is-active" type="button" data-plan="balanced">ÉQUILIBRÉ</button>
+                <button type="button" data-plan="possession">POSSESSION</button>
+                <button type="button" data-plan="defensive">DÉFENSIF</button>
+                <button type="button" data-plan="percussion">PERCUTEUR</button>
+                <button type="button" data-plan="tikitaka">TIKI TAKA</button>
+            </div>
+            <div class="lab-command-actions">
+                <span class="lab-save-state"><i></i> SAUVEGARDE LOCALE</span>
+                <button class="lab-action lab-action-primary" id="labOptimize" type="button">OPTIMISER LE CINQ</button>
+                <button class="lab-action" id="labReset" type="button">RÉINITIALISER</button>
+            </div>
+        </section>
+
+        <section class="lab-workspace">
+            <div class="lab-pitch-panel">
+                <div class="lab-section-head">
+                    <span>01</span>
+                    <div><small>MATRICE DE FORMATION</small>
+                        <h2>COMPOSITION ACTIVE</h2>
+                    </div>
+                    <strong id="labCount">00 / 05</strong>
+                </div>
+                <div class="lab-pitch" id="labPitch" aria-label="Terrain de composition">
+                    <div class="lab-pitch-markings" aria-hidden="true"></div>
+                    <div id="labSlots"></div>
+                </div>
+            </div>
+
+            <aside class="lab-analysis" aria-live="polite">
+                <div class="lab-section-head lab-analysis-head">
+                    <span>02</span>
+                    <div><small>LECTURE TEMPS RÉEL</small>
+                        <h2>DIAGNOSTIC</h2>
+                    </div>
+                </div>
+                <div class="lab-overall">
+                    <small>INDICE COLLECTIF</small>
+                    <strong id="labOverall">—</strong>
+                    <span id="labStatus">COMPOSITION INCOMPLÈTE</span>
+                </div>
+                <div class="lab-metrics" id="labMetrics"></div>
+            </aside>
+
+            <div class="lab-analysis-footer">
+                <div class="lab-identity">
+                    <small>IDENTITÉ DOMINANTE</small>
+                    <strong id="labIdentity">EN ATTENTE</strong>
+                    <p id="labIdentityCopy">Ajoutez des joueurs pour générer une lecture tactique.</p>
+                </div>
+                <div class="lab-value">
+                    <span>VALEUR DU CINQ</span><strong id="labValue">0 ¥</strong>
+                </div>
+                <div class="lab-insights" id="labInsights"></div>
+            </div>
+        </section>
+
+        <section class="lab-roster">
+            <div class="lab-section-head">
+                <span>03</span>
+                <div><small>BASE DE DONNÉES JOUEURS</small>
+                    <h2>BANQUE DE PROFILS</h2>
+                </div>
+                <p>Sélectionnez d’abord un emplacement sur le terrain, puis choisissez le joueur à y connecter.</p>
+            </div>
+            <div class="lab-roster-tools">
+                <div class="lab-role-filters" id="labRoleFilters">
+                    <button class="is-active" type="button" data-filter="all">TOUS</button>
+                    <button type="button" data-filter="CF">CF</button>
+                    <button type="button" data-filter="LW">LW</button>
+                    <button type="button" data-filter="RW">RW</button>
+                    <button type="button" data-filter="LM">LM</button>
+                    <button type="button" data-filter="RM">RM</button>
+                </div>
+                <div class="lab-active-slot"><small>EMPLACEMENT CIBLÉ</small><strong id="labActiveRole">CF</strong></div>
+            </div>
+            <div class="lab-player-grid" id="labPlayerGrid"></div>
+        </section>
+
+        <section class="lab-protocol">
+            <article><span>01</span><small>CIBLER</small><strong>CHOISIS UN POSTE</strong>
+                <p>Active l’un des cinq emplacements présents sur le terrain.</p>
+            </article>
+            <article><span>02</span><small>CONNECTER</small><strong>AJOUTE UN PROFIL</strong>
+                <p>Un joueur peut être utilisé hors de son poste naturel, avec une pénalité.</p>
+            </article>
+            <article><span>03</span><small>ANALYSER</small><strong>ADAPTE TON PLAN</strong>
+                <p>Change d’approche pour révéler les forces et les faiblesses du cinq.</p>
+            </article>
+        </section>
+
+        <nav class="lab-crosslinks" aria-label="Outils associés">
+            <a href="progression.html"><span>TRAJECTOIRES</span><strong>PROGRESSION</strong><i>↗</i></a>
+            <a href="dream-team.html"><span>SÉLECTION AUTOMATIQUE</span><strong>ÉQUIPES IDÉALES</strong><i>↗</i></a>
+        </nav>
+    </main>
+
+    <script src="JavaScript/nebula-data.js"></script>
+    <script src="JavaScript/tactical-lab.js"></script>
+    <script src="JavaScript/hamburger.js"></script>
+</body>
+
+</html>

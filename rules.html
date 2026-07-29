@@ -39,7 +39,7 @@
             <a class="nav-active" href="rules.html" aria-current="page">Règles</a>
             <a href="stats.html">Records</a>
             <a href="progression.html">Progression</a>
-            <a href="hall-of-fame.html">Hall of Fame</a>
+            <a href="tactical-lab.html">Labo Tactique</a>
             <a href="dream-team.html">Équipes Idéales</a>
         </nav>
         <div class="header-actions">
@@ -217,23 +217,36 @@
                 </div>
 
                 <div class="ncl-bracket">
-                    <div class="bracket-stage semi-stage">
-                        <span class="bracket-stage-label">01 // DEMI-FINALES</span>
-                        <div class="bracket-match"><small>MATCH A</small><strong>DEMI-FINALE A</strong></div>
-                        <div class="bracket-match"><small>MATCH B</small><strong>DEMI-FINALE B</strong></div>
+                    <div class="rules-bracket-main">
+                        <div class="bracket-stage semi-stage">
+                            <span class="bracket-stage-label">01 // DEMI-FINALES</span>
+                            <div class="bracket-match"><small>MATCH A</small><strong>DEMI-FINALE A</strong></div>
+                            <div class="bracket-match"><small>MATCH B</small><strong>DEMI-FINALE B</strong></div>
+                        </div>
+
+                        <div class="bracket-connector" aria-hidden="true">
+                            <i class="wire-top"></i>
+                            <i class="wire-bottom"></i>
+                            <i class="wire-spine"></i>
+                            <i class="wire-output"></i>
+                            <span></span>
+                            <b>VAINQUEURS</b>
+                        </div>
+
+                        <div class="bracket-stage final-stage">
+                            <span class="bracket-stage-label">02 // FINALE NCL</span>
+                            <div class="bracket-match final-match"><small>VAINQUEURS</small><strong>FINALE NCL</strong>
+                                <span>But en or en cas d’égalité après 12 minutes</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="bracket-connector" aria-hidden="true"><i></i><i></i><span></span></div>
-
-                    <div class="bracket-stage outcome-stage">
-                        <span class="bracket-stage-label">02 // DÉCISIONS</span>
-                        <div class="bracket-match final-match"><small>VAINQUEURS</small><strong>FINALE NCL</strong>
-                            <span>But en or en cas d’égalité après 12 minutes</span>
-                        </div>
+                    <aside class="bracket-third-branch">
+                        <span class="bracket-stage-label">BRANCHE SECONDAIRE // PERDANTS</span>
                         <div class="bracket-match third-match"><small>PERDANTS</small><strong>PETITE FINALE</strong>
                             <span>Match pour la troisième place</span>
                         </div>
-                    </div>
+                    </aside>
                 </div>
             </section>
 

@@ -1019,10 +1019,7 @@ body.nebula-page.rules-page .manual-heading h2 {
 }
 
 .ncl-bracket {
-    display: grid;
-    min-height: 460px;
-    grid-template-columns: minmax(220px, 1fr) 120px minmax(260px, 1fr);
-    align-items: center;
+    min-height: 520px;
     padding: 42px;
     background:
         linear-gradient(rgba(255, 255, 255, 0.021) 1px, transparent 1px),
@@ -1031,9 +1028,19 @@ body.nebula-page.rules-page .manual-heading h2 {
     background-size: 34px 34px;
 }
 
+.rules-bracket-main {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) 120px minmax(260px, 1fr);
+    align-items: start;
+}
+
 .bracket-stage {
     display: grid;
     gap: 18px;
+}
+
+.final-stage {
+    margin-top: 57px;
 }
 
 .bracket-stage-label {
@@ -1086,47 +1093,83 @@ body.nebula-page.rules-page .manual-heading h2 {
     border-color: rgba(99, 231, 255, 0.25);
 }
 
-.bracket-connector {
-    position: relative;
-    height: 220px;
+.bracket-third-branch {
+    display: grid;
+    width: min(480px, 44%);
+    gap: 18px;
+    margin: 34px 0 0 auto;
+    padding-top: 18px;
+    border-top: 1px solid rgba(99, 231, 255, 0.25);
 }
 
-.bracket-connector::before {
-    position: absolute;
-    top: 25%;
-    bottom: 25%;
-    left: 50%;
-    width: 1px;
-    content: "";
-    background: rgba(173, 255, 47, 0.42);
+.bracket-connector {
+    position: relative;
+    height: 236px;
 }
 
 .bracket-connector i {
     position: absolute;
+    display: block;
+    pointer-events: none;
+}
+
+.bracket-connector .wire-top,
+.bracket-connector .wire-bottom {
+    left: 0;
     width: 50%;
-    height: 25%;
+    height: 57px;
     border-color: rgba(173, 255, 47, 0.42);
 }
 
-.bracket-connector i:first-child {
-    top: 25%;
+.bracket-connector .wire-top {
+    top: 74px;
     border-top: 1px solid;
     border-right: 1px solid;
 }
 
-.bracket-connector i:nth-child(2) {
-    bottom: 25%;
+.bracket-connector .wire-bottom {
+    top: 131px;
     border-right: 1px solid;
     border-bottom: 1px solid;
 }
 
-.bracket-connector span {
-    position: absolute;
-    top: 50%;
+.bracket-connector .wire-spine {
+    top: 74px;
+    bottom: 48px;
+    left: 50%;
+    width: 1px;
+    background: rgba(173, 255, 47, 0.42);
+}
+
+.bracket-connector .wire-output {
+    top: 131px;
     right: 0;
     left: 50%;
     height: 1px;
     background: rgba(173, 255, 47, 0.42);
+}
+
+.bracket-connector>span {
+    position: absolute;
+    top: 126px;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    border: 1px solid rgba(173, 255, 47, 0.72);
+    background: var(--rules-surface-2);
+    transform: translateX(-50%) rotate(45deg);
+}
+
+.bracket-connector>b {
+    position: absolute;
+    top: 143px;
+    left: 50%;
+    color: #647079;
+    font-family: "JetBrains Mono", var(--mono);
+    font-size: 0.42rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    transform: translateX(-50%);
 }
 
 .quick-reference {
@@ -1346,13 +1389,25 @@ body.nebula-page.rules-page .manual-heading h2 {
     }
 
     .ncl-bracket {
+        min-height: 0;
+    }
+
+    .rules-bracket-main {
         grid-template-columns: 1fr;
         gap: 22px;
     }
 
+    .final-stage {
+        margin-top: 0;
+    }
+
     .bracket-connector {
-        height: 70px;
-        transform: rotate(90deg);
+        display: none;
+    }
+
+    .bracket-third-branch {
+        width: 100%;
+        margin-top: 34px;
     }
 }
 

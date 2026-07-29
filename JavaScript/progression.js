@@ -108,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const actions = Object.fromEntries((data.marketValueActions || []).map(action => [action.key, action]));
         return Math.round(
             (perf.won ? Number(tier.victory || 0) : 0)
+            + (perf.lost ? Number(actions.defaite?.base || 0) * Number(tier.multiplier || 1) : 0)
             + perf.goals * Number(actions.buts?.base || 0) * Number(tier.multiplier || 1)
             + perf.assists * Number(actions.passes?.base || 0) * Number(tier.multiplier || 1)
             + perf.defenses * Number(actions.def?.base || 0) * Number(tier.multiplier || 1)
@@ -156,31 +157,120 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const values = [Number(player.baseValue || 0)];
         entries.forEach(entry => values.push(values.at(-1) + matchValue(entry)));
-        const max = Math.max(...values, 1);
         const width = 1200;
         const height = 280;
         const padding = 24;
+        let minValue = Math.min(...values, 0);
+        let maxValue = Math.max(...values, 0);
+        if (minValue === maxValue) {
+            minValue -= 1;
+            maxValue += 1;
+        }
+        const valueRange = maxValue - minValue;
+        const chartHeight = height - padding * 2;
+        const yForValue = value => padding + ((maxValue - value) / valueRange) * chartHeight;
+        const zeroY = yForValue(0);
         const points = values.map((value, index) => {
             const x = padding + (index / Math.max(values.length - 1, 1)) * (width - padding * 2);
-            const y = height - padding - (value / max) * (height - padding * 2);
+            const y = yForValue(value);
             return { x, y, value };
         });
         const polyline = points.map(point => `${point.x},${point.y}`).join(" ");
-        const area = `${padding},${height - padding} ${polyline} ${width - padding},${height - padding}`;
-        const horizontalGrid = [0.25, 0.5, 0.75, 1].map(level => {
-            const y = height - padding - level * (height - padding * 2);
+        const area = `${points[0].x},${zeroY} ${polyline} ${points.at(-1).x},${zeroY}`;
+        const horizontalGrid = [0, 0.25, 0.5, 0.75, 1].map(level => {
+            const y = padding + level * chartHeight;
             return `<line class="grid" x1="${padding}" y1="${y}" x2="${width - padding}" y2="${y}"/>`;
         }).join("");
+        const zeroLine = minValue < 0 && maxValue > 0
+            ? `<line class="grid zero" x1="${padding}" y1="${zeroY}" x2="${width - padding}" y2="${zeroY}"/>`
+            : "";
 
         chart.innerHTML = `
             <svg class="progress-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Progression cumulée de valeur">
                 <defs><linearGradient id="progressGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#52dcff" stop-opacity=".25"/><stop offset="1" stop-color="#52dcff" stop-opacity="0"/></linearGradient></defs>
                 ${horizontalGrid}
+                ${zeroLine}
                 <polygon class="area" points="${area}"/>
                 <polyline class="path" points="${polyline}"/>
-                ${points.map(point => `<circle class="node" cx="${point.x}" cy="${point.y}" r="5"><title>${compact(point.value)} ¥</title></circle>`).join("")}
+                ${points.map((point, index) => `
+                    <circle class="node" cx="${point.x}" cy="${point.y}" r="6" tabindex="0"
+                        role="button" aria-pressed="false"
+                        data-progress-value="${point.value}"
+                        data-progress-label="${index === 0 ? "DÉPART" : `MATCH ${String(index).padStart(2, "0")}`}"
+                        aria-label="${index === 0 ? "Valeur de départ" : `Valeur cumulée après le match ${index}`} : ${compact(point.value)} ¥">
+                    </circle>`).join("")}
             </svg>
+            <div class="progress-point-tooltip" role="tooltip" aria-hidden="true"></div>
             <div class="progress-chart-labels"><span>DÉPART · ${compact(values[0])} ¥</span><span>${entries.length} MATCH${entries.length > 1 ? "S" : ""}</span><span>IMPACT · ${compact(values.at(-1))} ¥</span></div>`;
+
+        const tooltip = chart.querySelector(".progress-point-tooltip");
+        const chartBounds = () => chart.getBoundingClientRect();
+        let pinnedNode = null;
+
+        function positionTooltip(node, pointerEvent = null) {
+            const bounds = chartBounds();
+            const nodeBounds = node.getBoundingClientRect();
+            const rawX = pointerEvent?.clientX ?? nodeBounds.left + nodeBounds.width / 2;
+            const rawY = pointerEvent?.clientY ?? nodeBounds.top + nodeBounds.height / 2;
+            const x = Math.max(95, Math.min(bounds.width - 95, rawX - bounds.left));
+            const y = Math.max(18, Math.min(bounds.height - 24, rawY - bounds.top));
+            tooltip.style.left = `${x}px`;
+            tooltip.style.top = `${y}px`;
+        }
+
+        function showTooltip(node, pointerEvent = null) {
+            const value = Number(node.dataset.progressValue || 0);
+            tooltip.innerHTML = `
+                <small>${escapeHtml(node.dataset.progressLabel || "TRAJECTOIRE")}</small>
+                <strong>${compact(value)} ¥</strong>
+                <span>VALEUR CUMULÉE</span>`;
+            positionTooltip(node, pointerEvent);
+            tooltip.classList.add("is-visible");
+            tooltip.setAttribute("aria-hidden", "false");
+        }
+
+        function hideTooltip(force = false) {
+            if (pinnedNode && !force) {
+                showTooltip(pinnedNode);
+                return;
+            }
+            tooltip.classList.remove("is-visible");
+            tooltip.setAttribute("aria-hidden", "true");
+        }
+
+        chart.querySelectorAll(".progress-svg .node").forEach(node => {
+            node.addEventListener("pointerenter", event => showTooltip(node, event));
+            node.addEventListener("pointermove", event => positionTooltip(node, event));
+            node.addEventListener("pointerleave", () => hideTooltip());
+            node.addEventListener("focus", () => showTooltip(node));
+            node.addEventListener("blur", () => hideTooltip());
+            node.addEventListener("click", event => {
+                event.stopPropagation();
+                const shouldUnpin = pinnedNode === node;
+
+                if (pinnedNode) {
+                    pinnedNode.classList.remove("is-pinned");
+                    pinnedNode.setAttribute("aria-pressed", "false");
+                }
+
+                pinnedNode = shouldUnpin ? null : node;
+                if (pinnedNode) {
+                    pinnedNode.classList.add("is-pinned");
+                    pinnedNode.setAttribute("aria-pressed", "true");
+                    showTooltip(pinnedNode);
+                } else {
+                    hideTooltip(true);
+                }
+            });
+        });
+
+        chart.addEventListener("click", event => {
+            if (event.target.closest?.(".progress-svg .node") || !pinnedNode) return;
+            pinnedNode.classList.remove("is-pinned");
+            pinnedNode.setAttribute("aria-pressed", "false");
+            pinnedNode = null;
+            hideTooltip(true);
+        });
     }
 
     function renderTimeline(player, entries) {
@@ -191,6 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
         timeline.innerHTML = entries.slice().reverse().map(({ match, perf }, index) => {
             const home = data.getClub?.(match.home);
             const away = data.getClub?.(match.away);
+            const valueImpact = matchValue({ match, perf });
             return `
                 <article class="progress-entry">
                     <span class="progress-entry-index">${String(entries.length - index).padStart(2, "0")}</span>
@@ -199,7 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="progress-entry-stat"><span>BUTS</span><strong>${perf.goals}</strong></div>
                     <div class="progress-entry-stat"><span>PASSES</span><strong>${perf.assists}</strong></div>
                     <div class="progress-entry-stat"><span>DEF / DRB</span><strong>${perf.defenses} / ${perf.dribbles}</strong></div>
-                    <div class="progress-entry-stat"><span>VALEUR</span><strong>+${compact(matchValue({ match, perf }))}</strong></div>
+                    <div class="progress-entry-stat"><span>VALEUR</span><strong>${valueImpact > 0 ? "+" : ""}${compact(valueImpact)}</strong></div>
                 </article>`;
         }).join("");
     }

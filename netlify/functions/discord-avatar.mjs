@@ -64,8 +64,8 @@ export default async function discordAvatar(request) {
             },
             200,
             {
-                "Cache-Control": "public, max-age=300, stale-while-revalidate=3600",
-                "Netlify-CDN-Cache-Control": "public, durable, s-maxage=3600, stale-while-revalidate=86400"
+                "Cache-Control": "public, max-age=60, must-revalidate",
+                "Netlify-CDN-Cache-Control": "public, durable, s-maxage=300, stale-while-revalidate=60"
             }
         );
     } catch {

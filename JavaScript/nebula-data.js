@@ -218,12 +218,12 @@
         {
             name: "Enzo", club: "pxg", folder: "pxg", position: "LM", baseValue: 0, discordId: "775004632576950272", avatarPath: "Joueurs/images-joueurs/enzo.png", character: "Chigiri", Ult: false, technical:
             {
-                defense: 71,
-                passe: 75,
-                dribble: 67,
-                tir: 68,
-                offense: 75,
-                position: 72
+                defense: 73,
+                passe: 77,
+                dribble: 69,
+                tir: 70,
+                offense: 77,
+                position: 74
             }
         },
         /* ========================== Manshine City ========================== */
@@ -272,6 +272,7 @@
                 position: null
             }
         },
+        /* ========================== Ubers ========================== */
         /* ========================== Retraite ========================== */
         {
             name: "Matheo", club: "retraite", folder: "retraite", position: "LM", baseValue: 0, discordId: "506800771417767938", avatarPath: "Joueurs/images-joueurs/matheo.png", character: "Lorenzo", Ult: false, technical:
@@ -319,11 +320,11 @@
 
        Si `discordId` est renseigné, Netlify récupère la PFP actuelle sans
        exposer le token Discord. `avatarPath` reste toujours l'image de secours.
-       Les résultats sont conservés une heure dans le navigateur pour limiter
-       les appels à Discord pendant la navigation entre les pages.
+       Les résultats sont conservés dix minutes dans le navigateur pour limiter
+       les appels à Discord tout en répercutant rapidement une nouvelle PFP.
        ---------------------------------------------------------------------- */
-    const discordAvatarCacheDuration = 60 * 60 * 1000;
-    const discordAvatarCacheVersion = "v2";
+    const discordAvatarCacheDuration = 10 * 60 * 1000;
+    const discordAvatarCacheVersion = "v3";
 
     function readDiscordAvatarCache(discordId) {
         try {
@@ -377,7 +378,10 @@
         }
 
         try {
-            const endpoint = pageUrl(`api/discord-avatar?userId=${encodeURIComponent(player.discordId)}&v=${discordAvatarCacheVersion}`);
+            const refreshWindow = Math.floor(Date.now() / discordAvatarCacheDuration);
+            const endpoint = pageUrl(
+                `api/discord-avatar?userId=${encodeURIComponent(player.discordId)}&v=${discordAvatarCacheVersion}&refresh=${refreshWindow}`
+            );
             const response = await fetch(endpoint, {
                 headers: { Accept: "application/json" }
             });
@@ -435,7 +439,7 @@
         //
         // Retirez les `/* */`, adaptez les valeurs et ajoutez une virgule entre
         // deux matchs. Les totaux des buteurs doivent correspondre au score.
-        /* {
+        {
             id: "m1",
             date: "2026-09-02",
             time: "20:00",
@@ -493,7 +497,7 @@
                 { name: "Elijah", note: 9.4, defenses: 5, dribbles: 7 },
                 { name: "Imrane", note: 9.8, defenses: 3, dribbles: 6 }
             ],
-        } */
+        }
     ];
 
     /* ----------------------------------------------------------------------
@@ -792,9 +796,10 @@
        Quand `reward.value` correspond à un joueur, sa fiche ajoute
        automatiquement un titre comme « Ballon d’Or Saison 3 ».
 
-       Exception : la récompense GLD (Soulier d’Or / Golden Shoe) est attribuée
+       La récompense GLD (Soulier d’Or / Golden Shoe) est attribuée
        automatiquement au meilleur buteur uniquement lorsque le nombre de
-       matchs de la saison atteint `expectedMatches`.
+       matchs de la saison atteint `expectedMatches`. Le trophée NCL est
+       attribué automatiquement au club vainqueur de la finale enregistrée.
        ---------------------------------------------------------------------- */
     const emptySeasonRewards = [
         { code: "GLD", label: "Soulier d’Or", value: "NON ATTRIBUÉ" }, // Automatique
@@ -808,9 +813,9 @@
             id: "s1",
             number: 1,
             status: "active",
-            startDate: "2026-01-10",
+            startDate: "2026-09-02",
             endDate: null,
-            expectedMatches: 20,
+            expectedMatches: 24,
             rewards: emptySeasonRewards
         }
 
@@ -860,6 +865,8 @@
 
     const marketValueActions = [
         { key: "victoire", metric: "win", code: "WIN", label: "Victoire", base: 0 },
+        { key: "egalite", metric: "draw", code: "DRW", label: "Égalité", base: 0 },
+        { key: "defaite", metric: "loss", code: "LSS", label: "Défaite", base: -5000000 },
         { key: "buts", metric: "goals", code: "GLS", label: "But", base: 1500000 },
         { key: "passes", metric: "assists", code: "AST", label: "Passe décisive", base: 1000000 },
         { key: "def", metric: "defenses", code: "DEF", label: "Défense", base: 200000 },
@@ -892,6 +899,20 @@
             .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "fr"))[0]?.[0] || null;
     }
 
+    function getSeasonNclWinner(seasonNumber) {
+        const final = matches.find(match => (
+            Number(match.season) === Number(seasonNumber)
+            && match.category === "ncl"
+            && match.valueTier === "finale"
+        ));
+        if (!final || Number(final.scoreHome) === Number(final.scoreAway)) return null;
+
+        const winnerKey = Number(final.scoreHome) > Number(final.scoreAway)
+            ? final.home
+            : final.away;
+        return clubMeta[winnerKey]?.name || winnerKey;
+    }
+
     function resolveSeasonRewards(season) {
         if (!season) return [];
         const playedMatches = matches.filter(match => (
@@ -904,12 +925,17 @@
         const goldenShoeWinner = seasonIsComplete
             ? getSeasonTopScorer(season.number)
             : null;
+        const nclWinner = getSeasonNclWinner(season.number);
 
-        return (season.rewards || emptySeasonRewards).map(reward => (
-            reward.code === "GLD"
-                ? { ...reward, value: goldenShoeWinner || "NON ATTRIBUÉ" }
-                : { ...reward }
-        ));
+        return (season.rewards || emptySeasonRewards).map(reward => {
+            if (reward.code === "GLD") {
+                return { ...reward, value: goldenShoeWinner || "NON ATTRIBUÉ" };
+            }
+            if (reward.code === "NCL") {
+                return { ...reward, value: nclWinner || "NON ATTRIBUÉ" };
+            }
+            return { ...reward };
+        });
     }
 
     function normalizeRewardOwner(value) {
@@ -1001,7 +1027,7 @@
         };
     }
 
-    function getPlayerMatchStats(playerName) {
+    function getPlayerMatchStats(playerName, seasonNumber = null) {
         const totals = {
             matches: 0,
             goals: 0,
@@ -1014,20 +1040,26 @@
             losses: 0
         };
 
-        matches.forEach(match => {
-            const performance = getPlayerMatchPerformance(match, playerName);
-            if (!performance) return;
+        matches
+            .filter(match => (
+                seasonNumber === null
+                || seasonNumber === undefined
+                || Number(match.season) === Number(seasonNumber)
+            ))
+            .forEach(match => {
+                const performance = getPlayerMatchPerformance(match, playerName);
+                if (!performance) return;
 
-            totals.matches += 1;
-            totals.goals += performance.goals;
-            totals.assists += performance.assists;
-            totals.defenses += performance.defenses;
-            totals.dribbles += performance.dribbles;
-            totals.mvp += performance.mvp;
-            totals.wins += performance.won ? 1 : 0;
-            totals.draws += performance.draw ? 1 : 0;
-            totals.losses += performance.lost ? 1 : 0;
-        });
+                totals.matches += 1;
+                totals.goals += performance.goals;
+                totals.assists += performance.assists;
+                totals.defenses += performance.defenses;
+                totals.dribbles += performance.dribbles;
+                totals.mvp += performance.mvp;
+                totals.wins += performance.won ? 1 : 0;
+                totals.draws += performance.draw ? 1 : 0;
+                totals.losses += performance.lost ? 1 : 0;
+            });
 
         return totals;
     }
@@ -1111,6 +1143,8 @@
             const tier = marketValueTiers.find(item => item.key === tierKey) || marketValueTiers[0];
             const quantities = {
                 victoire: performance.won ? 1 : 0,
+                egalite: performance.draw ? 1 : 0,
+                defaite: performance.lost ? 1 : 0,
                 buts: performance.goals,
                 passes: performance.assists,
                 def: performance.defenses,

@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const players = window.NEBULA_DATA?.players || [];
     const typeMatch = document.getElementById("typeMatch");
+    const matchResult = document.getElementById("victoire");
     const tierSelector = document.getElementById("tierSelector");
     const ledgerHead = document.getElementById("ledgerHead");
     const ledgerBody = document.getElementById("ledgerBody");
@@ -42,10 +43,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderMarket() {
         const sortedPlayers = [...players].sort((a, b) => b.value - a.value);
-        const totalValue = sortedPlayers.reduce((total, player) => total + player.value, 0);
-        const valuedPlayers = sortedPlayers.filter(player => player.value > 0);
+        const playerMatchCounts = new Map(sortedPlayers.map(player => [
+            player.name,
+            Number(window.NEBULA_DATA?.getPlayerMatchStats?.(player.name)?.matches || 0)
+        ]));
+        const totalValue = sortedPlayers.reduce((total, player) => total + (Number(player.value) || 0), 0);
+        const valuedPlayers = sortedPlayers.filter(player => (
+            (Number(player.value) || 0) !== 0
+            || (playerMatchCounts.get(player.name) || 0) > 0
+        ));
         const leader = sortedPlayers.find(player => Number(player.value) > 0) || null;
         const maximumValue = leader?.value || 1;
+        const minimumValue = Math.abs(Math.min(0, ...sortedPlayers.map(player => Number(player.value) || 0))) || 1;
 
         document.getElementById("marketTotal").textContent = formatCompactCredits(totalValue);
         document.getElementById("valuedProfiles").textContent = String(valuedPlayers.length).padStart(2, "0");
@@ -58,12 +67,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         ranking.innerHTML = sortedPlayers.map((player, index) => {
             const accent = MARKET_CLUB_COLORS[player.club] || "#63e7ff";
-            const width = player.value > 0 ? Math.max(4, (player.value / maximumValue) * 100) : 0;
-            const status = player.value > 0 ? "COTÉ" : "NON COTÉ";
+            const numericValue = Number(player.value) || 0;
+            const isNegative = numericValue < 0;
+            const hasPlayedMatch = (playerMatchCounts.get(player.name) || 0) > 0;
+            const hasMarketActivity = numericValue !== 0 || hasPlayedMatch;
+            const width = numericValue > 0
+                ? Math.max(4, (numericValue / maximumValue) * 100)
+                : isNegative
+                    ? Math.max(4, (Math.abs(numericValue) / minimumValue) * 100)
+                    : 0;
+            const status = isNegative ? "EN BAISSE" : hasMarketActivity ? "COTÉ" : "NON COTÉ";
             const href = window.NEBULA_DATA.playerPageHref(player);
 
             return `
-                <a class="market-player-row" href="${href}" style="--market-accent:${accent};">
+                <a class="market-player-row${isNegative ? " is-negative" : ""}" href="${href}" style="--market-accent:${accent};">
                     <span class="market-rank">${String(index + 1).padStart(2, "0")}</span>
                     <img src="${player.avatar}" alt="" class="market-player-avatar">
                     <span class="market-player-identity">
@@ -73,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <span class="market-player-progress" aria-hidden="true"><i style="width:${width}%"></i></span>
                     <span class="market-player-value">
                         <small>${status}</small>
-                        <strong>${player.value > 0 ? formatCredits(player.value) : "—"}</strong>
+                        <strong>${hasMarketActivity ? formatCredits(numericValue) : "—"}</strong>
                     </span>
                     <span class="market-row-arrow">↗</span>
                 </a>
@@ -128,11 +145,27 @@ document.addEventListener("DOMContentLoaded", () => {
         return index < 0 ? 0 : index;
     }
 
+    function updateMatchResultOptions(tier) {
+        const currentResult = matchResult.value || "loss";
+        const isNclResult = ["ncl", "third", "finale"].includes(tier.key);
+        const nextResult = isNclResult && currentResult === "draw"
+            ? "loss"
+            : currentResult;
+
+        matchResult.innerHTML = `
+            <option value="loss">Non</option>
+            ${isNclResult ? "" : `<option value="draw">Égalité</option>`}
+            <option value="win">Oui</option>
+        `;
+        matchResult.value = nextResult;
+    }
+
     function updateTierInterface() {
         const index = activeTierIndex();
         const tier = VALUE_TIERS[index];
         const percentage = (index / (VALUE_TIERS.length - 1)) * 100;
 
+        updateMatchResultOptions(tier);
         renderTierSelector(index);
         renderLedger(index);
         document.getElementById("activeTierLabel").textContent = `${tier.shortLabel} ×${tier.multiplier}`;
@@ -150,8 +183,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function calculValeur() {
         const tier = VALUE_TIERS[activeTierIndex()];
+        const result = matchResult.value;
         const stats = {
-            victoire: Number(document.getElementById("victoire").value),
+            victoire: result === "win" ? 1 : 0,
+            egalite: result === "draw" ? 1 : 0,
+            defaite: result === "loss" ? 1 : 0,
             buts: sanitizedValue("buts"),
             passes: sanitizedValue("passes"),
             def: sanitizedValue("def"),
