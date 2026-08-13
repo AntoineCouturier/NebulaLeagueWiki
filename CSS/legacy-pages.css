@@ -766,6 +766,75 @@ body.nebula-page.legacy-page {
     padding: 32px;
 }
 
+.progress-mode-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-bottom: 1px solid var(--legacy-line);
+}
+
+.progress-mode-tabs button {
+    min-height: 62px;
+    border: 0;
+    border-right: 1px solid var(--legacy-line);
+    border-bottom: 2px solid transparent;
+    color: #6f818e;
+    background: rgba(255, 255, 255, 0.018);
+    font: 700 0.58rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.06em;
+    transition: color 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.progress-mode-tabs button:last-child {
+    border-right: 0;
+}
+
+.progress-mode-tabs button span {
+    margin-right: 12px;
+    color: #44535e;
+}
+
+.progress-mode-tabs button:hover,
+.progress-mode-tabs button.is-active {
+    border-bottom-color: var(--legacy-acid);
+    color: var(--legacy-acid);
+    background: rgba(168, 255, 37, 0.08);
+}
+
+.progress-mode-tabs button.is-active span {
+    color: var(--legacy-paper);
+}
+
+.progress-chart-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 13px;
+    overscroll-behavior-x: contain;
+    scrollbar-color: var(--legacy-acid) rgba(255, 255, 255, 0.06);
+    scrollbar-width: thin;
+}
+
+.progress-chart-scroll:focus-visible {
+    outline: 1px solid rgba(168, 255, 37, 0.5);
+    outline-offset: 5px;
+}
+
+.progress-chart-scroll::-webkit-scrollbar {
+    height: 7px;
+}
+
+.progress-chart-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.progress-chart-scroll::-webkit-scrollbar-thumb {
+    background: var(--legacy-acid);
+}
+
+.progress-chart-track {
+    min-width: 100%;
+}
+
 .progress-svg {
     width: 100%;
     height: 330px;
@@ -850,6 +919,260 @@ body.nebula-page.legacy-page {
     justify-content: space-between;
     color: #627481;
     font: 600 0.48rem/1 "Orbitron", sans-serif;
+}
+
+.progress-scroll-hint {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
+    color: #627481;
+    font: 600 0.45rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.08em;
+}
+
+.progress-scroll-hint span {
+    color: var(--legacy-acid);
+    font-size: 0.75rem;
+}
+
+.progress-revision-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 18px;
+    color: #6e808c;
+    font: 600 0.47rem/1.4 "Orbitron", sans-serif;
+}
+
+.progress-revision-summary span {
+    color: var(--legacy-acid);
+}
+
+.progress-revision-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 12px;
+    overscroll-behavior-x: contain;
+    scrollbar-color: var(--legacy-acid) rgba(255, 255, 255, 0.06);
+    scrollbar-width: thin;
+}
+
+.progress-revision-scroll:focus-visible {
+    outline: 1px solid rgba(168, 255, 37, 0.5);
+    outline-offset: 4px;
+}
+
+.progress-revision-scroll::-webkit-scrollbar {
+    height: 7px;
+}
+
+.progress-revision-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.progress-revision-scroll::-webkit-scrollbar-thumb {
+    background: var(--legacy-acid);
+}
+
+.progress-revision-track {
+    display: grid;
+    min-width: 100%;
+    gap: 16px;
+}
+
+.progress-revision-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--legacy-line);
+    background: rgba(4, 9, 13, 0.88);
+}
+
+.progress-revision-card::before {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 2px;
+    content: "";
+    background: #33414b;
+}
+
+.progress-revision-card.is-current::before {
+    background: var(--legacy-acid);
+    box-shadow: 0 0 13px rgba(168, 255, 37, 0.5);
+}
+
+.progress-revision-head {
+    display: grid;
+    min-height: 125px;
+    grid-template-columns: minmax(0, 1fr) 130px;
+    border-bottom: 1px solid var(--legacy-line);
+}
+
+.progress-revision-head>div:first-child {
+    display: flex;
+    justify-content: center;
+    padding: 23px;
+    flex-direction: column;
+}
+
+.progress-revision-head small,
+.progress-revision-head span {
+    color: #6c7e8b;
+    font: 600 0.44rem/1.3 "Orbitron", sans-serif;
+}
+
+.progress-revision-head small {
+    color: var(--legacy-acid);
+}
+
+.progress-revision-head h3 {
+    margin: 11px 0 8px;
+    color: var(--legacy-paper);
+    font: 800 1rem/1 "Orbitron", sans-serif;
+}
+
+.progress-revision-overall {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px solid var(--legacy-line);
+    background: rgba(255, 255, 255, 0.018);
+    flex-direction: column;
+}
+
+.progress-revision-overall strong {
+    margin: 9px 0 7px;
+    color: var(--legacy-paper);
+    font: 900 2.2rem/1 "Orbitron", sans-serif;
+}
+
+.progress-revision-overall em,
+.progress-revision-stat em {
+    color: #71828d;
+    font: 700 0.45rem/1 "Orbitron", sans-serif;
+    font-style: normal;
+}
+
+.progress-revision-overall em.is-up,
+.progress-revision-stat.is-up em {
+    color: var(--legacy-acid);
+}
+
+.progress-revision-overall em.is-down,
+.progress-revision-stat.is-down em {
+    color: #ff5368;
+}
+
+.progress-revision-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.progress-revision-stat {
+    min-height: 126px;
+    padding: 17px;
+    border-right: 1px solid var(--legacy-line);
+    border-bottom: 1px solid var(--legacy-line);
+    background: linear-gradient(145deg, color-mix(in srgb, var(--stat-color), transparent 96%), transparent 70%);
+}
+
+.progress-revision-stat:nth-child(3n) {
+    border-right: 0;
+}
+
+.progress-revision-stat:nth-last-child(-n+3) {
+    border-bottom: 0;
+}
+
+.progress-revision-stat>div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.progress-revision-stat span {
+    color: #778893;
+    font: 600 0.43rem/1 "Orbitron", sans-serif;
+}
+
+.progress-revision-stat strong {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 19px 0 15px;
+    color: var(--stat-color);
+    font: 800 1.35rem/1 "Orbitron", sans-serif;
+}
+
+.progress-revision-stat strong small,
+.progress-revision-stat strong b {
+    color: #53636e;
+    font: 700 0.6rem/1 "Orbitron", sans-serif;
+}
+
+.progress-revision-meter {
+    display: block;
+    width: 100%;
+    height: 2px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.progress-revision-meter i {
+    display: block;
+    height: 100%;
+    background: var(--stat-color);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--stat-color), transparent 35%);
+}
+
+.progress-technical-entry {
+    display: grid;
+    min-height: 112px;
+    grid-template-columns: 82px minmax(190px, 1fr) repeat(7, minmax(76px, 0.45fr));
+    align-items: stretch;
+    border-bottom: 1px solid var(--legacy-line);
+}
+
+.progress-technical-entry:last-child {
+    border-bottom: 0;
+}
+
+.progress-technical-entry-index {
+    display: grid;
+    place-items: center;
+    border-right: 1px solid var(--legacy-line);
+    color: #465560;
+    font: 800 1.15rem/1 "Orbitron", sans-serif;
+}
+
+.progress-technical-entry-head,
+.progress-technical-entry-stat {
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+    flex-direction: column;
+}
+
+.progress-technical-entry-stat {
+    border-left: 1px solid var(--legacy-line);
+}
+
+.progress-technical-entry small,
+.progress-technical-entry span {
+    color: #687a87;
+    font: 600 0.43rem/1.35 "Orbitron", sans-serif;
+}
+
+.progress-technical-entry strong {
+    margin-top: 9px;
+    color: var(--stat-color, var(--legacy-paper));
+    font: 800 0.9rem/1 "Orbitron", sans-serif;
 }
 
 .progress-entry {
@@ -1146,7 +1469,7 @@ body.nebula-page.legacy-page {
 .legacy-crosslinks {
     display: grid;
     margin-top: 18px;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     border: 1px solid var(--legacy-line);
 }
 
@@ -1239,6 +1562,14 @@ body.nebula-page.legacy-page {
     }
 
     .progress-entry-stat:nth-last-child(-n+2) {
+        display: none;
+    }
+
+    .progress-technical-entry {
+        grid-template-columns: 70px 1fr repeat(3, 90px);
+    }
+
+    .progress-technical-entry-stat:nth-last-child(-n+4) {
         display: none;
     }
 }
@@ -1383,6 +1714,27 @@ body.nebula-page.legacy-page {
 
     .progress-entry-stat:not(:last-child) {
         display: none;
+    }
+
+    .progress-mode-tabs button {
+        min-height: 58px;
+        font-size: 0.5rem;
+    }
+
+    .progress-mode-tabs button span {
+        display: none;
+    }
+
+    .progress-technical-entry {
+        grid-template-columns: 55px 1fr 80px;
+    }
+
+    .progress-technical-entry-stat {
+        display: none;
+    }
+
+    .progress-technical-entry-head + .progress-technical-entry-stat {
+        display: flex;
     }
 
     .dream-bench,

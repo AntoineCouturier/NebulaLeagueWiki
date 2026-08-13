@@ -1,9 +1,9 @@
 /* ===================== CLUB CONFIG ===================== */
 function playerCardTint(hex, alpha = 0.15) {
     const value = String(hex || "#63e7ff").replace("#", "");
-    const expanded = value.length === 3
+    const expanded = (value.length === 3
         ? value.split("").map(character => character + character).join("")
-        : value.padEnd(6, "0");
+        : value).slice(0, 6).padEnd(6, "0");
     const number = Number.parseInt(expanded, 16);
     return `rgba(${(number >> 16) & 255}, ${(number >> 8) & 255}, ${number & 255}, ${alpha})`;
 }
@@ -53,11 +53,12 @@ const CHARACTER_ULTIMATE_TITLES = {
     kiyora: "God's Unknown Plan",
     karasu: 'The Crow',
     otoya: 'Stealthy Ninja',
-    ness: 'The Magician',
+    ness: 'The SpellCaster',
     kaiser: 'The Blue Rose',
     lorenzo: 'The Zombie',
     rin: 'The Beast',
     reo: 'Master of All Trades',
+    hugo: "The Team's Cogwheel",
     nelisagi: 'Genius of Adaptation',
     hiori: 'Ultra Sadist',
     lorenzomastery: 'The Ace Eater',
@@ -77,6 +78,7 @@ const CHARACTER_ULTIMATE_PALETTES = {
     chigiri: { accent: '#ff0080ff', accentSecondary: '#ff6d91ff', accentTertiary: '#ffffffff' },
     bachira: { accent: '#ffd900ff', accentSecondary: '#755600ff', accentTertiary: '#000000ff' },
     shidou: { accent: '#ff3f87', accentSecondary: '#d818ffff', accentTertiary: '#cd4dffff' },
+    niko: { accent: '#117884', accentSecondary: '#B4E2E1', accentTertiary: '#6C9BE9' },
     kurona: { accent: '#9300c0ff', accentSecondary: '#63e7ff', accentTertiary: '#1a042eff' },
     charles: { accent: '#fada5eff', accentSecondary: '#89cff0', accentTertiary: '#feffbbff' },
     kunigami: { accent: '#ff6b35', accentSecondary: '#ffd84d', accentTertiary: '#a73500ff' },
@@ -87,10 +89,12 @@ const CHARACTER_ULTIMATE_PALETTES = {
     kiyora: { accent: '#78caf0ff', accentSecondary: '#d3dafdff', accentTertiary: '#ff819cff' },
     karasu: { accent: '#000280ff', accentSecondary: '#000000ff', accentTertiary: '#020068ff' },
     otoya: { accent: '#c1ffbbff', accentSecondary: '#8aff80ff', accentTertiary: '#1dac00ff' },
+    ness: { accent: '#FD2996', accentSecondary: '#7A365B', accentTertiary: '#FDC0FF' },
     kaiser: { accent: '#9ab5ffff', accentSecondary: '#0033dbff', accentTertiary: '#fff389ff' },
     lorenzo: { accent: '#5c00a7ff', accentSecondary: '#21ff7dff', accentTertiary: '#046d00ff' },
     rin: { accent: '#00d3baff', accentSecondary: '#336affff', accentTertiary: '#001f8dff' },
     reo: { accent: '#6200ffff', accentSecondary: '#00f7ffff', accentTertiary: '#37ff1cff' },
+    hugo: { accent: '#7E1929', accentSecondary: '#E0B44B', accentTertiary: '#37375B' },
     nelisagi: { accent: '#ffffffff', accentSecondary: '#4d4c9bff', accentTertiary: '#3b39acff' },
     hiori: { accent: '#00ccffff', accentSecondary: '#00f7ffff', accentTertiary: '#ffffffff' },
     lorenzomastery: { accent: '#5c00a7ff', accentSecondary: '#fff021ff', accentTertiary: '#046d00ff' },
@@ -116,6 +120,12 @@ function detectClub() {
 }
 
 function getPlayerName() {
+    const fileSlug = decodeURIComponent(window.location.pathname.split('/').pop() || '')
+        .replace(/\.html$/i, '');
+    const filePlayer = (window.NEBULA_DATA?.players || [])
+        .find(player => normalizeLabel(player.name) === normalizeLabel(fileSlug));
+    if (filePlayer) return filePlayer.name;
+
     const header = document.querySelector(
         '[class*="player-header-"] h2'
     );
@@ -376,32 +386,159 @@ function extractManualTitles() {
 }
 
 function getSeasonRewardTitles() {
-    const seasons = window.NEBULA_DATA?.seasons || [];
+    const data = window.NEBULA_DATA || {};
+    const seasons = data.seasons || [];
     const currentPlayer = normalizeLabel(playerName);
+    const currentClub = data.getClub?.(playerData?.club) || null;
+    const currentClubAliases = new Set([
+        playerData?.club,
+        currentClub?.key,
+        currentClub?.name,
+        currentClub?.shortName,
+        currentClub?.fullName
+    ].filter(Boolean).map(normalizeLabel));
     const rewardAccents = {
         PUS: '#ff536e',
         GLD: '#ffd84d',
         NCL: '#9bff20',
-        BDO: '#ffd84d'
+        BDO: '#ffd84d',
+        LIG: '#f2f5f7'
+    };
+    const rewardWeights = {
+        PUS: 1000,
+        LIG: 1100,
+        NCL: 1200,
+        GLD: 1300,
+        BDO: 1400,
+        GOAT: 1500
+    };
+    const rewardNames = {
+        PUS: 'Prix Puskás',
+        LIG: 'Champion de la Ligue',
+        NCL: 'Trophée de la NCL',
+        GLD: 'Golden Shoe',
+        BDO: "Ballon d'Or",
+        GOAT: '★ GOAT ★'
     };
 
-    return seasons.flatMap(season => {
-        const rewards = window.NEBULA_DATA?.resolveSeasonRewards
-            ? window.NEBULA_DATA.resolveSeasonRewards(season)
+    const seasonTitles = seasons.flatMap(season => {
+        const rewards = data.resolveSeasonRewards
+            ? data.resolveSeasonRewards(season)
             : (season.rewards || []);
-
-        return rewards
-            .filter(reward => normalizeLabel(reward.value) === currentPlayer)
+        const finished = season.status === 'finished';
+        const individualRewards = rewards.filter(reward => (
+            reward.code !== 'NCL'
+            && normalizeLabel(reward.value) === currentPlayer
+        ));
+        const wonNcl = finished && rewards.some(reward => (
+            reward.code === 'NCL'
+            && currentClubAliases.has(normalizeLabel(reward.value))
+        ));
+        const fallbackStandings = (data.clubs || [])
+            .map(club => {
+                const stats = data.getClubMatchStats?.(club.key, season.number)
+                    || { played: 0, points: 0, gf: 0, ga: 0 };
+                return { club: club.key, ...stats, diff: Number(stats.gf || 0) - Number(stats.ga || 0) };
+            })
+            .filter(row => Number(row.played) > 0)
+            .sort((a, b) => (
+                Number(b.points || 0) - Number(a.points || 0)
+                || Number(b.diff || 0) - Number(a.diff || 0)
+                || Number(b.gf || 0) - Number(a.gf || 0)
+            ));
+        const leagueChampionKey = fallbackStandings[0]?.club || null;
+        const wonLeague = finished && currentClubAliases.has(normalizeLabel(leagueChampionKey));
+        const unlockedDuringSeason = individualRewards
             .map(reward => ({
-                name: `${reward.label} Saison ${season.number}`,
+                name: rewardNames[reward.code] || reward.label,
                 requirement: `Attribué lors de la Saison ${season.number}`,
                 code: reward.code || 'RWD',
                 accent: rewardAccents[reward.code] || '#ffd84d',
-                priority: 1000 + Number(season.number || 0),
+                priority: rewardWeights[reward.code] || 950,
                 source: 'season',
                 category: 'Récompense officielle',
                 season: season.number
             }));
+
+        if (wonLeague) {
+            unlockedDuringSeason.push({
+                name: rewardNames.LIG,
+                requirement: `Champion de la Nebula League lors de la Saison ${season.number}`,
+                code: 'LIG',
+                accent: rewardAccents.LIG,
+                priority: rewardWeights.LIG,
+                source: 'season',
+                category: 'Titre collectif',
+                season: season.number
+            });
+        }
+
+        if (wonNcl) {
+            unlockedDuringSeason.push({
+                name: rewardNames.NCL,
+                requirement: `Vainqueur de la Nebula Champions League lors de la Saison ${season.number}`,
+                code: 'NCL',
+                accent: rewardAccents.NCL,
+                priority: rewardWeights.NCL,
+                source: 'season',
+                category: 'Titre collectif',
+                season: season.number
+            });
+        }
+
+        const individualCodes = new Set(individualRewards.map(reward => reward.code));
+        const isGoatSeason = wonLeague
+            && wonNcl
+            && individualCodes.has('PUS')
+            && individualCodes.has('GLD')
+            && individualCodes.has('BDO');
+
+        if (isGoatSeason) {
+            unlockedDuringSeason.push({
+                name: rewardNames.GOAT,
+                requirement: `Toutes les distinctions majeures remportées lors de la Saison ${season.number}`,
+                code: 'GOAT',
+                accent: '#ffd84d',
+                accentSecondary: '#fff4b0',
+                accentTertiary: '#9b6800',
+                priority: rewardWeights.GOAT,
+                source: 'season',
+                category: 'Rang absolu',
+                season: season.number
+            });
+        }
+
+        return unlockedDuringSeason;
+    });
+
+    const groupedTitles = new Map();
+    seasonTitles.forEach(title => {
+        const key = title.code || normalizeLabel(title.name);
+        const seasonNumber = Number(title.season);
+        if (!groupedTitles.has(key)) {
+            groupedTitles.set(key, {
+                ...title,
+                seasons: Number.isFinite(seasonNumber) ? [seasonNumber] : []
+            });
+            return;
+        }
+
+        const groupedTitle = groupedTitles.get(key);
+        if (Number.isFinite(seasonNumber) && !groupedTitle.seasons.includes(seasonNumber)) {
+            groupedTitle.seasons.push(seasonNumber);
+        }
+    });
+
+    return Array.from(groupedTitles.values()).map(title => {
+        const wonSeasons = title.seasons.sort((a, b) => a - b);
+        const seasonList = wonSeasons.map(number => String(number).padStart(2, '0')).join(' · ');
+        const count = wonSeasons.length;
+        return {
+            ...title,
+            season: wonSeasons[wonSeasons.length - 1],
+            requirement: `${count > 1 ? 'Saisons remportées' : 'Saison remportée'} : ${seasonList}`,
+            proof: `${count > 1 ? 'Saisons remportées' : 'Saison remportée'} : ${seasonList}`
+        };
     });
 }
 
@@ -525,8 +662,66 @@ function showToast(message) {
 }
 
 function getTechnicalTitleIllustration(title) {
-    const metric = title?.category === 'Statistique' ? title.metric : null;
+    const trophyIllustrations = {
+        BDO: 'ballon-dor',
+        GLD: 'golden-shoe',
+        NCL: 'ncl-trophy',
+        GOAT: 'goat'
+    };
+    if (title?.source === 'ultimate') return '';
+
+    const metric = trophyIllustrations[title?.code]
+        || (title?.category === 'Statistique' ? title.metric : null);
     const illustrations = {
+        'ballon-dor': `
+            <svg class="pc-technical-title-art ballon-dor-illustration" viewBox="0 0 160 90" aria-hidden="true" focusable="false">
+                <g class="ballon-dor-trophy" transform="translate(-26 0)">
+                    <circle class="trophy-solid" cx="106" cy="31" r="23" />
+                    <polygon class="trophy-facet trophy-facet-main" points="106,19 116,26 112,38 100,38 96,26" />
+                    <path class="trophy-facets" d="M106 8v11m18-1l-8 8m13 9l-17 3m5 12l-5-12m-17 12l5-12m-17-3l17 3m-12-20l8 8M96 26l10-7 10 7M88 18l-1 17 7 13m30-30l5 17-11 13" />
+                    <path class="trophy-rock trophy-solid" d="M88 64l8-8 9 5 7-6 9 6 8-4 5 7-10 7H96z" />
+                    <path class="trophy-rock-facets" d="M96 56l4 8 5-3 7 4 9-4 3 10m-24-7l-4 7m16-6v6" />
+                    <rect class="trophy-base" x="87" y="72" width="39" height="8" rx="1" />
+                    <path class="glyph-faint" d="M82 84h49" />
+                </g>
+            </svg>`,
+        'golden-shoe': `
+            <svg class="pc-technical-title-art golden-shoe-illustration" viewBox="0 0 160 90" aria-hidden="true" focusable="false">
+                <path class="trophy-solid shoe-body" d="M58 25l30 7 13 16 32 10c7 2 10 7 8 13H55l-10-5 2-9 11-7z" />
+                <path class="shoe-outline" d="M58 25l30 7 13 16 32 10c7 2 10 7 8 13H55l-10-5 2-9 11-7z" />
+                <path class="shoe-panel" d="M58 25v25l12 8h35l-4-10-13-16zM70 58l12-25" />
+                <path class="shoe-laces" d="M72 38l15 4m-17 2l18 5m-20 1l22 6" />
+                <path class="shoe-sole" d="M45 65h94M54 71l-2 8m20-8l-2 8m34-8l3 8m22-8l4 8" />
+                <path class="glyph-faint glyph-dash" d="M32 36H12m24 8H20m10 8H8" />
+            </svg>`,
+        'ncl-trophy': `
+            <svg class="pc-technical-title-art ncl-trophy-illustration" viewBox="0 0 160 90" aria-hidden="true" focusable="false">
+                <path class="trophy-solid cup-body" d="M58 18h44l-4 31c-2 14-10 21-18 21s-16-7-18-21z" />
+                <path class="cup-rim" d="M55 18h50M59 23h42" />
+                <path class="cup-body-lines" d="M58 18l4 31c2 14 10 21 18 21s16-7 18-21l4-31M67 28c8 4 18 4 26 0" />
+                <path class="cup-handle cup-handle-left" d="M59 27C49 18 36 22 37 39c1 13 11 20 25 16M59 31C51 24 42 27 43 39c1 9 8 14 18 12" />
+                <path class="cup-handle cup-handle-right" d="M101 27c10-9 23-5 22 12-1 13-11 20-25 16m3-24c8-7 17-4 16 8-1 9-8 14-18 12" />
+                <path class="cup-stem" d="M76 69v8m8-8v8" />
+                <path class="cup-base" d="M64 82h32M70 77h20l6 5H64z" />
+                <path class="glyph-faint" d="M80 6v8M47 10l7 7m59-7l-7 7" />
+            </svg>`,
+        goat: `
+            <svg class="pc-technical-title-art goat-cosmos-illustration" viewBox="0 0 220 140" aria-hidden="true" focusable="false">
+                <ellipse class="cosmos-orbit cosmos-orbit-one" cx="110" cy="68" rx="82" ry="34" transform="rotate(-10 110 68)" />
+                <ellipse class="cosmos-orbit cosmos-orbit-two" cx="110" cy="68" rx="58" ry="52" transform="rotate(38 110 68)" />
+                <path class="cosmos-axis" d="M19 83h182M110 7v122" />
+                <g class="cosmos-core">
+                    <circle cx="110" cy="68" r="24" />
+                    <circle cx="110" cy="68" r="17" />
+                    <path d="M110 49l5 12 13 1-10 8 3 13-11-7-11 7 3-13-10-8 13-1z" />
+                    <circle class="cosmos-core-dot" cx="110" cy="68" r="4" />
+                </g>
+                <g class="cosmos-trophy trophy-shoe" transform="translate(35 57)"><circle r="10" /><path d="M-5-2v6l5 3h7V3L2 2l-2-5z" /></g>
+                <g class="cosmos-trophy trophy-puskas" transform="translate(73 22)"><circle r="10" /><path d="M0-6l2 4 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" /></g>
+                <g class="cosmos-trophy trophy-league" transform="translate(157 29)"><circle r="10" /><path d="M-6-4h12l-2 8-4 3-4-3zM-7-7l3 3 4-4 4 4 3-3" /></g>
+                <g class="cosmos-trophy trophy-ncl" transform="translate(188 77)"><circle r="10" /><path d="M-5-6h10v4c0 5-2 7-5 8-3-1-5-3-5-8zM-5-3h-4c0 4 2 6 5 6m9-6h4c0 4-2 6-5 6" /></g>
+                <g class="cosmos-trophy trophy-ballon" transform="translate(91 118)"><circle r="10" /><circle r="5" /><path d="M0-5l4 3-2 5h-4l-2-5z" /></g>
+            </svg>`,
         defense: `
             <svg class="pc-technical-title-art crown-illustration" viewBox="0 0 160 90" aria-hidden="true" focusable="false">
                 <path class="glyph-faint" d="M89 20l8-9 8 9 9-7 4 18H76l4-18z" />
@@ -652,12 +847,13 @@ function buildHero(club, stats, titles) {
         <div class="pc-hero-identity">
             <p class="pc-hero-eyebrow"><span>${parseInfoField('Position')}</span> ${clubLabel}</p>
             <h2 class="pc-hero-name">${playerName}</h2>
-            <p class="pc-hero-alias">${parseInfoField('Pseudo')} // ${parseInfoField('Personnage')}</p>
+            <p class="pc-hero-alias">${parseInfoField('Pseudo')} // ${parseInfoField('Position')}</p>
             <div class="pc-signature-title${featuredTitle ? ' unlocked' : ''}${featuredTitleIllustration ? ' has-technical-illustration' : ''}${featuredSourceClass}"${featuredStyle}>
                 ${featuredTitleIllustration}
                 <small>${featuredTitle ? 'TITRE ACTIF // SYNCHRONISÉ' : 'TITRE ACTIF // NON ATTRIBUÉ'}</small>
                 <strong>${featuredTitle ? featuredTitle.name : 'AUCUN SEUIL ATTEINT'}</strong>
                 ${featuredTitle ? `<span>${featuredTitle.requirement}</span>` : '<span>Continuez votre progression</span>'}
+                ${titles.length > 1 ? `<div class="pc-title-switcher"><button type="button" data-title-shift="-1" aria-label="Titre précédent">←</button><span>01 / ${String(titles.length).padStart(2, '0')}</span><button type="button" data-title-shift="1" aria-label="Titre suivant">→</button></div>` : ''}
             </div>
         </div>
         <div class="pc-hero-rating">
@@ -689,6 +885,45 @@ function buildHero(club, stats, titles) {
     `;
 
     main.parentNode.insertBefore(hero, main);
+
+    const signatureTitle = hero.querySelector('.pc-signature-title');
+    let featuredTitleIndex = 0;
+    const renderFeaturedTitle = () => {
+        const title = titles[featuredTitleIndex];
+        const illustration = getTechnicalTitleIllustration(title);
+        const sourceClass = title?.source ? ` ${title.source}` : '';
+        signatureTitle.className = `pc-signature-title${title ? ' unlocked' : ''}${illustration ? ' has-technical-illustration' : ''}${titles.length > 1 ? ' has-title-switcher' : ''}${sourceClass}`;
+
+        ['--title-accent', '--title-accent-secondary', '--title-accent-tertiary'].forEach(property => signatureTitle.style.removeProperty(property));
+        if (title) {
+            signatureTitle.style.setProperty('--title-accent', title.accent);
+            signatureTitle.style.setProperty('--title-accent-secondary', title.accentSecondary || title.accent);
+            signatureTitle.style.setProperty('--title-accent-tertiary', title.accentTertiary || title.accent);
+        }
+
+        signatureTitle.innerHTML = `
+            ${illustration}
+            <small>${title ? 'TITRE ACTIF // SYNCHRONISÉ' : 'TITRE ACTIF // NON ATTRIBUÉ'}</small>
+            <strong>${title ? title.name : 'AUCUN SEUIL ATTEINT'}</strong>
+            ${title ? `<span>${title.requirement}</span>` : '<span>Continuez votre progression</span>'}
+            ${titles.length > 1 ? `
+                <div class="pc-title-switcher" aria-label="Parcourir les titres débloqués">
+                    <button type="button" data-title-shift="-1" aria-label="Titre précédent">←</button>
+                    <span>${String(featuredTitleIndex + 1).padStart(2, '0')} / ${String(titles.length).padStart(2, '0')}</span>
+                    <button type="button" data-title-shift="1" aria-label="Titre suivant">→</button>
+                </div>
+            ` : ''}
+        `;
+    };
+
+    signatureTitle?.addEventListener('click', event => {
+        const control = event.target.closest('[data-title-shift]');
+        if (!control || titles.length < 2) return;
+        featuredTitleIndex = (featuredTitleIndex + Number(control.dataset.titleShift) + titles.length) % titles.length;
+        renderFeaturedTitle();
+    });
+    if (signatureTitle) renderFeaturedTitle();
+
     main.classList.add('pc-enhanced');
 }
 
@@ -905,16 +1140,18 @@ function buildTrophiesPanel(titles) {
         const sourceLabel = title.source === 'automatic'
             ? 'AUTO'
             : title.source === 'season'
-                ? `SAISON ${String(title.season).padStart(2, '0')}`
+                ? title.seasons?.length > 1
+                    ? 'PALMARÈS CUMULÉ'
+                    : `SAISON ${String(title.season).padStart(2, '0')}`
                 : title.source === 'ultimate'
                     ? 'ULTIME'
                     : 'ARCHIVE';
         const titleStyle = `--title-accent:${title.accent};--title-accent-secondary:${title.accentSecondary || title.accent};--title-accent-tertiary:${title.accentTertiary || title.accent}`;
-        const proof = title.metric === 'value' && Number.isFinite(title.value) && Number.isFinite(title.threshold)
+        const proof = title.proof || (title.metric === 'value' && Number.isFinite(title.value) && Number.isFinite(title.threshold)
             ? `${formatPlayerValue(title.value)} / ${formatPlayerValue(title.threshold)}`
             : Number.isFinite(title.value) && Number.isFinite(title.threshold)
                 ? `${title.value} / ${title.threshold}`
-                : title.requirement;
+                : title.requirement);
         titlesHTML += `
             <li class="pc-title-card ${title.source}" style="${titleStyle}">
                 <span class="pc-title-index">${String(index + 1).padStart(2, '0')}</span>
@@ -922,7 +1159,7 @@ function buildTrophiesPanel(titles) {
                 <div>
                     <small>${sourceLabel} // ${title.category || 'Palmarès'}</small>
                     <strong>${title.name}</strong>
-                    <span>${title.requirement}</span>
+                    ${title.source === 'season' ? '' : `<span>${title.requirement}</span>`}
                 </div>
                 <b>${proof}</b>
             </li>
@@ -975,7 +1212,7 @@ function buildTabs() {
     const radarInline = document.createElement('div');
     radarInline.className = 'pc-radar-inline';
     radarInline.innerHTML = `
-        <div class="pc-panel-heading"><span>R</span><div><small>LECTURE HEXAGONALE</small><h3>RADAR DES COMPÉTENCES</h3></div></div>
+        <div class="pc-panel-heading"><div><small>LECTURE HEXAGONALE</small><h3>RADAR DES COMPÉTENCES</h3></div></div>
         <div class="pc-radar-inline-canvas"><canvas id="inlineRadarChart"></canvas></div>
     `;
 
@@ -1070,7 +1307,10 @@ function createRadarChart(canvasId, chartRef) {
     if (!canvas || typeof Chart === 'undefined') return null;
 
     const stats = extractStatsFromHTML();
-    const data = STAT_LABELS.map(s => stats[s.key] ?? 50);
+    const hasTechnicalData = STAT_LABELS.some(stat => Number.isFinite(stats[stat.key]));
+    const data = hasTechnicalData
+        ? STAT_LABELS.map(stat => Number.isFinite(stats[stat.key]) ? stats[stat.key] : 50)
+        : STAT_LABELS.map(() => null);
 
     if (chartRef === 'inline' && inlineRadarChart) {
         inlineRadarChart.destroy();
@@ -1088,14 +1328,14 @@ function createRadarChart(canvasId, chartRef) {
             datasets: [{
                 label: playerName,
                 data,
-                backgroundColor: clubData.bgColor,
-                borderColor: clubData.borderColor,
+                backgroundColor: hasTechnicalData ? clubData.bgColor : 'transparent',
+                borderColor: hasTechnicalData ? clubData.borderColor : 'transparent',
                 pointBackgroundColor: clubData.borderColor,
                 pointBorderColor: '#fff',
-                pointBorderWidth: 2,
-                pointRadius: 5,
-                pointHoverRadius: 7,
-                borderWidth: 2.5
+                pointBorderWidth: hasTechnicalData ? 2 : 0,
+                pointRadius: hasTechnicalData ? 5 : 0,
+                pointHoverRadius: hasTechnicalData ? 7 : 0,
+                borderWidth: hasTechnicalData ? 2.5 : 0
             }]
         },
         options: getChartOptions(clubData.borderColor, playerName)
@@ -1159,6 +1399,7 @@ function initPlayerCard() {
 
     playerName = getPlayerName();
     playerData = getCentralPlayer(playerName);
+    if (playerData?.name) document.title = `Carte Joueur - ${playerData.name}`;
     const clubKey = playerData?.club || detectClub();
     clubData = CLUBS[clubKey] || CLUBS.bastard;
     syncPlayerIdentityFromData(playerData);

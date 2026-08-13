@@ -2,6 +2,12 @@
 // This code handles the mobile hamburger menu - include in every JS file
 
 document.addEventListener('DOMContentLoaded', function () {
+    const activeSeason = window.NEBULA_DATA?.getActiveSeason?.();
+    const seasonPill = document.querySelector('.live-pill');
+    if (seasonPill && Number.isFinite(Number(activeSeason?.number))) {
+        seasonPill.innerHTML = `<i></i> SAISON ${String(activeSeason.number).padStart(2, '0')}`;
+    }
+
     const menuButton = document.querySelector('.menu-button');
     const mainNav = document.querySelector('.main-nav');
     const hamburger = document.querySelector('.hamburger-menu');
@@ -75,4 +81,29 @@ document.addEventListener('DOMContentLoaded', function () {
             link.addEventListener('click', closeMenu);
         });
     }
+
+    // Optimisation globale des images : les éléments hors en-tête sont décodés
+    // de façon asynchrone et chargés seulement lorsqu'ils approchent de l'écran.
+    function optimizeImage(image) {
+        if (!(image instanceof HTMLImageElement)) return;
+        if (!image.hasAttribute('decoding')) image.decoding = 'async';
+        if (
+            !image.hasAttribute('loading')
+            && !image.closest('header, [data-eager-image]')
+        ) {
+            image.loading = 'lazy';
+        }
+    }
+
+    document.querySelectorAll('img').forEach(optimizeImage);
+    const imageObserver = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+            mutation.addedNodes.forEach(node => {
+                if (!(node instanceof Element)) return;
+                if (node.matches('img')) optimizeImage(node);
+                node.querySelectorAll?.('img').forEach(optimizeImage);
+            });
+        });
+    });
+    imageObserver.observe(document.body, { childList: true, subtree: true });
 });

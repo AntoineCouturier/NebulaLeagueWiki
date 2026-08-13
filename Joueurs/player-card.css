@@ -1267,6 +1267,7 @@ body.nebula-page.player-card-page .pc-dossier .pc-hero-name {
 
 .pc-technical-title-art path,
 .pc-technical-title-art circle,
+.pc-technical-title-art ellipse,
 .pc-technical-title-art rect,
 .pc-technical-title-art polygon {
     fill: none;
@@ -1336,6 +1337,127 @@ body.nebula-page.player-card-page .pc-dossier .pc-hero-name {
     width: 215px;
 }
 
+.pc-technical-title-art .trophy-solid {
+    fill: currentColor;
+    opacity: 0.1;
+}
+
+.pc-technical-title-art.ballon-dor-illustration {
+    width: 176px;
+    opacity: 0.5;
+}
+
+.pc-technical-title-art.ballon-dor-illustration .trophy-halo {
+    opacity: 0.12;
+    stroke-width: 6;
+}
+
+.pc-technical-title-art.ballon-dor-illustration .trophy-facet-main {
+    fill: currentColor;
+    opacity: 0.2;
+    stroke-width: 1.6;
+}
+
+.pc-technical-title-art.ballon-dor-illustration .trophy-facets {
+    opacity: 0.72;
+    stroke-width: 1.1;
+}
+
+.pc-technical-title-art.ballon-dor-illustration .trophy-rock {
+    fill: color-mix(in srgb, var(--title-accent), transparent 88%);
+    stroke-width: 1.5;
+}
+
+.pc-technical-title-art.golden-shoe-illustration {
+    width: 184px;
+    opacity: 0.48;
+}
+
+.pc-technical-title-art.golden-shoe-illustration .shoe-outline {
+    stroke-width: 1.8;
+}
+
+.pc-technical-title-art.golden-shoe-illustration .shoe-panel,
+.pc-technical-title-art.golden-shoe-illustration .shoe-laces {
+    opacity: 0.76;
+}
+
+.pc-technical-title-art.golden-shoe-illustration .shoe-sole {
+    stroke-width: 1.8;
+}
+
+.pc-technical-title-art.ncl-trophy-illustration {
+    width: 180px;
+    opacity: 0.5;
+}
+
+.pc-technical-title-art.ncl-trophy-illustration .cup-rim,
+.pc-technical-title-art.ncl-trophy-illustration .cup-handle {
+    stroke-width: 1.8;
+}
+
+.pc-technical-title-art.ncl-trophy-illustration .cup-body-lines {
+    opacity: 0.78;
+}
+
+.pc-technical-title-art.goat-cosmos-illustration {
+    right: 20px;
+    width: 178px;
+    height: 104px;
+    opacity: 0.5;
+}
+
+.pc-technical-title-art.goat-cosmos-illustration .cosmos-orbit {
+    opacity: 0.34;
+    stroke-width: 1;
+}
+
+.pc-technical-title-art.goat-cosmos-illustration .cosmos-orbit-two {
+    opacity: 0.2;
+    stroke-dasharray: 4 7;
+}
+
+.pc-technical-title-art.goat-cosmos-illustration .cosmos-axis {
+    opacity: 0.08;
+    stroke-dasharray: 2 8;
+}
+
+.pc-technical-title-art.goat-cosmos-illustration .cosmos-core circle:first-child {
+    opacity: 0.16;
+    stroke-width: 5;
+}
+
+.pc-technical-title-art.goat-cosmos-illustration .cosmos-core circle:nth-child(2) {
+    opacity: 0.7;
+    stroke-width: 1.2;
+}
+
+.pc-technical-title-art.goat-cosmos-illustration .cosmos-core path {
+    fill: color-mix(in srgb, var(--title-accent), transparent 86%);
+    stroke-width: 1.4;
+}
+
+.pc-technical-title-art.goat-cosmos-illustration .cosmos-core-dot {
+    fill: currentColor;
+    stroke: none;
+    filter: drop-shadow(0 0 9px currentColor);
+}
+
+.pc-technical-title-art.goat-cosmos-illustration .cosmos-trophy>circle {
+    fill: #090c10;
+    opacity: 0.95;
+    stroke-width: 1.2;
+}
+
+.pc-technical-title-art.goat-cosmos-illustration .cosmos-trophy path {
+    opacity: 0.82;
+    stroke-width: 1.1;
+}
+
+.pc-technical-title-art.goat-cosmos-illustration .cosmos-trophy {
+    filter: drop-shadow(0 0 5px color-mix(in srgb, var(--title-accent), transparent 72%));
+}
+
 .pc-signature-title small {
     color: var(--title-accent);
     font-family: 'Courier New', monospace;
@@ -1359,6 +1481,108 @@ body.nebula-page.player-card-page .pc-dossier .pc-hero-name {
     font-family: 'Courier New', monospace;
     font-size: 0.68rem;
     text-transform: uppercase;
+}
+
+.pc-signature-title.has-title-switcher {
+    overflow: visible;
+}
+
+.pc-title-switcher {
+    position: absolute;
+    z-index: 4;
+    inset: 0;
+    pointer-events: none;
+}
+
+.pc-title-switcher button {
+    position: absolute;
+    top: 50%;
+    width: 34px;
+    height: 38px;
+    padding: 0;
+    border: 1px solid color-mix(in srgb, var(--title-accent), transparent 48%);
+    background:
+        linear-gradient(135deg, color-mix(in srgb, var(--title-accent), transparent 88%), transparent 62%),
+        rgba(5, 8, 12, 0.94);
+    color: var(--title-accent);
+    font-size: 0;
+    box-shadow:
+        inset 0 0 12px color-mix(in srgb, var(--title-accent), transparent 91%),
+        0 0 10px color-mix(in srgb, var(--title-accent), transparent 88%);
+    cursor: pointer;
+    pointer-events: auto;
+    transform: translateY(-50%);
+    transition: color 0.16s ease, background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.pc-title-switcher button::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 11px;
+    content: "";
+    border: 0;
+    background: currentColor;
+    clip-path: polygon(0 44%, 62% 44%, 62% 8%, 100% 50%, 62% 92%, 62% 56%, 0 56%);
+    filter: none;
+    transform: translate(-50%, -50%);
+}
+
+.pc-title-switcher button::after {
+    display: none;
+}
+
+.pc-title-switcher button:first-child {
+    left: -44px;
+}
+
+.pc-title-switcher button:first-child::after {
+    display: none;
+}
+
+.pc-title-switcher button:first-child::before {
+    transform: translate(-50%, -50%) scaleX(-1);
+}
+
+.pc-title-switcher button:last-child {
+    right: -44px;
+}
+
+.pc-title-switcher button:last-child::after {
+    display: none;
+}
+
+.pc-title-switcher button:hover,
+.pc-title-switcher button:focus-visible {
+    outline: 0;
+    background: color-mix(in srgb, var(--title-accent), transparent 82%);
+    border-color: var(--title-accent);
+    color: #fff;
+    box-shadow: 0 0 16px color-mix(in srgb, var(--title-accent), transparent 65%);
+    transform: translateY(-50%) !important;
+}
+
+.pc-title-switcher button:active {
+    transform: translateY(-50%) !important;
+}
+
+.pc-title-switcher span {
+    position: absolute;
+    top: -22px;
+    right: 0;
+    min-width: 58px;
+    padding: 3px 7px;
+    border: 1px solid color-mix(in srgb, var(--title-accent), transparent 68%);
+    background: rgba(5, 8, 12, 0.88);
+    color: #9ba5ae;
+    font-family: 'Courier New', monospace;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
 }
 
 .pc-signature-title.ultimate {
@@ -1405,6 +1629,20 @@ body.nebula-page.player-card-page .pc-dossier .pc-hero-name {
 
     .pc-technical-title-art.machinery-illustration {
         width: 110px;
+    }
+
+    .pc-technical-title-art.ballon-dor-illustration,
+    .pc-technical-title-art.golden-shoe-illustration,
+    .pc-technical-title-art.ncl-trophy-illustration {
+        right: 4px;
+        width: 104px;
+        height: 76px;
+    }
+
+    .pc-technical-title-art.goat-cosmos-illustration {
+        right: 4px;
+        width: 100px;
+        height: 80px;
     }
 }
 
@@ -1616,6 +1854,10 @@ body.nebula-page.player-card-page .pc-trophies-panel.pc-dossier-panel {
 
 .pc-panel-heading>div {
     padding: 0 20px;
+}
+
+.pc-radar-inline .pc-panel-heading {
+    grid-template-columns: 1fr;
 }
 
 .pc-panel-heading small,

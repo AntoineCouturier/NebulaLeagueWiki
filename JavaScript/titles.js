@@ -23,7 +23,7 @@ const characters = [
     difficulty: 5,
     ultimate: "The Overseer",
     description:
-      "« My greatest weapon is my close-quarter plays. »",
+      "« My Super Reaction Speed. »",
     conditions: [
       "Marquer 5 fois avec Scorpion",
       "Sauver 5 tirs avec Diving Header",
@@ -99,19 +99,19 @@ const characters = [
       "Marquer 5 fois avec Backheel Shot Pivot",
       "Déclencher l’Auto Goal",
     ],
-  }, /*
+  },
   {
     id: "niko",
     name: "Niko",
     rarity: "rare",
-    rarityLabel: "Rare · à venir",
+    rarityLabel: "Rare · 8,5 %",
     difficulty: 3,
     ultimate: "The Watchtower",
     description:
-      "Encore en observation. Sa lecture défensive rejoindra bientôt les archives officielles de la Nebula League.",
+      "« Meta-Vision, Huh? Interesting. »",
     conditions: ["Conditions à découvrir lors de sa sortie."],
-    available: false,
-  }, */
+    available: false
+  },
   {
     id: "kurona",
     name: "Kurona",
@@ -273,19 +273,19 @@ const characters = [
       "Marquer 1 fois avec « Extraordinary Combo »",
       "Récupérer la balle avec « Not Gonna Happen »",
     ],
-  }, /*
+  },
   {
     id: "ness",
     name: "Ness",
     rarity: "mythical",
-    rarityLabel: "Mythique · à venir",
+    rarityLabel: "Mythique · 1,7 %",
     difficulty: 3,
-    ultimate: "The Magician",
+    ultimate: "The SpellCaster",
     description:
-      "Le magicien attend encore son entrée officielle. Sa fiche complète sera ouverte dès son arrivée dans la ligue.",
+      "« If You're The Best in the World... THEN COME STEAL IT! »",
     conditions: ["Conditions à découvrir lors de sa sortie."],
-    available: false,
-  }, */
+    available: false
+  },
   {
     id: "kaiser",
     name: "Kaiser",
@@ -356,6 +356,18 @@ const characters = [
       "Voler la balle 1 fois avec « Breakdancing Tackle »",
       "Voler la balle 1 fois avec « Meta-Vision! »"
     ],
+  },
+  {
+    id: "hugo",
+    name: "Hugo",
+    rarity: "worldclass",
+    rarityLabel: "World Class",
+    difficulty: 3,
+    ultimate: "The Team's Cogwheel",
+    description:
+      "« That's Why.. I Will Win... The World Cup 4 Times. »",
+    conditions: ["Conditions à découvrir lors de sa sortie."],
+    available: false
   },
   {
     id: "nel-isagi",

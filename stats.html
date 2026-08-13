@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="CSS/stats.css">
     <link rel="stylesheet" href="CSS/hamburger.css">
     <link rel="stylesheet" href="CSS/global-theme.css">
+    <link rel="stylesheet" href="CSS/responsive.css">
 </head>
 
 <body class="nebula-page records-page">
@@ -39,7 +40,6 @@
             <a href="rules.html">Règles</a>
             <a class="nav-active" href="stats.html" aria-current="page">Records</a>
             <a href="progression.html">Progression</a>
-            <a href="tactical-lab.html">Labo Tactique</a>
             <a href="dream-team.html">Équipes Idéales</a>
         </nav>
         <div class="header-actions">
@@ -71,15 +71,35 @@
                 <strong id="recordSignalName">—</strong>
                 <span id="recordSignalValue">0 BUT</span>
             </div>
-            <div class="record-signal-footer"><span>ALL-TIME // S00–S01</span><span>DATA LIVE</span></div>
+            <div class="record-signal-footer"><span id="recordScopeSignal">ALL-TIME // ARCHIVE</span><span>DATA LIVE</span></div>
         </aside>
     </section>
 
     <main class="records-archive">
+        <section class="record-scope-console" aria-label="Périmètre des records">
+            <div class="record-scope-copy">
+                <small>PÉRIMÈTRE D’ANALYSE</small>
+                <strong id="recordScopeStatus">ARCHIVES ABSOLUES</strong>
+            </div>
+            <div class="record-scope-tabs" id="recordScopeTabs">
+                <button type="button" class="active" data-record-scope="all" aria-pressed="true">ABSOLUS</button>
+                <button type="button" data-record-scope="season" aria-pressed="false">PAR SAISON</button>
+                <button type="button" data-record-scope="match" aria-pressed="false">MATCH UNIQUE</button>
+            </div>
+            <label class="record-scope-select" id="recordSeasonShell">
+                <span>SAISON</span>
+                <select id="recordSeasonSelect" aria-label="Saison analysée"></select>
+            </label>
+            <label class="record-scope-select" id="recordMatchShell">
+                <span>MATCH</span>
+                <select id="recordMatchSelect" aria-label="Match analysé"></select>
+            </label>
+        </section>
+
         <section class="record-holders">
             <div class="records-section-heading">
                 <span class="records-section-index">01</span>
-                <div><small>LEADERS ABSOLUS</small>
+                <div><small id="recordScopeEyebrow">LEADERS ABSOLUS</small>
                     <h2>DÉTENTEURS DE RECORDS</h2>
                 </div>
                 <p>Les meilleures marques sont recalculées directement depuis l’historique des matchs et les joueurs.

@@ -982,6 +982,160 @@ body.nebula-page.seasons-page .ncl-bracket-panel > header {
     color: var(--season-gold);
 }
 
+.ncl-expanded-flow {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) 72px minmax(220px, 1fr) 72px minmax(220px, 1fr);
+    align-items: stretch;
+}
+
+.ncl-stage-slots {
+    min-height: 814px;
+    display: grid;
+}
+
+.ncl-quarter-slots {
+    grid-template-rows: repeat(4, minmax(190px, 1fr));
+    gap: 0;
+}
+
+.ncl-quarter-slots .ncl-match-card {
+    align-self: center;
+}
+
+.ncl-semi-slots {
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.ncl-semi-slots .ncl-match-card,
+.ncl-final-slot .ncl-match-card {
+    align-self: center;
+}
+
+.ncl-final-slot {
+    align-items: center;
+}
+
+.ncl-stage-bridge {
+    position: relative;
+    min-height: 814px;
+    margin-top: 56px;
+}
+
+.ncl-stage-bridge::before,
+.ncl-stage-bridge::after,
+.ncl-stage-bridge > i {
+    position: absolute;
+    content: "";
+    background: linear-gradient(var(--season-cyan), var(--season-violet));
+}
+
+.ncl-stage-bridge::before {
+    top: 12.5%;
+    bottom: 12.5%;
+    left: 50%;
+    width: 1px;
+}
+
+.ncl-stage-bridge::after {
+    top: 50%;
+    right: 0;
+    left: 50%;
+    height: 1px;
+}
+
+.ncl-stage-bridge > i {
+    top: 12.5%;
+    bottom: 12.5%;
+    left: 0;
+    width: 50%;
+    background:
+        linear-gradient(var(--season-cyan), var(--season-violet)) 100% 0 / 1px 100% no-repeat,
+        linear-gradient(90deg, var(--season-cyan), var(--season-violet)) 0 0 / 100% 1px no-repeat,
+        linear-gradient(90deg, var(--season-cyan), var(--season-violet)) 0 33.333% / 100% 1px no-repeat,
+        linear-gradient(90deg, var(--season-cyan), var(--season-violet)) 0 66.666% / 100% 1px no-repeat,
+        linear-gradient(90deg, var(--season-cyan), var(--season-violet)) 0 100% / 100% 1px no-repeat;
+}
+
+.ncl-semi-bridge > i {
+    top: 25%;
+    bottom: 25%;
+    background:
+        linear-gradient(var(--season-cyan), var(--season-violet)) 100% 0 / 1px 100% no-repeat,
+        linear-gradient(90deg, var(--season-cyan), var(--season-violet)) 0 0 / 100% 1px no-repeat,
+        linear-gradient(90deg, var(--season-cyan), var(--season-violet)) 0 100% / 100% 1px no-repeat;
+}
+
+.ncl-semi-bridge::before {
+    top: 25%;
+    bottom: 25%;
+}
+
+.ncl-stage-bridge > span {
+    position: absolute;
+    z-index: 2;
+    top: calc(50% - 5px);
+    left: calc(50% - 5px);
+    width: 11px;
+    height: 11px;
+    border: 1px solid var(--season-violet);
+    background: #090e13;
+    box-shadow: 0 0 13px rgba(167, 107, 255, 0.65);
+    transform: rotate(45deg);
+}
+
+.ncl-stage-bridge > b {
+    position: absolute;
+    top: calc(50% + 17px);
+    right: 4px;
+    color: #566671;
+    font: 600 0.34rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.06em;
+}
+
+/* Chaque paire de quarts possède sa propre convergence vers sa demi-finale. */
+.ncl-quarter-bridge::before,
+.ncl-quarter-bridge::after {
+    display: none;
+}
+
+.ncl-quarter-bridge > i {
+    top: 12.5%;
+    bottom: auto;
+    left: 0;
+    width: 100%;
+    height: 25%;
+    background:
+        linear-gradient(90deg, var(--season-cyan), var(--season-violet)) 0 0 / 50% 1px no-repeat,
+        linear-gradient(90deg, var(--season-cyan), var(--season-violet)) 0 100% / 50% 1px no-repeat,
+        linear-gradient(var(--season-cyan), var(--season-violet)) 50% 0 / 1px 100% no-repeat,
+        linear-gradient(90deg, var(--season-violet), var(--season-violet)) 100% 50% / 50% 1px no-repeat;
+}
+
+.ncl-quarter-bridge > i.is-lower {
+    top: 62.5%;
+}
+
+.ncl-quarter-bridge > span.is-upper {
+    top: calc(25% - 5px);
+}
+
+.ncl-quarter-bridge > span.is-lower {
+    top: calc(75% - 5px);
+}
+
+.ncl-quarter-bridge > b.is-upper {
+    top: calc(25% + 17px);
+}
+
+.ncl-quarter-bridge > b.is-lower {
+    top: calc(75% + 17px);
+}
+
+.ncl-bracket-panel.is-eight-team .ncl-third-branch {
+    width: min(540px, 36%);
+    margin-top: 34px;
+}
+
 .ncl-round-label {
     display: flex;
     align-items: center;
@@ -2078,6 +2232,10 @@ body.nebula-page.seasons-page .ncl-modal-back:hover {
         grid-template-columns: minmax(230px, 1fr) 90px minmax(230px, 1fr);
     }
 
+    .ncl-expanded-flow {
+        grid-template-columns: minmax(180px, 1fr) 48px minmax(180px, 1fr) 48px minmax(180px, 1fr);
+    }
+
     .ncl-third-branch {
         width: min(520px, 54%);
     }
@@ -2191,6 +2349,72 @@ body.nebula-page.seasons-page .ncl-modal-back:hover {
     .ncl-main-flow {
         grid-template-columns: 1fr;
         gap: 22px;
+    }
+
+    .ncl-expanded-flow {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .ncl-stage-slots {
+        min-height: 0;
+        gap: 18px;
+    }
+
+    .ncl-quarter-slots,
+    .ncl-semi-slots {
+        grid-template-rows: none;
+    }
+
+    .ncl-stage-bridge {
+        min-height: 72px;
+        margin-top: 0;
+    }
+
+    .ncl-stage-bridge::before,
+    .ncl-stage-bridge > i {
+        display: none;
+    }
+
+    .ncl-stage-bridge::after {
+        top: 0;
+        right: auto;
+        bottom: 0;
+        left: 50%;
+        width: 1px;
+        height: 100%;
+        background: linear-gradient(var(--season-cyan), var(--season-violet));
+    }
+
+    .ncl-quarter-bridge::after {
+        display: block;
+    }
+
+    .ncl-quarter-bridge > span.is-lower,
+    .ncl-quarter-bridge > b.is-lower {
+        display: none;
+    }
+
+    .ncl-quarter-bridge > span.is-upper {
+        top: calc(50% - 5px);
+    }
+
+    .ncl-quarter-bridge > b.is-upper {
+        top: calc(50% - 2px);
+    }
+
+    .ncl-stage-bridge > span {
+        top: calc(50% - 5px);
+    }
+
+    .ncl-stage-bridge > b {
+        top: calc(50% - 2px);
+        right: calc(50% + 15px);
+    }
+
+    .ncl-bracket-panel.is-eight-team .ncl-third-branch {
+        width: 100%;
+        margin-top: 28px;
     }
 
     .ncl-convergence {

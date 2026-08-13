@@ -184,7 +184,7 @@
         {
             name: "Dylan", club: "bastard", folder: "bm", position: "RW", baseValue: 0, discordId: "469446272235995141", avatarPath: "Joueurs/images-joueurs/dylan.jpeg", character: "Kiyora", Ult: false, technical:
             {
-                defense: 78,
+                defense: 81,
                 passe: 91,
                 dribble: 89,
                 tir: 84,
@@ -439,7 +439,7 @@
         //
         // Retirez les `/* */`, adaptez les valeurs et ajoutez une virgule entre
         // deux matchs. Les totaux des buteurs doivent correspondre au score.
-        {
+        /* {
             id: "m1",
             date: "2026-09-02",
             time: "20:00",
@@ -490,14 +490,14 @@
             notesHome: [
                 { name: "Antoine", note: 9.9, defenses: 10, dribbles: 10 },
                 { name: "Dylan", note: 9.3, defenses: 5, dribbles: 10 },
-                { name: "Alessio", note: 8.9, defenses: 9, dribbles: 5 }
+                { name: "Alessio", note: 9.1, defenses: 9, dribbles: 5 }
             ],
             notesAway: [
-                { name: "William", note: 9.1, defenses: 3, dribbles: 6 },
+                { name: "William", note: 8.9, defenses: 3, dribbles: 6 },
                 { name: "Elijah", note: 9.4, defenses: 5, dribbles: 7 },
                 { name: "Imrane", note: 9.8, defenses: 3, dribbles: 6 }
             ],
-        }
+        } */
     ];
 
     /* ----------------------------------------------------------------------
@@ -542,34 +542,48 @@
        Format d'une ligne :
        ["AAAA-MM-JJ", "Nom de la phase"]
 
-       Les quatre premiers de la Ligue sont injectés automatiquement :
-       - demi-finale 01 : 1er contre 4e
-       - demi-finale 02 : 2e contre 3e
-       - petite finale : les deux perdants
-       - finale         : les deux vainqueurs
+       Le format s'adapte automatiquement au nombre de clubs enregistrés :
+       - moins de 8 clubs : TOP 4, puis demi-finales ;
+       - 8 clubs ou plus : TOP 8, puis quarts et demi-finales.
+       Les deux derniers matchs restent la petite finale et la finale.
        ---------------------------------------------------------------------- */
-    const nclSchedule = [
-        /* ==================================================== SAISON 1 ==================================================== */
-        ["2026-11-14", "Demi-finale 01"],
-        ["2026-11-18", "Demi-finale 02"],
-        ["2026-11-21", "Petite finale"],
-        ["2026-11-25", "Finale"]
-        /* ==================================================== SAISON 2 ==================================================== */
-    ];
+    const nclSchedules = {
+        4: [
+            ["2026-11-14", "Demi-finale 01"],
+            ["2026-11-18", "Demi-finale 02"],
+            ["2026-11-21", "Petite finale"],
+            ["2026-11-25", "Finale"]
+        ],
+        8: [
+            ["2026-11-10", "Quart de finale 01"],
+            ["2026-11-12", "Quart de finale 02"],
+            ["2026-11-14", "Quart de finale 03"],
+            ["2026-11-16", "Quart de finale 04"],
+            ["2026-11-19", "Demi-finale 01"],
+            ["2026-11-21", "Demi-finale 02"],
+            ["2026-11-24", "Petite finale"],
+            ["2026-11-26", "Finale"]
+        ]
+    };
+
+    const nclQualifiedCount = clubs.length >= 8 ? 8 : 4;
+    const nclSchedule = nclSchedules[nclQualifiedCount];
 
     const nclSeasonNumber = 1;
 
     function buildLeagueStandings(seasonNumber) {
-        const table = new Map(clubs.map(club => [club.key, {
-            club: club.key,
-            points: 0,
-            played: 0,
-            wins: 0,
-            draws: 0,
-            losses: 0,
-            goalsFor: 0,
-            goalsAgainst: 0
-        }]));
+        const table = new Map(clubs
+            .filter(club => Number(club.introducedSeason || 1) <= Number(seasonNumber))
+            .map(club => [club.key, {
+                club: club.key,
+                points: 0,
+                played: 0,
+                wins: 0,
+                draws: 0,
+                losses: 0,
+                goalsFor: 0,
+                goalsAgainst: 0
+            }]));
 
         matches
             .filter(match => match.category === "ligue" && Number(match.season) === Number(seasonNumber))
@@ -622,7 +636,7 @@
     );
 
     const nclQualifiedClubs = leagueSeasonIsComplete
-        ? buildLeagueStandings(nclSeasonNumber).slice(0, 4).map(row => row.club)
+        ? buildLeagueStandings(nclSeasonNumber).slice(0, nclQualifiedCount).map(row => row.club)
         : [];
 
     function nclResultOn(date) {
@@ -642,22 +656,60 @@
         };
     }
 
-    const nclSemiFinalOne = nclOutcome(nclResultOn(nclSchedule[0][0]));
-    const nclSemiFinalTwo = nclOutcome(nclResultOn(nclSchedule[1][0]));
-    const nclSemiFinalsComplete = Boolean(nclSemiFinalOne && nclSemiFinalTwo);
-
-    const nclBracketTeams = [
-        { home: nclQualifiedClubs[0] || null, away: nclQualifiedClubs[3] || null },
-        { home: nclQualifiedClubs[1] || null, away: nclQualifiedClubs[2] || null },
-        {
-            home: nclSemiFinalsComplete ? nclSemiFinalOne.loser : null,
-            away: nclSemiFinalsComplete ? nclSemiFinalTwo.loser : null
-        },
-        {
-            home: nclSemiFinalsComplete ? nclSemiFinalOne.winner : null,
-            away: nclSemiFinalsComplete ? nclSemiFinalTwo.winner : null
+    function buildNclBracketTeams() {
+        if (nclQualifiedCount === 4) {
+            const semiOne = nclOutcome(nclResultOn(nclSchedule[0][0]));
+            const semiTwo = nclOutcome(nclResultOn(nclSchedule[1][0]));
+            const semiFinalsComplete = Boolean(semiOne && semiTwo);
+            return [
+                { home: nclQualifiedClubs[0] || null, away: nclQualifiedClubs[3] || null },
+                { home: nclQualifiedClubs[1] || null, away: nclQualifiedClubs[2] || null },
+                {
+                    home: semiFinalsComplete ? semiOne.loser : null,
+                    away: semiFinalsComplete ? semiTwo.loser : null
+                },
+                {
+                    home: semiFinalsComplete ? semiOne.winner : null,
+                    away: semiFinalsComplete ? semiTwo.winner : null
+                }
+            ];
         }
-    ];
+
+        const quarterPairs = [[0, 7], [3, 4], [1, 6], [2, 5]];
+        const quarterTeams = quarterPairs.map(([homeIndex, awayIndex]) => ({
+            home: nclQualifiedClubs[homeIndex] || null,
+            away: nclQualifiedClubs[awayIndex] || null
+        }));
+        const quarterOutcomes = nclSchedule.slice(0, 4).map(([date]) => nclOutcome(nclResultOn(date)));
+        const quartersComplete = quarterOutcomes.every(Boolean);
+        const semiTeams = [
+            {
+                home: quartersComplete ? quarterOutcomes[0].winner : null,
+                away: quartersComplete ? quarterOutcomes[1].winner : null
+            },
+            {
+                home: quartersComplete ? quarterOutcomes[2].winner : null,
+                away: quartersComplete ? quarterOutcomes[3].winner : null
+            }
+        ];
+        const semiOutcomes = nclSchedule.slice(4, 6).map(([date]) => nclOutcome(nclResultOn(date)));
+        const semisComplete = semiOutcomes.every(Boolean);
+
+        return [
+            ...quarterTeams,
+            ...semiTeams,
+            {
+                home: semisComplete ? semiOutcomes[0].loser : null,
+                away: semisComplete ? semiOutcomes[1].loser : null
+            },
+            {
+                home: semisComplete ? semiOutcomes[0].winner : null,
+                away: semisComplete ? semiOutcomes[1].winner : null
+            }
+        ];
+    }
+
+    const nclBracketTeams = buildNclBracketTeams();
 
     /* ----------------------------------------------------------------------
        07. RENCONTRES DU CALENDRIER
@@ -683,7 +735,7 @@
             time: match.time || "20:00",
             category: match.category,
             valueTier: match.valueTier || null,
-            status: "finished",
+            status: "active",
             season: match.season,
             competitionLabel: `${match.valueTier === "finale"
                 ? "Finale NCL"
@@ -735,7 +787,7 @@
             date,
             time: "18:00",
             category: "ncl",
-            valueTier: index === 2 ? "third" : index === 3 ? "finale" : null,
+            valueTier: stage === "Petite finale" ? "third" : stage === "Finale" ? "finale" : null,
             status: "upcoming",
             season: nclSeasonNumber,
             competitionLabel: "Nebula Champions League — Saison 1",
@@ -792,6 +844,8 @@
        expectedMatches = nombre de matchs prévu pour calculer la progression
        rewards         = récompenses affichées dans le dossier de saison
        reward.value    = nom exact du joueur récompensé, ou NON ATTRIBUÉ
+       technicalSnapshots = notes techniques finales archivées quand la saison
+                            possède le statut `finished`
 
        Quand `reward.value` correspond à un joueur, sa fiche ajoute
        automatiquement un titre comme « Ballon d’Or Saison 3 ».
@@ -816,7 +870,8 @@
             startDate: "2026-09-02",
             endDate: null,
             expectedMatches: 24,
-            rewards: emptySeasonRewards
+            rewards: emptySeasonRewards,
+            technicalSnapshots: {}
         }
 
         /*
@@ -834,6 +889,7 @@
             startDate: "2027-01-10",
             endDate: null,
             expectedMatches: 20,
+            technicalSnapshots: {},
             rewards: [
                 { code: "PUS", label: "Prix Puskas", value: "NON ATTRIBUÉ" },
                 { code: "GLD", label: "Soulier d’Or", value: "NON ATTRIBUÉ" },

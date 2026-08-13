@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="CSS/rules.css">
     <link rel="stylesheet" href="CSS/hamburger.css">
     <link rel="stylesheet" href="CSS/global-theme.css">
+    <link rel="stylesheet" href="CSS/responsive.css">
 </head>
 
 <body class="nebula-page rules-page">
@@ -39,7 +40,6 @@
             <a class="nav-active" href="rules.html" aria-current="page">Règles</a>
             <a href="stats.html">Records</a>
             <a href="progression.html">Progression</a>
-            <a href="tactical-lab.html">Labo Tactique</a>
             <a href="dream-team.html">Équipes Idéales</a>
         </nav>
         <div class="header-actions">
@@ -59,7 +59,7 @@
             <div class="rules-intro-stats" aria-label="Résumé du règlement">
                 <div><strong>12</strong><span>Minutes par match</span></div>
                 <div><strong>3–5</strong><span>Joueurs par équipe</span></div>
-                <div><strong>04</strong><span>Équipes qualifiées en NCL</span></div>
+                <div><strong id="nclQualifiedStat">04</strong><span>Équipes qualifiées en NCL</span></div>
             </div>
         </div>
 
@@ -205,20 +205,20 @@
                     <div><small>NEBULA CHAMPIONS LEAGUE</small>
                         <h2>PARCOURS NCL</h2>
                     </div>
-                    <p>Les quatre meilleures équipes de Ligue accèdent au tournoi final.</p>
+                    <p id="nclFormatDescription">Les quatre meilleures équipes de Ligue accèdent au tournoi final.</p>
                 </div>
 
                 <div class="qualification-strip">
-                    <div><small>CLASSEMENT LIGUE</small><strong>TOP 04</strong></div>
+                    <div><small>CLASSEMENT LIGUE</small><strong id="nclQualificationLabel">TOP 04</strong></div>
                     <span class="qualification-arrow">→</span>
-                    <div><small>ACCÈS VALIDÉ</small><strong>DEMI-FINALES</strong></div>
+                    <div><small>ACCÈS VALIDÉ</small><strong id="nclOpeningRoundLabel">DEMI-FINALES</strong></div>
                     <span class="qualification-arrow">→</span>
                     <div><small>OBJECTIF FINAL</small><strong>TROPHÉE NCL</strong></div>
                 </div>
 
                 <div class="ncl-bracket">
                     <div class="rules-bracket-main">
-                        <div class="bracket-stage semi-stage">
+                        <div class="bracket-stage semi-stage" id="rulesNclOpeningStage">
                             <span class="bracket-stage-label">01 // DEMI-FINALES</span>
                             <div class="bracket-match"><small>MATCH A</small><strong>DEMI-FINALE A</strong></div>
                             <div class="bracket-match"><small>MATCH B</small><strong>DEMI-FINALE B</strong></div>
@@ -284,6 +284,7 @@
         </div>
     </main>
 
+    <script src="JavaScript/nebula-data.js"></script>
     <script src="JavaScript/rules.js"></script>
     <script src="JavaScript/hamburger.js"></script>
 </body>

@@ -1691,6 +1691,444 @@ body.nebula-page.club-page .close-btn:hover {
     transform: none !important;
 }
 
+.club-alltime {
+    border: 1px solid var(--club-line);
+    background: var(--club-surface);
+}
+
+.club-alltime-stage {
+    --club-color: var(--cyan);
+    background:
+        linear-gradient(135deg, color-mix(in srgb, var(--club-color), transparent 97%), transparent 48%),
+        var(--club-surface);
+}
+
+.club-alltime-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--club-line);
+}
+
+.club-alltime-card {
+    --leader-color: var(--cyan);
+    position: relative;
+    display: grid;
+    min-width: 0;
+    min-height: 235px;
+    grid-template-rows: auto 1fr auto;
+    gap: 20px;
+    padding: 19px;
+    overflow: hidden;
+    background:
+        linear-gradient(145deg, color-mix(in srgb, var(--leader-color), transparent 94%), transparent 56%),
+        var(--club-surface-2);
+}
+
+.club-alltime-card::before {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    content: "";
+    background: var(--leader-color);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--leader-color), transparent 35%);
+}
+
+.club-alltime-card::after {
+    position: absolute;
+    right: -38px;
+    bottom: -58px;
+    width: 150px;
+    height: 150px;
+    content: "";
+    border: 1px solid color-mix(in srgb, var(--leader-color), transparent 86%);
+    border-radius: 50%;
+}
+
+.club-alltime-topline,
+.club-alltime-value {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.club-alltime-topline {
+    color: #65737e;
+    font-family: var(--mono);
+    font-size: 0.52rem;
+    font-weight: 700;
+}
+
+.club-alltime-topline>span {
+    color: var(--leader-color);
+}
+
+.club-alltime-player {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    min-width: 0;
+    grid-template-columns: 64px minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
+}
+
+.club-alltime-player>img {
+    width: 64px;
+    height: 64px;
+    border: 1px solid color-mix(in srgb, var(--leader-color), transparent 55%);
+    object-fit: cover;
+    filter: saturate(0.82);
+}
+
+.club-alltime-player>div {
+    display: grid;
+    min-width: 0;
+    gap: 7px;
+}
+
+.club-alltime-player small,
+.club-alltime-player span,
+.club-alltime-value span {
+    color: #75838e;
+    font-family: var(--mono);
+    font-size: 0.47rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+}
+
+.club-alltime-player a,
+.club-alltime-player strong {
+    overflow: hidden;
+    color: #f2f5f7;
+    font-family: var(--display);
+    font-size: 0.92rem;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.club-alltime-player a:hover {
+    color: var(--leader-color);
+}
+
+.club-alltime-value {
+    padding-top: 15px;
+    border-top: 1px solid var(--club-line);
+}
+
+.club-alltime-value strong {
+    color: var(--leader-color);
+    font-family: var(--display);
+    font-size: 1.55rem;
+    line-height: 1;
+}
+
+.club-alltime-value span {
+    color: var(--leader-color);
+}
+
+.club-history {
+    margin-top: 20px;
+    border: 1px solid var(--club-line);
+    background: var(--club-surface);
+}
+
+.club-history-stage {
+    --club-color: var(--cyan);
+    background:
+        linear-gradient(135deg, color-mix(in srgb, var(--club-color), transparent 97%), transparent 45%),
+        var(--club-surface);
+}
+
+.club-history-summary {
+    display: grid;
+    grid-template-columns: 1.3fr repeat(3, 1fr);
+    gap: 1px;
+    border-bottom: 1px solid var(--club-line);
+    background: var(--club-line);
+}
+
+.club-history-summary>div {
+    display: grid;
+    min-height: 88px;
+    align-content: center;
+    gap: 9px;
+    padding: 18px 22px;
+    background: var(--club-surface-2);
+}
+
+.club-history-summary small,
+.club-season-card small,
+.club-recent-panel small {
+    color: #73818c;
+    font-family: var(--mono);
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+}
+
+.club-history-summary strong {
+    overflow: hidden;
+    color: #f0f4f6;
+    font-family: var(--display);
+    font-size: clamp(0.9rem, 1.6vw, 1.2rem);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.club-history-summary>div:first-child strong,
+.club-history-summary>div:last-child strong {
+    color: var(--club-color);
+}
+
+.club-history-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(310px, 0.65fr);
+}
+
+.club-season-list {
+    display: grid;
+    gap: 1px;
+    border-right: 1px solid var(--club-line);
+    background: var(--club-line);
+}
+
+.club-season-card {
+    display: grid;
+    grid-template-columns: 105px minmax(190px, 0.7fr) minmax(300px, 1.1fr) minmax(340px, 1.25fr);
+    min-height: 158px;
+    background: var(--club-surface);
+}
+
+.club-season-topline,
+.club-season-rank,
+.club-season-data,
+.club-season-leaders {
+    padding: 20px;
+    border-right: 1px solid var(--club-line);
+}
+
+.club-season-topline {
+    display: grid;
+    align-content: space-between;
+    border-left: 2px solid var(--club-color);
+}
+
+.club-season-topline>span {
+    color: var(--club-color);
+    font-family: var(--display);
+    font-size: 1.5rem;
+}
+
+.club-season-topline small {
+    color: var(--club-color);
+}
+
+.club-season-rank {
+    display: grid;
+    align-content: center;
+    gap: 8px;
+}
+
+.club-season-rank strong {
+    color: #f1f5f7;
+    font-family: var(--display);
+    font-size: 2rem;
+}
+
+.club-season-rank>span {
+    color: #89959e;
+    font-family: var(--mono);
+    font-size: 0.56rem;
+}
+
+.club-season-data {
+    display: grid;
+    grid-template-columns: 0.65fr 0.65fr 1.7fr;
+    gap: 1px;
+    padding: 0;
+    background: var(--club-line);
+}
+
+.club-season-data>div {
+    display: grid;
+    align-content: center;
+    gap: 10px;
+    padding: 15px;
+    background: var(--club-surface-2);
+}
+
+.club-season-data strong {
+    color: #e8edf0;
+    font-family: var(--display);
+    font-size: 0.74rem;
+}
+
+.club-season-data>div.is-ncl-champion strong {
+    color: transparent;
+    background: linear-gradient(90deg,
+            #9b6800 0%,
+            #f6bf32 24%,
+            #fff4b0 47%,
+            #ffd85e 61%,
+            #9b6800 100%);
+    background-size: 220% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    filter: drop-shadow(0 0 4px rgba(255, 201, 65, 0.42));
+    animation: club-ncl-champion-glimmer 2.7s linear infinite;
+}
+
+@keyframes club-ncl-champion-glimmer {
+    from {
+        background-position: 110% 50%;
+    }
+
+    to {
+        background-position: -110% 50%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .club-season-data>div.is-ncl-champion strong {
+        animation: none;
+        background-position: 50% 50%;
+    }
+}
+
+.club-season-leaders {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    padding: 0;
+    border-right: 0;
+    background: var(--club-line);
+}
+
+.club-season-leaders>div {
+    display: grid;
+    align-content: center;
+    gap: 9px;
+    padding: 18px;
+    background: var(--club-surface);
+}
+
+.club-season-leaders strong,
+.club-season-leaders strong a {
+    overflow: hidden;
+    color: #f1f5f7;
+    font-family: var(--display);
+    font-size: 0.76rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.club-season-leaders strong a:hover {
+    color: var(--club-color);
+}
+
+.club-season-leaders span {
+    color: var(--club-color);
+    font-family: var(--mono);
+    font-size: 0.6rem;
+}
+
+.club-recent-panel {
+    min-width: 0;
+    background: var(--club-surface-2);
+}
+
+.club-recent-heading {
+    display: grid;
+    min-height: 76px;
+    align-content: center;
+    gap: 7px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--club-line);
+}
+
+.club-recent-heading strong {
+    color: var(--club-color);
+    font-family: var(--display);
+    font-size: 0.85rem;
+}
+
+.club-recent-panel ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.club-history-match {
+    display: grid;
+    min-height: 76px;
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--club-line);
+}
+
+.club-history-match>span {
+    display: grid;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    border: 1px solid currentColor;
+    color: var(--club-color);
+    font-family: var(--display);
+    font-size: 0.65rem;
+}
+
+.club-history-match.result-v>span {
+    color: #adff2f;
+}
+
+.club-history-match.result-d>span {
+    color: #ff5d66;
+}
+
+.club-history-match.result-n>span {
+    color: #ffd84d;
+}
+
+.club-history-match>div {
+    display: grid;
+    min-width: 0;
+    gap: 6px;
+}
+
+.club-history-match strong {
+    overflow: hidden;
+    color: #e7ecef;
+    font-family: var(--display);
+    font-size: 0.69rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.club-history-match>b {
+    color: #f4f7f9;
+    font-family: var(--display);
+    font-size: 0.82rem;
+}
+
+.club-history-empty {
+    display: grid;
+    min-height: 150px;
+    place-items: center;
+    padding: 24px;
+    color: #64717b;
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+}
+
 @media (max-width: 1120px) {
     .club-intro {
         min-height: 820px;
@@ -1704,8 +2142,25 @@ body.nebula-page.club-page .close-btn:hover {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
+    .club-alltime-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
     .club-stage {
         grid-template-columns: 1fr;
+    }
+
+    .club-history-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .club-season-list {
+        border-right: 0;
+        border-bottom: 1px solid var(--club-line);
+    }
+
+    .club-season-card {
+        grid-template-columns: 90px minmax(160px, 0.7fr) minmax(270px, 1.1fr) minmax(300px, 1.2fr);
     }
 
     .club-stage-field {
@@ -1776,6 +2231,29 @@ body.nebula-page.club-page .close-btn:hover {
         grid-template-columns: 1fr 1fr;
     }
 
+    .club-alltime-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .club-history-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .club-season-card {
+        grid-template-columns: 74px minmax(0, 1fr);
+    }
+
+    .club-season-data,
+    .club-season-leaders {
+        grid-column: 1 / -1;
+        border-top: 1px solid var(--club-line);
+    }
+
+    .club-season-topline,
+    .club-season-rank {
+        min-height: 125px;
+    }
+
     .club-stage-field {
         min-height: 500px;
         padding: 14px;
@@ -1789,6 +2267,10 @@ body.nebula-page.club-page .close-btn:hover {
 @media (max-width: 500px) {
     .club-intro {
         min-height: 760px;
+    }
+
+    .club-alltime-grid {
+        grid-template-columns: 1fr;
     }
 
     .club-intro-text {

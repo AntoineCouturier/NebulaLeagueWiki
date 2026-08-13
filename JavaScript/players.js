@@ -30,6 +30,40 @@ document.addEventListener("DOMContentLoaded", () => {
     const positionFilters = document.getElementById("positionFilters");
     const resetFilters = document.getElementById("resetFilters");
 
+    function buildClubDropdown() {
+        const data = window.NEBULA_DATA || {};
+        const filterEntries = [
+            { key: "all", name: "Tous les clubs", logo: null },
+            ...(data.clubs || []),
+            ...Object.values(data.groups || {})
+        ];
+
+        dropdownMenu.replaceChildren(...filterEntries.map((entry, index) => {
+            const option = document.createElement("button");
+            option.type = "button";
+            option.className = `dropdown-option${index === 0 ? " active" : ""}`;
+            option.dataset.club = entry.key;
+            option.dataset.label = entry.name;
+            option.setAttribute("role", "option");
+            option.setAttribute("aria-selected", String(index === 0));
+
+            if (entry.logo) {
+                const icon = document.createElement("img");
+                icon.loading = "lazy";
+                icon.src = entry.logo;
+                icon.className = "filter-icon";
+                icon.alt = "";
+                icon.addEventListener("error", () => icon.remove(), { once: true });
+                option.append(icon);
+            }
+
+            option.append(document.createTextNode(entry.name));
+            return option;
+        }));
+    }
+
+    buildClubDropdown();
+
     let selectedClub = "all";
     let selectedPosition = "all";
     let searchTerm = "";
@@ -58,6 +92,44 @@ document.addEventListener("DOMContentLoaded", () => {
             .replace(/[\u0300-\u036f]/g, "")
             .toLowerCase()
             .trim();
+    }
+
+    function getRecentForm(player) {
+        const performances = [...(window.NEBULA_DATA?.matches || [])]
+            .sort((a, b) => (
+                String(b.date || "").localeCompare(String(a.date || ""))
+                || String(b.time || "").localeCompare(String(a.time || ""))
+            ))
+            .map(match => window.NEBULA_DATA?.getPlayerMatchPerformance?.(match, player.name))
+            .filter(performance => performance && Number(performance.note) > 0)
+            .slice(0, 5);
+
+        if (!performances.length) {
+            return {
+                key: "unrated",
+                label: "NON ÉVALUÉ",
+                detail: "Aucun match",
+                accent: "#71808d"
+            };
+        }
+
+        const average = performances.reduce((sum, performance) => sum + performance.note, 0) / performances.length;
+        if (average >= 9) {
+            return { key: "fire", label: "EN FEU", detail: `${average.toFixed(1)} / 10`, accent: "#b32fffff" };
+        }
+        if (average >= 8) {
+            return { key: "good", label: "EN FORME", detail: `${average.toFixed(1)} / 10`, accent: "#52ff2fff" };
+        }
+        if (average >= 7) {
+            return { key: "stable", label: "STABLE", detail: `${average.toFixed(1)} / 10`, accent: "#63e7ff" };
+        }
+        if (average >= 6) {
+            return { key: "struggle", label: "EN DIFFICULTÉ", detail: `${average.toFixed(1)} / 10`, accent: "#ffd84d" };
+        }
+        if (average >= 5) {
+            return { key: "bench", label: "BON POUR LE BANC", detail: `${average.toFixed(1)} / 10`, accent: "#ff4d4dff" };
+        }
+        return { key: "pmu", label: "RETOURNE AU PMU", detail: `${average.toFixed(1)} / 10`, accent: "#000000ff" };
     }
 
     function setClubFilter(option) {
@@ -108,24 +180,30 @@ document.addEventListener("DOMContentLoaded", () => {
             const status = player.club === "retraite" ? "RETRAITE" : "ACTIF";
             const value = player.value === 0 ? "NON COTÉ" : `${formatValue(player.value)} ¥`;
             const role = POSITION_LABELS[player.position] || player.position;
+            const form = getRecentForm(player);
 
             return `
                 <a class="player-card ${player.club}" href="${window.NEBULA_DATA.playerPageHref(player)}"
-                    style="--club-accent:${accent}; animation-delay:${Math.min(index, 8) * 0.055}s"
+                    style="--club-accent:${accent}; --form-accent:${form.accent}; animation-delay:${Math.min(index, 8) * 0.055}s"
                     aria-label="Ouvrir le profil de ${player.name}">
                     <div class="player-file-topline">
                         <span>PLAYER FILE // ${playerNumber}</span>
                         <span class="player-file-status"><i></i>${status}</span>
                     </div>
                     <div class="player-card-visual">
-                        <img class="player-avatar" src="${player.avatar}" alt="${player.name}">
-                        ${logo ? `<img src="${logo}" class="card-club-badge" alt="" onerror="this.style.display='none'">` : ""}
+                        <img class="player-avatar" src="${player.avatar}" alt="${player.name}" loading="lazy" decoding="async">
+                        ${logo ? `<img src="${logo}" class="card-club-badge" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">` : ""}
                         <span class="position-pill">${player.position}</span>
                         <span class="player-index" aria-hidden="true">${playerNumber}</span>
                     </div>
                     <div class="player-card-body">
                         <span class="player-card-club">${player.clubName}</span>
                         <h3>${player.name}</h3>
+                        <div class="player-form player-form-${form.key}">
+                            <span><i></i> FORME RÉCENTE</span>
+                            <strong>${form.label}</strong>
+                            <small>${form.detail}</small>
+                        </div>
                         <div class="player-card-data">
                             <div><small>POSTE</small><strong>${role}</strong></div>
                             <div><small>VALEUR DE MARCHÉ</small><strong class="market-value">${value}</strong></div>

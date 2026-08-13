@@ -18,9 +18,100 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!highlightGrid) return;
 
     const players = typeof PLAYERS === "undefined" ? [] : PLAYERS;
-    const matches = typeof MATCHES === "undefined" ? [] : MATCHES;
+    const allMatches = typeof MATCHES === "undefined" ? [] : MATCHES;
     const clubKeys = typeof CLUB_META === "undefined" ? [] : Object.keys(CLUB_META);
     const profilesByName = new Map(players.map(player => [player.name.toLowerCase(), player]));
+    const scopeParams = new URLSearchParams(window.location.search);
+    const availableSeasons = [...new Set([
+        ...(window.NEBULA_DATA?.seasons || []).map(season => Number(season.number)),
+        ...allMatches.map(match => Number(match.season))
+    ])].filter(Number.isFinite).sort((a, b) => b - a);
+    const activeSeason = Number(window.NEBULA_DATA?.getActiveSeason?.()?.number)
+        || availableSeasons[0]
+        || 1;
+    const requestedScope = scopeParams.get("scope");
+    const recordScope = ["season", "match"].includes(requestedScope) ? requestedScope : "all";
+    const requestedSeason = Number(scopeParams.get("season"));
+    const selectedSeason = availableSeasons.includes(requestedSeason) ? requestedSeason : activeSeason;
+    const requestedMatch = scopeParams.get("match");
+    const selectedMatch = allMatches.find(match => match.id === requestedMatch) || allMatches[0] || null;
+    const matches = recordScope === "season"
+        ? allMatches.filter(match => Number(match.season) === selectedSeason)
+        : recordScope === "match"
+            ? allMatches.filter(match => match.id === selectedMatch?.id)
+            : allMatches;
+
+    function setScopeLocation(scope, value = null) {
+        const url = new URL(window.location.href);
+        if (scope === "all") {
+            url.searchParams.delete("scope");
+            url.searchParams.delete("season");
+            url.searchParams.delete("match");
+        } else {
+            url.searchParams.set("scope", scope);
+            url.searchParams.delete(scope === "season" ? "match" : "season");
+            if (value !== null) url.searchParams.set(scope, value);
+        }
+        window.location.href = url.toString();
+    }
+
+    function setupScopeControls() {
+        const tabs = document.getElementById("recordScopeTabs");
+        const seasonSelect = document.getElementById("recordSeasonSelect");
+        const matchSelect = document.getElementById("recordMatchSelect");
+        const seasonShell = document.getElementById("recordSeasonShell");
+        const matchShell = document.getElementById("recordMatchShell");
+
+        seasonSelect.innerHTML = availableSeasons.length
+            ? availableSeasons.map(season => (
+                `<option value="${season}" ${season === selectedSeason ? "selected" : ""}>SAISON ${String(season).padStart(2, "0")}</option>`
+            )).join("")
+            : '<option value="">AUCUNE SAISON</option>';
+
+        matchSelect.innerHTML = allMatches.length
+            ? allMatches.map(match => {
+                const home = clubInfo(match.home).name;
+                const away = clubInfo(match.away).name;
+                const selected = match.id === selectedMatch?.id ? "selected" : "";
+                return `<option value="${match.id}" ${selected}>${match.date} · ${home} ${match.scoreHome}–${match.scoreAway} ${away}</option>`;
+            }).join("")
+            : '<option value="">AUCUN MATCH</option>';
+
+        seasonSelect.disabled = !availableSeasons.length;
+        matchSelect.disabled = !allMatches.length;
+        seasonShell.classList.toggle("is-visible", recordScope === "season");
+        matchShell.classList.toggle("is-visible", recordScope === "match");
+
+        tabs.querySelectorAll("[data-record-scope]").forEach(button => {
+            const active = button.dataset.recordScope === recordScope;
+            button.classList.toggle("active", active);
+            button.setAttribute("aria-pressed", String(active));
+        });
+
+        tabs.addEventListener("click", event => {
+            const button = event.target.closest("[data-record-scope]");
+            if (!button) return;
+            const scope = button.dataset.recordScope;
+            if (scope === "season") setScopeLocation(scope, selectedSeason);
+            else if (scope === "match") setScopeLocation(scope, selectedMatch?.id || "");
+            else setScopeLocation("all");
+        });
+        seasonSelect.addEventListener("change", () => setScopeLocation("season", seasonSelect.value));
+        matchSelect.addEventListener("change", () => setScopeLocation("match", matchSelect.value));
+
+        const scopeLabel = recordScope === "season"
+            ? `SAISON ${String(selectedSeason).padStart(2, "0")}`
+            : recordScope === "match"
+                ? (selectedMatch ? `MATCH ${selectedMatch.id.toUpperCase()}` : "MATCH SANS DONNÉE")
+                : "ARCHIVES ABSOLUES";
+        document.getElementById("recordScopeStatus").textContent = scopeLabel;
+        document.getElementById("recordScopeSignal").textContent = recordScope === "all"
+            ? "ALL-TIME // ARCHIVE"
+            : `${recordScope.toUpperCase()} // ${scopeLabel}`;
+        document.getElementById("recordScopeEyebrow").textContent = recordScope === "all"
+            ? "LEADERS ABSOLUS"
+            : `LEADERS // ${scopeLabel}`;
+    }
 
     function playerProfile(name) {
         return profilesByName.get(String(name).toLowerCase()) || null;
@@ -165,7 +256,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 const timeMatch = /(\d+)'(\d+)/.exec(event.time || "");
                 if (!timeMatch) return;
                 const seconds = Number(timeMatch[1]) * 60 + Number(timeMatch[2]);
-                if (!fastest || seconds < fastest.seconds) fastest = { ...event, seconds };
+                if (!fastest || seconds < fastest.seconds) {
+                    fastest = { ...event, seconds, season: Number(match.season) || null };
+                }
             });
         });
         return fastest;
@@ -220,7 +313,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <${tag} class="record-leader-card" style="--record-accent:${record.accent};"${hrefAttribute}>
                 <div class="leader-card-topline"><span>${record.code}</span><span><i></i> ${status}</span></div>
                 <div class="leader-card-visual">
-                    <img src="${avatar}" alt="${record.name || record.label}">
+                    <img src="${avatar}" alt="${record.name || record.label}" loading="lazy" decoding="async">
                     <span>${record.watermark}</span>
                 </div>
                 <div class="leader-card-body">
@@ -352,7 +445,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return `
             <tr style="--club-accent:${accent};">
                 <td><span class="club-record-rank">${String(index + 1).padStart(2, "0")}</span></td>
-                <td><span class="club-record-identity"><img src="${info.logo}" alt=""><strong>${info.name}</strong></span></td>
+                <td><span class="club-record-identity"><img src="${info.logo}" alt="" loading="lazy" decoding="async"><strong>${info.name}</strong></span></td>
                 <td>${record.played}</td>
                 <td><strong>${record.points}</strong></td>
                 <td>${record.wins}–${record.draws}–${record.losses}</td>
@@ -369,16 +462,34 @@ document.addEventListener("DOMContentLoaded", () => {
         const meta = RECORD_CATEGORY_META[category];
         const records = categoryRanking(playerRecords, category);
         const maximum = records[0]?.[category] || 1;
-        const leader = records[0];
+        const podium = records.slice(0, 3);
 
-        document.getElementById("rankingSummary").innerHTML = leader ? `
-          <div class="ranking-summary-code"><span>${meta.code}</span></div>
-            <img src="${playerAvatar(leader.name)}" alt="">
-            <div><small>LEADER // ${meta.label.toUpperCase()}</small><strong>${leader.name}</strong></div>
-            <span>${leader[category]}</span>
+        document.getElementById("rankingSummary").innerHTML = podium.length ? `
+            <div class="ranking-podium" style="--category-accent:${meta.accent};">
+                ${podium.map((record, index) => {
+                    const rank = index + 1;
+                    const club = playerClub(record.name);
+                    const href = playerHref(record.name);
+                    const tag = href ? "a" : "div";
+                    const hrefAttribute = href ? ` href="${href}"` : "";
+                    return `
+                        <${tag} class="podium-entry podium-rank-${rank}"${hrefAttribute}>
+                            <span class="podium-crown" aria-hidden="true">♛</span>
+                            <span class="podium-avatar-wrap">
+                                <img src="${playerAvatar(record.name)}" alt="" loading="lazy" decoding="async">
+                                <b class="podium-medal">${String(rank).padStart(2, "0")}</b>
+                            </span>
+                            <span class="podium-player">${record.name}</span>
+                            <small>${club.name}</small>
+                            <strong class="podium-value">${record[category]} <i>${meta.code}</i></strong>
+                            <span class="podium-step"><b>${rank}</b></span>
+                        </${tag}>
+                    `;
+                }).join("")}
+            </div>
         ` : `<p>Aucune donnée enregistrée.</p>`;
 
-        document.getElementById("playerRecordList").innerHTML = records.map((record, index) => {
+        document.getElementById("playerRecordList").innerHTML = records.slice(3).map((record, index) => {
             const club = playerClub(record.name);
             const href = playerHref(record.name);
             const tag = href ? "a" : "div";
@@ -386,8 +497,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const width = record[category] > 0 ? Math.max(3, (record[category] / maximum) * 100) : 0;
             return `
                 <${tag} class="player-record-row" style="--category-accent:${meta.accent};"${hrefAttribute}>
-                    <span class="player-record-rank">${String(index + 1).padStart(2, "0")}</span>
-                    <img src="${playerAvatar(record.name)}" alt="">
+                    <span class="player-record-rank">${String(index + 4).padStart(2, "0")}</span>
+                    <img src="${playerAvatar(record.name)}" alt="" loading="lazy" decoding="async">
                     <span class="player-record-name"><small>${club.name}</small><strong>${record.name}</strong></span>
                     <span class="player-record-bar"><i style="width:${width}%"></i></span>
                     <span class="player-record-value"><strong>${record[category]}</strong><small>${meta.code}</small></span>
@@ -427,7 +538,8 @@ document.addEventListener("DOMContentLoaded", () => {
             value: prolificMatch
                 ? `${clubInfo(prolificMatch.home).name} ${prolificMatch.scoreHome}–${prolificMatch.scoreAway} ${clubInfo(prolificMatch.away).name}`
                 : "Aucune donnée",
-            detail: prolificMatch ? plural(prolificMatch.scoreHome + prolificMatch.scoreAway, "but") : "0 but"
+            detail: prolificMatch ? plural(prolificMatch.scoreHome + prolificMatch.scoreAway, "but") : "0 but",
+            season: Number(prolificMatch?.season) || null
         },
         {
             code: "MAT–02",
@@ -435,13 +547,15 @@ document.addEventListener("DOMContentLoaded", () => {
             value: biggestWin
                 ? `${clubInfo(biggestWin.home).name} ${biggestWin.scoreHome}–${biggestWin.scoreAway} ${clubInfo(biggestWin.away).name}`
                 : "Aucune donnée",
-            detail: biggestWin ? `Écart de ${Math.abs(biggestWin.scoreHome - biggestWin.scoreAway)} buts` : "Écart de 0"
+            detail: biggestWin ? `Écart de ${Math.abs(biggestWin.scoreHome - biggestWin.scoreAway)} buts` : "Écart de 0",
+            season: Number(biggestWin?.season) || null
         },
         {
             code: "PLR–03",
             label: "But le plus rapide",
             value: fastestGoal?.scorer || "Aucun",
-            detail: fastestGoal ? fastestGoal.time : "0 seconde"
+            detail: fastestGoal ? fastestGoal.time : "0 seconde",
+            season: Number(fastestGoal?.season) || null
         },
         {
             code: "CLB–04",
@@ -480,9 +594,13 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("recordVaultGrid").innerHTML = vaultRecords.map((record, index) => {
         const tag = record.href ? "a" : "article";
         const href = record.href ? ` href="${record.href}" target="_blank" rel="noopener"` : "";
+        const archiveIndex = String(index + 1).padStart(2, "0");
+        const seasonLabel = record.season
+            ? `SAISON ${String(record.season).padStart(2, "0")} · ${archiveIndex}`
+            : archiveIndex;
         return `
             <${tag} class="vault-record ${record.href ? "has-link" : ""}"${href}>
-                <div><span>${record.code}</span><small>${String(index + 1).padStart(2, "0")}</small></div>
+                <div><span>${record.code}</span><small>${seasonLabel}</small></div>
                 <strong>${record.label}</strong>
                 <p>${record.value}</p>
                 <span>${record.detail}</span>
@@ -490,5 +608,6 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
     }).join("");
 
+    setupScopeControls();
     renderPlayerRanking("buts");
 });

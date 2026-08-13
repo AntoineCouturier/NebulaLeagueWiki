@@ -552,10 +552,27 @@ body.nebula-page.players-page .dropdown-menu {
 body.nebula-page.players-page .club-dropdown.open .dropdown-menu {
     max-height: 430px;
     padding: 6px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-color: var(--players-cyan) rgba(255, 255, 255, 0.06);
+    scrollbar-width: thin;
     border-color: #33404a !important;
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
+}
+
+body.nebula-page.players-page .dropdown-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+body.nebula-page.players-page .dropdown-menu::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+body.nebula-page.players-page .dropdown-menu::-webkit-scrollbar-thumb {
+    background: var(--players-cyan);
 }
 
 body.nebula-page.players-page .dropdown-option {
@@ -936,6 +953,54 @@ body.nebula-page.players-page .player-card h3 {
     white-space: nowrap;
 }
 
+.player-form {
+    display: grid;
+    min-height: 48px;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 0 12px;
+    border: 1px solid color-mix(in srgb, var(--form-accent), transparent 64%);
+    background: color-mix(in srgb, var(--form-accent), transparent 94%);
+    box-shadow: inset 2px 0 0 var(--form-accent);
+}
+
+.player-form>span {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 7px;
+    color: #77838d;
+    font-family: var(--mono);
+    font-size: 0.48rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.player-form>span i {
+    width: 5px;
+    height: 5px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: var(--form-accent);
+    box-shadow: 0 0 8px var(--form-accent);
+}
+
+.player-form strong {
+    color: var(--form-accent);
+    font-family: var(--display);
+    font-size: 0.65rem;
+    white-space: nowrap;
+}
+
+.player-form small {
+    color: #aab3ba;
+    font-family: var(--mono);
+    font-size: 0.49rem;
+    white-space: nowrap;
+}
+
 .player-card-data {
     display: grid;
     grid-template-columns: 0.72fr 1.28fr;
@@ -1180,6 +1245,15 @@ body.nebula-page.players-page .player-card h3 {
 
     body.nebula-page.players-page .player-card {
         grid-template-rows: auto minmax(310px, 1fr) auto;
+    }
+
+    .player-form {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .player-form small {
+        grid-column: 1 / -1;
+        padding-bottom: 9px;
     }
 }
 

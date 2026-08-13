@@ -929,7 +929,7 @@ body.nebula-page :is(.modal-close-x, .close-btn) {
 
 /* -------------------- Tickers et accents -------------------- */
 
-body.nebula-page :is(.mp-ticker-wrap, .ve-ticker-wrap) {
+body.nebula-page .ve-ticker-wrap {
   border-color: var(--line) !important;
   background: var(--surface-2) !important;
 }

@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="CSS/hamburger.css">
     <link rel="stylesheet" href="CSS/global-theme.css">
     <link rel="stylesheet" href="CSS/legacy-pages.css">
+    <link rel="stylesheet" href="CSS/responsive.css">
 </head>
 
 <body class="nebula-page legacy-page progression-page">
@@ -28,7 +29,6 @@
             <a href="fixtures.html">Calendrier</a><a href="headtohead.html">Face à Face</a>
             <a href="valeur.html">Valeurs</a><a href="rules.html">Règles</a><a href="stats.html">Records</a>
             <a class="nav-active" aria-current="page" href="progression.html">Progression</a>
-            <a href="tactical-lab.html">Labo Tactique</a>
             <a href="dream-team.html">Équipes Idéales</a>
         </nav>
         <div class="header-actions"><span class="live-pill"><i></i> SAISON 01</span><button class="menu-button"
@@ -74,26 +74,33 @@
 
         <section class="legacy-panel" id="progressChartPanel" hidden>
             <div class="legacy-panel-title"><span>02</span>
-                <div><small>COURBE CUMULÉE</small>
-                    <h2>TRAJECTOIRE DE VALEUR</h2>
+                <div><small id="progressChartEyebrow">COURBE CUMULÉE</small>
+                    <h2 id="progressChartTitle">TRAJECTOIRE DE VALEUR</h2>
                 </div>
                 <p id="progressChartCaption">Valeur générée par les matchs enregistrées.</p>
+            </div>
+            <div class="progress-mode-tabs" role="tablist" aria-label="Type de progression">
+                <button type="button" id="progressValueMode" class="is-active" role="tab" aria-selected="true">
+                    <span>01</span> VALEUR
+                </button>
+                <button type="button" id="progressTechnicalMode" role="tab" aria-selected="false">
+                    <span>02</span> STATS TECHNIQUES
+                </button>
             </div>
             <div class="progress-chart" id="progressChart"></div>
         </section>
 
         <section class="legacy-panel" id="progressTimelinePanel" hidden>
             <div class="legacy-panel-title"><span>03</span>
-                <div><small>JOURNAL D’IMPACT</small>
-                    <h2>MATCH PAR MATCH</h2>
+                <div><small id="progressTimelineEyebrow">JOURNAL D’IMPACT</small>
+                    <h2 id="progressTimelineTitle">MATCH PAR MATCH</h2>
                 </div>
-                <p>Les entrées les plus récentes apparaissent en premier.</p>
+                <p id="progressTimelineCaption">Les entrées les plus récentes apparaissent en premier.</p>
             </div>
             <div class="progress-timeline" id="progressTimeline"></div>
         </section>
 
         <nav class="legacy-crosslinks" aria-label="Autres archives">
-            <a href="tactical-lab.html"><span>COMPOSITION LIBRE</span><strong>LABO TACTIQUE</strong><i>↗</i></a>
             <a href="dream-team.html"><span>SÉLECTION AUTOMATIQUE</span><strong>ÉQUIPES IDÉALES</strong><i>↗</i></a>
         </nav>
     </main>

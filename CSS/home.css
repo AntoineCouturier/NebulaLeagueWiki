@@ -894,24 +894,17 @@ body.home-page .home-hero::after {
 
 .portal-progression {
   --portal-accent: var(--home-cyan);
-  grid-column: 1 / 5;
-  grid-row: 5;
-}
-
-.portal-lab {
-  --portal-accent: #b56bff;
-  grid-column: 5 / 9;
+  grid-column: 1 / 7;
   grid-row: 5;
 }
 
 .portal-dream {
   --portal-accent: var(--home-acid);
-  grid-column: 9 / 13;
+  grid-column: 7 / 13;
   grid-row: 5;
 }
 
 .portal-progress-symbol,
-.portal-lab-symbol,
 .portal-team-symbol {
   position: absolute;
   top: 45px;
@@ -948,28 +941,6 @@ body.home-page .home-hero::after {
 .portal-progress-symbol i:nth-child(2) { --step: 1; }
 .portal-progress-symbol i:nth-child(3) { --step: 2; }
 .portal-progress-symbol i:nth-child(4) { --step: 3; }
-
-.portal-lab-symbol {
-  border: 1px solid color-mix(in srgb, var(--portal-accent), transparent 68%);
-  background:
-    linear-gradient(transparent 49%, color-mix(in srgb, var(--portal-accent), transparent 75%) 50%, transparent 51%),
-    radial-gradient(circle, transparent 0 22px, color-mix(in srgb, var(--portal-accent), transparent 72%) 23px 24px, transparent 25px);
-}
-
-.portal-lab-symbol i {
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  border: 1px solid var(--portal-accent);
-  background: var(--home-panel);
-  transform: rotate(45deg);
-}
-
-.portal-lab-symbol i:nth-child(1) { top: 9px; left: 66px; }
-.portal-lab-symbol i:nth-child(2) { top: 38px; left: 17px; }
-.portal-lab-symbol i:nth-child(3) { top: 38px; right: 17px; }
-.portal-lab-symbol i:nth-child(4) { bottom: 10px; left: 40px; }
-.portal-lab-symbol i:nth-child(5) { right: 40px; bottom: 10px; }
 
 .portal-team-symbol {
   background:
@@ -1587,7 +1558,6 @@ body.home-page .home-hero::after {
   .portal-seasons,
   .portal-calendar,
   .portal-progression,
-  .portal-lab,
   .portal-dream {
     grid-column: auto;
     grid-row: auto;

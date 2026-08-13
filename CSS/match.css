@@ -740,6 +740,7 @@ body.nebula-page.matches-page .match-season-select:focus-visible {
 }
 
 body.nebula-page.matches-page .match-filter-tab {
+    --filter-accent: var(--match-acid);
     min-width: 0 !important;
     padding: 0 10px !important;
     border: 0 !important;
@@ -752,16 +753,30 @@ body.nebula-page.matches-page .match-filter-tab {
     font-weight: 700;
 }
 
+body.nebula-page.matches-page .match-filter-tab[data-cat="ligue"] {
+    --filter-accent: #59e7ff;
+}
+
+body.nebula-page.matches-page .match-filter-tab[data-cat="ncl"] {
+    --filter-accent: #ff5365;
+}
+
+body.nebula-page.matches-page .match-filter-tab[data-cat="amical"] {
+    --filter-accent: var(--match-acid);
+}
+
 body.nebula-page.matches-page .match-filter-tab:hover {
-    background: rgba(99, 231, 255, 0.07) !important;
-    color: var(--match-cyan) !important;
+    background: color-mix(in srgb, var(--filter-accent), transparent 93%) !important;
+    color: var(--filter-accent) !important;
     transform: none !important;
 }
 
 body.nebula-page.matches-page .match-filter-tab.active {
-    background: rgba(173, 255, 47, 0.16) !important;
-    box-shadow: inset 0 0 0 1px var(--match-acid) !important;
-    color: var(--match-acid) !important;
+    background: color-mix(in srgb, var(--filter-accent), transparent 82%) !important;
+    box-shadow:
+        inset 0 0 0 1px var(--filter-accent),
+        inset 0 -2px 0 var(--filter-accent) !important;
+    color: var(--filter-accent) !important;
 }
 
 .match-club-dropdown {
@@ -834,10 +849,27 @@ body.nebula-page.matches-page .match-club-dropdown.open .match-club-trigger {
 .match-club-dropdown.open .match-club-menu {
     max-height: 430px;
     padding: 6px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-color: var(--match-cyan) rgba(255, 255, 255, 0.06);
+    scrollbar-width: thin;
     border-color: #33404a;
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
+}
+
+.match-club-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.match-club-menu::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.match-club-menu::-webkit-scrollbar-thumb {
+    background: var(--match-cyan);
 }
 
 body.nebula-page.matches-page .match-club-option {

@@ -116,7 +116,10 @@ document.addEventListener("DOMContentLoaded", () => {
             .sort((a, b) => new Date(b.date) - new Date(a.date));
         const leagueMatches = allMatches.filter(match => match.category === "ligue");
 
-        const standings = new Map(Object.keys(SEASON_CLUBS).map(key => [key, {
+        const seasonClubKeys = Object.values(SEASON_CLUBS)
+            .filter(club => Number(club.introducedSeason || 1) <= Number(meta.number))
+            .map(club => club.key);
+        const standings = new Map(seasonClubKeys.map(key => [key, {
             club: key,
             pts: 0,
             gf: 0,
@@ -300,7 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
             [season.leagueMatches.length, "MATCHS JOUÉS"],
             [season.totalGoals, "BUTS MARQUÉS"],
             [season.playerCount, "JOUEURS ACTIFS"],
-            [Object.keys(SEASON_CLUBS).length, "CLUBS ENGAGÉS"]
+            [season.standings.length, "CLUBS ENGAGÉS"]
         ];
         return `
             <div class="season-metric-grid">
@@ -514,15 +517,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 : finalMatch.away
             : null;
         const completed = fixtures.filter(fixture => nclMatchForFixture(season, fixture)).length;
-        const expected = Math.max(fixtures.length, 4);
+        const expected = Math.max(fixtures.length, 1);
         const progress = Math.min(100, Math.round((completed / expected) * 100));
+        const hasQuarterFinals = fixtures.some(fixture => /quart/i.test(String(fixture.stage || "")));
         const phase = champion
             ? "CHAMPION COURONNÉ"
-            : completed >= 2
+            : completed >= expected - 2
                 ? "FINALES DÉVERROUILLÉES"
-                : completed
+                : hasQuarterFinals && completed >= 4
                     ? "DEMI-FINALES EN COURS"
-                    : standings.length >= 4
+                    : completed
+                    ? "DEMI-FINALES EN COURS"
+                    : standings.length >= (hasQuarterFinals ? 8 : 4)
                         ? "TABLEAU INITIALISÉ"
                         : "QUALIFICATIONS EN ATTENTE";
 
@@ -535,6 +541,7 @@ document.addEventListener("DOMContentLoaded", () => {
             expected,
             progress,
             phase,
+            hasQuarterFinals,
             totalGoals: matches.reduce((total, match) =>
                 total + Number(match.scoreHome || 0) + Number(match.scoreAway || 0), 0),
             topScorers: ranking("goals"),
@@ -603,9 +610,57 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderNclBracket(season, ncl) {
-        const [semiOne, semiTwo] = ncl.fixtures;
-        const third = ncl.fixtures.find(fixture => fixture.valueTier === "third") || ncl.fixtures[2];
-        const final = ncl.fixtures.find(fixture => fixture.valueTier === "finale") || ncl.fixtures[3];
+        const quarters = ncl.fixtures.filter(fixture => /quart/i.test(String(fixture.stage || "")));
+        const semis = ncl.fixtures.filter(fixture => /demi/i.test(String(fixture.stage || "")));
+        const third = ncl.fixtures.find(fixture => fixture.valueTier === "third");
+        const final = ncl.fixtures.find(fixture => fixture.valueTier === "finale")
+            || ncl.fixtures.find(fixture => /^finale$/i.test(String(fixture.stage || "")));
+
+        if (quarters.length) {
+            return `
+                <section class="ncl-bracket-panel is-eight-team">
+                    <header>
+                        <div><small>ÉLIMINATION DIRECTE · TOP 08</small><h3>TABLEAU NCL</h3></div>
+                        <span>${String(ncl.completed).padStart(2, "0")} / ${String(ncl.expected).padStart(2, "0")} TERMINÉS</span>
+                    </header>
+                    <div class="ncl-bracket ncl-expanded-bracket">
+                        <div class="ncl-expanded-flow">
+                            <div class="ncl-round ncl-quarter-round">
+                                <div class="ncl-round-label"><span>ROUND 01</span><strong>QUARTS DE FINALE</strong></div>
+                                <div class="ncl-stage-slots ncl-quarter-slots">
+                                    ${quarters.map(fixture => renderNclMatchCard(season, fixture)).join("")}
+                                </div>
+                            </div>
+                            <div class="ncl-stage-bridge ncl-quarter-bridge" aria-hidden="true">
+                                <i class="is-upper"></i>
+                                <i class="is-lower"></i>
+                                <span class="is-upper"></span>
+                                <span class="is-lower"></span>
+                                <b class="is-upper">VAINQUEUR 01</b>
+                                <b class="is-lower">VAINQUEUR 02</b>
+                            </div>
+                            <div class="ncl-round ncl-semi-round">
+                                <div class="ncl-round-label"><span>ROUND 02</span><strong>DEMI-FINALES</strong></div>
+                                <div class="ncl-stage-slots ncl-semi-slots">
+                                    ${semis.map(fixture => renderNclMatchCard(season, fixture)).join("")}
+                                </div>
+                            </div>
+                            <div class="ncl-stage-bridge ncl-semi-bridge" aria-hidden="true"><i></i><span></span><b>VAINQUEURS</b></div>
+                            <div class="ncl-round ncl-final-round">
+                                <div class="ncl-round-label"><span>ROUND 03</span><strong>FINALE NCL</strong></div>
+                                <div class="ncl-stage-slots ncl-final-slot">${renderNclMatchCard(season, final)}</div>
+                            </div>
+                        </div>
+                        <aside class="ncl-third-branch">
+                            <div class="ncl-round-label"><span>BRANCHE SECONDAIRE · PERDANTS DES DEMIES</span><strong>PETITE FINALE</strong></div>
+                            ${renderNclMatchCard(season, third, "is-third")}
+                        </aside>
+                    </div>
+                </section>
+            `;
+        }
+
+        const [semiOne, semiTwo] = semis.length ? semis : ncl.fixtures;
 
         return `
             <section class="ncl-bracket-panel">
@@ -661,7 +716,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <em>${row.wins}</em>
                             </a>
                         `;
-                    }).join("") : `<div class="season-no-data">Les quatre qualifiés apparaîtront à la fin de la Ligue.</div>`}
+                    }).join("") : `<div class="season-no-data">Les qualifiés apparaîtront à la fin de la Ligue.</div>`}
                 </div>
             </section>
         `;
@@ -907,6 +962,15 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.querySelector(".season-modal-close")?.focus();
     }
 
+    function openNclMatchPage(fixtureId) {
+        const season = seasons.find(item => item.id === selectedId);
+        const fixture = season ? nclFixturesForSeason(season).find(item => item.id === fixtureId) : null;
+        const match = fixture ? nclMatchForFixture(season, fixture) : null;
+        const target = new URL("matchs.html", window.location.href);
+        if (match?.id) target.searchParams.set("match", match.id);
+        window.location.href = target.href;
+    }
+
     function scorerSummary(entries) {
         if (!entries?.length) return `<span>AUCUN BUTEUR</span>`;
         return entries.map(entry => `
@@ -1053,7 +1117,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const nclMatchButton = event.target.closest("[data-open-ncl-match]");
         if (nclMatchButton) {
-            openNclMatchModal(nclMatchButton.dataset.openNclMatch);
+            openNclMatchPage(nclMatchButton.dataset.openNclMatch);
             return;
         }
 
@@ -1075,7 +1139,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const nclMatchButton = event.target.closest("[data-open-ncl-match]");
         if (nclMatchButton) {
-            openNclMatchModal(nclMatchButton.dataset.openNclMatch);
+            openNclMatchPage(nclMatchButton.dataset.openNclMatch);
             return;
         }
 

@@ -55,6 +55,41 @@ fiche existante dans le bon dossier. Son identité, son club, son poste, son
 personnage, sa valeur et ses statistiques techniques seront ensuite remplacés
 automatiquement par les champs ci-dessus.
 
+### Historique des statistiques techniques
+
+Les relevés techniques sont officiels et communs à tous les visiteurs : ils ne
+sont jamais conservés dans le stockage du navigateur. Un relevé n'apparaît que
+si la saison possède le statut `finished` et contient un objet
+`technicalSnapshots`.
+
+Au moment de terminer une saison :
+
+1. passez son `status` de `active` à `finished` ;
+2. renseignez sa `endDate` ;
+3. copiez les six notes finales de chaque joueur dans `technicalSnapshots`.
+
+Exemple à placer directement dans l'objet de la saison :
+
+```js
+technicalSnapshots: {
+    Antoine: {
+        label: "Fin de saison 01",
+        technical: {
+            defense: 96,
+            passe: 100,
+            dribble: 95,
+            tir: 84,
+            offense: 93,
+            position: 94
+        }
+    }
+}
+```
+
+La page Progression ignore automatiquement `technicalSnapshots` tant que la
+saison n'est pas terminée. Les dossiers restent ainsi visibles après un
+changement de navigateur ou un nettoyage des données locales.
+
 ## Modifier ou ajouter un club
 
 Utilisez le tableau `clubs`. Une seule entrée contient désormais :

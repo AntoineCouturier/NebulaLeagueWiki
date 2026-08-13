@@ -104,6 +104,7 @@ body.nebula-page.admin-page {
 }
 
 .admin-workspace,
+.admin-transfer,
 .admin-output {
     margin-top: 28px;
     border: 1px solid var(--admin-line);
@@ -421,6 +422,27 @@ body.nebula-page.admin-page {
     color: var(--admin-red);
 }
 
+.admin-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+}
+
+.admin-transfer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 76px;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+}
+
+.admin-transfer-actions>span {
+    margin-left: auto;
+    color: var(--admin-cyan);
+    font: 700 0.54rem/1.4 "Orbitron", sans-serif;
+    letter-spacing: 0.08em;
+}
+
 .admin-output .admin-section-title {
     grid-template-columns: 100px 1fr auto;
 }
@@ -555,6 +577,16 @@ body.nebula-page.admin-page {
 
     .admin-builder-actions {
         flex-direction: column;
+    }
+
+    .admin-transfer-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-transfer-actions>span {
+        margin: 8px 0 0;
+        text-align: center;
     }
 
     .admin-generate {

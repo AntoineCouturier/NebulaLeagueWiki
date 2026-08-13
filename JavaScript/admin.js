@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const players = data.players || [];
     const matches = data.matches || [];
     const draftKey = "nebula-local-match-draft-v1";
+    const backupKey = "nebula-local-match-backups-v1";
 
     const form = document.getElementById("matchBuilder");
     const homeClub = document.getElementById("homeClub");
@@ -12,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const output = document.getElementById("matchOutput");
     const copyButton = document.getElementById("copyOutput");
     const feedback = document.getElementById("adminFeedback");
+    const backupCount = document.getElementById("adminBackupCount");
+    const restoreBackupButton = document.getElementById("restoreBackup");
     let goals = [];
 
     if (!form || !clubs.length) return;
@@ -43,6 +46,53 @@ document.addEventListener("DOMContentLoaded", () => {
     function setFeedback(type, title, message) {
         feedback.className = `admin-feedback${type ? ` is-${type}` : ""}`;
         feedback.innerHTML = `<span>${escapeHtml(title)}</span><p>${escapeHtml(message)}</p>`;
+    }
+
+    function readBackups() {
+        try {
+            const backups = JSON.parse(localStorage.getItem(backupKey));
+            return Array.isArray(backups) ? backups : [];
+        } catch {
+            return [];
+        }
+    }
+
+    function updateBackupCount() {
+        const count = readBackups().length;
+        if (backupCount) {
+            backupCount.textContent = `${String(count).padStart(2, "0")} SAUVEGARDE${count > 1 ? "S" : ""} LOCALE${count > 1 ? "S" : ""}`;
+        }
+        if (restoreBackupButton) restoreBackupButton.disabled = count === 0;
+    }
+
+    function backupCurrentDraft(reason) {
+        const current = localStorage.getItem(draftKey);
+        if (!current) return;
+        try {
+            const backups = readBackups();
+            backups.unshift({
+                version: 1,
+                savedAt: new Date().toISOString(),
+                reason,
+                draft: JSON.parse(current)
+            });
+            localStorage.setItem(backupKey, JSON.stringify(backups.slice(0, 10)));
+            updateBackupCount();
+        } catch {
+            // Un ancien brouillon illisible ne doit pas bloquer l'interface.
+        }
+    }
+
+    function downloadJson(payload, filename) {
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
     }
 
     function populateClubs() {
@@ -231,6 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch {
         localStorage.removeItem(draftKey);
     }
+    updateBackupCount();
 
     homeClub.addEventListener("change", refreshTeams);
     awayClub.addEventListener("change", refreshTeams);
@@ -283,11 +334,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.getElementById("saveDraft").addEventListener("click", () => {
+        backupCurrentDraft("avant sauvegarde");
         localStorage.setItem(draftKey, JSON.stringify(collectDraft()));
         setFeedback("success", "BROUILLON SAUVÉ", "Tu pourras reprendre la saisie depuis ce navigateur.");
     });
 
     document.getElementById("resetBuilder").addEventListener("click", () => {
+        backupCurrentDraft("avant réinitialisation");
         localStorage.removeItem(draftKey);
         form.reset();
         populateClubs();
@@ -298,5 +351,69 @@ document.addEventListener("DOMContentLoaded", () => {
         output.textContent = "// Le match généré apparaîtra ici.";
         copyButton.disabled = true;
         setFeedback("", "EN ATTENTE", "Le formulaire a été réinitialisé.");
+    });
+
+    document.getElementById("exportDraft").addEventListener("click", () => {
+        const now = new Date();
+        const stamp = now.toISOString().slice(0, 19).replace(/[:T]/g, "-");
+        downloadJson({
+            type: "nebula-match-draft",
+            version: 1,
+            exportedAt: now.toISOString(),
+            draft: collectDraft()
+        }, `nebula-dossier-match-${stamp}.json`);
+        setFeedback("success", "DOSSIER EXPORTÉ", "Le fichier JSON contient toutes les données actuelles du formulaire.");
+    });
+
+    document.getElementById("exportRegistry").addEventListener("click", () => {
+        const now = new Date();
+        const stamp = now.toISOString().slice(0, 10);
+        downloadJson({
+            type: "nebula-data-backup",
+            version: 1,
+            exportedAt: now.toISOString(),
+            clubs: data.clubs || [],
+            players: data.players || [],
+            matches: data.matches || [],
+            fixtures: data.fixtures || [],
+            seasons: data.seasons || []
+        }, `nebula-base-${stamp}.json`);
+        setFeedback("success", "BASE EXPORTÉE", "Une copie portable des clubs, joueurs, matchs, saisons et du calendrier a été téléchargée.");
+    });
+
+    const importDraftFile = document.getElementById("importDraftFile");
+    document.getElementById("importDraft").addEventListener("click", () => importDraftFile.click());
+    importDraftFile.addEventListener("change", async () => {
+        const file = importDraftFile.files?.[0];
+        if (!file) return;
+        try {
+            const payload = JSON.parse(await file.text());
+            const draft = payload?.type === "nebula-match-draft" ? payload.draft : payload;
+            if (!draft || typeof draft !== "object" || !draft.fields) {
+                throw new Error("Format de dossier invalide");
+            }
+            backupCurrentDraft("avant import");
+            restoreDraft(draft);
+            localStorage.setItem(draftKey, JSON.stringify(collectDraft()));
+            updateBackupCount();
+            setFeedback("success", "DOSSIER IMPORTÉ", `${file.name} est chargé et sauvegardé localement.`);
+        } catch {
+            setFeedback("error", "IMPORT REFUSÉ", "Le fichier ne correspond pas à un dossier de match Nebula valide.");
+        } finally {
+            importDraftFile.value = "";
+        }
+    });
+
+    restoreBackupButton.addEventListener("click", () => {
+        const backup = readBackups()[0];
+        if (!backup?.draft) return;
+        backupCurrentDraft("avant restauration");
+        restoreDraft(backup.draft);
+        localStorage.setItem(draftKey, JSON.stringify(collectDraft()));
+        const date = new Intl.DateTimeFormat("fr-FR", {
+            dateStyle: "short",
+            timeStyle: "short"
+        }).format(new Date(backup.savedAt));
+        setFeedback("success", "SAUVEGARDE RESTAURÉE", `La copie locale du ${date} est chargée.`);
     });
 });

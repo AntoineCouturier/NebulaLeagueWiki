@@ -1567,9 +1567,11 @@ main {
   top: 15px;
   right: 15px;
   display: grid;
+  width: 27px;
   min-width: 27px;
   height: 27px;
-  padding: 0 5px;
+  padding: 0;
+  box-sizing: border-box;
   place-items: center;
   border: 1px solid color-mix(in srgb, var(--accent), transparent 35%);
   color: var(--accent);
@@ -1924,9 +1926,11 @@ main {
   right: 14px;
   bottom: 14px;
   display: grid;
+  width: 34px;
   min-width: 34px;
   height: 34px;
-  padding: 0 5px;
+  padding: 0;
+  box-sizing: border-box;
   place-items: center;
   border: 1px solid var(--accent);
   background: rgba(5, 7, 10, 0.8);

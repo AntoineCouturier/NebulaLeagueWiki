@@ -1,0 +1,442 @@
+/* Équipes idéales — page-specific hierarchy and compact states. */
+
+body.nebula-page.dream-page .legacy-shell {
+    padding-top: 30px;
+}
+
+body.nebula-page.dream-page .legacy-hero {
+    min-height: 370px;
+    grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.5fr);
+}
+
+body.nebula-page.dream-page .legacy-hero-copy {
+    padding: 48px clamp(38px, 6vw, 76px);
+}
+
+body.nebula-page.dream-page .legacy-hero h1 {
+    font-size: clamp(3rem, 5.25vw, 5.5rem);
+}
+
+body.nebula-page.dream-page .legacy-hero-copy > p:last-child {
+    margin-top: 26px;
+}
+
+body.nebula-page.dream-page .dream-controls {
+    min-height: 78px;
+    grid-template-columns: minmax(460px, 1.35fr) minmax(220px, 0.55fr) minmax(220px, 0.55fr);
+}
+
+body.nebula-page.dream-page .dream-mode-tabs button {
+    min-height: 76px;
+}
+
+body.nebula-page.dream-page .dream-controls label,
+body.nebula-page.dream-page .dream-method {
+    padding-block: 14px;
+}
+
+.dream-status {
+    display: grid;
+    min-height: 62px;
+    grid-template-columns: 210px minmax(240px, 0.55fr) minmax(0, 1fr);
+    align-items: stretch;
+    margin-top: 10px;
+    border: 1px solid var(--legacy-line);
+    background: rgba(255, 255, 255, 0.012);
+}
+
+.dream-status > span,
+.dream-status > strong,
+.dream-status > p {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 14px 20px;
+}
+
+.dream-status > span {
+    gap: 9px;
+    border-right: 1px solid var(--legacy-line);
+}
+
+.dream-status > span i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--legacy-acid);
+    box-shadow: 0 0 10px rgba(168, 255, 37, 0.65);
+}
+
+.dream-status small {
+    color: var(--legacy-acid);
+    font: 700 0.45rem/1.3 "Orbitron", sans-serif;
+    letter-spacing: 0.1em;
+}
+
+.dream-status > strong {
+    border-right: 1px solid var(--legacy-line);
+    color: var(--legacy-paper);
+    font: 800 0.66rem/1.35 "Orbitron", sans-serif;
+}
+
+.dream-status > p {
+    color: #778892;
+    font: 400 0.72rem/1.5 "Inter", sans-serif;
+}
+
+.dream-status.is-warning {
+    background: linear-gradient(90deg, rgba(255, 212, 84, 0.055), transparent 45%);
+}
+
+.dream-status.is-warning > span i {
+    background: var(--legacy-gold);
+    box-shadow: 0 0 10px rgba(255, 212, 84, 0.6);
+}
+
+.dream-status.is-warning small {
+    color: var(--legacy-gold);
+}
+
+body.nebula-page.dream-page .dream-stage {
+    min-height: 610px;
+    grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.55fr);
+}
+
+body.nebula-page.dream-page .dream-pitch {
+    min-height: 610px;
+}
+
+body.nebula-page.dream-page .dream-player {
+    width: 170px;
+    min-height: 76px;
+    padding: 8px;
+    gap: 9px;
+}
+
+body.nebula-page.dream-page .dream-player img {
+    width: 50px;
+    height: 54px;
+}
+
+body.nebula-page.dream-page .dream-player strong {
+    margin-top: 6px;
+    font-size: 0.61rem;
+}
+
+body.nebula-page.dream-page .dream-player span {
+    margin-top: 6px;
+}
+
+body.nebula-page.dream-page .dream-player.is-vacant {
+    border-style: dashed;
+    box-shadow: none;
+    opacity: 0.72;
+}
+
+body.nebula-page.dream-page .dream-dossier-title {
+    padding: 20px 22px;
+}
+
+body.nebula-page.dream-page .dream-dossier-title h2 {
+    margin-top: 8px;
+    font-size: 1.4rem;
+}
+
+body.nebula-page.dream-page .dream-dossier-row {
+    min-height: 70px;
+    grid-template-columns: 48px 1fr auto;
+    padding: 9px 16px;
+    gap: 11px;
+}
+
+body.nebula-page.dream-page .dream-dossier-row img {
+    width: 40px;
+    height: 40px;
+}
+
+body.nebula-page.dream-page .dream-dossier-row strong {
+    margin-top: 6px;
+}
+
+.dream-empty-state {
+    position: absolute;
+    z-index: 3;
+    inset: 50% auto auto 50%;
+    display: grid;
+    width: min(520px, calc(100% - 80px));
+    padding: 28px;
+    border: 1px solid rgba(255, 212, 84, 0.32);
+    background: rgba(5, 10, 13, 0.94);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
+    transform: translate(-50%, -50%);
+}
+
+.dream-empty-state span,
+.dream-dossier-empty small,
+.dream-bench-empty > span {
+    color: var(--legacy-gold);
+    font: 700 0.48rem/1 "Orbitron", sans-serif;
+    letter-spacing: 0.1em;
+}
+
+.dream-empty-state strong,
+.dream-dossier-empty strong,
+.dream-bench-empty strong {
+    margin-top: 11px;
+    color: var(--legacy-paper);
+    font: 800 clamp(0.9rem, 1.7vw, 1.35rem)/1.3 "Orbitron", sans-serif;
+}
+
+.dream-empty-state p,
+.dream-dossier-empty p,
+.dream-bench-empty p {
+    margin: 11px 0 0;
+    color: #778892;
+    font: 400 0.74rem/1.6 "Inter", sans-serif;
+}
+
+.dream-dossier-empty {
+    display: flex;
+    min-height: 100%;
+    grid-column: 1 / -1;
+    justify-content: center;
+    padding: 28px;
+    flex-direction: column;
+}
+
+body.nebula-page.dream-page .legacy-panel-title {
+    min-height: 84px;
+    grid-template-columns: 82px minmax(0, 1fr) minmax(250px, 0.55fr);
+}
+
+body.nebula-page.dream-page .legacy-panel-title > div,
+body.nebula-page.dream-page .legacy-panel-title > p {
+    padding-block: 17px;
+}
+
+body.nebula-page.dream-page .dream-bench-player {
+    min-height: 118px;
+    grid-template-columns: 66px 1fr;
+    padding: 16px 18px;
+    gap: 13px;
+}
+
+body.nebula-page.dream-page .dream-bench-player img {
+    width: 60px;
+    height: 66px;
+}
+
+.dream-bench-empty {
+    grid-column: 1 / -1;
+    display: grid;
+    min-height: 104px;
+    grid-template-columns: 140px minmax(0, 1fr);
+    align-items: stretch;
+}
+
+.dream-bench-empty > span {
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    border-right: 1px solid var(--legacy-line);
+}
+
+.dream-bench-empty > div {
+    display: flex;
+    justify-content: center;
+    padding: 20px 24px;
+    flex-direction: column;
+}
+
+.dream-bench-empty strong {
+    margin-top: 0;
+    font-size: 0.72rem;
+}
+
+.dream-bench-empty p {
+    margin-top: 7px;
+}
+
+body.nebula-page.dream-page .dream-formula {
+    min-height: 72px;
+    grid-template-columns: 220px 1fr;
+}
+
+body.nebula-page.dream-page .dream-formula span,
+body.nebula-page.dream-page .dream-formula p {
+    padding: 20px 24px;
+}
+
+@media (max-width: 1050px) {
+    body.nebula-page.dream-page .dream-stage {
+        grid-template-columns: 1fr;
+    }
+
+    body.nebula-page.dream-page .dream-pitch {
+        min-height: 570px;
+        border-right: 0;
+        border-bottom: 1px solid var(--legacy-line);
+    }
+
+    body.nebula-page.dream-page .dream-dossier {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    body.nebula-page.dream-page .dream-dossier-title {
+        grid-column: 1 / -1;
+    }
+
+    body.nebula-page.dream-page .dream-dossier-row {
+        border-right: 1px solid var(--legacy-line);
+    }
+
+    .dream-dossier-empty {
+        min-height: 180px;
+    }
+}
+
+@media (max-width: 760px) {
+    body.nebula-page.dream-page .legacy-hero {
+        width: 100% !important;
+        min-height: 0;
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    body.nebula-page.dream-page .legacy-hero-copy {
+        min-width: 0;
+        padding: 38px 22px 34px;
+    }
+
+    body.nebula-page.dream-page .legacy-kicker,
+    body.nebula-page.dream-page .legacy-hero h1,
+    body.nebula-page.dream-page .legacy-hero h1 em {
+        word-break: normal;
+        overflow-wrap: normal;
+        hyphens: none;
+    }
+
+    body.nebula-page.dream-page .dream-controls {
+        grid-template-columns: 1fr;
+    }
+
+    body.nebula-page.dream-page .dream-mode-tabs,
+    body.nebula-page.dream-page .dream-controls label,
+    body.nebula-page.dream-page .dream-method,
+    body.nebula-page.dream-page .dream-controls select {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    body.nebula-page.dream-page .dream-mode-tabs {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    body.nebula-page.dream-page .dream-mode-tabs button {
+        min-width: 0;
+        padding-inline: 4px;
+        overflow-wrap: anywhere;
+    }
+
+    .dream-status {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .dream-status > p {
+        grid-column: 1 / -1;
+        border-top: 1px solid var(--legacy-line);
+    }
+
+    body.nebula-page.dream-page .dream-pitch {
+        min-height: 520px;
+    }
+
+    body.nebula-page.dream-page .dream-player {
+        width: 112px;
+        min-height: 68px;
+        gap: 7px;
+    }
+
+    body.nebula-page.dream-page .dream-player img {
+        width: 36px;
+        height: 42px;
+    }
+
+    body.nebula-page.dream-page .dream-player strong {
+        max-width: 58px;
+        font-size: 0.52rem;
+    }
+
+    body.nebula-page.dream-page .dream-player span {
+        font-size: 0.36rem;
+    }
+
+    body.nebula-page.dream-page .legacy-panel-title {
+        grid-template-columns: 64px minmax(0, 1fr);
+    }
+
+    body.nebula-page.dream-page .dream-formula {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    body.nebula-page.dream-page .legacy-hero h1 {
+        font-size: clamp(2.1rem, 10.5vw, 3.25rem) !important;
+        line-height: 0.96;
+    }
+
+    body.nebula-page.dream-page .dream-pitch {
+        min-height: 520px;
+    }
+
+    .dream-status {
+        grid-template-columns: 1fr;
+    }
+
+    .dream-status > span,
+    .dream-status > strong {
+        border-right: 0;
+        border-bottom: 1px solid var(--legacy-line);
+    }
+
+    .dream-status > p {
+        grid-column: auto;
+        border-top: 0;
+    }
+
+    .dream-empty-state {
+        width: calc(100% - 42px);
+        padding: 21px;
+    }
+
+    body.nebula-page.dream-page .dream-dossier {
+        grid-template-columns: 1fr;
+    }
+
+    body.nebula-page.dream-page .dream-dossier-row {
+        border-right: 0;
+    }
+
+    .dream-bench-empty {
+        grid-template-columns: 1fr;
+    }
+
+    .dream-bench-empty > span {
+        min-height: 42px;
+        place-items: center start;
+        border-right: 0;
+        border-bottom: 1px solid var(--legacy-line);
+    }
+}
+
+@media (max-width: 360px) {
+    body.nebula-page.dream-page .dream-mode-tabs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    body.nebula-page.dream-page .dream-mode-tabs button {
+        min-height: 66px;
+    }
+}
