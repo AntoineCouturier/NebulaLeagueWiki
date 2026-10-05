@@ -138,12 +138,16 @@ body.nebula-page :is(.table-scroll, .club-table-scroll, .ledger-scroll, .perform
 /* Accueil */
 @media (max-width: 520px) {
   .home-page .home-metrics {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .home-page .home-metrics > div:last-child {
-    grid-column: 1 / -1;
-    padding-top: 18px;
+  .home-page .home-metrics div {
+    padding-inline: 6px;
+  }
+
+  .home-page .home-metrics dd {
+    overflow-wrap: normal;
+    letter-spacing: 0.04em;
   }
 
   .home-page .home-hero-visual {
@@ -605,6 +609,38 @@ body.nebula-page :is(.table-scroll, .club-table-scroll, .ledger-scroll, .perform
   body.nebula-page.player-card-page .pc-signature-title.has-technical-illustration {
     min-height: 104px;
     padding: 18px 88px 18px 18px;
+  }
+
+  /* Les flèches débordaient hors de l'écran : on les regroupe avec le
+     compteur au-dessus de la carte. */
+  body.nebula-page.player-card-page .pc-signature-title.has-title-switcher {
+    margin-top: 44px;
+  }
+
+  body.nebula-page.player-card-page .pc-title-switcher {
+    inset: -40px 0 auto auto;
+    display: flex;
+    align-items: stretch;
+    gap: 4px;
+  }
+
+  body.nebula-page.player-card-page .pc-title-switcher button,
+  body.nebula-page.player-card-page .pc-title-switcher button:hover,
+  body.nebula-page.player-card-page .pc-title-switcher button:focus-visible,
+  body.nebula-page.player-card-page .pc-title-switcher button:active {
+    position: relative;
+    inset: auto;
+    width: 40px;
+    height: 32px;
+    min-height: 32px;
+    transform: none !important;
+  }
+
+  body.nebula-page.player-card-page .pc-title-switcher span {
+    position: static;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

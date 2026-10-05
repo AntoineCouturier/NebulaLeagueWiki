@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nebula-league",
+  "account_id": "bbf66e31e132cb0cc742dfd4c2bcaf47",
+  "workers_dev": true,
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-05-15",
+  "assets": { "directory": "./dist", "binding": "ASSETS", "run_worker_first": ["/api/*", "/Joueurs/*"] },
+  "d1_databases": [{ "binding": "DB", "database_name": "nebula-league-db", "database_id": "1d4b65b3-8db5-4424-b89f-b3af34fe9d74", "migrations_dir": "db/migrations" }],
+  "vars": { "NEBULA_SITE_URL": "https://nebula-league.nightmarefoxy26.workers.dev", "DISCORD_CLIENT_ID": "1531381492930969820", "DISCORD_GUILD_ID": "1090677322157408296", "ADMIN_DISCORD_IDS": "725931972802904115" }
+}

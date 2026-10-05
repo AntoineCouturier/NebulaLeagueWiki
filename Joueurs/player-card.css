@@ -151,16 +151,6 @@ body.player-card-page nav ul li a:hover {
     background: linear-gradient(90deg, transparent, var(--club-primary), transparent);
 }
 
-.pc-hero-glow {
-    position: absolute;
-    top: -40%;
-    right: -10%;
-    width: 320px;
-    height: 320px;
-    background: radial-gradient(circle, var(--club-glow), transparent 70%);
-    pointer-events: none;
-}
-
 .pc-hero-rating {
     grid-row: 1 / 3;
     display: flex;
@@ -169,24 +159,6 @@ body.player-card-page nav ul li a:hover {
     justify-content: center;
     position: relative;
     z-index: 1;
-}
-
-.pc-ovr-badge {
-    width: 96px;
-    height: 96px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(145deg, var(--club-primary), var(--club-secondary));
-    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    box-shadow: 0 0 30px var(--club-glow), inset 0 2px 4px rgba(255, 255, 255, 0.25);
-    animation: ovrPulse 3s ease-in-out infinite;
-}
-
-@keyframes ovrPulse {
-    0%, 100% { box-shadow: 0 0 20px var(--club-glow); }
-    50% { box-shadow: 0 0 40px var(--club-glow), 0 0 60px var(--club-glow); }
 }
 
 .pc-ovr-value {
@@ -215,14 +187,6 @@ body.player-card-page nav ul li a:hover {
     color: var(--club-primary);
     text-transform: uppercase;
     letter-spacing: 0.08em;
-}
-
-.pc-hero-visual {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    position: relative;
-    z-index: 1;
 }
 
 .pc-hero-avatar {
@@ -258,19 +222,6 @@ body.player-card-page nav ul li a:hover {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-}
-
-.pc-hero-position {
-    display: inline-block;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 700;
-    padding: 4px 12px;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid var(--club-primary);
-    color: var(--club-primary);
-    letter-spacing: 0.1em;
 }
 
 .pc-hero-meta {
@@ -471,13 +422,6 @@ body.player-card-page nav ul li a:hover {
 .pc-radar-inline-canvas canvas {
     width: 100% !important;
     height: 100% !important;
-}
-
-.pc-stats-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 16px;
-    flex-wrap: wrap;
 }
 
 /* Hide raw FIFA stats paragraphs after enhancement */
@@ -696,17 +640,6 @@ body.player-card-page nav ul li a:hover {
     gap: 8px;
 }
 
-.pc-btn-primary {
-    background: linear-gradient(135deg, var(--club-primary), var(--club-secondary));
-    color: #fff;
-    box-shadow: 0 4px 14px var(--club-glow);
-}
-
-.pc-btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 22px var(--club-glow);
-}
-
 .pc-btn-ghost {
     background: rgba(255, 255, 255, 0.06);
     color: var(--text);
@@ -792,17 +725,6 @@ body.player-card-page nav ul li a:hover {
     background: #0a0a0f;
     color: #fff;
     font-size: 0.9rem;
-}
-
-.popup-stats {
-    text-align: left;
-    margin: 16px 0;
-}
-
-.popup-stats p {
-    margin: 6px 0;
-    padding: 6px 0;
-    border-bottom: 1px solid var(--border);
 }
 
 .close-btn {
@@ -904,7 +826,7 @@ body.player-card-page nav ul li a:hover {
 }
 
 /* Animated role titles */
-.striker, .passer, .defender, .goat, .machinery {
+.striker, .passer, .goat {
     position: relative;
     display: inline-block;
     background-size: 300%;
@@ -915,30 +837,10 @@ body.player-card-page nav ul li a:hover {
 
 .striker { background: linear-gradient(90deg, rgb(255, 96, 96), rgb(255, 0, 0), rgb(197, 0, 0), rgb(135, 0, 0), rgb(91, 0, 0)); }
 .passer { background: linear-gradient(90deg, rgb(96, 117, 255), rgb(0, 8, 255), rgb(0, 39, 197), rgb(0, 18, 135), rgb(0, 12, 91)); }
-.defender { background: linear-gradient(90deg, rgb(96, 255, 112), rgb(34, 255, 0), rgb(0, 197, 7), rgb(31, 135, 0), rgb(21, 91, 0)); }
 .goat { background: linear-gradient(90deg, #ff0000, #ffff00, #2fff00, #00ffee, #0037ff, #9d00ff, #ff00a2); }
-.machinery { background: linear-gradient(90deg, rgb(255, 255, 255), rgb(192, 182, 0), rgb(255, 255, 255), rgb(2, 72, 142)); }
 
 /* Trophy & title colors */
-.puskas { color: #AFAFBB; }
-.goldenshoe { color: #D1B878; }
 .ncl { color: #5C6166; }
-.ballonor { color: #B0913C; }
-
-.crown { background-image: linear-gradient(90deg, #43ff36, #ffea00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.butterfly { background-image: linear-gradient(90deg, #ead7ff, #c879ff, #7a36c9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.metavision { background-image: linear-gradient(90deg, #005cc5, #b5b1ff, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.predator { background-image: linear-gradient(90deg, #c50000, #3d0000, #461818); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.godspeed { background-image: linear-gradient(90deg, #00a4c5, #fff59e, #ff7700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.rainbow { background-image: linear-gradient(90deg, #c50000, #84ff00, #0055c5, #b800c5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-.copycatoffense, .copycatdefense {
-    background: linear-gradient(90deg, #7700ff 0%, #74ffd8 40%, #af1bff 100%);
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shine 3s linear infinite;
-}
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 8px; }
@@ -956,11 +858,6 @@ body.player-card-page nav ul li a:hover {
     .pc-hero-rating {
         grid-row: auto;
         margin-bottom: 8px;
-    }
-
-    .pc-hero-visual {
-        flex-direction: column;
-        justify-content: center;
     }
 
     .pc-hero-meta {
@@ -987,11 +884,6 @@ body.player-card-page nav ul li a:hover {
 
     .pc-hero {
         padding: 20px 16px;
-    }
-
-    .pc-ovr-badge {
-        width: 80px;
-        height: 80px;
     }
 
     .pc-ovr-value {
@@ -1337,125 +1229,9 @@ body.nebula-page.player-card-page .pc-dossier .pc-hero-name {
     width: 215px;
 }
 
-.pc-technical-title-art .trophy-solid {
-    fill: currentColor;
-    opacity: 0.1;
-}
-
 .pc-technical-title-art.ballon-dor-illustration {
     width: 176px;
     opacity: 0.5;
-}
-
-.pc-technical-title-art.ballon-dor-illustration .trophy-halo {
-    opacity: 0.12;
-    stroke-width: 6;
-}
-
-.pc-technical-title-art.ballon-dor-illustration .trophy-facet-main {
-    fill: currentColor;
-    opacity: 0.2;
-    stroke-width: 1.6;
-}
-
-.pc-technical-title-art.ballon-dor-illustration .trophy-facets {
-    opacity: 0.72;
-    stroke-width: 1.1;
-}
-
-.pc-technical-title-art.ballon-dor-illustration .trophy-rock {
-    fill: color-mix(in srgb, var(--title-accent), transparent 88%);
-    stroke-width: 1.5;
-}
-
-.pc-technical-title-art.golden-shoe-illustration {
-    width: 184px;
-    opacity: 0.48;
-}
-
-.pc-technical-title-art.golden-shoe-illustration .shoe-outline {
-    stroke-width: 1.8;
-}
-
-.pc-technical-title-art.golden-shoe-illustration .shoe-panel,
-.pc-technical-title-art.golden-shoe-illustration .shoe-laces {
-    opacity: 0.76;
-}
-
-.pc-technical-title-art.golden-shoe-illustration .shoe-sole {
-    stroke-width: 1.8;
-}
-
-.pc-technical-title-art.ncl-trophy-illustration {
-    width: 180px;
-    opacity: 0.5;
-}
-
-.pc-technical-title-art.ncl-trophy-illustration .cup-rim,
-.pc-technical-title-art.ncl-trophy-illustration .cup-handle {
-    stroke-width: 1.8;
-}
-
-.pc-technical-title-art.ncl-trophy-illustration .cup-body-lines {
-    opacity: 0.78;
-}
-
-.pc-technical-title-art.goat-cosmos-illustration {
-    right: 20px;
-    width: 178px;
-    height: 104px;
-    opacity: 0.5;
-}
-
-.pc-technical-title-art.goat-cosmos-illustration .cosmos-orbit {
-    opacity: 0.34;
-    stroke-width: 1;
-}
-
-.pc-technical-title-art.goat-cosmos-illustration .cosmos-orbit-two {
-    opacity: 0.2;
-    stroke-dasharray: 4 7;
-}
-
-.pc-technical-title-art.goat-cosmos-illustration .cosmos-axis {
-    opacity: 0.08;
-    stroke-dasharray: 2 8;
-}
-
-.pc-technical-title-art.goat-cosmos-illustration .cosmos-core circle:first-child {
-    opacity: 0.16;
-    stroke-width: 5;
-}
-
-.pc-technical-title-art.goat-cosmos-illustration .cosmos-core circle:nth-child(2) {
-    opacity: 0.7;
-    stroke-width: 1.2;
-}
-
-.pc-technical-title-art.goat-cosmos-illustration .cosmos-core path {
-    fill: color-mix(in srgb, var(--title-accent), transparent 86%);
-    stroke-width: 1.4;
-}
-
-.pc-technical-title-art.goat-cosmos-illustration .cosmos-core-dot {
-    fill: currentColor;
-    stroke: none;
-    filter: drop-shadow(0 0 9px currentColor);
-}
-
-.pc-technical-title-art.goat-cosmos-illustration .cosmos-trophy>circle {
-    fill: #090c10;
-    opacity: 0.95;
-    stroke-width: 1.2;
-}
-
-.pc-technical-title-art.goat-cosmos-illustration .cosmos-trophy path {
-    opacity: 0.82;
-    stroke-width: 1.1;
-}
-
-.pc-technical-title-art.goat-cosmos-illustration .cosmos-trophy {
-    filter: drop-shadow(0 0 5px color-mix(in srgb, var(--title-accent), transparent 72%));
 }
 
 .pc-signature-title small {
@@ -1631,18 +1407,10 @@ body.nebula-page.player-card-page .pc-dossier .pc-hero-name {
         width: 110px;
     }
 
-    .pc-technical-title-art.ballon-dor-illustration,
-    .pc-technical-title-art.golden-shoe-illustration,
-    .pc-technical-title-art.ncl-trophy-illustration {
+    .pc-technical-title-art.ballon-dor-illustration {
         right: 4px;
         width: 104px;
         height: 76px;
-    }
-
-    .pc-technical-title-art.goat-cosmos-illustration {
-        right: 4px;
-        width: 100px;
-        height: 80px;
     }
 }
 
@@ -1825,6 +1593,7 @@ body.nebula-page.player-card-page .pc-stats-grid {
 body.nebula-page.player-card-page .pc-stat-bars,
 body.nebula-page.player-card-page .pc-radar-inline,
 body.nebula-page.player-card-page .pc-match-panel.pc-dossier-panel,
+body.nebula-page.player-card-page .pc-value-panel.pc-dossier-panel,
 body.nebula-page.player-card-page .pc-trophies-panel.pc-dossier-panel {
     padding: 0;
     border: 0;
@@ -1922,7 +1691,6 @@ body.nebula-page.player-card-page .pc-stat-bar-fill {
     padding: 18px;
 }
 
-.pc-stats-actions,
 .pc-match-actions {
     margin: 0;
     padding: 17px 20px 20px;
@@ -1944,12 +1712,6 @@ body.nebula-page.player-card-page .pc-btn {
     box-shadow: none !important;
 }
 
-body.nebula-page.player-card-page .pc-btn-primary {
-    border-color: var(--club-primary) !important;
-    background: color-mix(in srgb, var(--club-primary), transparent 90%) !important;
-    color: var(--club-primary) !important;
-}
-
 body.nebula-page.player-card-page .pc-btn:hover {
     border-color: var(--club-primary) !important;
     background: color-mix(in srgb, var(--club-primary), transparent 92%) !important;
@@ -1958,6 +1720,7 @@ body.nebula-page.player-card-page .pc-btn:hover {
 }
 
 body.nebula-page.player-card-page .pc-match-panel.pc-dossier-panel,
+body.nebula-page.player-card-page .pc-value-panel.pc-dossier-panel,
 body.nebula-page.player-card-page .pc-trophies-panel.pc-dossier-panel {
     border: 1px solid var(--pc-line);
 }
@@ -2473,5 +2236,1182 @@ body.nebula-page.player-card-page .pc-titles-empty {
 
     .pc-title-card>b {
         display: none;
+    }
+}
+
+/* ===================== ACTIONS DU DOSSIER ===================== */
+body.nebula-page.player-card-page .pc-hero-actions {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-wrap: wrap;
+    grid-column: 1 / -1;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--pc-line);
+    background: rgba(0, 0, 0, 0.18);
+}
+
+body.nebula-page.player-card-page .pc-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 0 14px;
+    border: 1px solid var(--pc-line) !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    color: #d4dae0 !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+}
+
+body.nebula-page.player-card-page .pc-action span {
+    color: var(--club-primary);
+}
+
+body.nebula-page.player-card-page .pc-action:hover,
+body.nebula-page.player-card-page .pc-action:focus-visible {
+    border-color: var(--club-primary) !important;
+    background: color-mix(in srgb, var(--club-primary), transparent 88%) !important;
+    color: #fff !important;
+    transform: none;
+}
+
+/* ===================== COURBE DE VALEUR ===================== */
+.pc-value-panel {
+    margin-top: 16px;
+}
+
+.pc-value-chart {
+    position: relative;
+    height: 260px;
+    padding: 18px 20px 14px;
+}
+
+.pc-value-empty {
+    display: grid;
+    gap: 6px;
+    padding: 28px 22px;
+}
+
+.pc-value-empty strong {
+    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.6rem;
+}
+
+.pc-value-empty p {
+    margin: 0;
+    color: #89939e;
+    font-size: 0.85rem;
+}
+
+@media (max-width: 720px) {
+    body.nebula-page.player-card-page .pc-hero-actions {
+        padding: 12px;
+    }
+
+    body.nebula-page.player-card-page .pc-action {
+        flex: 1;
+        justify-content: center;
+        padding: 0 8px;
+    }
+
+    .pc-value-chart {
+        height: 220px;
+        padding: 14px 10px 10px;
+    }
+}
+
+/* ===================== ILLUSTRATIONS ANIMÉES ===================== */
+/* Dessins générés par getTechnicalTitleIllustration (player-card.js). */
+
+.pc-technical-title-art {
+    opacity: 0.6;
+    animation: pc-art-reveal 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.pc-technical-title-art.ballon-dor-illustration {
+    opacity: 0.72;
+}
+
+/* Les éléments animés tournent ou grandissent autour de leur propre centre. */
+.pc-technical-title-art :is(.art-float, .ncl-sway, .art-sparkle, .df-ring, .df-crown, .pass-receiver,
+    .bf-ball, .bf-defender, .bf-dust, .pd-scope, .pd-pupil, .pd-lock, .goal-target, .sp-ball, .sp-rush,
+    .vision-ring, .vs-blip, .mc-core, .mc-heart, .mc-node, .cosmos-core, .cosmos-upright) {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+@keyframes pc-art-reveal {
+    from {
+        clip-path: inset(0 0 0 100%);
+        opacity: 0;
+    }
+
+    to {
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+/* ---------- Motifs partagés ---------- */
+.pc-technical-title-art .art-flow {
+    animation: pc-art-flow 1.4s linear infinite;
+}
+
+.pc-technical-title-art .art-flow-slow {
+    animation-duration: 2.4s;
+}
+
+.pc-technical-title-art .art-flow-fast {
+    animation-duration: 0.7s;
+}
+
+@keyframes pc-art-flow {
+    to {
+        stroke-dashoffset: -20;
+    }
+}
+
+@keyframes pc-art-float {
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+.pc-technical-title-art .art-shine {
+    stroke: none;
+    animation: pc-art-shine 3.6s ease-in-out infinite;
+}
+
+@keyframes pc-art-shine {
+    0%,
+    35% {
+        transform: translateX(0);
+    }
+
+    70%,
+    100% {
+        transform: translateX(110px);
+    }
+}
+
+.pc-technical-title-art .art-sparkle {
+    fill: currentColor;
+    stroke: none;
+    opacity: 0;
+    animation: pc-art-twinkle 2.8s ease-in-out infinite;
+}
+
+.pc-technical-title-art .art-sparkle-2 {
+    animation-delay: 0.7s;
+}
+
+.pc-technical-title-art .art-sparkle-3 {
+    animation-delay: 1.4s;
+}
+
+.pc-technical-title-art .art-sparkle-4 {
+    animation-delay: 2.1s;
+}
+
+@keyframes pc-art-twinkle {
+    0%,
+    100% {
+        opacity: 0;
+        transform: scale(0.3) rotate(0deg);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1) rotate(45deg);
+    }
+}
+
+/* ---------- Butterfly Dribbling : les ailes battent ---------- */
+
+.pc-technical-title-art .bf-ball {
+    animation: pc-bf-bob 1.5s ease-in-out infinite;
+}
+
+@keyframes pc-bf-bob {
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+.pc-technical-title-art .bf-defender {
+    animation: pc-bf-defender 3s ease-in-out infinite;
+}
+
+.pc-technical-title-art .bf-defender-right {
+    animation-delay: 1.5s;
+}
+
+@keyframes pc-bf-defender {
+    50% {
+        opacity: 0.35;
+        transform: translateY(4px);
+    }
+}
+
+/* ---------- Predator Eyes : la cible se verrouille, tir ---------- */
+
+@keyframes pc-pd-scope {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    50%,
+    100% {
+        transform: rotate(90deg);
+    }
+}
+
+.pc-technical-title-art .pd-lock {
+    opacity: 0;
+    stroke-width: 1.8;
+    animation: pc-pd-lock 2.8s ease-out infinite;
+}
+
+@keyframes pc-pd-lock {
+    0%,
+    25% {
+        opacity: 0;
+        transform: scale(1.8);
+    }
+
+    45%,
+    72% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    90%,
+    100% {
+        opacity: 0;
+        transform: scale(1);
+    }
+}
+
+.pc-technical-title-art.predator-illustration .goal-target {
+    animation: pc-pd-impact 2.8s ease-out infinite;
+}
+
+@keyframes pc-pd-impact {
+    0%,
+    70% {
+        opacity: 0.24;
+        transform: scale(1);
+    }
+
+    74% {
+        opacity: 0.95;
+        transform: scale(1.25);
+    }
+
+    100% {
+        opacity: 0.24;
+        transform: scale(1);
+    }
+}
+
+/* ---------- Passes : le ballon voyage, les receveurs s'allument ---------- */
+
+/* ---------- Défense : le ballon rebondit, le bouclier émet une onde ---------- */
+
+@keyframes pc-df-ring {
+    0%,
+    36% {
+        opacity: 0;
+        transform: scale(1);
+    }
+
+    40% {
+        opacity: 0.8;
+    }
+
+    75%,
+    100% {
+        opacity: 0;
+        transform: scale(1.35);
+    }
+}
+
+/* ---------- Offense : les flèches foncent, le ballon tourne ---------- */
+
+@keyframes pc-art-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.pc-technical-title-art .glyph-speed-ticks {
+    animation: pc-art-blink 0.6s steps(2) infinite;
+}
+
+@keyframes pc-art-blink {
+    50% {
+        opacity: 0.25;
+    }
+}
+
+/* ---------- Positionnement : radar qui balaie ---------- */
+
+.pc-technical-title-art .vision-ring-outer {
+    animation: pc-art-spin 14s linear infinite;
+}
+
+.pc-technical-title-art .vision-ring-middle {
+    animation: pc-art-spin 10s linear infinite reverse;
+}
+
+.pc-technical-title-art .vision-ring-inner {
+    animation: pc-art-spin 6s linear infinite;
+}
+
+@keyframes pc-art-pulse {
+    50% {
+        transform: scale(1.35);
+        opacity: 0.7;
+    }
+}
+
+/* ---------- Machinery : le noyau tourne, les nœuds s'allument ---------- */
+
+/* ---------- Trophée NCL : légère oscillation ---------- */
+
+/* ---------- GOAT : le cosmos tourne ---------- */
+
+.pc-technical-title-art .cosmos-core {
+    animation: pc-art-pulse 3s ease-in-out infinite;
+}
+
+/* ---------- Accessibilité ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .pc-technical-title-art,
+    .pc-technical-title-art * {
+        animation: none !important;
+    }
+
+    .pc-technical-title-art :is(.art-sparkle, .bf-dust, .vs-blip, .pd-lock, .df-ring) {
+        opacity: 0;
+    }
+}
+
+/* ===================== STYLE BLUEPRINT / HOLOGRAMME ===================== */
+/* Dessins `.bp-art` : traits fins, construction, annotations, balayage. */
+
+.pc-technical-title-art.bp-art {
+    opacity: 0.85;
+}
+
+.bp-art .bp-body {
+    animation: bp-flicker 7s linear infinite 1.2s;
+}
+
+.bp-art .bp-fine {
+    stroke-width: 0.8;
+}
+
+.bp-art .bp-dash {
+    stroke-dasharray: 2 3;
+}
+
+.bp-art .bp-faint {
+    opacity: 0.4;
+}
+
+.bp-art .bp-fill {
+    fill: currentColor;
+    fill-opacity: 0.08;
+    stroke: none;
+}
+
+.bp-art .bp-solid {
+    fill: currentColor;
+    stroke: none;
+}
+
+.bp-art .bp-frame {
+    stroke-width: 1.1;
+    opacity: 0.75;
+}
+
+.bp-art .bp-label {
+    fill: currentColor;
+    stroke: none;
+    font-family: 'Courier New', monospace;
+    font-size: 5.5px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    opacity: 0.7;
+}
+
+.bp-art .bp-scan {
+    fill: currentColor;
+    stroke: none;
+    opacity: 0;
+    animation: bp-scan 3.4s linear infinite;
+}
+
+@keyframes bp-scan {
+    0% {
+        opacity: 0;
+        transform: translateY(0);
+    }
+
+    10%,
+    85% {
+        opacity: 0.22;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(var(--bp-scan-height, 90px));
+    }
+}
+
+@keyframes bp-flicker {
+    0%,
+    91%,
+    94%,
+    100% {
+        opacity: 1;
+    }
+
+    92% {
+        opacity: 0.35;
+    }
+
+    93% {
+        opacity: 0.85;
+    }
+}
+
+/* ---------- Ballon d'Or ---------- */
+.bp-art .bdo-rays {
+    transform-box: view-box;
+    transform-origin: 80px 34px;
+    animation: bdo-rays 6s ease-in-out infinite;
+}
+
+@keyframes bdo-rays {
+    0%,
+    100% {
+        transform: rotate(-7deg);
+        opacity: 0.55;
+    }
+
+    50% {
+        transform: rotate(7deg);
+        opacity: 1;
+    }
+}
+
+.bp-art .bdo-facets {
+    transform-box: view-box;
+    transform-origin: 80px 34px;
+    animation: pc-art-spin 26s linear infinite;
+}
+
+/* ---------- Butterfly Dribbling : le ballon trace le papillon ---------- */
+.bp-art .bf-trace {
+    stroke-width: 1.7;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: bf-trace 4.4s linear infinite;
+}
+
+@keyframes bf-trace {
+    0% {
+        stroke-dashoffset: 1;
+        opacity: 1;
+    }
+
+    75% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+        opacity: 0.2;
+    }
+}
+
+.bp-art .bf-body {
+    stroke-width: 1.4;
+}
+
+.bp-art .bp-defender {
+    stroke-width: 1.4;
+}
+
+.bp-art .bf-ball {
+    filter: drop-shadow(0 0 3px currentColor);
+}
+
+/* ---------- Predator Eyes ---------- */
+.bp-art .pd-bezel,
+.bp-art .pd-slit,
+.bp-art .pd-target,
+.bp-art .pd-lock {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.bp-art .pd-bezel {
+    animation: pc-pd-scope 2.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+.bp-art .pd-slit {
+    animation: pd-slit 2.8s ease-in-out infinite;
+}
+
+@keyframes pd-slit {
+    0%,
+    30% {
+        transform: scaleX(1);
+    }
+
+    45%,
+    65% {
+        transform: scaleX(0.3);
+    }
+
+    85%,
+    100% {
+        transform: scaleX(1);
+    }
+}
+
+.bp-art .pd-target {
+    animation: pc-pd-impact 2.8s ease-out infinite;
+}
+
+.bp-art .pd-lock {
+    opacity: 0;
+    stroke-width: 1.3;
+    animation: pc-pd-lock 2.8s ease-out infinite;
+}
+
+.bp-art .pd-reflection {
+    animation: pc-art-blink 2.8s steps(2) infinite;
+}
+
+.bp-art .pd-shot {
+    filter: drop-shadow(0 0 3px currentColor);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bp-art .bp-scan,
+    .bp-art .pd-lock {
+        opacity: 0;
+    }
+
+    .bp-art .bf-trace {
+        stroke-dashoffset: 0;
+    }
+}
+
+.bp-art .bf-ball {
+    animation: none;
+}
+
+/* ---------- Blueprint : éléments qui tournent ou grandissent sur eux-mêmes ---------- */
+.bp-art :is(.wall-ring, .wall-ball, .pass-rose, .pass-node, .speed-ball, .board-piece,
+    .engine-gear, .engine-core, .goat-star) {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+/* ---------- Soulier d'Or : la chaussure ailée ---------- */
+
+/* ---------- Trophée NCL : étoiles en orbite ---------- */
+.bp-art .ncl-orbit-star {
+    filter: drop-shadow(0 0 2px currentColor);
+}
+
+/* ---------- GOAT : constellation ---------- */
+
+/* ---------- Défense : le rempart encaisse ---------- */
+.bp-art .wall-ring {
+    opacity: 0;
+    animation: pc-df-ring 2.8s ease-out infinite;
+}
+
+.bp-art .wall-crack {
+    stroke-width: 1.1;
+    animation: wall-crack 2.8s ease-out infinite;
+}
+
+@keyframes wall-crack {
+    0%,
+    36%,
+    70%,
+    100% {
+        opacity: 0.55;
+    }
+
+    40% {
+        opacity: 1;
+        stroke-width: 2.2;
+    }
+}
+
+.bp-art .wall-impact {
+    opacity: 0;
+    animation: wall-impact 2.8s ease-out infinite;
+}
+
+@keyframes wall-impact {
+    0%,
+    36%,
+    60%,
+    100% {
+        opacity: 0;
+    }
+
+    40% {
+        opacity: 1;
+    }
+}
+
+.bp-art .wall-ball {
+    animation: wall-squash 2.8s ease-out infinite;
+}
+
+@keyframes wall-squash {
+    0%,
+    34%,
+    50%,
+    100% {
+        transform: scale(1);
+    }
+
+    38% {
+        transform: scale(0.72, 1.18);
+    }
+}
+
+/* ---------- Passes : le triangle se trace ---------- */
+.bp-art .pass-line {
+    stroke-width: 1.6;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: pass-line 3.6s linear infinite;
+}
+
+@keyframes pass-line {
+    0% {
+        stroke-dashoffset: 1;
+        opacity: 1;
+    }
+
+    91% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+        opacity: 0.2;
+    }
+}
+
+.bp-art .pass-rose {
+    animation: pc-art-spin 36s linear infinite;
+}
+
+.bp-art .pass-node {
+    animation: pass-node-2 3.6s ease-out infinite;
+}
+
+.bp-art .pass-node-1 {
+    animation-name: pass-node-1;
+}
+
+.bp-art .pass-node-3 {
+    animation-name: pass-node-3;
+}
+
+@keyframes pass-node-1 {
+    0%,
+    6%,
+    88%,
+    100% {
+        fill: currentColor;
+    }
+
+    12%,
+    85% {
+        fill: #090c10;
+    }
+}
+
+@keyframes pass-node-2 {
+    0%,
+    22%,
+    40%,
+    100% {
+        fill: #090c10;
+        transform: scale(1);
+    }
+
+    26% {
+        fill: currentColor;
+        transform: scale(1.4);
+    }
+}
+
+@keyframes pass-node-3 {
+    0%,
+    55%,
+    74%,
+    100% {
+        fill: #090c10;
+        transform: scale(1);
+    }
+
+    59% {
+        fill: currentColor;
+        transform: scale(1.4);
+    }
+}
+
+.bp-art .pass-runner {
+    filter: drop-shadow(0 0 3px currentColor);
+}
+
+/* ---------- Offense : chronophotographie ---------- */
+.bp-art .speed-ghost {
+    stroke-width: 0.9;
+    stroke-dasharray: 3 3;
+    opacity: 0;
+    animation: speed-ghost 1.2s linear infinite;
+}
+
+.bp-art .speed-ghost-2 {
+    animation-delay: 0.1s;
+}
+
+.bp-art .speed-ghost-3 {
+    animation-delay: 0.2s;
+}
+
+.bp-art .speed-ghost-4 {
+    animation-delay: 0.3s;
+}
+
+@keyframes speed-ghost {
+    0% {
+        opacity: 0;
+    }
+
+    15% {
+        opacity: 0.65;
+    }
+
+    60%,
+    100% {
+        opacity: 0.08;
+    }
+}
+
+.bp-art .speed-ball {
+    animation: pc-art-spin 0.9s linear infinite;
+}
+
+.bp-art .speed-bolt-line {
+    stroke-width: 1.4;
+    animation: speed-bolt 2.4s steps(1) infinite;
+}
+
+.bp-art .speed-bolt {
+    animation: speed-bolt-fill 2.4s steps(1) infinite;
+}
+
+@keyframes speed-bolt {
+    0%,
+    100% {
+        opacity: 0.9;
+    }
+
+    40% {
+        opacity: 0.3;
+    }
+
+    44% {
+        opacity: 1;
+    }
+
+    48% {
+        opacity: 0.4;
+    }
+
+    52% {
+        opacity: 1;
+    }
+}
+
+@keyframes speed-bolt-fill {
+    0%,
+    100% {
+        fill-opacity: 0.08;
+    }
+
+    44%,
+    52% {
+        fill-opacity: 0.45;
+    }
+}
+
+/* ---------- Positionnement : la bonne case ---------- */
+.bp-art .board-cell {
+    animation: board-cell 2.4s ease-in-out infinite;
+}
+
+@keyframes board-cell {
+    0%,
+    100% {
+        opacity: 0.15;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.bp-art .board-cell-ring {
+    stroke-width: 1.4;
+}
+
+.bp-art .board-piece {
+    animation: pc-art-float 2.4s ease-in-out infinite;
+    filter: drop-shadow(0 0 3px currentColor);
+}
+
+/* ---------- Global : le moteur ---------- */
+.pc-technical-title-art.bp-engine-illustration {
+    width: 215px;
+}
+
+.bp-art .engine-gear-main {
+    animation: pc-art-spin 20s linear infinite;
+}
+
+.bp-art .engine-gear-small {
+    animation: pc-art-spin 11.4s linear infinite reverse;
+}
+
+.bp-art .engine-core {
+    animation: pc-art-pulse 1.6s ease-in-out infinite;
+    filter: drop-shadow(0 0 4px currentColor);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bp-art .pass-line {
+        stroke-dashoffset: 0;
+    }
+
+    .bp-art :is(.wall-ring, .wall-impact) {
+        opacity: 0;
+    }
+
+    .bp-art .speed-ghost {
+        opacity: 0.3;
+    }
+}
+
+/* ---------- Soulier d'Or : le trophée sur son présentoir ---------- */
+.bp-art .boot-plaque {
+    font-size: 4.3px;
+    letter-spacing: 0.3px;
+}
+
+.bp-art .boot-turn {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: boot-turn 6s ease-in-out infinite;
+}
+
+@keyframes boot-turn {
+    0%,
+    100% {
+        transform: scaleX(1) skewY(0deg);
+    }
+
+    25% {
+        transform: scaleX(0.82) skewY(-3deg);
+    }
+
+    50% {
+        transform: scaleX(1) skewY(0deg);
+    }
+
+    75% {
+        transform: scaleX(0.9) skewY(2deg);
+    }
+}
+
+.bp-art .boot-turntable {
+    animation: pc-art-flow 3s linear infinite;
+}
+
+/* ---------- GOAT : la couronne absolue ---------- */
+.bp-art .crown-halo {
+    transform-box: view-box;
+    transform-origin: 80px 44px;
+    animation: pc-art-spin 40s linear infinite;
+}
+
+.bp-art .crown-trophy-disc {
+    fill: currentColor;
+    fill-opacity: 0;
+    stroke-width: 0.9;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: crown-trophy 5s ease-out infinite;
+}
+
+.bp-art .crown-trophy-2 .crown-trophy-disc {
+    animation-delay: 0.45s;
+}
+
+.bp-art .crown-trophy-3 .crown-trophy-disc {
+    animation-delay: 0.9s;
+}
+
+.bp-art .crown-trophy-4 .crown-trophy-disc {
+    animation-delay: 1.35s;
+}
+
+.bp-art .crown-trophy-5 .crown-trophy-disc {
+    animation-delay: 1.8s;
+}
+
+@keyframes crown-trophy {
+    0% {
+        fill-opacity: 0;
+        transform: scale(1);
+    }
+
+    6% {
+        fill-opacity: 0.55;
+        transform: scale(1.3);
+    }
+
+    12%,
+    72% {
+        fill-opacity: 0.3;
+        transform: scale(1);
+    }
+
+    85%,
+    100% {
+        fill-opacity: 0;
+        transform: scale(1);
+    }
+}
+
+.bp-art .crown-glow {
+    animation: crown-glow 5s ease-in-out infinite;
+}
+
+@keyframes crown-glow {
+    0%,
+    45%,
+    85%,
+    100% {
+        fill-opacity: 0.08;
+    }
+
+    58%,
+    72% {
+        fill-opacity: 0.32;
+    }
+}
+
+/* ---------- Titres de carrière et de valeur ---------- */
+.bp-art .bp-counter-value {
+    fill: currentColor;
+    stroke: none;
+    font-family: 'Courier New', monospace;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+}
+
+.bp-art :is(.goals-ball, .assist-node, .slalom-cone, .value-coin) {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+/* Buts : les ballons tombent dans les filets un par un */
+.bp-art .goals-ball {
+    opacity: 0;
+    animation: goals-ball 3.6s ease-out infinite;
+}
+
+.bp-art .goals-ball-1 { animation-delay: 0.3s; }
+.bp-art .goals-ball-2 { animation-delay: 0.6s; }
+.bp-art .goals-ball-3 { animation-delay: 0.9s; }
+.bp-art .goals-ball-4 { animation-delay: 1.2s; }
+.bp-art .goals-ball-5 { animation-delay: 1.5s; }
+
+@keyframes goals-ball {
+    0% {
+        opacity: 0;
+        transform: scale(2.2);
+    }
+
+    10%,
+    80% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.bp-art .goals-net {
+    animation: goals-net 3.6s ease-out infinite;
+}
+
+@keyframes goals-net {
+    0%,
+    70%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    80% {
+        transform: translate(0.8px, 0.6px);
+    }
+}
+
+/* Passes décisives : le relais s'allume */
+.bp-art .assist-node {
+    animation: assist-node 3s ease-out infinite;
+}
+
+.bp-art .assist-node-2 { animation-delay: 0.75s; }
+.bp-art .assist-node-3 { animation-delay: 1.5s; }
+.bp-art .assist-node-4 { animation-delay: 2.25s; }
+
+@keyframes assist-node {
+    0%,
+    100% {
+        fill: #090c10;
+        transform: scale(1);
+    }
+
+    6% {
+        fill: currentColor;
+        transform: scale(1.35);
+    }
+
+    25% {
+        fill: #090c10;
+        transform: scale(1);
+    }
+}
+
+.bp-art .assist-pulse {
+    filter: drop-shadow(0 0 3px currentColor);
+}
+
+/* Sauvetages : le bastion se construit, le ballon rebondit */
+.bp-art .wallrow {
+    animation: wallrow 4s ease-out infinite;
+}
+
+.bp-art .wallrow-2 { animation-delay: 0.15s; }
+.bp-art .wallrow-3 { animation-delay: 0.3s; }
+.bp-art .wallrow-4 { animation-delay: 0.45s; }
+.bp-art .wallrow-5 { animation-delay: 0.6s; }
+
+@keyframes wallrow {
+    0% {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    10%,
+    90% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Dribbles : les plots vacillent au passage du ballon */
+.bp-art .slalom-cone {
+    transform-origin: 50% 100%;
+    animation: slalom-cone 3.2s ease-in-out infinite;
+}
+
+.bp-art .slalom-cone-2 { animation-delay: 0.6s; }
+.bp-art .slalom-cone-3 { animation-delay: 1.2s; }
+.bp-art .slalom-cone-4 { animation-delay: 1.8s; }
+.bp-art .slalom-cone-5 { animation-delay: 2.4s; }
+
+@keyframes slalom-cone {
+    0%,
+    20%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    8% {
+        transform: rotate(-12deg);
+    }
+
+    14% {
+        transform: rotate(6deg);
+    }
+}
+
+.bp-art .slalom-ball {
+    filter: drop-shadow(0 0 3px currentColor);
+}
+
+/* Valeur : la pièce tourne, les piles montent */
+.bp-art .value-coin {
+    animation: value-coin 2.4s ease-in-out infinite;
+}
+
+@keyframes value-coin {
+    0%,
+    100% {
+        transform: scaleX(1);
+    }
+
+    50% {
+        transform: scaleX(0.12);
+    }
+}
+
+.bp-art .coin-stack {
+    animation: wallrow 4.5s ease-out infinite;
+}
+
+.bp-art .coin-stack-2 { animation-delay: 0.25s; }
+.bp-art .coin-stack-3 { animation-delay: 0.5s; }
+
+@media (prefers-reduced-motion: reduce) {
+    .bp-art .goals-ball {
+        opacity: 1;
     }
 }

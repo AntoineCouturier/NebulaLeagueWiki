@@ -1053,7 +1053,7 @@ body.nebula-page.h2h-page .h2h-entity-card.is-selected {
 .h2h-history-row {
     min-height: 92px;
     display: grid;
-    grid-template-columns: 90px minmax(190px, 0.8fr) minmax(360px, 1.3fr) 100px;
+    grid-template-columns: 90px minmax(190px, 0.72fr) minmax(360px, 1.3fr) minmax(150px, 0.55fr);
     align-items: center;
     border-bottom: 1px solid var(--h2h-line);
 }
@@ -1105,6 +1105,11 @@ body.nebula-page.h2h-page .h2h-entity-card.is-selected {
     font: 600 0.57rem/1.3 "Orbitron", sans-serif;
 }
 
+.h2h-history-score span.is-winner {
+    color: var(--h2h-acid);
+    text-shadow: 0 0 14px rgba(173, 255, 47, 0.28);
+}
+
 .h2h-history-score strong {
     margin: 0 !important;
     color: #fff !important;
@@ -1116,6 +1121,41 @@ body.nebula-page.h2h-page .h2h-entity-card.is-selected {
     font: 600 0.48rem/1 "Orbitron", sans-serif;
     font-style: normal;
     text-align: center;
+}
+
+.h2h-history-verdict {
+    align-self: stretch;
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 7px;
+    background: linear-gradient(90deg, rgba(173, 255, 47, 0.075), transparent 78%);
+}
+
+.h2h-history-verdict small {
+    color: var(--h2h-acid);
+    font-size: 0.43rem;
+    letter-spacing: 0.14em;
+}
+
+.h2h-history-verdict > strong {
+    max-width: 100%;
+    margin: 0 !important;
+    overflow: hidden;
+    color: #f4f8f0 !important;
+    font-size: 0.62rem !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.h2h-history-verdict.is-draw {
+    background: linear-gradient(90deg, rgba(99, 231, 255, 0.07), transparent 78%);
+}
+
+.h2h-history-verdict.is-draw small {
+    color: var(--h2h-cyan);
 }
 
 .h2h-history-row.player-history {
@@ -1363,6 +1403,11 @@ body.nebula-page.h2h-page .h2h-entity-card.is-selected {
     .h2h-history-row > em {
         padding: 0 20px;
         text-align: left;
+    }
+
+    .h2h-history-verdict {
+        min-height: 58px;
+        padding: 11px 20px !important;
     }
 }
 

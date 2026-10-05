@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <span class="player-file-status"><i></i>${status}</span>
                     </div>
                     <div class="player-card-visual">
-                        <img class="player-avatar" src="${player.avatar}" alt="${player.name}" loading="lazy" decoding="async">
+                        <img class="player-avatar" src="${player.avatar}" alt="${player.name}" style="view-transition-name: player-portrait-${player.name.toLowerCase().replace(/[^a-z0-9]/g, "")}" loading="lazy" decoding="async">
                         ${logo ? `<img src="${logo}" class="card-club-badge" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">` : ""}
                         <span class="position-pill">${player.position}</span>
                         <span class="player-index" aria-hidden="true">${playerNumber}</span>

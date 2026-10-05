@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+    <title>Démo — Tous les titres</title>
+    <link rel="stylesheet" href="../player-card.css">
+    <link rel="stylesheet" href="../../CSS/colors.css">
+    <link rel="stylesheet" href="../../CSS/hamburger.css">
+    <link rel="stylesheet" href="../../CSS/global-theme.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../../CSS/responsive.css">
+</head>
+
+<!-- Fiche de démonstration : un joueur fictif avec tous les titres (voir demo-setup.js).
+     Visible uniquement en local avec pnpm dev, jamais publiée en ligne. -->
+<body class="nebula-page">
+
+    <header class="site-header">
+        <a class="brand" href="../../index.html" aria-label="Nebula League, accueil">
+            <span class="brand-mark"><span></span></span>
+            <span class="brand-copy"><strong>NEBULA</strong><small>LEAGUE // DATABASE</small></span>
+        </a>
+        <nav class="main-nav" aria-label="Navigation principale">
+            <a href="../../index.html">Accueil</a>
+            <a href="../../title.html">Titres</a>
+            <a href="../../club.html">Clubs</a>
+            <a class="nav-active" href="../../players.html" aria-current="page">Joueurs</a>
+            <a href="../../matchs.html">Matchs</a>
+            <a href="../../saison.html">Saisons</a>
+            <a href="../../fixtures.html">Calendrier</a>
+            <a href="../../headtohead.html">Face à Face</a>
+            <a href="../../valeur.html">Valeurs</a>
+            <a href="../../rules.html">Règles</a>
+            <a href="../../stats.html">Records</a>
+            <a href="../../progression.html">Progression</a>
+            <a href="../../dream-team.html">Équipes Idéales</a>
+        </nav>
+        <div class="header-actions">
+            <span class="live-pill"><i></i> SAISON 01</span>
+            <button class="menu-button" type="button" aria-label="Ouvrir le menu"
+                aria-expanded="false"><span></span><span></span></button>
+        </div>
+    </header>
+
+    <!-- -------------------- Carte Joueur -------------------- -->
+    <div class="player-card-wrapper">
+
+        <!-- Carte principale -->
+        <div class="player-card-main">
+            <div class="player-header-bastard">
+                <img loading="lazy" src="../../images/icons/kaiser.webp" alt="Demo">
+                <h2>Demo</h2>
+            </div>
+
+            <div class="player-club-logo-bastard">
+                <img loading="lazy" src="../../images/clubs_icon/Bastard_Munchen.webp" alt="Logo Bastard München">
+            </div>
+
+            <div class="player-info">
+                <p><strong class="info-bastard">Pseudo :</strong> Demo</p>
+                <p><strong class="info-bastard">Club :</strong> Bastard München</p>
+                <p><strong class="info-bastard">Position :</strong> CF</p>
+                <p><strong class="info-bastard">Personnage :</strong> Kaiser</p>
+                <p><strong class="info-bastard">Valeur :</strong> 1 500 000 000 ¥</p>
+            </div>
+        </div>
+
+        <!-- Cube Stats techniques -->
+        <div class="player-card-fifa-stats">
+            <h3>Stats techniques</h3>
+            <p><strong class="stats">🛡️ Defense :</strong> 100 | <span class="z">Z</span></p>
+            <p><strong class="stats">⭐ Passe :</strong> 100 | <span class="z">Z</span></p>
+            <p><strong class="stats">🌟 Dribble :</strong> 100 | <span class="z">Z</span></p>
+            <p><strong class="stats">⚽ Tir :</strong> 100 | <span class="z">Z</span></p>
+            <p><strong class="stats">💥 Offense :</strong> 100 | <span class="z">Z</span></p>
+            <p><strong class="stats">👋 Positionement :</strong> 100 | <span class="z">Z</span></p>
+            <p><strong class="stats">👤 Global :</strong> 100 | <span class="z">Z</span></p>
+            <button class="radar-btn bastard-season" id="openRadarPopup">
+                📊 Voir graphique radar
+            </button>
+        </div>
+
+        <!-- Cube Stats matchs (recalculées depuis les matchs par player-card.js) -->
+        <div class="player-card-match-stats">
+            <h3>Stats de Matchs Total</h3>
+        </div>
+
+        <!-- Cube Titres / Trophées (trophées calculés depuis les saisons) -->
+        <div class="player-card-trophies">
+            <h3>Titres</h3>
+            <ul>
+                <li><strong>Titre manuel de démonstration</strong></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- POPUP RADAR AGRANDI -->
+    <div class="popup-overlay" id="popupRadar">
+        <div class="popup-box bastard-box" id="radarPopupBox">
+            <h2>📊 Graphique Radar - Demo</h2>
+
+            <div class="radar-container">
+                <canvas id="skillsRadarChart"></canvas>
+            </div>
+
+            <div class="radar-info" style="text-align: center; margin: 20px 0;">
+                <p style="color: #fff; font-size: 1.1rem; margin-bottom: 5px;">
+                    <strong>Note Globale : 100 | <span class="z">Z</span></strong>
+                </p>
+                <p style="color: #aaa; font-size: 0.9rem;">
+                    Statistiques techniques
+                </p>
+            </div>
+
+            <button class="close-btn" id="closeRadarPopup">Fermer</button>
+        </div>
+    </div>
+
+    <script src="../../JavaScript/nebula-data.js"></script>
+    <script src="demo-setup.js"></script>
+    <script src="../player-card.js"></script>
+    <script src="../../JavaScript/hamburger.js"></script>
+</body>
+
+</html>

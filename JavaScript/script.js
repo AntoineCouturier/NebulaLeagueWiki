@@ -28,22 +28,39 @@ document.addEventListener("DOMContentLoaded", () => {
     const revealItems = [...document.querySelectorAll(".reveal")];
     document.body.classList.add("reveal-ready");
 
+    // Une fois l'apparition terminée, on retire la classe .reveal pour que
+    // l'élément retrouve ses propres transitions (survol des cartes, etc.).
+    function finishReveal(item) {
+        item.classList.remove("reveal", "is-visible");
+        item.style.transitionDelay = "";
+    }
+
     if ("IntersectionObserver" in window) {
         const observer = new IntersectionObserver((entries, currentObserver) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-                entry.target.classList.add("is-visible");
-                currentObserver.unobserve(entry.target);
-            });
+            // Décalage en cascade uniquement entre les éléments qui entrent
+            // ensemble à l'écran, dans leur ordre visuel.
+            entries
+                .filter(entry => entry.isIntersecting)
+                .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top
+                    || a.boundingClientRect.left - b.boundingClientRect.left)
+                .forEach((entry, index) => {
+                    const item = entry.target;
+                    item.style.transitionDelay = `${Math.min(index, 3) * 60}ms`;
+                    item.classList.add("is-visible");
+                    const onEnd = event => {
+                        if (event.target !== item || event.propertyName !== "opacity") return;
+                        item.removeEventListener("transitionend", onEnd);
+                        finishReveal(item);
+                    };
+                    item.addEventListener("transitionend", onEnd);
+                    currentObserver.unobserve(item);
+                });
         }, {
-            rootMargin: "0px 0px -8% 0px",
-            threshold: 0.12
+            rootMargin: "0px 0px 8% 0px",
+            threshold: 0
         });
 
-        revealItems.forEach((item, index) => {
-            item.style.transitionDelay = `${Math.min(index % 4, 3) * 70}ms`;
-            observer.observe(item);
-        });
+        revealItems.forEach(item => observer.observe(item));
     } else {
         revealItems.forEach(item => item.classList.add("is-visible"));
     }

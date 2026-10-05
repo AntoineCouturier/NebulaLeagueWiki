@@ -1,0 +1,22 @@
+{
+  "name": "nebula-league",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/dev.mjs",
+    "test": "node --test Tests/*.test.mjs",
+    "deploy": "node scripts/deploy.mjs",
+    "images": "node scripts/optimize-images.mjs",
+    "meta": "node scripts/meta.mjs",
+    "joueurs": "node scripts/players.mjs"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.5",
+    "wrangler": "4.92.0"
+  }
+}

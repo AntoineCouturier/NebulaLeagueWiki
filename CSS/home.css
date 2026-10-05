@@ -558,96 +558,6 @@ body.home-page .home-hero::after {
 
 /* -------------------- Club signal -------------------- */
 
-.club-signal {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: stretch;
-  min-height: 112px;
-  border-bottom: 1px solid var(--line);
-  background: rgba(6, 9, 13, 0.86);
-}
-
-.club-signal > p,
-.club-signal-link {
-  display: flex;
-  align-items: center;
-  margin: 0;
-  padding: 0 3vw;
-  font-family: var(--mono);
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  white-space: nowrap;
-  text-transform: uppercase;
-}
-
-.club-signal > p {
-  gap: 9px;
-  border-right: 1px solid var(--line);
-  color: #717b85;
-}
-
-.club-signal > p span {
-  color: var(--home-acid);
-}
-
-.club-signal-list {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-}
-
-.club-signal-list a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  min-width: 0;
-  padding: 16px 13px;
-  border-right: 1px solid var(--line);
-  color: #929ba4;
-  font-family: var(--mono);
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  transition:
-    background 170ms ease,
-    color 170ms ease;
-}
-
-.club-signal-list a:hover {
-  background: rgba(255, 255, 255, 0.03);
-  color: #fff;
-}
-
-.club-signal-list img {
-  width: 34px;
-  height: 34px;
-  object-fit: contain;
-  filter: grayscale(1);
-  opacity: 0.7;
-  transition:
-    filter 170ms ease,
-    opacity 170ms ease,
-    transform 170ms ease;
-}
-
-.club-signal-list a:hover img {
-  filter: grayscale(0);
-  opacity: 1;
-  transform: scale(1.08);
-}
-
-.club-signal-link {
-  justify-content: space-between;
-  gap: 18px;
-  color: #afb6bd !important;
-}
-
-.club-signal-link:hover {
-  color: var(--home-acid) !important;
-}
-
 /* -------------------- Directory -------------------- */
 
 .home-directory {
@@ -904,65 +814,6 @@ body.home-page .home-hero::after {
   grid-row: 5;
 }
 
-.portal-progress-symbol,
-.portal-team-symbol {
-  position: absolute;
-  top: 45px;
-  right: 28px;
-  width: 145px;
-  height: 110px;
-  opacity: 0.72;
-}
-
-.portal-progress-symbol {
-  border-bottom: 1px solid color-mix(in srgb, var(--portal-accent), transparent 55%);
-}
-
-.portal-progress-symbol::before {
-  position: absolute;
-  inset: 18px 9px 12px;
-  content: "";
-  border-top: 1px solid var(--portal-accent);
-  transform: skewY(-24deg);
-}
-
-.portal-progress-symbol i {
-  position: absolute;
-  bottom: calc(8px + var(--step) * 18px);
-  left: calc(8px + var(--step) * 36px);
-  width: 8px;
-  height: 8px;
-  border: 1px solid var(--portal-accent);
-  border-radius: 50%;
-  background: var(--home-panel);
-}
-
-.portal-progress-symbol i:nth-child(1) { --step: 0; }
-.portal-progress-symbol i:nth-child(2) { --step: 1; }
-.portal-progress-symbol i:nth-child(3) { --step: 2; }
-.portal-progress-symbol i:nth-child(4) { --step: 3; }
-
-.portal-team-symbol {
-  background:
-    linear-gradient(transparent 49%, color-mix(in srgb, var(--portal-accent), transparent 68%) 50%, transparent 51%),
-    radial-gradient(circle, transparent 0 25px, color-mix(in srgb, var(--portal-accent), transparent 68%) 26px 27px, transparent 28px);
-}
-
-.portal-team-symbol i {
-  position: absolute;
-  width: 13px;
-  height: 13px;
-  border: 1px solid var(--portal-accent);
-  background: var(--home-panel);
-  transform: rotate(45deg);
-}
-
-.portal-team-symbol i:nth-child(1) { top: 8px; left: 66px; }
-.portal-team-symbol i:nth-child(2) { top: 40px; left: 16px; }
-.portal-team-symbol i:nth-child(3) { top: 40px; right: 16px; }
-.portal-team-symbol i:nth-child(4) { bottom: 8px; left: 40px; }
-.portal-team-symbol i:nth-child(5) { right: 40px; bottom: 8px; }
-
 .portal-orbit {
   position: absolute;
   z-index: 1;
@@ -1051,24 +902,6 @@ body.home-page .home-hero::after {
   opacity: 0.55;
 }
 
-.value-graph {
-  position: absolute;
-  top: 26px;
-  right: 28px;
-  display: flex;
-  align-items: end;
-  gap: 5px;
-  width: 82px;
-  height: 66px;
-}
-
-.value-graph i {
-  flex: 1;
-  height: var(--bar);
-  background: color-mix(in srgb, var(--portal-accent), transparent 26%);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--portal-accent), transparent 70%);
-}
-
 .match-timeline {
   position: absolute;
   top: 54px;
@@ -1153,135 +986,6 @@ body.home-page .home-hero::after {
   background: var(--portal-accent);
   box-shadow: 0 0 12px var(--portal-accent);
   transform: translate(-50%, -50%);
-}
-
-.portal-rule-diagram,
-.portal-versus-symbol,
-.portal-season-symbol,
-.portal-calendar-symbol {
-  position: absolute;
-  top: 27px;
-  right: 26px;
-}
-
-.portal-rule-diagram {
-  display: grid;
-  width: 82px;
-  gap: 11px;
-}
-
-.portal-rule-diagram i {
-  position: relative;
-  height: 1px;
-  background: color-mix(in srgb, var(--portal-accent), transparent 36%);
-}
-
-.portal-rule-diagram i::before {
-  position: absolute;
-  top: -3px;
-  left: var(--rule-dot, 10%);
-  width: 7px;
-  height: 7px;
-  content: "";
-  border: 1px solid var(--portal-accent);
-  background: var(--home-panel);
-  transform: rotate(45deg);
-}
-
-.portal-rule-diagram i:nth-child(2) {
-  --rule-dot: 50%;
-}
-
-.portal-rule-diagram i:nth-child(3) {
-  --rule-dot: 82%;
-}
-
-.portal-versus-symbol {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--portal-accent);
-}
-
-.portal-versus-symbol i {
-  display: grid;
-  width: 29px;
-  height: 29px;
-  place-items: center;
-  border: 1px solid color-mix(in srgb, var(--portal-accent), transparent 35%);
-  font-style: normal;
-  transform: rotate(45deg);
-}
-
-.portal-versus-symbol i::after {
-  display: block;
-  content: attr(data-side);
-  font: 700 7px/1 var(--mono);
-  transform: rotate(-45deg);
-}
-
-.portal-versus-symbol strong {
-  color: rgba(255, 255, 255, 0.2);
-  font: 800 14px/1 var(--display);
-}
-
-.portal-season-symbol {
-  display: grid;
-  width: 74px;
-  height: 74px;
-  place-items: center;
-  border: 1px solid color-mix(in srgb, var(--portal-accent), transparent 72%);
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 12px var(--home-panel), inset 0 0 0 13px color-mix(in srgb, var(--portal-accent), transparent 82%);
-}
-
-.portal-season-symbol::before,
-.portal-season-symbol i {
-  position: absolute;
-  content: "";
-  border: 1px solid color-mix(in srgb, var(--portal-accent), transparent 65%);
-  border-radius: 50%;
-}
-
-.portal-season-symbol::before {
-  inset: 9px;
-}
-
-.portal-season-symbol i {
-  top: -3px;
-  left: 50%;
-  width: 8px;
-  height: 8px;
-  border: 0;
-  background: var(--portal-accent);
-  box-shadow: 0 0 10px var(--portal-accent);
-  transform: translateX(-50%);
-}
-
-.portal-season-symbol strong {
-  color: color-mix(in srgb, var(--portal-accent), white 18%);
-  font: 700 12px/1 var(--display);
-}
-
-.portal-calendar-symbol {
-  display: grid;
-  width: 76px;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
-  padding-top: 10px;
-  border-top: 1px solid var(--portal-accent);
-}
-
-.portal-calendar-symbol i {
-  aspect-ratio: 1;
-  border: 1px solid color-mix(in srgb, var(--portal-accent), transparent 72%);
-  background: color-mix(in srgb, var(--portal-accent), transparent 94%);
-}
-
-.portal-calendar-symbol i:nth-child(5) {
-  border-color: var(--portal-accent);
-  background: color-mix(in srgb, var(--portal-accent), transparent 45%);
-  box-shadow: 0 0 10px color-mix(in srgb, var(--portal-accent), transparent 55%);
 }
 
 /* -------------------- Final call -------------------- */
@@ -1405,14 +1109,791 @@ body.home-page .home-hero::after {
   color: var(--home-acid);
 }
 
+/* -------------------- Fil d'activité (home-feed.js) -------------------- */
+
+.home-feed {
+  width: min(1440px, calc(100% - 8vw));
+  margin: 0 auto;
+  padding: clamp(80px, 8vw, 130px) 0 0;
+}
+
+.feed-heading {
+  margin-bottom: 34px;
+}
+
+.feed-heading h2 {
+  margin: 0;
+  color: #f4f7f9;
+  font-family: var(--display);
+  font-size: clamp(34px, 3.6vw, 56px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+}
+
+.feed-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr 1fr;
+  gap: 14px;
+}
+
+.feed-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.018), transparent 52%),
+    var(--home-panel);
+}
+
+.feed-panel header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+  color: #6f7983;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+
+.feed-panel header a {
+  color: #aeb6bf;
+  text-transform: uppercase;
+  transition: color 160ms ease;
+}
+
+.feed-panel header a:hover {
+  color: var(--home-acid);
+}
+
+.feed-panel header a i {
+  font-style: normal;
+}
+
+.feed-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 18px 20px 20px;
+}
+
+.feed-club {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.feed-club img,
+.feed-club i {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  color: #5f6872;
+  font-family: var(--mono);
+  font-style: normal;
+}
+
+.feed-club i {
+  border: 1px dashed var(--line);
+}
+
+.feed-club b {
+  overflow: hidden;
+  color: #d4dae0;
+  font-size: 13px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feed-club.is-unknown b {
+  color: #6f7983;
+}
+
+/* Résultats */
+.feed-results {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feed-results a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 6px 12px;
+  padding: 12px 14px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.025);
+  transition: border-color 160ms ease;
+}
+
+.feed-results a:hover {
+  border-color: var(--line-strong);
+}
+
+.feed-results small {
+  grid-column: 1 / -1;
+  color: #6f7983;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.feed-results span:last-child {
+  justify-self: end;
+}
+
+.feed-results span:last-child .feed-club {
+  flex-direction: row-reverse;
+}
+
+.feed-results .is-winner b {
+  color: #fff;
+}
+
+.feed-results strong {
+  color: #fff;
+  font-family: var(--display);
+  font-size: 20px;
+  white-space: nowrap;
+}
+
+.feed-results strong em {
+  margin: 0 6px;
+  color: #5f6872;
+  font-style: normal;
+}
+
+/* Prochaine rencontre */
+.feed-next {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 22px;
+}
+
+.feed-next-stage {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  color: #87919b;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.feed-next-stage span {
+  color: var(--home-cyan);
+}
+
+.feed-versus {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+}
+
+.feed-versus .feed-club {
+  flex-direction: column;
+  text-align: center;
+}
+
+.feed-versus .feed-club img,
+.feed-versus .feed-club i {
+  width: 58px;
+  height: 58px;
+}
+
+.feed-versus em {
+  color: var(--home-acid);
+  font-family: var(--display);
+  font-size: 14px;
+  font-style: normal;
+  letter-spacing: 0.1em;
+}
+
+.feed-next-when {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.feed-next-when strong {
+  color: #fff;
+  font-family: var(--display);
+  font-size: 26px;
+  letter-spacing: -0.02em;
+}
+
+.feed-next-when span {
+  color: #aeb6bf;
+  font-size: 13px;
+  text-align: right;
+}
+
+.feed-next-when span::first-letter {
+  text-transform: uppercase;
+}
+
+/* Leaders */
+.feed-leaders {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feed-leaders a {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.025);
+  transition: border-color 160ms ease;
+}
+
+.feed-leaders a:hover {
+  border-color: var(--line-strong);
+}
+
+.feed-leaders img {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  object-fit: cover;
+}
+
+.feed-leaders span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.feed-leaders small {
+  color: #6f7983;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.feed-leaders b {
+  overflow: hidden;
+  color: #f4f7f9;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feed-leaders strong {
+  color: var(--home-acid);
+  font-family: var(--mono);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* États vides et notes */
+.feed-empty {
+  display: grid;
+  flex: 1;
+  align-content: center;
+  justify-items: start;
+  gap: 8px;
+}
+
+.feed-empty span {
+  color: rgba(255, 255, 255, 0.08);
+  font-family: var(--display);
+  font-size: 64px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.feed-empty strong {
+  color: #f4f7f9;
+  font-family: var(--display);
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.feed-empty p,
+.feed-note {
+  margin: 0;
+  color: #87919b;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.feed-note {
+  margin-top: auto;
+  padding-top: 14px;
+  color: #6f7983;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 1180px) {
+  .feed-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .feed-panel-next {
+    grid-row: span 2;
+  }
+}
+
+@media (max-width: 720px) {
+  .feed-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feed-panel-next {
+    grid-row: auto;
+  }
+
+  .feed-panel {
+    min-height: 0;
+  }
+}
+
+/* -------------------- Icônes blueprint du hub -------------------- */
+/* Animation discrète en continu, plus marquée au survol de la carte. */
+
+.portal-art {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  width: 132px;
+  height: 88px;
+  overflow: visible;
+  color: var(--portal-accent, var(--home-cyan));
+  opacity: 0.72;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--portal-accent, var(--home-cyan)), transparent 70%));
+  transition:
+    opacity 220ms ease,
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 220ms ease;
+}
+
+.portal-card:hover .portal-art,
+.portal-card:focus-visible .portal-art {
+  opacity: 1;
+  transform: scale(1.06);
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--portal-accent, var(--home-cyan)), transparent 45%));
+}
+
+.portal-art :is(path, circle, rect) {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.portal-art .pa-frame {
+  stroke-width: 1;
+  opacity: 0.5;
+}
+
+.portal-art .pa-fine {
+  stroke-width: 0.9;
+}
+
+.portal-art .pa-faint {
+  opacity: 0.38;
+}
+
+.portal-art .pa-solid {
+  fill: currentColor;
+  stroke: none;
+}
+
+.portal-art .pa-text {
+  fill: currentColor;
+  stroke: none;
+  font-family: var(--mono);
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  opacity: 0.7;
+}
+
+.portal-art .pa-text-big {
+  font-size: 11px;
+  opacity: 1;
+}
+
+.portal-art .pa-score {
+  fill: currentColor;
+  stroke: none;
+  font-family: var(--display);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.portal-art :is(.pa-bar, .pa-event, .pa-ring, .pa-node, .pa-player, .pa-star, .pa-spark, .pa-hex) {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes pa-draw {
+  0% {
+    stroke-dashoffset: 1;
+  }
+
+  60%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pa-pulse {
+  50% {
+    transform: scale(1.25);
+  }
+}
+
+/* Valeurs : les barres montent, la courbe suit */
+.portal-art .pa-bar {
+  fill: currentColor;
+  fill-opacity: 0.22;
+  transform-origin: 50% 100%;
+  animation: pa-bar 3.2s ease-in-out infinite;
+}
+
+.portal-art .pa-bar-2 { animation-delay: 0.1s; }
+.portal-art .pa-bar-3 { animation-delay: 0.2s; }
+.portal-art .pa-bar-4 { animation-delay: 0.3s; }
+.portal-art .pa-bar-5 { animation-delay: 0.4s; }
+.portal-art .pa-bar-6 { animation-delay: 0.5s; }
+
+@keyframes pa-bar {
+  0%,
+  100% {
+    transform: scaleY(0.82);
+  }
+
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.portal-art .pa-trend {
+  stroke-width: 1.8;
+  stroke-dasharray: 1;
+  animation: pa-draw 3.2s ease-out infinite;
+}
+
+.portal-art .pa-dot {
+  fill: currentColor;
+  animation: pa-pulse 1.6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Matchs : la tête de lecture parcourt la frise */
+.portal-art .pa-playhead {
+  stroke-width: 1.8;
+  animation: pa-playhead 4s linear infinite;
+}
+
+@keyframes pa-playhead {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(100px);
+  }
+}
+
+.portal-art .pa-event {
+  fill: #090c10;
+  animation: pa-event 4s ease-out infinite;
+}
+
+.portal-art .pa-event circle {
+  fill: inherit;
+}
+
+.portal-art .pa-event-1 { animation-delay: 0.72s; }
+.portal-art .pa-event-2 { animation-delay: 2.24s; }
+.portal-art .pa-event-3 { animation-delay: 3.28s; }
+
+@keyframes pa-event {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  6% {
+    transform: scale(1.45);
+  }
+
+  14% {
+    transform: scale(1);
+  }
+}
+
+/* Records : la cible pulse, la flèche se plante au survol */
+.portal-art .pa-ring {
+  animation: pa-pulse 2.2s ease-in-out infinite;
+}
+
+.portal-art .pa-arrow {
+  transition: transform 380ms cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+.portal-card:not(:hover) .portal-art .pa-arrow {
+  transform: translate(10px, -8px);
+}
+
+/* Règles : l'attaquant franchit la ligne, le drapeau se lève */
+.portal-art .pa-offside {
+  stroke-dasharray: 4 4;
+  animation: pa-flow 1s linear infinite;
+}
+
+@keyframes pa-flow {
+  to {
+    stroke-dashoffset: -16;
+  }
+}
+
+.portal-art .pa-attacker {
+  animation: pa-attacker 3s ease-in-out infinite;
+}
+
+@keyframes pa-attacker {
+  0%,
+  15% {
+    transform: translateX(0);
+  }
+
+  55%,
+  85% {
+    transform: translateX(34px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.portal-art .pa-flag {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+  animation: pa-flag 3s ease-in-out infinite;
+}
+
+@keyframes pa-flag {
+  0%,
+  45% {
+    transform: rotate(60deg);
+  }
+
+  55%,
+  85% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(60deg);
+  }
+}
+
+/* Face à face : les rayons se rencontrent au centre */
+.portal-art .pa-beam {
+  stroke-width: 1.8;
+  stroke-dasharray: 18;
+  animation: pa-beam 2.4s ease-in-out infinite;
+}
+
+@keyframes pa-beam {
+  0% {
+    stroke-dashoffset: 18;
+  }
+
+  45%,
+  70% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: -18;
+  }
+}
+
+.portal-art .pa-spark {
+  opacity: 0;
+  animation: pa-spark 2.4s ease-out infinite;
+}
+
+@keyframes pa-spark {
+  0%,
+  42% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+
+  48% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  75%,
+  100% {
+    opacity: 0;
+    transform: scale(1.3);
+  }
+}
+
+.portal-art .pa-hex-b {
+  color: color-mix(in srgb, currentColor, #fff 30%);
+}
+
+/* Saisons : l'arc de progression fait le tour */
+.portal-art .pa-cycle {
+  stroke-width: 2;
+  stroke-dasharray: 1;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(-90deg);
+  animation: pa-cycle 4s ease-in-out infinite;
+}
+
+@keyframes pa-cycle {
+  0% {
+    stroke-dashoffset: 1;
+  }
+
+  70%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Calendrier : la case du jour se coche */
+.portal-art .pa-day {
+  fill: currentColor;
+  fill-opacity: 0.2;
+  stroke-width: 1.4;
+}
+
+.portal-art .pa-check {
+  stroke-width: 2;
+  stroke-dasharray: 1;
+  animation: pa-draw 2.6s ease-out infinite;
+}
+
+/* Progression : la courbe se trace, les paliers s'allument */
+.portal-art .pa-curve {
+  stroke-width: 1.8;
+  stroke-dasharray: 1;
+  animation: pa-draw 3.6s ease-out infinite;
+}
+
+.portal-art .pa-node {
+  fill: #090c10;
+  animation: pa-node 3.6s ease-out infinite;
+}
+
+.portal-art .pa-node-2 { animation-delay: 0.3s; }
+.portal-art .pa-node-3 { animation-delay: 0.6s; }
+.portal-art .pa-node-4 { animation-delay: 0.9s; }
+.portal-art .pa-node-5 { animation-delay: 1.2s; }
+
+@keyframes pa-node {
+  0%,
+  100% {
+    fill: #090c10;
+  }
+
+  15%,
+  60% {
+    fill: currentColor;
+  }
+}
+
+/* Équipes idéales : les joueurs s'allument, l'étoile brille */
+.portal-art .pa-player {
+  fill: #090c10;
+  animation: pa-node 3s ease-out infinite;
+}
+
+.portal-art .pa-player-2 { animation-delay: 0.25s; }
+.portal-art .pa-player-3 { animation-delay: 0.5s; }
+.portal-art .pa-player-4 { animation-delay: 0.75s; }
+.portal-art .pa-player-5 { animation-delay: 1s; }
+
+.portal-art .pa-star {
+  animation: pa-pulse 3s ease-in-out infinite 1.2s;
+}
+
+.portal-art .pa-links {
+  stroke-dasharray: 3 3;
+  animation: pa-flow 1.6s linear infinite;
+}
+
+/* Au survol, les barres des valeurs s'emballent. */
+.portal-card:hover .portal-art-value .pa-bar,
+.portal-card:hover .portal-art-value .pa-trend {
+  animation-duration: 1.6s;
+}
+
+@media (max-width: 720px) {
+  .portal-art {
+    top: 18px;
+    right: 16px;
+    width: 104px;
+    height: 70px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portal-art,
+  .portal-art * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .portal-art :is(.pa-trend, .pa-check, .pa-curve, .pa-cycle) {
+    stroke-dashoffset: 0;
+  }
+}
+
 /* -------------------- Reveal -------------------- */
 
 .reveal-ready .reveal {
   opacity: 0;
-  transform: translateY(24px);
+  transform: translateY(16px);
   transition:
-    opacity 600ms ease,
-    transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 380ms ease-out,
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .reveal-ready .reveal.is-visible {
@@ -1460,14 +1941,6 @@ body.home-page .home-hero::after {
     right: -2vw;
   }
 
-  .club-signal {
-    grid-template-columns: 1fr auto;
-  }
-
-  .club-signal > p {
-    display: none;
-  }
-
   .portal-featured {
     grid-column: 1 / 7;
   }
@@ -1512,24 +1985,6 @@ body.home-page .home-hero::after {
   }
 
   .home-scroll-cue {
-    display: none;
-  }
-
-  .club-signal {
-    display: block;
-  }
-
-  .club-signal-list {
-    overflow-x: auto;
-    grid-template-columns: repeat(5, minmax(160px, 1fr));
-    scrollbar-width: none;
-  }
-
-  .club-signal-list::-webkit-scrollbar {
-    display: none;
-  }
-
-  .club-signal-link {
     display: none;
   }
 
@@ -1644,27 +2099,6 @@ body.home-page .home-hero::after {
     right: 0;
     bottom: 0;
     width: min(280px, 82%);
-  }
-
-  .club-signal {
-    min-height: 90px;
-  }
-
-  .club-signal-list {
-    grid-template-columns: repeat(5, minmax(130px, 1fr));
-  }
-
-  .club-signal-list a {
-    min-height: 90px;
-  }
-
-  .club-signal-list span {
-    display: none;
-  }
-
-  .club-signal-list img {
-    width: 44px;
-    height: 44px;
   }
 
   .home-directory {

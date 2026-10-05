@@ -1,0 +1,17 @@
+{
+  "name": "nebula-league", "version": "1.0.0", "private": true, "type": "module",
+  "engines": { "node": ">=22.13.0" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/dev.mjs",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.worker.json",
+    "test": "node --test Tests/*.test.mjs",
+    "db:local": "wrangler d1 migrations apply DB --local",
+    "db:remote": "wrangler d1 migrations apply DB --remote",
+    "db:seed:local": "wrangler d1 execute DB --local --file db/seed.sql",
+    "db:seed:remote": "wrangler d1 execute DB --remote --file db/seed.sql",
+    "deploy": "node scripts/deploy.mjs"
+  },
+  "dependencies": { "react": "19.2.6", "react-dom": "19.2.6", "html-react-parser": "^5.2.7" },
+  "devDependencies": { "@types/react": "19.2.14", "@types/react-dom": "19.2.3", "@cloudflare/workers-types": "4.20260515.1", "typescript": "5.9.3", "esbuild": "^0.25.0", "wrangler": "4.92.0" }
+}

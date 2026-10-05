@@ -410,8 +410,15 @@ document.addEventListener("DOMContentLoaded", () => {
             format: options.format || (value => formatNumber(value)),
             precision: options.precision || 0,
             context: options.context || "",
-            scaleMax: Number.isFinite(options.scaleMax) ? options.scaleMax : null
+            scaleMax: Number.isFinite(options.scaleMax) ? options.scaleMax : null,
+            preferLower: options.preferLower === true
         };
+    }
+
+    function metricWinner(metric) {
+        if (metric.aValue === metric.bValue) return "tie";
+        if (metric.preferLower) return metric.aValue < metric.bValue ? "a" : "b";
+        return metric.aValue > metric.bValue ? "a" : "b";
     }
 
     function buildMetrics(aId, bId) {
@@ -467,6 +474,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 format: value => `${formatNumber(value, 1)} %`
             }),
             makeMetric("Buts marqués", a.goalsFor, b.goalsFor, { color: "goals" }),
+            makeMetric("Buts encaissés", a.goalsAgainst, b.goalsAgainst, {
+                color: "defenses",
+                preferLower: true
+            }),
             makeMetric("Différence de buts", a.goalDifference, b.goalDifference, {
                 color: "assists",
                 format: value => `${value > 0 ? "+" : ""}${formatNumber(value)}`
@@ -481,8 +492,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function metricResult(metrics) {
         return metrics.reduce((score, metric) => {
-            if (metric.aValue > metric.bValue) score.a += 1;
-            else if (metric.bValue > metric.aValue) score.b += 1;
+            const winner = metricWinner(metric);
+            if (winner === "a") score.a += 1;
+            else if (winner === "b") score.b += 1;
             else score.ties += 1;
             return score;
         }, { a: 0, b: 0, ties: 0 });
@@ -510,7 +522,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 || Math.max(Math.abs(metric.aValue), Math.abs(metric.bValue), 1);
             const aWidth = Math.min(100, Math.max(metric.aValue === 0 ? 0 : 4, (Math.abs(metric.aValue) / magnitude) * 100));
             const bWidth = Math.min(100, Math.max(metric.bValue === 0 ? 0 : 4, (Math.abs(metric.bValue) / magnitude) * 100));
-            const winner = metric.aValue === metric.bValue ? "tie" : metric.aValue > metric.bValue ? "a" : "b";
+            const winner = metricWinner(metric);
             return `
                 <div class="h2h-metric-row" style="--metric-color:${metric.color}">
                     <span class="h2h-metric-rank">${String(index + 1).padStart(2, "0")}</span>
@@ -567,15 +579,22 @@ document.addEventListener("DOMContentLoaded", () => {
             const aIsHome = match.home === aId;
             const scoreA = aIsHome ? match.scoreHome : match.scoreAway;
             const scoreB = aIsHome ? match.scoreAway : match.scoreHome;
-            const winner = scoreA === scoreB ? "MATCH NUL" : scoreA > scoreB ? a.name : b.name;
+            const isDraw = scoreA === scoreB;
+            const winnerSide = isDraw ? "draw" : scoreA > scoreB ? "a" : "b";
+            const winner = winnerSide === "a" ? a.name : winnerSide === "b" ? b.name : "ÉGALITÉ";
             return `
                 <article class="h2h-history-row">
                     <span class="h2h-history-id">DUEL–${String(index + 1).padStart(2, "0")}</span>
-                    <div><small>${formatDate(match.date)} · ${escapeHtml(match.category || "MATCH")}</small><strong>${escapeHtml(winner)}</strong></div>
+                    <div><small>${formatDate(match.date)} · ${escapeHtml(match.category || "MATCH")}</small><strong>${isDraw ? "MATCH NUL" : "MATCH TERMINÉ"}</strong></div>
                     <div class="h2h-history-score">
-                        <span>${escapeHtml(a.name)}</span><strong>${scoreA} : ${scoreB}</strong><span>${escapeHtml(b.name)}</span>
+                        <span class="${winnerSide === "a" ? "is-winner" : ""}">${escapeHtml(a.name)}</span>
+                        <strong>${scoreA} : ${scoreB}</strong>
+                        <span class="${winnerSide === "b" ? "is-winner" : ""}">${escapeHtml(b.name)}</span>
                     </div>
-                    <em>${scoreA === scoreB ? "NUL" : "VAINQUEUR"} ↗</em>
+                    <div class="h2h-history-verdict is-${winnerSide}">
+                        <small>${isDraw ? "RÉSULTAT" : "VAINQUEUR"}</small>
+                        <strong>${escapeHtml(winner)}</strong>
+                    </div>
                 </article>
             `;
         }).join("");
@@ -702,6 +721,17 @@ document.addEventListener("DOMContentLoaded", () => {
         selections[mode] = [];
         renderAll();
     });
+
+    // ?joueur=Antoine (bouton « Comparer » des fiches) : mode joueurs,
+    // comparaison technique, joueur placé en A.
+    const requestedPlayer = new URLSearchParams(window.location.search).get("joueur");
+    const requestedEntry = requestedPlayer
+        && (window.NEBULA_DATA?.players || []).find(player => normalize(player.name) === normalize(requestedPlayer));
+    if (requestedEntry) {
+        mode = "players";
+        playerComparisonMode = "technical";
+        selections.players = [requestedEntry.name];
+    }
 
     renderHeroStats();
     renderAll();

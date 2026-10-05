@@ -174,13 +174,17 @@ body.nebula-page.seasons-page .season-command {
 
 .season-cycle::before {
     position: absolute;
-    inset: 8%;
+    top: 50%;
+    left: 50%;
+    width: min(84%, 520px);
+    aspect-ratio: 1;
     content: "";
     border-radius: 50%;
     background: conic-gradient(var(--season-acid) var(--cycle-progress), rgba(99, 231, 255, 0.08) 0);
     opacity: 0.24;
     -webkit-mask: radial-gradient(circle, transparent 68%, #000 69%);
     mask: radial-gradient(circle, transparent 68%, #000 69%);
+    transform: translate(-50%, -50%);
 }
 
 .season-cycle-ring {

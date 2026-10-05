@@ -81,33 +81,6 @@ nav ul li a.active {
 
 /* ---------- Bouton Discord ---------- */
 
-.discord-btn {
-    display: flex;
-    align-items: right;
-    gap: 8px;
-    background: #ffffff;
-    /* Couleur Discord */
-    padding: 6px 14px;
-    border-radius: 6px;
-    color: #4752C4 !important;
-    font-weight: bold;
-    transition: 0.25s ease-in-out;
-}
-
-.discord-btn:hover {
-    background: #4752C4;
-    /* Hover Discord */
-    transform: scale(1.07);
-    box-shadow: 0 0 12px #5865F2aa;
-    color: white !important;
-}
-
-.discord-logo {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
-}
-
 /* -------------------- Cards -------------------- */
 .cards-container {
     display: flex;
@@ -117,44 +90,13 @@ nav ul li a.active {
     padding: 40px 20px;
 }
 
-.card-A {
-    background: rgba(10, 10, 10, 0.7);
-    border: 2px solid #b41cff;
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 0 15px #b41cff80;
-    transition: 0.3s;
-    width: 280px;
-}
-
-.card-A:hover {
-    box-shadow: 0 0 25px #b41cff, 0 0 45px #b41cffaa;
-    transform: translateY(-4px);
-}
-
-.card-A h3 {
-    color: #df9fff;
-    margin-top: 0;
-}
-
-.card-A p {
-    line-height: 1.5;
-    color: #e0d6ff;
-}
-
 /* -------------------- Responsive -------------------- */
 @media (max-width: 768px) {
     .cards-container {
         flex-direction: column;
         align-items: center;
     }
-
-    .card-A {
-        width: 90%;
-    }
 }
-
-
 
 .section {
     padding: 50px 20px;
@@ -241,8 +183,6 @@ tr:nth-child(even) {
     background: #666;
     /* Couleur au survol */
 }
-
-
 
 /* Firefox (fonctionne différemment) */
 * {

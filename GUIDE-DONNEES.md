@@ -18,7 +18,7 @@ Ajoutez une entrée dans le tableau `players` :
     folder: "bm",
     position: "CF",
     baseValue: 0,
-    avatarPath: "Joueurs/images-joueurs/prenom.png",
+    avatarPath: "Joueurs/images-joueurs/prenom.webp",
     character: "Personnage",
     technical: {
         defense: 0,
@@ -50,10 +50,37 @@ progression :
 - `Extra Riche` à partir de 500 000 000 ¥ ;
 - `Milliardaire` à partir de 1 000 000 000 ¥.
 
-La fiche individuelle reste une page HTML. Pour un nouveau joueur, dupliquez une
-fiche existante dans le bon dossier. Son identité, son club, son poste, son
-personnage, sa valeur et ses statistiques techniques seront ensuite remplacés
-automatiquement par les champs ci-dessus.
+Lancez ensuite :
+
+```
+pnpm joueurs
+```
+
+La commande crée ou met à jour la fiche `Joueurs/<folder>/<prénom>.html` depuis
+le modèle unique `scripts/templates/joueur.html`, avec l'aperçu affiché quand
+on partage le lien sur Discord. Ne modifiez pas les fiches à la main : changez
+le modèle (pour toutes les fiches) ou les données (pour un joueur), puis
+relancez la commande. Après un transfert (changement de `folder`), l'ancienne
+fiche est supprimée automatiquement.
+
+Pour attribuer un titre manuel, ajoutez-le au joueur :
+`titles: ["Nom du titre"]`.
+
+La carte image de l'aperçu (portrait, club, note globale) est générée à chaque
+build. Si une fiche n'est plus à jour, le build l'indique.
+
+### Ajouter une image
+
+Déposez l'image (PNG ou JPEG) dans `Joueurs/images-joueurs/`,
+`images/icons/` (portraits des personnages, nommés comme leur `id`) ou
+`images/clubs_icon/`, référencez-la avec son nom actuel, puis lancez :
+
+```
+pnpm images
+```
+
+Le script la convertit en WebP (souvent 10 fois plus légère), supprime
+l'original et met à jour les chemins dans les pages et les scripts.
 
 ### Historique des statistiques techniques
 

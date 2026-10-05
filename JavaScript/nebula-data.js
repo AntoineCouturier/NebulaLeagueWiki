@@ -68,7 +68,7 @@
             key: "bastard",
             name: "Bastard München",
             shortName: "Bastard",
-            logoPath: "images/clubs_icon/Bastard_Munchen.png",
+            logoPath: "images/clubs_icon/Bastard_Munchen.webp",
             className: "bastard",
             color: "#ff323cff",
             style: "Le Bastard München utilise Antoine en pivot pendant que les deux autres attaquants se rendent disponibles pour recevoir la passe au moment décisif."
@@ -77,7 +77,7 @@
             key: "pxg",
             name: "PXG",
             fullName: "Paris X Gen",
-            logoPath: "images/clubs_icon/PXG.png",
+            logoPath: "images/clubs_icon/PXG.webp",
             className: "pxg",
             color: "#2877ffff",
             style: "Le PXG n'a pas encore de style de jeu fixe."
@@ -85,7 +85,7 @@
         {
             key: "ubers",
             name: "Ubers",
-            logoPath: "images/clubs_icon/Ubers.png",
+            logoPath: "images/clubs_icon/Ubers.webp",
             className: "ubers",
             color: "#21ff3fff",
             style: "Les Ubers n'ont pas encore de style de jeu fixe."
@@ -93,7 +93,7 @@
         {
             key: "barcha",
             name: "Barcha",
-            logoPath: "images/clubs_icon/Barcha.png",
+            logoPath: "images/clubs_icon/Barcha.webp",
             className: "barcha",
             color: "#ffd84d",
             style: "Le Barcha n'a pas encore de style de jeu fixe."
@@ -101,7 +101,7 @@
         {
             key: "manshine",
             name: "Manshine City",
-            logoPath: "images/clubs_icon/Manshine_City.png",
+            logoPath: "images/clubs_icon/Manshine_City.webp",
             className: "manshine",
             color: "#2fe0ffff",
             style: "Manshine City mise sur une attaque à trois, agressive et difficile à contenir pour les défenseurs adverses."
@@ -148,6 +148,7 @@
        avatarPath = image depuis la racine du projet
        character  = personnage représenté sur sa fiche
        Ult        = true si le titre ultime du personnage est débloqué, sinon false
+       titles     = (optionnel) titres attribués à la main, ex. ["Predator Eyes"]
        technical  = les 6 notes techniques affichées sur sa player-card
 
        La note globale n'est pas renseignée : elle correspond automatiquement
@@ -171,7 +172,7 @@
     const players = [
         /* ========================== Bastard München ========================== */
         {
-            name: "Antoine", club: "bastard", folder: "bm", position: "RM", baseValue: 0, discordId: "725931972802904115", avatarPath: "Joueurs/images-joueurs/anto.png", character: "Kurona", Ult: false, technical:
+            name: "Antoine", club: "bastard", folder: "bm", position: "RM", baseValue: 0, discordId: "725931972802904115", avatarPath: "Joueurs/images-joueurs/anto.webp", character: "Kurona", Ult: false, technical:
             {
                 defense: 96,
                 passe: 100,
@@ -182,7 +183,7 @@
             }
         },
         {
-            name: "Dylan", club: "bastard", folder: "bm", position: "RW", baseValue: 0, discordId: "469446272235995141", avatarPath: "Joueurs/images-joueurs/dylan.jpeg", character: "Kiyora", Ult: false, technical:
+            name: "Dylan", club: "bastard", folder: "bm", position: "RW", baseValue: 0, discordId: "469446272235995141", avatarPath: "Joueurs/images-joueurs/dylan.webp", character: "Kiyora", Ult: false, technical:
             {
                 defense: 81,
                 passe: 91,
@@ -193,7 +194,7 @@
             }
         },
         {
-            name: "Alessio", club: "bastard", folder: "bm", position: "CF", baseValue: 0, discordId: "748818822290604032", avatarPath: "Joueurs/images-joueurs/alessio.png", character: "Rin", Ult: false, technical:
+            name: "Alessio", club: "bastard", folder: "bm", position: "CF", baseValue: 0, discordId: "748818822290604032", avatarPath: "Joueurs/images-joueurs/alessio.webp", character: "Rin", Ult: false, technical:
             {
                 defense: 74,
                 passe: 77,
@@ -205,7 +206,7 @@
         },
         /* ========================== PxG ========================== */
         {
-            name: "Jason", club: "pxg", folder: "pxg", position: "CF", baseValue: 0, discordId: "771124358311051284", avatarPath: "Joueurs/images-joueurs/Jason.png", character: "Shidou", Ult: false, technical:
+            name: "Jason", club: "pxg", folder: "pxg", position: "CF", baseValue: 0, discordId: "771124358311051284", avatarPath: "Joueurs/images-joueurs/Jason.webp", character: "Shidou", Ult: false, technical:
             {
                 defense: null,
                 passe: null,
@@ -216,7 +217,7 @@
             }
         },
         {
-            name: "Enzo", club: "pxg", folder: "pxg", position: "LM", baseValue: 0, discordId: "775004632576950272", avatarPath: "Joueurs/images-joueurs/enzo.png", character: "Chigiri", Ult: false, technical:
+            name: "Enzo", club: "pxg", folder: "pxg", position: "LM", baseValue: 0, discordId: "775004632576950272", avatarPath: "Joueurs/images-joueurs/enzo.webp", character: "Chigiri", Ult: false, technical:
             {
                 defense: 73,
                 passe: 77,
@@ -228,7 +229,7 @@
         },
         /* ========================== Manshine City ========================== */
         {
-            name: "William", club: "manshine", folder: "manshine", position: "CF", baseValue: 0, discordId: "915917842602405888", avatarPath: "Joueurs/images-joueurs/william.png", character: "Nagi", Ult: false, technical:
+            name: "William", club: "manshine", folder: "manshine", position: "CF", baseValue: 0, discordId: "915917842602405888", avatarPath: "Joueurs/images-joueurs/william.webp", character: "Nagi", Ult: false, technical:
             {
                 defense: 77,
                 passe: 79,
@@ -239,7 +240,7 @@
             }
         },
         {
-            name: "Imrane", club: "manshine", folder: "manshine", position: "LW", baseValue: 0, discordId: "1049719803725750302", avatarPath: "Joueurs/images-joueurs/imrane.png", character: "Reo", Ult: false, technical:
+            name: "Imrane", club: "manshine", folder: "manshine", position: "LW", baseValue: 0, discordId: "1049719803725750302", avatarPath: "Joueurs/images-joueurs/imrane.webp", character: "Reo", Ult: false, technical:
             {
                 defense: 88,
                 passe: 84,
@@ -250,7 +251,7 @@
             }
         },
         {
-            name: "Elijah", club: "manshine", folder: "manshine", position: "RW", baseValue: 0, discordId: "827952021239889940", avatarPath: "Joueurs/images-joueurs/elijah.png", character: "Shidou", Ult: false, technical:
+            name: "Elijah", club: "manshine", folder: "manshine", position: "RW", baseValue: 0, discordId: "827952021239889940", avatarPath: "Joueurs/images-joueurs/elijah.webp", character: "Shidou", Ult: false, technical:
             {
                 defense: 72,
                 passe: 74,
@@ -262,7 +263,7 @@
         },
         /* ========================== Barcha ========================== */
         {
-            name: "Leandro", club: "barcha", folder: "barcha", position: "RW", baseValue: 0, discordId: "1051860042690871356", avatarPath: "Joueurs/images-joueurs/leandro.png", character: "Kaiser", Ult: false, technical:
+            name: "Leandro", club: "barcha", folder: "barcha", position: "RW", baseValue: 0, discordId: "1051860042690871356", avatarPath: "Joueurs/images-joueurs/leandro.webp", character: "Kaiser", Ult: false, technical:
             {
                 defense: null,
                 passe: null,
@@ -275,7 +276,7 @@
         /* ========================== Ubers ========================== */
         /* ========================== Retraite ========================== */
         {
-            name: "Matheo", club: "retraite", folder: "retraite", position: "LM", baseValue: 0, discordId: "506800771417767938", avatarPath: "Joueurs/images-joueurs/matheo.png", character: "Lorenzo", Ult: false, technical:
+            name: "Matheo", club: "retraite", folder: "retraite", position: "LM", baseValue: 0, discordId: "506800771417767938", avatarPath: "Joueurs/images-joueurs/matheo.webp", character: "Lorenzo", Ult: false, technical:
             {
                 defense: 82,
                 passe: 80,
@@ -286,7 +287,7 @@
             }
         },
         {
-            name: "Theo", club: "retraite", folder: "retraite", position: "RW", baseValue: 0, discordId: "414493257775448075", avatarPath: "Joueurs/images-joueurs/theo.png", character: "Kunigami", Ult: false, technical:
+            name: "Theo", club: "retraite", folder: "retraite", position: "RW", baseValue: 0, discordId: "414493257775448075", avatarPath: "Joueurs/images-joueurs/theo.webp", character: "Kunigami", Ult: false, technical:
             {
                 defense: null,
                 passe: null,
@@ -441,7 +442,7 @@
         // deux matchs. Les totaux des buteurs doivent correspondre au score.
         /* {
             id: "m1",
-            date: "2026-09-02",
+            date: "2027-01-06",
             time: "20:00",
             category: "ligue",
             valueTier: null,
@@ -511,28 +512,28 @@
     const leagueSchedule = [
         /* ==================================================== SAISON 1 ==================================================== */
         /* Phase aller */
-        ["2026-09-02", "bastard", "manshine"],
-        ["2026-09-05", "pxg", "ubers"],
-        ["2026-09-09", "bastard", "barcha"],
-        ["2026-09-12", "manshine", "ubers"],
-        ["2026-09-16", "bastard", "ubers"],
-        ["2026-09-19", "barcha", "pxg"],
-        ["2026-09-23", "bastard", "pxg"],
-        ["2026-09-26", "manshine", "barcha"],
-        ["2026-09-30", "pxg", "manshine"],
-        ["2026-10-03", "ubers", "barcha"],
+        ["2027-01-06", "bastard", "manshine"],
+        ["2027-01-09", "pxg", "ubers"],
+        ["2027-01-13", "bastard", "barcha"],
+        ["2027-01-16", "manshine", "ubers"],
+        ["2027-01-20", "bastard", "ubers"],
+        ["2027-01-23", "barcha", "pxg"],
+        ["2027-01-27", "bastard", "pxg"],
+        ["2027-01-30", "manshine", "barcha"],
+        ["2027-02-03", "pxg", "manshine"],
+        ["2027-02-06", "ubers", "barcha"],
 
         /* Phase retour */
-        ["2026-10-07", "manshine", "bastard"],
-        ["2026-10-10", "ubers", "pxg"],
-        ["2026-10-14", "barcha", "bastard"],
-        ["2026-10-17", "ubers", "manshine"],
-        ["2026-10-21", "ubers", "bastard"],
-        ["2026-10-24", "pxg", "barcha"],
-        ["2026-10-28", "pxg", "bastard"],
-        ["2026-10-31", "barcha", "manshine"],
-        ["2026-11-04", "manshine", "pxg"],
-        ["2026-11-07", "barcha", "ubers"]
+        ["2027-02-10", "manshine", "bastard"],
+        ["2027-02-13", "ubers", "pxg"],
+        ["2027-02-17", "barcha", "bastard"],
+        ["2027-02-20", "ubers", "manshine"],
+        ["2027-02-24", "ubers", "bastard"],
+        ["2027-02-27", "pxg", "barcha"],
+        ["2027-03-03", "pxg", "bastard"],
+        ["2027-03-06", "barcha", "manshine"],
+        ["2027-03-10", "manshine", "pxg"],
+        ["2027-03-13", "barcha", "ubers"]
         /* ==================================================== SAISON 2 ==================================================== */
     ];
 
@@ -549,20 +550,20 @@
        ---------------------------------------------------------------------- */
     const nclSchedules = {
         4: [
-            ["2026-11-14", "Demi-finale 01"],
-            ["2026-11-18", "Demi-finale 02"],
-            ["2026-11-21", "Petite finale"],
-            ["2026-11-25", "Finale"]
+            ["2027-03-20", "Demi-finale 01"],
+            ["2027-03-24", "Demi-finale 02"],
+            ["2027-03-27", "Petite finale"],
+            ["2027-03-31", "Finale"]
         ],
         8: [
-            ["2026-11-10", "Quart de finale 01"],
-            ["2026-11-12", "Quart de finale 02"],
-            ["2026-11-14", "Quart de finale 03"],
-            ["2026-11-16", "Quart de finale 04"],
-            ["2026-11-19", "Demi-finale 01"],
-            ["2026-11-21", "Demi-finale 02"],
-            ["2026-11-24", "Petite finale"],
-            ["2026-11-26", "Finale"]
+            ["2027-03-16", "Quart de finale 01"],
+            ["2027-03-18", "Quart de finale 02"],
+            ["2027-03-20", "Quart de finale 03"],
+            ["2027-03-22", "Quart de finale 04"],
+            ["2027-03-25", "Demi-finale 01"],
+            ["2027-03-27", "Demi-finale 02"],
+            ["2027-03-30", "Petite finale"],
+            ["2027-04-01", "Finale"]
         ]
     };
 
@@ -749,8 +750,8 @@
             away: match.away,
             homeTeam: home?.name || match.home,
             awayTeam: away?.name || match.away,
-            homeLogo: home?.logo || assetUrl("images/clubs_icon/placeholder.png"),
-            awayLogo: away?.logo || assetUrl("images/clubs_icon/placeholder.png"),
+            homeLogo: home?.logo || assetUrl("images/clubs_icon/placeholder.webp"),
+            awayLogo: away?.logo || assetUrl("images/clubs_icon/placeholder.webp"),
             scoreHome: match.scoreHome,
             scoreAway: match.scoreAway
         };
@@ -796,8 +797,8 @@
             away,
             homeTeam: homeClub?.name || "???",
             awayTeam: awayClub?.name || "???",
-            homeLogo: homeClub?.logo || assetUrl("images/clubs_icon/placeholder.png"),
-            awayLogo: awayClub?.logo || assetUrl("images/clubs_icon/placeholder.png"),
+            homeLogo: homeClub?.logo || assetUrl("images/clubs_icon/placeholder.webp"),
+            awayLogo: awayClub?.logo || assetUrl("images/clubs_icon/placeholder.webp"),
             scoreHome: null,
             scoreAway: null
         };
@@ -867,7 +868,7 @@
             id: "s1",
             number: 1,
             status: "active",
-            startDate: "2026-09-02",
+            startDate: "2027-01-06",
             endDate: null,
             expectedMatches: 24,
             rewards: emptySeasonRewards,
@@ -886,7 +887,7 @@
             id: "s2",
             number: 2,
             status: "active",
-            startDate: "2027-01-10",
+            startDate: "2027-05-05",
             endDate: null,
             expectedMatches: 20,
             technicalSnapshots: {},
@@ -1183,6 +1184,34 @@
         ), 0);
     }
 
+    // Valeur gagnée par un joueur sur un seul match, détaillée par action.
+    // Renvoie null si le joueur n'a pas participé au match.
+    function getPlayerMatchValueActions(match, playerName) {
+        const performance = getPlayerMatchPerformance(match, playerName);
+        if (!performance) return null;
+
+        const tierKey = match.valueTier || match.category;
+        const tier = marketValueTiers.find(item => item.key === tierKey) || marketValueTiers[0];
+        const quantities = {
+            victoire: performance.won ? 1 : 0,
+            egalite: performance.draw ? 1 : 0,
+            defaite: performance.lost ? 1 : 0,
+            buts: performance.goals,
+            passes: performance.assists,
+            def: performance.defenses,
+            dribbles: performance.dribbles,
+            mvp: performance.mvp
+        };
+
+        return marketValueActions.map(action => {
+            const quantity = Number(quantities[action.key] || 0);
+            const unitValue = action.key === "victoire"
+                ? Number(tier.victory || 0)
+                : Number(action.base || 0) * Number(tier.multiplier || 1);
+            return { key: action.key, quantity, value: quantity * unitValue };
+        });
+    }
+
     function getPlayerMarketValueBreakdown(playerName) {
         const normalizedPlayerName = normalizeRewardOwner(playerName);
         const player = players.find(item => normalizeRewardOwner(item.name) === normalizedPlayerName);
@@ -1192,29 +1221,9 @@
         );
 
         matches.forEach(match => {
-            const performance = getPlayerMatchPerformance(match, playerName);
-            if (!performance) return;
-
-            const tierKey = match.valueTier || match.category;
-            const tier = marketValueTiers.find(item => item.key === tierKey) || marketValueTiers[0];
-            const quantities = {
-                victoire: performance.won ? 1 : 0,
-                egalite: performance.draw ? 1 : 0,
-                defaite: performance.lost ? 1 : 0,
-                buts: performance.goals,
-                passes: performance.assists,
-                def: performance.defenses,
-                dribbles: performance.dribbles,
-                mvp: performance.mvp
-            };
-
-            marketValueActions.forEach(action => {
-                const quantity = Number(quantities[action.key] || 0);
-                const unitValue = action.key === "victoire"
-                    ? Number(tier.victory || 0)
-                    : Number(action.base || 0) * Number(tier.multiplier || 1);
-                actionTotals[action.key].quantity += quantity;
-                actionTotals[action.key].value += quantity * unitValue;
+            getPlayerMatchValueActions(match, playerName)?.forEach(action => {
+                actionTotals[action.key].quantity += action.quantity;
+                actionTotals[action.key].value += action.value;
             });
         });
 
@@ -1243,6 +1252,38 @@
 
     function getPlayerMarketValue(playerName) {
         return getPlayerMarketValueBreakdown(playerName).total;
+    }
+
+    // Évolution de la valeur match après match (courbe des fiches joueurs).
+    // Le dernier point ajoute les trophées pour retomber sur la valeur actuelle.
+    function getPlayerMarketValueHistory(playerName) {
+        const breakdown = getPlayerMarketValueBreakdown(playerName);
+        let total = breakdown.baseValue;
+        const points = [{ label: "Départ", date: null, matchId: null, delta: 0, total }];
+
+        [...matches]
+            .sort((a, b) => `${a.date} ${a.time || ""}`.localeCompare(`${b.date} ${b.time || ""}`))
+            .forEach(match => {
+                const actions = getPlayerMatchValueActions(match, playerName);
+                if (!actions) return;
+                const delta = actions.reduce((sum, action) => sum + action.value, 0);
+                total += delta;
+                const opponent = getPlayerMatchPerformance(match, playerName)?.side === "away"
+                    ? match.home
+                    : match.away;
+                points.push({
+                    label: `vs ${clubMeta[opponent]?.shortName || clubMeta[opponent]?.name || opponent}`,
+                    date: match.date,
+                    matchId: match.id,
+                    delta,
+                    total: Math.round(total)
+                });
+            });
+
+        if (breakdown.rewardValue > 0) {
+            points.push({ label: "Trophées", date: null, matchId: null, delta: breakdown.rewardValue, total: breakdown.total });
+        }
+        return points;
     }
 
     function refreshPlayerValues() {
@@ -1359,6 +1400,7 @@
        getClubMatchStats     = calculer le bilan du club sur une saison
        getClubTitleCount     = compter les trophées NCL du club
        getPlayerMarketValue  = calculer la valeur totale d'un joueur
+       getPlayerMarketValueHistory = évolution de la valeur match après match
        calculateTechnicalOverall = calculer automatiquement la note globale
        playerPageHref(obj)  = lien vers une fiche joueur
        clubPageHref(key)    = lien vers un dossier club
@@ -1396,6 +1438,7 @@
         getClubTitleCount,
         getPlayerMarketValue,
         getPlayerMarketValueBreakdown,
+        getPlayerMarketValueHistory,
         refreshPlayerValues,
         syncDiscordAvatars,
         playerPageHref: player => player?.href || pageUrl("players.html"),

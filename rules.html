@@ -4,8 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- meta:start (généré par pnpm meta) -->
+    <meta name="description" content="Le protocole de compétition officiel de la Nebula League.">
     <meta name="theme-color" content="#05070a">
-    <link rel="icon" type="image/png" href="images/logos/nebula.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta property="og:site_name" content="Nebula League">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Nebula League — Protocole de Compétition">
+    <meta property="og:description" content="Le protocole de compétition officiel de la Nebula League.">
+    <meta property="og:url" content="https://nebula-league.nightmarefoxy26.workers.dev/rules">
+    <meta property="og:image" content="https://nebula-league.nightmarefoxy26.workers.dev/og/site.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- meta:end -->
     <title>Nebula League — Protocole de Compétition</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -158,9 +173,22 @@
                     <article class="restriction-card">
                         <div class="restriction-code"><span>R–01</span><strong>ANTI-JEU</strong></div>
                         <div class="anti-play-diagram" aria-hidden="true">
-                            <span class="field-midline"></span>
-                            <i class="diagram-player ultimate-player"></i>
-                            <i class="diagram-player distant-carrier"></i>
+                            <svg class="rule-scene rule-scene-antiplay" viewBox="0 0 200 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+                                <path class="rs-faint" d="M100 8v104M8 60h184" />
+                                <circle class="rs-faint" cx="100" cy="60" r="18" />
+                                <g class="rs-ult">
+                                    <circle class="rs-aura rs-aura-1" cx="62" cy="60" r="12" />
+                                    <circle class="rs-aura rs-aura-2" cx="62" cy="60" r="12" />
+                                    <circle class="rs-player rs-acid" cx="62" cy="60" r="7" />
+                                    <text class="rs-text rs-acid" x="62" y="40" text-anchor="middle">ULT</text>
+                                </g>
+                                <path class="rs-arrow-flee" d="M104 60h56m-6-5 6 5-6 5" />
+                                <g class="rs-runner"><circle class="rs-player" cx="96" cy="60" r="7" /><circle class="rs-ball" cx="104" cy="66" r="3" /></g>
+                                <g class="rs-stamp">
+                                    <path class="rs-danger" d="M118 44l28 32m0-32-28 32" />
+                                    <text class="rs-text rs-danger" x="132" y="96" text-anchor="middle">INTERDIT</text>
+                                </g>
+                            </svg>
                         </div>
                         <p>Ne vous éloignez pas volontairement d’un joueur uniquement parce qu’il utilise son ultime.
                         </p>
@@ -170,10 +198,20 @@
                     <article class="restriction-card critical">
                         <div class="restriction-code"><span>R–02</span><strong>HORS-JEU</strong></div>
                         <div class="offside-diagram" aria-hidden="true">
-                            <span class="penalty-area"></span>
-                            <i class="diagram-player defender-player"></i>
-                            <i class="diagram-player passing-player"></i>
-                            <i class="diagram-player offside-player"></i>
+                            <svg class="rule-scene rule-scene-offside" viewBox="0 0 200 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+                                <path class="rs-line" d="M8 112h184" />
+                                <path class="rs-line" d="M150 112V40h42M164 112V70h28" />
+                                <path class="rs-goal" d="M184 52h8v40h-8" />
+                                <path class="rs-offside-line" d="M124 10v102" />
+                                <text class="rs-text" x="124" y="8" text-anchor="middle">DERNIER DÉFENSEUR</text>
+                                <circle class="rs-player" cx="124" cy="56" r="7" />
+                                <circle class="rs-player" cx="44" cy="84" r="7" />
+                                <circle class="rs-player rs-danger rs-offside-player" cx="168" cy="44" r="7" />
+                                <path class="rs-pass" d="M50 80 160 48" />
+                                <circle class="rs-ball rs-pass-ball" cx="50" cy="80" r="3" />
+                                <g class="rs-flag"><path class="rs-danger" d="M140 112V78" /><path class="rs-danger rs-fill" d="M140 78h14l-4 5 4 5h-14z" /></g>
+                                <text class="rs-text rs-danger rs-verdict" x="100" y="104" text-anchor="middle">BUT REFUSÉ</text>
+                            </svg>
                         </div>
                         <p>Attendre devant les cages pour recevoir la balle et marquer déclenche la règle de hors-jeu
                             simplifiée.</p>
@@ -184,12 +222,22 @@
                     <article class="restriction-card">
                         <div class="restriction-code"><span>R–03</span><strong>BALL HOG</strong></div>
                         <div class="possession-diagram" aria-hidden="true">
-                            <i class="diagram-player ball-carrier"></i>
-                            <i class="diagram-player defender-one"></i>
-                            <i class="diagram-player defender-two"></i>
-                            <i class="diagram-player defender-three"></i>
-                            <i class="diagram-player open-player-one"></i>
-                            <i class="diagram-player open-player-two"></i>
+                            <svg class="rule-scene rule-scene-ballhog" viewBox="0 0 200 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+                                <path class="rs-line" d="M8 8h184v104H8z" />
+                                <path class="rs-faint" d="M8 76h40v36" />
+                                <path class="rs-loop" d="M40 92a14 14 0 1 0 0.1 0" />
+                                <g class="rs-hog"><circle class="rs-player rs-acid" cx="40" cy="78" r="7" /><circle class="rs-ball" cx="47" cy="84" r="3" /></g>
+                                <circle class="rs-player rs-danger" cx="72" cy="72" r="7" />
+                                <circle class="rs-player rs-danger" cx="70" cy="100" r="7" />
+                                <circle class="rs-player rs-danger" cx="44" cy="52" r="7" />
+                                <path class="rs-option rs-option-1" d="M50 74 130 40" />
+                                <path class="rs-option rs-option-2" d="M50 80 150 86" />
+                                <circle class="rs-player rs-open rs-open-1" cx="138" cy="36" r="7" />
+                                <circle class="rs-player rs-open rs-open-2" cx="158" cy="88" r="7" />
+                                <text class="rs-text" x="138" y="22" text-anchor="middle">LIBRE</text>
+                                <text class="rs-text" x="158" y="108" text-anchor="middle">LIBRE</text>
+                                <text class="rs-text rs-acid" x="100" y="20" text-anchor="middle">⟳ 00:42</text>
+                            </svg>
                         </div>
                         <p>Ne campez pas avec la balle pour préserver un résultat. Continuez à construire et à chercher
                             le but.</p>

@@ -4,10 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- meta:start (généré par pnpm meta) -->
+    <meta name="description" content="Le hub officiel de la Nebula League : joueurs, clubs, titres, matchs, valeurs et archives d'une ligue privée sur Azure Latch.">
     <meta name="theme-color" content="#05070a">
-    <meta name="description"
-        content="Le hub officiel de la Nebula League : joueurs, clubs, titres, matchs, valeurs et archives d'une ligue privée sur Azure Latch.">
-    <link rel="icon" type="image/png" href="images/logos/nebula.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta property="og:site_name" content="Nebula League">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Nebula League — Entrez dans la ligue">
+    <meta property="og:description" content="Le hub officiel de la Nebula League : joueurs, clubs, titres, matchs, valeurs et archives d'une ligue privée sur Azure Latch.">
+    <meta property="og:url" content="https://nebula-league.nightmarefoxy26.workers.dev/">
+    <meta property="og:image" content="https://nebula-league.nightmarefoxy26.workers.dev/og/site.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- meta:end -->
     <title>Nebula League — Entrez dans la ligue</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -120,6 +133,27 @@
             </a>
         </section>
 
+        <section class="home-feed" aria-labelledby="feed-title">
+            <div class="feed-heading reveal">
+                <p class="home-eyebrow"><span>NL—01</span> LIVE FEED</p>
+                <h2 id="feed-title">EN CE MOMENT</h2>
+            </div>
+            <div class="feed-grid">
+                <article class="feed-panel reveal">
+                    <header><span>01 // DERNIERS RÉSULTATS</span><a href="matchs.html">Tous les matchs <i>↗</i></a></header>
+                    <div class="feed-body" data-feed="results"></div>
+                </article>
+                <article class="feed-panel feed-panel-next reveal">
+                    <header><span>02 // PROCHAINE RENCONTRE</span><a href="fixtures.html">Calendrier <i>↗</i></a></header>
+                    <div class="feed-body" data-feed="next"></div>
+                </article>
+                <article class="feed-panel reveal">
+                    <header><span>03 // EN TÊTE DE LA LIGUE</span><a href="stats.html">Records <i>↗</i></a></header>
+                    <div class="feed-body" data-feed="leaders"></div>
+                </article>
+            </div>
+        </section>
+
         <section class="home-directory" id="directory" aria-labelledby="directory-title">
             <div class="directory-heading reveal">
                 <div>
@@ -163,9 +197,9 @@
                         <span class="portal-arrow">↗</span>
                     </div>
                     <div class="portal-club-marks" aria-hidden="true">
-                        <img src="images/clubs_icon/Bastard_Munchen.png" alt="">
-                        <img src="images/clubs_icon/PXG.png" alt="">
-                        <img src="images/clubs_icon/Manshine_City.png" alt="">
+                        <img src="images/clubs_icon/Bastard_Munchen.webp" alt="">
+                        <img src="images/clubs_icon/PXG.webp" alt="">
+                        <img src="images/clubs_icon/Manshine_City.webp" alt="">
                     </div>
                 </a>
 
@@ -176,14 +210,14 @@
                         <h3>VALEURS</h3>
                         <span class="portal-arrow">↗</span>
                     </div>
-                    <div class="value-graph" aria-hidden="true">
-                        <i style="--bar:32%"></i>
-                        <i style="--bar:48%"></i>
-                        <i style="--bar:42%"></i>
-                        <i style="--bar:68%"></i>
-                        <i style="--bar:86%"></i>
-                        <i style="--bar:100%"></i>
-                    </div>
+                    <svg class="portal-art portal-art-value" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
+                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
+                        <path class="pa-fine pa-faint" d="M14 66h96M14 66V12M14 52h4M14 38h4M14 24h4" />
+                        <rect class="pa-bar pa-bar-1" x="19" y="44" width="10" height="22" /><rect class="pa-bar pa-bar-2" x="33" y="36" width="10" height="30" /><rect class="pa-bar pa-bar-3" x="47" y="40" width="10" height="26" /><rect class="pa-bar pa-bar-4" x="61" y="26" width="10" height="40" /><rect class="pa-bar pa-bar-5" x="75" y="18" width="10" height="48" /><rect class="pa-bar pa-bar-6" x="89" y="8" width="10" height="58" />
+                        <path class="pa-trend" pathLength="1" d="M24 40l14-8 14 4 14-14 14-8 14-10" />
+                        <circle class="pa-dot" cx="94" cy="8" r="3" />
+                        <text class="pa-text" x="110" y="76" text-anchor="end">¥ +</text>
+                    </svg>
                 </a>
 
                 <a class="portal-card portal-matches reveal" href="matchs.html">
@@ -193,9 +227,17 @@
                         <h3>MATCHS</h3>
                         <span class="portal-arrow">↗</span>
                     </div>
-                    <div class="match-timeline" aria-hidden="true">
-                        <span></span><i></i><i></i><i></i>
-                    </div>
+                    <svg class="portal-art portal-art-matches" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
+                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
+                        <rect class="pa-fine" x="34" y="8" width="52" height="20" rx="2" />
+                        <text class="pa-score" x="60" y="22.5" text-anchor="middle">2 – 1</text>
+                        <path class="pa-fine pa-faint" d="M10 52h100M10 47v10m50-10v10m50-10v10" />
+                        <text class="pa-text" x="10" y="72">0'</text>
+                        <text class="pa-text" x="60" y="72" text-anchor="middle">MT</text>
+                        <text class="pa-text" x="110" y="72" text-anchor="end">FIN</text>
+                        <g class="pa-event pa-event-1"><circle cx="28" cy="52" r="4.5" /><path class="pa-fine" d="M28 49.5l2 1.5-.8 2.4h-2.4l-.8-2.4z" /></g><g class="pa-event pa-event-2"><circle cx="66" cy="52" r="4.5" /><path class="pa-fine" d="M66 49.5l2 1.5-.8 2.4h-2.4l-.8-2.4z" /></g><g class="pa-event pa-event-3"><circle cx="92" cy="52" r="4.5" /><path class="pa-fine" d="M92 49.5l2 1.5-.8 2.4h-2.4l-.8-2.4z" /></g>
+                        <path class="pa-playhead" d="M10 42v20" />
+                    </svg>
                 </a>
 
                 <a class="portal-card portal-records reveal" href="stats.html">
@@ -205,7 +247,16 @@
                         <h3>RECORDS</h3>
                         <span class="portal-arrow">↗</span>
                     </div>
-                    <div class="record-target" aria-hidden="true"><i></i></div>
+                    <svg class="portal-art portal-art-records" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
+                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
+                        <circle class="pa-fine pa-faint" cx="60" cy="40" r="32" />
+                        <circle class="pa-ring" cx="60" cy="40" r="22" />
+                        <circle class="pa-fine" cx="60" cy="40" r="12" />
+                        <circle class="pa-solid" cx="60" cy="40" r="3.5" />
+                        <path class="pa-fine pa-faint" d="M60 2v14m0 48v14M22 40h14m48 0h14" />
+                        <g class="pa-arrow"><path d="M60 40 100 10" /><path d="M100 10l-1 7m1-7-7 1M96 13l-6 1m3-4-1 6" /></g>
+                        <text class="pa-text" x="110" y="76" text-anchor="end">MAX</text>
+                    </svg>
                 </a>
 
                 <a class="portal-card portal-rules reveal" href="rules.html">
@@ -215,7 +266,16 @@
                         <h3>RÈGLES</h3>
                         <span class="portal-arrow">↗</span>
                     </div>
-                    <div class="portal-rule-diagram" aria-hidden="true"><i></i><i></i><i></i></div>
+                    <svg class="portal-art portal-art-rules" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
+                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
+                        <path class="pa-fine pa-faint" d="M8 66h104" />
+                        <path class="pa-offside" d="M64 8v62" />
+                        <circle class="pa-fine" cx="80" cy="30" r="5" />
+                        <circle class="pa-fine" cx="80" cy="54" r="5" />
+                        <g class="pa-attacker"><circle class="pa-solid" cx="40" cy="42" r="5" /></g>
+                        <g class="pa-flag"><path d="M104 66V22" /><path class="pa-solid" d="M104 22h12l-3 5 3 5h-12z" /></g>
+                        <text class="pa-text" x="8" y="12">HORS-JEU</text>
+                    </svg>
                 </a>
 
                 <a class="portal-card portal-headtohead reveal" href="headtohead.html">
@@ -225,7 +285,17 @@
                         <h3>FACE À FACE</h3>
                         <span class="portal-arrow">↗</span>
                     </div>
-                    <div class="portal-versus-symbol" aria-hidden="true"><i data-side="A"></i><strong>VS</strong><i data-side="B"></i></div>
+                    <svg class="portal-art portal-art-versus" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
+                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
+                        <path class="pa-hex" d="M24 22l14 8v16l-14 8-14-8V30z" />
+                        <path class="pa-hex pa-hex-b" d="M96 22l14 8v16l-14 8-14-8V30z" />
+                        <text class="pa-text pa-text-big" x="24" y="42" text-anchor="middle">A</text>
+                        <text class="pa-text pa-text-big" x="96" y="42" text-anchor="middle">B</text>
+                        <path class="pa-beam pa-beam-a" d="M38 38h18" />
+                        <path class="pa-beam pa-beam-b" d="M82 38H64" />
+                        <g class="pa-spark"><path d="M60 30v-6m0 22v6m-8-14h-6m22 0h6m-19-7-4-4m10 0 4-4m-10 18-4 4m10 0 4 4" /></g>
+                        <text class="pa-text" x="60" y="74" text-anchor="middle">VS</text>
+                    </svg>
                 </a>
 
                 <a class="portal-card portal-seasons reveal" href="saison.html">
@@ -235,7 +305,15 @@
                         <h3>SAISONS</h3>
                         <span class="portal-arrow">↗</span>
                     </div>
-                    <div class="portal-season-symbol" aria-hidden="true"><i></i><strong>01</strong></div>
+                    <svg class="portal-art portal-art-seasons" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
+                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
+                        <circle class="pa-fine pa-faint" cx="60" cy="40" r="28" />
+                        <circle class="pa-cycle" pathLength="1" cx="60" cy="40" r="28" />
+                        <path class="pa-fine" d="M86 26l2 8-8 0" />
+                        <text class="pa-score" x="60" y="46" text-anchor="middle">01</text>
+                        <text class="pa-text" x="60" y="56" text-anchor="middle">SAISON</text>
+                        <circle class="pa-fine pa-faint" cx="60.0" cy="6.0" r="2" /><circle class="pa-fine pa-faint" cx="94.0" cy="40.0" r="2" /><circle class="pa-fine pa-faint" cx="60.0" cy="74.0" r="2" /><circle class="pa-fine pa-faint" cx="26.0" cy="40.0" r="2" />
+                    </svg>
                 </a>
 
                 <a class="portal-card portal-calendar reveal" href="fixtures.html">
@@ -245,9 +323,15 @@
                         <h3>CALENDRIER</h3>
                         <span class="portal-arrow">↗</span>
                     </div>
-                    <div class="portal-calendar-symbol" aria-hidden="true">
-                        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-                    </div>
+                    <svg class="portal-art portal-art-calendar" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
+                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
+                        <rect class="pa-fine" x="20" y="10" width="80" height="62" rx="2" />
+                        <path class="pa-fine" d="M20 22h80M36 6v8m48-8v8" />
+                        <path class="pa-fine pa-faint" d="M20 38h80M20 55h80M36 22v50m16-50v50m16-50v50m16-50v50" />
+                        <rect class="pa-day" x="52" y="38" width="16" height="17" />
+                        <path class="pa-check" pathLength="1" d="M55 47l4 4 7-8" />
+                        <text class="pa-text" x="60" y="19" text-anchor="middle">JANV.</text>
+                    </svg>
                 </a>
 
                 <a class="portal-card portal-progression reveal" href="progression.html">
@@ -257,7 +341,14 @@
                         <h3>PROGRESSION</h3>
                         <span class="portal-arrow">↗</span>
                     </div>
-                    <div class="portal-progress-symbol" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+                    <svg class="portal-art portal-art-progress" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
+                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
+                        <path class="pa-fine pa-faint" d="M10 70h100M10 70V8M10 54h100M10 38h100M10 22h100" />
+                        <path class="pa-curve" pathLength="1" d="M12 64l18-6 16 4 18-16 16 2 16-20 14-14" />
+                        <circle class="pa-node pa-node-1" cx="30" cy="58" r="2.6" /><circle class="pa-node pa-node-2" cx="46" cy="62" r="2.6" /><circle class="pa-node pa-node-3" cx="64" cy="46" r="2.6" /><circle class="pa-node pa-node-4" cx="80" cy="48" r="2.6" /><circle class="pa-node pa-node-5" cx="96" cy="28" r="2.6" />
+                        <path class="pa-fine" d="M110 14l-6-1m6 1-1 6" />
+                        <text class="pa-text" x="110" y="78" text-anchor="end">+12</text>
+                    </svg>
                 </a>
 
                 <a class="portal-card portal-dream reveal" href="dream-team.html">
@@ -267,7 +358,14 @@
                         <h3>ÉQUIPES IDÉALES</h3>
                         <span class="portal-arrow">↗</span>
                     </div>
-                    <div class="portal-team-symbol" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                    <svg class="portal-art portal-art-team" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
+                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
+                        <path class="pa-fine pa-faint" d="M60 10 92 34 80 70H40L28 34z" />
+                        <path class="pa-fine pa-faint pa-links" d="M60 10 60 42M92 34 60 42M80 70 60 42M40 70 60 42M28 34 60 42" />
+                        <circle class="pa-player pa-player-1" cx="60" cy="10" r="5" /><circle class="pa-player pa-player-2" cx="92" cy="34" r="5" /><circle class="pa-player pa-player-3" cx="80" cy="70" r="5" /><circle class="pa-player pa-player-4" cx="40" cy="70" r="5" /><circle class="pa-player pa-player-5" cx="28" cy="34" r="5" />
+                        <path class="pa-solid pa-star" d="M60 34l2.4 5 5.6.6-4.2 3.8 1.2 5.6-5-2.9-5 2.9 1.2-5.6-4.2-3.8 5.6-.6z" />
+                        <text class="pa-text" x="112" y="12" text-anchor="end">TOP 5</text>
+                    </svg>
                 </a>
             </div>
         </section>
@@ -304,7 +402,9 @@
 <script src="JavaScript/nebula-data.js" defer></script>
 <script src="JavaScript/players.js" defer></script>
     <script src="JavaScript/club.js" defer></script>
+    <script src="JavaScript/characters-data.js" defer></script>
     <script src="JavaScript/titles.js" defer></script>
+    <script src="JavaScript/home-feed.js" defer></script>
     <script src="JavaScript/script.js" defer></script>
     <script src="JavaScript/hamburger.js" defer></script>
 </body>
