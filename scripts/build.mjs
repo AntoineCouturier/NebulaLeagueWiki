@@ -1,6 +1,6 @@
 import { readFile, writeFile, mkdir, cp, readdir, rm } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
-import { loadLeagueData, listPages, applyMetaBlock } from './site-meta.mjs';
+import { loadLeagueData, listPages, applyMetaBlock, readText } from './site-meta.mjs';
 import { generateSocialAssets } from './social-assets.mjs';
 import { renderPlayerPage } from './player-pages.mjs';
 const outputDirectory = resolve('dist');
@@ -28,13 +28,13 @@ const previews = await generateSocialAssets(outputDirectory, data);
 // Les balises de partage vivent dans les pages sources : on signale celles à régénérer.
 const stalePages = [];
 for (const page of await listPages(data)) {
-  const html = await readFile(page.file, 'utf8');
+  const html = await readText(page.file);
   if (applyMetaBlock(page, html, data) !== html) stalePages.push(page.file);
 }
 // Les fiches joueurs sont générées depuis scripts/templates/joueur.html.
 const stalePlayers = [];
 for (const player of data.players) {
-  const current = await readFile(player.profilePath, 'utf8').catch(() => null);
+  const current = await readText(player.profilePath).catch(() => null);
   if (current !== await renderPlayerPage(player, data)) stalePlayers.push(player.profilePath);
 }
 console.log(`Site HTML/CSS/JS prêt. Avatars Discord : ${ids.length} joueurs. Aperçus : ${previews} fiches.`);

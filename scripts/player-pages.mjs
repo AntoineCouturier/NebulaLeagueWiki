@@ -1,8 +1,7 @@
 // Rendu des fiches joueurs depuis scripts/templates/joueur.html et les
 // données de nebula-data.js. Partagé par players.mjs (écriture) et build.mjs
 // (vérification).
-import { readFile } from 'node:fs/promises';
-import { renderMetaBlock } from './site-meta.mjs';
+import { renderMetaBlock, readText } from './site-meta.mjs';
 
 export const GENERATED_MARKER = 'Fiche générée par `pnpm joueurs`';
 
@@ -29,7 +28,7 @@ const formatStat = value => {
 };
 
 let templatePromise = null;
-const loadTemplate = () => (templatePromise ??= readFile('scripts/templates/joueur.html', 'utf8'));
+const loadTemplate = () => (templatePromise ??= readText('scripts/templates/joueur.html'));
 
 export async function renderPlayerPage(player, data) {
   const template = await loadTemplate();

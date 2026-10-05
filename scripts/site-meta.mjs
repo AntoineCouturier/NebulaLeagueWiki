@@ -28,6 +28,13 @@ const PAGE_DESCRIPTIONS = {
 };
 const DEFAULT_DESCRIPTION = 'Le hub officiel de la Nebula League : joueurs, clubs, titres, matchs, valeurs et archives.';
 
+// Lit un fichier texte en normalisant les fins de ligne : sous Windows, git
+// peut réécrire les fichiers en CRLF, ce qui ne doit pas compter comme un
+// changement quand on compare avec le contenu généré.
+export async function readText(path) {
+  return (await readFile(path, 'utf8')).replace(/\r\n/g, '\n');
+}
+
 export async function loadLeagueData() {
   const source = await readFile('JavaScript/nebula-data.js', 'utf8');
   const window = { dispatchEvent() {} };
