@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="CSS/global-theme.css">
     <link rel="stylesheet" href="CSS/home.css">
     <link rel="stylesheet" href="CSS/responsive.css">
+    <script src="JavaScript/reveal.js"></script>
 </head>
 
 <body class="nebula-page home-page">
@@ -134,20 +135,20 @@
         </section>
 
         <section class="home-feed" aria-labelledby="feed-title">
-            <div class="feed-heading reveal">
+            <div class="feed-heading">
                 <p class="home-eyebrow"><span>NL—01</span> LIVE FEED</p>
                 <h2 id="feed-title">EN CE MOMENT</h2>
             </div>
             <div class="feed-grid">
-                <article class="feed-panel reveal">
+                <article class="feed-panel">
                     <header><span>01 // DERNIERS RÉSULTATS</span><a href="matchs.html">Tous les matchs <i>↗</i></a></header>
                     <div class="feed-body" data-feed="results"></div>
                 </article>
-                <article class="feed-panel feed-panel-next reveal">
+                <article class="feed-panel feed-panel-next">
                     <header><span>02 // PROCHAINE RENCONTRE</span><a href="fixtures.html">Calendrier <i>↗</i></a></header>
                     <div class="feed-body" data-feed="next"></div>
                 </article>
-                <article class="feed-panel reveal">
+                <article class="feed-panel">
                     <header><span>03 // EN TÊTE DE LA LIGUE</span><a href="stats.html">Records <i>↗</i></a></header>
                     <div class="feed-body" data-feed="leaders"></div>
                 </article>
@@ -155,7 +156,7 @@
         </section>
 
         <section class="home-directory" id="directory" aria-labelledby="directory-title">
-            <div class="directory-heading reveal">
+            <div class="directory-heading">
                 <div>
                     <p class="home-eyebrow"><span>NL—02</span> LEAGUE DIRECTORY</p>
                     <h2 id="directory-title">TOUTE LA LIGUE.<br><em>UN SEUL HUB.</em></h2>
@@ -167,7 +168,7 @@
             </div>
 
             <div class="home-portals">
-                <a class="portal-card portal-featured reveal" href="title.html">
+                <a class="portal-card portal-featured" href="title.html">
                     <span class="portal-index">01 / ARCHIVES</span>
                     <div class="portal-copy">
                         <p><span data-count="characters">26</span> personnages — Titres communs à Mastery</p>
@@ -179,7 +180,7 @@
                     </div>
                 </a>
 
-                <a class="portal-card portal-players reveal" href="players.html">
+                <a class="portal-card portal-players" href="players.html">
                     <span class="portal-index">02 / ROSTER</span>
                     <div class="portal-copy">
                         <p>Profils, postes et valeurs</p>
@@ -189,7 +190,7 @@
                     <strong class="portal-figure" data-count="players" data-pad="2">10</strong>
                 </a>
 
-                <a class="portal-card portal-clubs reveal" href="club.html">
+                <a class="portal-card portal-clubs" href="club.html">
                     <span class="portal-index">03 / TEAMS</span>
                     <div class="portal-copy">
                         <p>Effectifs et identités de jeu</p>
@@ -203,7 +204,7 @@
                     </div>
                 </a>
 
-                <a class="portal-card portal-value reveal" href="valeur.html">
+                <a class="portal-card portal-value" href="valeur.html">
                     <span class="portal-index">04 / MARKET</span>
                     <div class="portal-copy">
                         <p>Progression et cotations</p>
@@ -220,7 +221,7 @@
                     </svg>
                 </a>
 
-                <a class="portal-card portal-matches reveal" href="matchs.html">
+                <a class="portal-card portal-matches" href="matchs.html">
                     <span class="portal-index">05 / TIMELINE</span>
                     <div class="portal-copy">
                         <p>Chaque score, chaque résultat</p>
@@ -240,7 +241,7 @@
                     </svg>
                 </a>
 
-                <a class="portal-card portal-records reveal" href="stats.html">
+                <a class="portal-card portal-records" href="stats.html">
                     <span class="portal-index">06 / RECORDS</span>
                     <div class="portal-copy">
                         <p>Les performances qui restent</p>
@@ -259,7 +260,7 @@
                     </svg>
                 </a>
 
-                <a class="portal-card portal-rules reveal" href="rules.html">
+                <a class="portal-card portal-rules" href="rules.html">
                     <span class="portal-index">07 / PROTOCOLE</span>
                     <div class="portal-copy">
                         <p>Cadre officiel de la ligue</p>
@@ -278,7 +279,7 @@
                     </svg>
                 </a>
 
-                <a class="portal-card portal-headtohead reveal" href="headtohead.html">
+                <a class="portal-card portal-headtohead" href="headtohead.html">
                     <span class="portal-index">08 / COMPARAISON</span>
                     <div class="portal-copy">
                         <p>Clubs et joueurs en duel</p>
@@ -298,7 +299,7 @@
                     </svg>
                 </a>
 
-                <a class="portal-card portal-seasons reveal" href="saison.html">
+                <a class="portal-card portal-seasons" href="saison.html">
                     <span class="portal-index">09 / CYCLES</span>
                     <div class="portal-copy">
                         <p>Progression de la compétition</p>
@@ -316,7 +317,7 @@
                     </svg>
                 </a>
 
-                <a class="portal-card portal-calendar reveal" href="fixtures.html">
+                <a class="portal-card portal-calendar" href="fixtures.html">
                     <span class="portal-index">10 / PLANNING</span>
                     <div class="portal-copy">
                         <p>Prochaines rencontres</p>
@@ -334,7 +335,7 @@
                     </svg>
                 </a>
 
-                <a class="portal-card portal-progression reveal" href="progression.html">
+                <a class="portal-card portal-progression" href="progression.html">
                     <span class="portal-index">11 / ÉVOLUTION</span>
                     <div class="portal-copy">
                         <p>Chaque match laisse une trace</p>
@@ -351,7 +352,7 @@
                     </svg>
                 </a>
 
-                <a class="portal-card portal-dream reveal" href="dream-team.html">
+                <a class="portal-card portal-dream" href="dream-team.html">
                     <span class="portal-index">12 / BEST FIVE</span>
                     <div class="portal-copy">
                         <p>La sélection qui domine</p>
@@ -370,7 +371,7 @@
             </div>
         </section>
 
-        <section class="home-final reveal">
+        <section class="home-final">
             <div class="home-final-grid" aria-hidden="true"></div>
             <p class="home-eyebrow"><span>NL—03</span> ENTER THE PITCH</p>
             <h2>TON EGO.<br><em>TA TRACE.</em></h2>
