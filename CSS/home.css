@@ -1886,21 +1886,6 @@ body.home-page .home-hero::after {
   }
 }
 
-/* -------------------- Reveal -------------------- */
-
-.reveal-ready .reveal {
-  opacity: 0;
-  transform: translateY(16px);
-  transition:
-    opacity 380ms ease-out,
-    transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.reveal-ready .reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 /* -------------------- Animations -------------------- */
 
 @keyframes home-spin {
@@ -2186,11 +2171,5 @@ body.home-page .home-hero::after {
   .home-orbit::before,
   .home-scroll-cue i::after {
     animation: none;
-  }
-
-  .reveal-ready .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
   }
 }
