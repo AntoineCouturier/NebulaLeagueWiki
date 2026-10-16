@@ -1477,11 +1477,11 @@ body.nebula-page .site-header {
 }
 
 ::view-transition-old(root) {
-  animation: nebula-page-out 160ms ease-in both;
+  animation: nebula-page-out 240ms cubic-bezier(0.55, 0, 0.75, 0.2) both;
 }
 
 ::view-transition-new(root) {
-  animation: nebula-page-in 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: nebula-page-in 520ms cubic-bezier(0.2, 0.8, 0.2, 1) 60ms both;
 }
 
 ::view-transition-group(*) {
@@ -1489,17 +1489,37 @@ body.nebula-page .site-header {
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* L'ancienne page recule et se brouille, la nouvelle se "scanne" de haut
+   en bas en sortant du flou. */
 @keyframes nebula-page-out {
   to {
     opacity: 0;
+    transform: scale(0.985);
+    filter: blur(6px) brightness(0.6);
   }
 }
 
 @keyframes nebula-page-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(18px);
+    filter: blur(10px) brightness(1.6);
+    clip-path: inset(0 0 100% 0);
   }
+
+  55% {
+    opacity: 1;
+    filter: blur(0) brightness(1.2);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* -------------------- Apparition des blocs -------------------- */
+/* Posé par JavaScript/reveal.js sur chaque bloc jusqu'à ce qu'il entre à
+   l'écran (l'animation elle-même est jouée par le script). */
+
+.nl-pending {
+  opacity: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
