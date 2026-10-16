@@ -27,6 +27,13 @@ function syncGlobalTitleCatalog() {
     if (title) title.textContent = rule.name;
   });
 
+  // Dessins blueprint partagés avec les fiches joueurs (title-art.js).
+  if (typeof getTechnicalTitleIllustration === "function") {
+    document.querySelectorAll("[data-title-art]").forEach((slot) => {
+      slot.innerHTML = getTechnicalTitleIllustration({ category: "Statistique", metric: slot.dataset.titleArt });
+    });
+  }
+
   const uniqueTechnicalThresholds = [...new Set(technicalRules.map((rule) => Number(rule.threshold ?? 95)))];
   const thresholdCopy = document.querySelector("[data-technical-threshold-copy]");
   if (thresholdCopy && uniqueTechnicalThresholds.length) {

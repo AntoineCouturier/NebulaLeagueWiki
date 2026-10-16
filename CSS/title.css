@@ -697,6 +697,7 @@ main {
   line-height: 1;
 }
 
+/* Emplacement des dessins blueprint (CSS/title-art.css pour le tracé). */
 .stat-illustration {
   position: absolute;
   z-index: 0;
@@ -704,105 +705,22 @@ main {
   right: 13px;
   width: min(46%, 145px);
   height: 82px;
-  overflow: visible;
-  color: var(--stat-accent);
-  opacity: 0.48;
-  filter: drop-shadow(0 0 7px color-mix(in srgb, var(--stat-accent), transparent 72%));
   pointer-events: none;
   transform-origin: center;
+  transition: transform 220ms ease;
+}
+
+.stat-title .stat-illustration .pc-technical-title-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  color: var(--stat-accent);
+  opacity: 0.6;
+  filter: drop-shadow(0 0 7px color-mix(in srgb, var(--stat-accent), transparent 72%));
   transition:
     opacity 180ms ease,
-    transform 220ms ease,
     filter 220ms ease;
-}
-
-.stat-illustration path,
-.stat-illustration circle,
-.stat-illustration rect,
-.stat-illustration line,
-.stat-illustration polygon,
-.stat-illustration polyline {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.55;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-
-.stat-illustration .glyph-faint {
-  opacity: 0.42;
-}
-
-.stat-illustration .glyph-dash {
-  stroke-dasharray: 5 5;
-}
-
-.stat-illustration .glyph-node {
-  fill: currentColor;
-  stroke: none;
-}
-
-.stat-illustration .glyph-ball {
-  fill: #090c10;
-  stroke-width: 1.8;
-}
-
-.passes-illustration .glyph-secondary {
-  color: #65b5ff;
-}
-
-.passes-illustration .glyph-support-player {
-  stroke-width: 1.45;
-}
-
-.speed-illustration .glyph-speed-ticks {
-  opacity: 0.72;
-  stroke-width: 1.8;
-}
-
-.predator-illustration .goal-frame {
-  stroke-width: 1.8;
-}
-
-.predator-illustration .goal-net {
-  opacity: 0.42;
-}
-
-.predator-illustration .goal-target {
-  fill: currentColor;
-  opacity: 0.24;
-  stroke-width: 1.8;
-}
-
-.vision-illustration .vision-ring {
-  transform-box: fill-box;
-  transform-origin: center;
-  transition: transform 500ms ease;
-}
-
-.vision-illustration .vision-ring-outer {
-  stroke-dasharray: 15 4 6 5;
-}
-
-.vision-illustration .vision-ring-middle {
-  stroke-dasharray: 7 3 12 4;
-}
-
-.vision-illustration .vision-ring-inner {
-  stroke-dasharray: 4 3 8 3;
-}
-
-.stat-title:hover .vision-ring-outer {
-  transform: rotate(14deg);
-}
-
-.stat-title:hover .vision-ring-middle {
-  transform: rotate(-18deg);
-}
-
-.stat-title:hover .vision-ring-inner {
-  transform: rotate(24deg);
 }
 
 .stat-overall .stat-illustration {
@@ -813,19 +731,12 @@ main {
 }
 
 .stat-title:hover .stat-illustration {
-  opacity: 0.82;
-  filter: drop-shadow(0 0 11px color-mix(in srgb, var(--stat-accent), transparent 58%));
   transform: translateY(-2px) scale(1.025);
 }
 
-.stat-title:hover .stat-illustration .glyph-dash {
-  animation: statGlyphFlow 1.2s linear infinite;
-}
-
-@keyframes statGlyphFlow {
-  to {
-    stroke-dashoffset: -20;
-  }
+.stat-title:hover .stat-illustration .pc-technical-title-art {
+  opacity: 0.95;
+  filter: drop-shadow(0 0 11px color-mix(in srgb, var(--stat-accent), transparent 58%));
 }
 
 .stat-defense {
