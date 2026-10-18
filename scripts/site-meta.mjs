@@ -6,7 +6,7 @@ import vm from 'node:vm';
 
 export const SITE_URL = 'https://nebula-league.nightmarefoxy26.workers.dev';
 export const SITE_NAME = 'Nebula League';
-export const BACKGROUND = '#05070a';
+export const BACKGROUND = '#020611';
 
 const META_START = '<!-- meta:start (généré par pnpm meta) -->';
 const META_END = '<!-- meta:end -->';
@@ -45,7 +45,7 @@ export async function loadLeagueData() {
   return window.NEBULA_DATA;
 }
 
-export const solidColor = color => (/^#[0-9a-f]{6}/i.test(color || '') ? color.slice(0, 7) : '#adff2f');
+export const solidColor = color => (/^#[0-9a-f]{6}/i.test(color || '') ? color.slice(0, 7) : '#3d7bff');
 export const playerSlug = player => `${player.folder}-${player.name.toLowerCase()}`;
 const escapeAttr = text => String(text).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 const cleanPath = file => '/' + file.replace(/\\/g, '/').replace(/(^|\/)index\.html$/, '$1').replace(/\.html$/, '');
@@ -74,7 +74,7 @@ export function renderMetaBlock({ file, player }, html, data, indent) {
   const existing = readExisting(html);
   let title = existing.title;
   let description = existing.description || PAGE_DESCRIPTIONS[file] || DEFAULT_DESCRIPTION;
-  let image = `${SITE_URL}/og/site.jpg`;
+  let image = `${SITE_URL}/og/site.jpg?v=2`;
   let themeColor = BACKGROUND;
 
   if (player) {
@@ -87,7 +87,7 @@ export function renderMetaBlock({ file, player }, html, data, indent) {
       rating ? `Note globale ${rating}` : 'Note en cours d’évaluation',
       player.character ? `Personnage : ${player.character}` : null
     ].filter(Boolean).join(' — ') + '.';
-    image = `${SITE_URL}/og/joueurs/${playerSlug(player)}.jpg`;
+    image = `${SITE_URL}/og/joueurs/${playerSlug(player)}.jpg?v=2`;
     themeColor = solidColor(club?.color);
   }
 
