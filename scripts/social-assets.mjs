@@ -17,10 +17,24 @@ const PAPER = '#f3f7ff';
 const MUTED = '#8b9ac0';
 const DIM = '#5f6e96';
 const DISPLAY = "'Chakra Petch', 'Bahnschrift', 'Arial Narrow', sans-serif";
-const SANS = "'IBM Plex Sans', 'Segoe UI', Arial, sans-serif";
 const MONO = "'IBM Plex Mono', Consolas, 'Courier New', monospace";
 const JP = "'Noto Sans JP', 'Yu Gothic', 'Meiryo', sans-serif";
 const LOGO = 'images/logos/nebula.png';
+
+// Polices du site, embarquées pour que les aperçus soient identiques sur toutes
+// les machines. sharp ne charge un fichier de police qu'en rendant du texte :
+// on le fait une fois, et le rendu SVG retrouve ensuite la police par son nom.
+const FONTS = [
+  ['Chakra Petch Bold', 'ChakraPetch-Bold.ttf'],
+  ['Chakra Petch Bold Italic', 'ChakraPetch-BoldItalic.ttf'],
+  ['IBM Plex Mono SemiBold', 'IBMPlexMono-SemiBold.ttf']
+];
+
+async function loadFonts() {
+  for (const [font, file] of FONTS) {
+    await sharp({ text: { text: '.', font, fontfile: join('scripts', 'fonts', file) } }).toBuffer();
+  }
+}
 
 const escapeXml = text => String(text ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -76,6 +90,18 @@ async function cover(path, size) {
     .toBuffer();
 }
 
+// Flux caméra du mur : image en niveaux de gris teintée en bleu.
+async function feed(path, size) {
+  const grey = await sharp(await readFile(path))
+    .resize(size, size, { fit: 'cover', position: 'top' })
+    .flatten({ background: BACKGROUND })
+    .grayscale()
+    .linear(0.82, 0)
+    .png()
+    .toBuffer();
+  return sharp(grey).toColourspace('srgb').tint(BLUE_2).toBuffer();
+}
+
 async function contain(path, size) {
   return sharp(await readFile(path))
     .resize(size, size, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
@@ -119,26 +145,53 @@ async function renderPlayerCard(player, club) {
   return sharp(Buffer.from(svg)).composite(layers).jpeg({ quality: 86, mozjpeg: true }).toBuffer();
 }
 
+// Mur principal : les quatre joueurs les mieux notés, comme sur l'accueil.
+const WALL = { x: 770, y: 140, tile: 172, gap: 6 };
+
 async function renderSiteCard(data) {
   const players = String(data.players.length).padStart(2, '0');
+  const featured = data.players
+    .filter(player => player.avatarPath)
+    .sort((a, b) => (b.technical?.global ?? 0) - (a.technical?.global ?? 0))
+    .slice(0, 4)
+    .map((player, index) => ({
+      player,
+      left: WALL.x + (index % 2) * (WALL.tile + WALL.gap),
+      top: WALL.y + Math.floor(index / 2) * (WALL.tile + WALL.gap)
+    }));
+
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
     ${screen(BLUE, 0.78, `CAM 00 <tspan fill="${BLUE_3}">//</tspan> SALLE DE CONTRÔLE`, `MUR PRINCIPAL — ${players} SUJETS`)}
     <text x="64" y="160" font-family="${MONO}" font-weight="600" font-size="20" fill="${BLUE_3}" letter-spacing="2">CH 00 <tspan fill="${MUTED}">LIGUE PRIVÉE // AZURE LATCH</tspan></text>
     <text x="58" y="310" font-family="${DISPLAY}" font-weight="700" font-size="158" fill="${PAPER}" letter-spacing="-3">NEBULA</text>
-    <text x="58" y="452" font-family="${DISPLAY}" font-weight="700" font-size="158" fill="${BLUE_2}" letter-spacing="-3">LEAGUE</text>
-    <rect x="66" y="488" width="4" height="62" fill="${BLUE_2}"/>
-    <text x="88" y="512" font-family="${SANS}" font-weight="600" font-size="26" fill="${PAPER}">Ton ego est sous surveillance.</text>
-    <text x="88" y="546" font-family="${SANS}" font-size="22" fill="${MUTED}">${data.players.length} joueurs · ${data.clubs.length} clubs · un seul classement</text>
+    <text x="54" y="452" font-family="${DISPLAY}" font-weight="700" font-style="italic" font-size="158" fill="${BLUE_2}" letter-spacing="-3">LEAGUE</text>
+    <rect x="64" y="482" width="504" height="44" fill="${BLUE}"/>
+    <text x="80" y="513" font-family="${DISPLAY}" font-weight="700" font-size="26" fill="${PAPER}" letter-spacing="1">TON EGO EST SOUS SURVEILLANCE.</text>
+    <text x="66" y="562" font-family="${MONO}" font-weight="600" font-size="18" fill="${MUTED}" letter-spacing="2">${data.players.length} JOUEURS · ${data.clubs.length} CLUBS · UN SEUL CLASSEMENT</text>
     <rect x="770" y="140" width="350" height="350" fill="${BLUE_2}" fill-opacity="0.05" stroke="${BLUE_2}" stroke-opacity="0.35"/>
     ${brackets(762, 132, 366, 366, BLUE_2, 30, 3)}
-    <path d="M945 150V200 M945 430V480 M780 315H830 M1060 315H1110" stroke="${BLUE_3}" stroke-opacity="0.55" stroke-width="2"/>
-    <circle cx="945" cy="315" r="150" fill="none" stroke="${BLUE_3}" stroke-opacity="0.18"/>
-    <text x="786" y="166" font-family="${MONO}" font-weight="600" font-size="15" fill="${MUTED}" letter-spacing="2">CAM 01</text>
-    <text x="1104" y="476" text-anchor="end" font-family="${DISPLAY}" font-weight="700" font-size="40" fill="${PAPER}" fill-opacity="0.9">#001</text>
     <text x="1120" y="540" text-anchor="end" font-family="${JP}" font-weight="700" font-size="22" fill="${BLUE_3}" fill-opacity="0.75">ブルーロック 監視中</text>
   </svg>`;
+
+  // Lignes de balayage, canal, point REC, nom et note par-dessus chaque flux.
+  const T = WALL.tile;
+  const overlay = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
+    <defs><pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="1" fill="#000000" fill-opacity="0.28"/></pattern></defs>
+    ${featured.map(({ player, left: x, top: y }, index) => `
+    <rect x="${x}" y="${y}" width="${T}" height="${T}" fill="url(#scan)"/>
+    <rect x="${x}" y="${y}" width="${T}" height="26" fill="${BACKGROUND}" fill-opacity="0.6"/>
+    <text x="${x + 8}" y="${y + 18}" font-family="${MONO}" font-weight="600" font-size="12" fill="${PAPER}" letter-spacing="1.5">CAM 0${index + 1}</text>
+    <circle cx="${x + T - 13}" cy="${y + 13}" r="4.5" fill="${REC}"/>
+    <rect x="${x}" y="${y + T - 40}" width="${T}" height="40" fill="${BACKGROUND}" fill-opacity="0.55"/>
+    <rect x="${x}" y="${y + T - 30}" width="${Math.round(player.name.length * 11.5 + 18)}" height="30" fill="${BLUE}"/>
+    <text x="${x + 9}" y="${y + T - 9}" font-family="${DISPLAY}" font-weight="700" font-size="18" fill="${PAPER}">${escapeXml(player.name.toUpperCase())}</text>
+    <text x="${x + T - 8}" y="${y + T - 8}" text-anchor="end" font-family="${DISPLAY}" font-weight="700" font-style="italic" font-size="34" fill="${PAPER}">${player.technical?.global ?? '--'}</text>`).join('')}
+  </svg>`;
+
+  const layers = await Promise.all(featured.map(async ({ player, left, top }) => ({ input: await feed(player.avatarPath, T), left, top })));
+  layers.push({ input: Buffer.from(overlay), left: 0, top: 0 });
   return sharp(Buffer.from(svg))
-    .composite([{ input: await contain(LOGO, 230), left: 830, top: 200 }])
+    .composite(layers)
     .jpeg({ quality: 88, mozjpeg: true })
     .toBuffer();
 }
@@ -172,6 +225,7 @@ function pngToIco(png, size) {
 export async function generateSocialAssets(outDir, data) {
   await mkdir(join(outDir, 'og', 'joueurs'), { recursive: true });
   await mkdir(join(outDir, 'icons'), { recursive: true });
+  await loadFonts();
 
   await writeFile(join(outDir, 'og', 'site.jpg'), await renderSiteCard(data));
   for (const player of data.players) {
