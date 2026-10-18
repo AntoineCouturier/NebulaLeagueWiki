@@ -26,18 +26,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,500;0,600;0,700;1,600;1,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="CSS/style.css">
     <link rel="stylesheet" href="CSS/hamburger.css">
     <link rel="stylesheet" href="CSS/global-theme.css">
     <link rel="stylesheet" href="CSS/saison.css">
     <link rel="stylesheet" href="CSS/responsive.css">
+    <link rel="stylesheet" href="CSS/theme-monitor.css">
     <script src="JavaScript/reveal.js"></script>
 </head>
 
-<body class="nebula-page seasons-page">
+<body class="nebula-page seasons-page nl-migrated">
     <header class="site-header" id="top">
         <a class="brand" href="#top" aria-label="Nebula League, retour en haut">
             <span class="brand-mark"><span></span></span>
@@ -66,71 +66,113 @@
     </header>
 
     <main class="season-command">
-        <section class="season-hero" aria-labelledby="seasonPageTitle">
-            <div class="season-hero-copy">
-                <p class="season-eyebrow"><span>NL–05</span> CHRONOLOGIE OFFICIELLE</p>
-                <h1 id="seasonPageTitle">CHAQUE CYCLE<br><em>LAISSE UNE TRACE.</em></h1>
-                <p class="season-intro">
-                    Explorez chaque édition de la Nebula League, suivez la campagne active et replongez dans les
-                    classements, leaders et distinctions des saisons archivées.
+        <!-- 01. Héros : multivue du cycle (écran maître + un flux par club, générés par saison.js) -->
+        <section class="season-hero nl-hero" aria-labelledby="seasonPageTitle">
+            <div class="osd">
+                <span class="rec">REC</span>
+                <span>CAM 09 <b>//</b> ARCHIVES DES CYCLES</span>
+                <span class="osd-hide-sm">MULTIVUE — <b>CYCLE EN COURS</b></span>
+                <span class="jp osd-hide-sm">記録 // ブルーロック</span>
+                <span class="osd-hide-sm">CANAL 05 · SIGNAL STABLE</span>
+            </div>
+
+            <div class="season-wall">
+                <div class="season-cycle" aria-hidden="true">
+                    <span class="nl-feed-osd"><span><b>CAM 01</b> // CYCLE MAÎTRE</span><span class="rec">DIRECT</span></span>
+                    <span class="nl-reticle"><i></i></span>
+                    <div class="season-cycle-core">
+                        <small id="seasonCycleStatus">CYCLE ACTIF</small>
+                        <span class="season-cycle-label">SAISON</span>
+                        <strong id="seasonCycleNumber">01</strong>
+                        <span class="season-cycle-meter"><span class="nl-vu"></span><span id="seasonCycleProgress">0% SYNCHRONISÉ</span></span>
+                    </div>
+                </div>
+                <div class="season-wall-feeds" data-season-wall></div>
+            </div>
+
+            <div class="nl-hero-inner season-hero-inner">
+                <p class="nl-kicker"><span class="nl-ch">CH 09</span> Ligue // Chronologie officielle</p>
+                <h1 id="seasonPageTitle" class="nl-headline season-title">Chaque cycle <em>laisse une trace.</em></h1>
+                <p class="nl-lead">
+                    Explorez chaque édition de la Nebula League, suivez la campagne <b>en direct</b> et replongez dans
+                    les classements, leaders et distinctions des saisons archivées.
                 </p>
                 <div class="season-hero-stats" id="seasonHeroStats" aria-label="Résumé des archives"></div>
             </div>
-
-            <div class="season-cycle" aria-hidden="true">
-                <span class="season-cycle-ring ring-outer"></span>
-                <span class="season-cycle-ring ring-inner"></span>
-                <span class="season-cycle-axis axis-x"></span>
-                <span class="season-cycle-axis axis-y"></span>
-                <i class="season-cycle-node node-one"></i>
-                <i class="season-cycle-node node-two"></i>
-                <div class="season-cycle-core">
-                    <small id="seasonCycleStatus">CYCLE ACTIF</small>
-                    <strong id="seasonCycleNumber">01</strong>
-                    <span id="seasonCycleProgress">0% SYNCHRONISÉ</span>
-                </div>
-            </div>
         </section>
 
-        <section class="season-console" aria-labelledby="seasonConsoleTitle">
-            <div class="season-section-head">
-                <span class="season-section-index">01</span>
+        <!-- 02. Console : sélecteur de cycle + dossier de saison (générés par saison.js) -->
+        <section class="season-console" id="seasonConsole" aria-labelledby="seasonConsoleTitle">
+            <div class="nl-section-head">
+                <div class="nl-chno" aria-hidden="true"><small>CH</small><b>01</b></div>
                 <div>
-                    <p class="season-kicker">NAVIGATION TEMPORELLE</p>
-                    <h2 id="seasonConsoleTitle">SÉLECTIONNER UNE SAISON</h2>
+                    <p class="nl-kicker">Navigation temporelle // Sélecteur de cycle</p>
+                    <h2 id="seasonConsoleTitle" class="nl-section-title">Sélectionner <em>une saison</em></h2>
                 </div>
-                <p>Chaque dossier est recalculé depuis les résultats enregistrés dans l’historique des matchs.</p>
+                <p class="nl-section-note">Chaque dossier est recalculé depuis les résultats enregistrés dans l’historique
+                    des matchs.</p>
             </div>
 
-            <div class="season-switcher" id="seasonSwitcher" role="tablist" aria-label="Saisons disponibles"></div>
+            <div class="season-switcher nl-channels" id="seasonSwitcher" role="tablist" aria-label="Saisons disponibles"></div>
             <div class="season-dossier-host" id="seasonDossier" aria-live="polite"></div>
         </section>
 
+        <!-- 03. Journal : une bande d'archives par cycle -->
         <section class="season-ledger" aria-labelledby="seasonLedgerTitle">
-            <div class="season-section-head">
-                <span class="season-section-index">02</span>
+            <div class="nl-section-head">
+                <div class="nl-chno" aria-hidden="true"><small>CH</small><b>02</b></div>
                 <div>
-                    <p class="season-kicker">REGISTRE PERMANENT</p>
-                    <h2 id="seasonLedgerTitle">JOURNAL DES ÉDITIONS</h2>
+                    <p class="nl-kicker">Registre permanent // Bandes d’archives</p>
+                    <h2 id="seasonLedgerTitle" class="nl-section-title">Journal <em>des éditions</em></h2>
                 </div>
-                <p>Une ligne temporelle compacte pour comparer l’activité et le leader de chaque cycle.</p>
+                <p class="nl-section-note">Une ligne temporelle compacte pour comparer l’activité et le leader de chaque
+                    cycle.</p>
             </div>
             <div class="season-history" id="seasonHistory"></div>
         </section>
     </main>
 
-    <div class="season-modal" id="seasonModal" hidden>
-        <div class="season-modal-backdrop" data-close-season-modal></div>
-        <section class="season-modal-panel" role="dialog" aria-modal="true" aria-labelledby="seasonModalTitle">
-            <header class="season-modal-head">
-                <div>
-                    <p class="season-kicker">DOSSIER INTÉGRAL</p>
+    <footer class="nl-footer">
+        <div class="nl-footer-main">
+            <a class="footer-brand" href="index.html">
+                <span class="brand-mark"><span></span></span>
+                <strong>NEBULA LEAGUE</strong>
+            </a>
+            <p>Ligue privée Azure Latch. Toutes les rencontres sont enregistrées, chaque statistique est archivée.</p>
+        </div>
+        <nav class="nl-footer-links" aria-label="Accès rapides">
+            <p>Accès rapides</p>
+            <a href="matchs.html">Matchs</a>
+            <a href="fixtures.html">Calendrier</a>
+            <a href="stats.html">Records</a>
+            <a href="club.html">Clubs</a>
+            <a href="players.html">Joueurs</a>
+            <a href="rules.html">Règles</a>
+        </nav>
+        <div class="nl-footer-osd">
+            <span class="rec">REC</span>
+            <span>NL-CTRL // FIN DU FLUX</span>
+            <span class="jp">ブルーロック</span>
+            <span>© NEBULA LEAGUE</span>
+            <a href="#top">Retour en haut ↑</a>
+        </div>
+    </footer>
+
+    <div class="season-modal nl-modal" id="seasonModal" hidden>
+        <div class="season-modal-backdrop nl-modal-backdrop" data-close-season-modal></div>
+        <section class="season-modal-panel nl-modal-panel" role="dialog" aria-modal="true" aria-labelledby="seasonModalTitle">
+            <div class="season-modal-head">
+                <div class="osd">
+                    <span><span class="rec">REC</span> CAM 09 <b>//</b> DOSSIER INTÉGRAL</span>
+                    <button class="season-control-button season-modal-close nl-modal-close" type="button" data-close-season-modal
+                        aria-label="Fermer le dossier">×</button>
+                </div>
+                <div class="season-modal-title">
+                    <p class="nl-kicker">Dossier intégral // Archives</p>
                     <h2 id="seasonModalTitle">SAISON</h2>
                 </div>
-                <button class="season-control-button season-modal-close" type="button" data-close-season-modal
-                    aria-label="Fermer le dossier">×</button>
-            </header>
-            <div class="season-modal-content" id="seasonModalContent"></div>
+            </div>
+            <div class="season-modal-content nl-modal-body" id="seasonModalContent"></div>
         </section>
     </div>
 

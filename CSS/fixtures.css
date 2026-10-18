@@ -1,2287 +1,2044 @@
-:root {
-    --fixture-acid: #adff2f;
-    --fixture-cyan: #59e7ff;
-    --fixture-red: #ff5365;
-    --fixture-violet: #a968ff;
-    --fixture-paper: #f1f5f7;
-    --fixture-muted: #7e909d;
-    --fixture-ink: #05080b;
-    --fixture-panel: #080d12;
-    --fixture-panel-raised: #0b1117;
-    --fixture-line: rgba(171, 197, 213, 0.16);
-    --fixture-line-bright: rgba(171, 197, 213, 0.3);
-}
+/* ==========================================================================
+   NEBULA LEAGUE — CALENDRIER (CAM 06 // GRILLE DES PROGRAMMES)
+   Salle de contrôle Blue Lock : la saison devient une grille de diffusion.
+   - Héros : titre + relevés, puis la prochaine diffusion en écran partagé
+     (CAM A domicile / CAM B extérieur) et un compte à rebours géant.
+   - Sélecteur de fenêtres (un canal par mois), console de tri du kit.
+   - Matrice mensuelle en moniteur + conducteur (rundown) des rencontres.
+   - Phases de la saison sur une bande bleue pleine, chiffres géants.
+   Toutes les règles sont préfixées par body.fixtures-page (cette feuille est
+   chargée avant global-theme / responsive / theme-monitor). Jetons et
+   composants : CSS/theme-monitor.css (voir ROLLOUT.md).
+   ========================================================================== */
 
-* {
-    box-sizing: border-box;
-}
+@layer nl-force;
 
-body.nebula-page.fixtures-page {
-    min-width: 320px;
-    margin: 0;
-    color: var(--fixture-paper);
-    background:
-        linear-gradient(rgba(89, 231, 255, 0.028) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(89, 231, 255, 0.028) 1px, transparent 1px),
-        radial-gradient(circle at 84% 4%, rgba(89, 231, 255, 0.08), transparent 29%),
-        radial-gradient(circle at 7% 38%, rgba(169, 104, 255, 0.07), transparent 24%),
-        #05080b;
-    background-size: 64px 64px, 64px 64px, auto, auto, auto;
-}
-
-body.fixture-modal-open {
+body.fixtures-page.fixture-modal-open {
     overflow: hidden;
 }
 
-.fixture-command {
-    width: min(100%, 1600px);
-    margin: 0 auto;
-    padding: 0 28px 100px;
-    overflow: hidden;
+body.fixtures-page .fixture-command {
+    padding: 0 0 var(--sp-6);
 }
 
-.fixture-control-button {
+/* Boutons de la page : global-theme les exclut déjà (.fixture-control-button),
+   on repart d'une base neutre. */
+body.fixtures-page .fixture-control-button {
     margin: 0;
+    padding: 0;
+    border: 0;
     border-radius: 0;
+    background: none;
+    color: inherit;
     font: inherit;
+    text-align: inherit;
+    cursor: pointer;
+    appearance: none;
 }
 
-body.nebula-page.fixtures-page :is(.indexed-section-head,
-    .calendar-header,
-    .fixture-list-head,
-    .fixture-card-meta,
-    .fixture-modal-head) {
-    position: relative !important;
-    z-index: auto !important;
-    top: auto !important;
-    border: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    backdrop-filter: none !important;
+body.fixtures-page .fixture-control-button:focus-visible {
+    outline: 2px solid var(--blue-3);
+    outline-offset: 2px;
 }
 
-.fixture-hero {
-    position: relative;
-    display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(430px, 0.8fr);
-    min-height: 610px;
-    border-right: 1px solid var(--fixture-line);
-    border-bottom: 1px solid var(--fixture-line);
-    border-left: 1px solid var(--fixture-line);
-    overflow: hidden;
+@layer nl-force {
+    body.fixtures-page [hidden] {
+        display: none !important;
+    }
 }
 
-.fixture-hero::before {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
+/* -------------------------------------------------------------------------
+   01. Héros
+   ------------------------------------------------------------------------- */
+
+body.fixtures-page .fixture-hero-screen {
+    min-height: 0;
     background:
-        linear-gradient(125deg, transparent 0 54%, rgba(89, 231, 255, 0.035) 54% 54.2%, transparent 54.2%),
-        linear-gradient(90deg, transparent 49.9%, var(--fixture-line) 50%, transparent 50.1%);
-    content: "";
-    pointer-events: none;
+        var(--scanlines),
+        radial-gradient(60% 70% at 88% 0%, rgba(31, 91, 255, 0.28), transparent 62%),
+        radial-gradient(50% 60% at 0% 100%, rgba(31, 91, 255, 0.12), transparent 70%),
+        linear-gradient(180deg, var(--screen), var(--ink) 92%);
 }
 
-.fixture-hero-copy {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-width: 0;
-    padding: 72px clamp(34px, 5vw, 82px) 55px;
-    overflow: hidden;
-}
-
-.fixture-hero-copy::after {
+/* Règle de programmation : graduations horaires sous le bandeau OSD */
+body.fixtures-page .fixture-hero-screen::before {
     position: absolute;
-    right: -0.04em;
-    bottom: -0.22em;
-    z-index: -1;
-    color: transparent;
-    font-family: "Orbitron", sans-serif;
-    font-size: clamp(16rem, 31vw, 34rem);
-    font-weight: 900;
-    line-height: 0.8;
-    -webkit-text-stroke: 1px rgba(171, 197, 213, 0.06);
-    content: "11";
+    z-index: 1;
+    top: 38px;
+    right: 0;
+    left: 0;
+    height: 18px;
+    content: "";
+    background:
+        repeating-linear-gradient(90deg, rgba(141, 176, 255, 0.4) 0 1px, transparent 1px 120px),
+        repeating-linear-gradient(90deg, rgba(141, 176, 255, 0.16) 0 1px, transparent 1px 24px);
+    background-size: 100% 18px, 100% 8px;
+    background-repeat: no-repeat;
+    border-bottom: 1px solid var(--line-soft);
     pointer-events: none;
 }
 
-.fixture-eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    margin: 0 0 28px;
-    color: #9eabb4;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.25em;
+body.fixtures-page .fixture-hero-inner {
+    display: grid;
+    gap: clamp(24px, 2.4vw, 36px);
+    justify-content: stretch;
+    padding-block: clamp(32px, 2.6vw, 44px) clamp(36px, 4vw, 60px);
 }
 
-.fixture-eyebrow::after {
-    width: 74px;
-    height: 1px;
-    background: var(--fixture-line-bright);
-    content: "";
+body.fixtures-page .fixture-hero-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+    align-items: end;
+    gap: 28px clamp(28px, 4vw, 64px);
 }
 
-.fixture-eyebrow span {
-    color: var(--fixture-acid);
+body.fixtures-page .fixture-title {
+    font-size: clamp(3.2rem, 6.4vw, 6.6rem);
 }
 
-.fixture-hero h1 {
-    max-width: 900px;
-    margin: 0;
-    color: var(--fixture-paper);
-    font-family: "Orbitron", sans-serif;
-    font-size: clamp(4.5rem, 8.2vw, 8.9rem);
-    font-weight: 900;
-    letter-spacing: -0.08em;
-    line-height: 0.79;
+body.fixtures-page .fixture-hero-copy .nl-lead {
+    max-width: 600px;
 }
 
-.fixture-hero h1 em {
-    color: transparent;
-    font-style: normal;
-    -webkit-text-stroke: 1px rgba(241, 245, 247, 0.55);
-}
-
-.fixture-intro {
-    max-width: 630px;
-    margin: 42px 0 0;
-    padding-left: 20px;
-    border-left: 2px solid var(--fixture-acid);
-    color: #a9b6bf;
-    font-family: "Inter", sans-serif;
-    font-size: clamp(0.95rem, 1.25vw, 1.12rem);
-    line-height: 1.8;
-}
-
-.fixture-hero-stats {
+body.fixtures-page .fixture-hero-stats {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    width: min(100%, 700px);
-    margin-top: 48px;
-    border-top: 1px solid var(--fixture-line);
-    border-bottom: 1px solid var(--fixture-line);
+    gap: var(--seam);
 }
 
-.fixture-hero-stats>div {
-    display: flex;
-    align-items: center;
-    min-width: 0;
-    padding: 19px 20px 19px 0;
+body.fixtures-page .fixture-hero-stats .nl-stat {
+    min-height: 128px;
 }
 
-.fixture-hero-stats>div+div {
-    padding-left: 20px;
-    border-left: 1px solid var(--fixture-line);
+body.fixtures-page .fixture-hero-stats .nl-stat-value {
+    font-style: italic;
 }
 
-.fixture-hero-stats strong {
-    margin-right: 14px;
-    color: var(--fixture-paper);
-    font-family: "Orbitron", sans-serif;
-    font-size: clamp(1.8rem, 3vw, 2.9rem);
-    font-weight: 800;
-    letter-spacing: -0.08em;
-}
-
-.fixture-hero-stats span {
-    color: var(--fixture-muted);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.53rem;
-    letter-spacing: 0.12em;
-    line-height: 1.65;
-}
-
-.next-fixture-panel {
+/* Prochaine diffusion : un moniteur large, écran partagé */
+body.fixtures-page .next-fixture-panel {
     position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 0;
-    padding: 48px;
-    border-left: 1px solid var(--fixture-line);
-    background:
-        linear-gradient(rgba(89, 231, 255, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(89, 231, 255, 0.035) 1px, transparent 1px),
-        rgba(5, 10, 14, 0.74);
-    background-size: 42px 42px;
     overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-mon);
+    background: var(--bezel);
+    box-shadow:
+        0 0 0 3px var(--bezel),
+        0 0 0 4px rgba(77, 128, 255, 0.14),
+        0 34px 80px rgba(0, 0, 0, 0.55);
 }
 
-.next-fixture-panel::before {
+body.fixtures-page .next-fixture-panel::after {
     position: absolute;
-    top: 27px;
-    right: 30px;
-    color: rgba(171, 197, 213, 0.22);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.55rem;
-    letter-spacing: 0.18em;
-    content: "SYNC // CAL–01";
-}
-
-.next-fixture-orbit,
-.next-fixture-orbit::before,
-.next-fixture-orbit::after {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    border: 1px solid rgba(89, 231, 255, 0.13);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
+    z-index: 6;
+    inset: 0;
     content: "";
+    background: var(--glare);
+    pointer-events: none;
 }
 
-.next-fixture-orbit {
-    width: min(82%, 510px);
-    aspect-ratio: 1;
-}
-
-.next-fixture-orbit::before {
-    width: 72%;
-    height: 72%;
-    border-color: rgba(173, 255, 47, 0.1);
-}
-
-.next-fixture-orbit::after {
-    width: 112%;
-    height: 28%;
-    border-color: rgba(169, 104, 255, 0.15);
-    transform: translate(-50%, -50%) rotate(23deg);
-}
-
-.next-fixture-orbit i {
-    position: absolute;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--fixture-cyan);
-    box-shadow: 0 0 12px var(--fixture-cyan);
-}
-
-.next-fixture-orbit i:nth-child(1) {
-    top: 9%;
-    left: 29%;
-}
-
-.next-fixture-orbit i:nth-child(2) {
-    right: 2%;
-    bottom: 34%;
-    background: var(--fixture-acid);
-    box-shadow: 0 0 12px var(--fixture-acid);
-}
-
-.next-fixture-orbit i:nth-child(3) {
-    bottom: 2%;
-    left: 27%;
-    background: var(--fixture-violet);
-    box-shadow: 0 0 12px var(--fixture-violet);
-}
-
-.next-fixture-content {
-    position: relative;
-    z-index: 1;
-    width: min(100%, 520px);
-    border: 1px solid rgba(89, 231, 255, 0.28);
-    background: rgba(4, 8, 11, 0.92);
-    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42);
-}
-
-.next-fixture-topline {
+body.fixtures-page .next-fixture-topline {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 17px 20px;
-    border-bottom: 1px solid var(--fixture-line);
-    color: var(--fixture-muted);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.55rem;
-    letter-spacing: 0.17em;
+    gap: 14px;
+    min-height: 40px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(90deg, rgba(31, 91, 255, 0.2), rgba(1, 4, 12, 0.9) 70%);
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-weight: 500;
+    letter-spacing: var(--track-micro);
+    text-transform: uppercase;
+    white-space: nowrap;
 }
 
-.next-fixture-topline b {
-    position: relative;
-    padding-left: 13px;
-    color: var(--fixture-cyan);
-    font-size: inherit;
+body.fixtures-page .next-fixture-topline b {
+    color: #fff;
+    font-weight: 600;
 }
 
-.next-fixture-topline b::before {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: currentColor;
-    box-shadow: 0 0 9px currentColor;
-    transform: translateY(-50%);
-    content: "";
-}
-
-.next-fixture-topline b.is-ncl {
-    color: var(--fixture-red);
-}
-
-.next-fixture-topline b.is-finale {
-    color: var(--fixture-violet);
-}
-
-.next-fixture-stage {
-    margin: 0;
-    padding: 20px 20px 0;
-    color: var(--fixture-acid);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.6rem;
-    font-weight: 800;
-    letter-spacing: 0.15em;
-}
-
-.next-fixture-matchup {
+body.fixtures-page .next-fixture-matchup {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 100px minmax(0, 1fr);
-    align-items: center;
-    gap: 10px;
-    padding: 25px 20px 28px;
+    grid-template-columns: minmax(0, 1fr) clamp(220px, 22vw, 320px) minmax(0, 1fr);
+    gap: var(--seam);
+    background: var(--bezel);
 }
 
-.next-team {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 0;
+/* Flux d'équipe (prochaine diffusion + dossier) : blason flouté en fond,
+   blason net au centre, filet à la couleur du club en bas. */
+body.fixtures-page :is(.next-team, .fixture-modal-team) {
+    aspect-ratio: auto;
+    min-height: clamp(210px, 15.6vw, 250px);
+    border: 0;
+    border-bottom: 4px solid var(--club, var(--blue));
+    border-radius: 0;
+}
+
+body.fixtures-page .team-feed-backdrop {
+    --feed-zoom: 1.9;
+    --feed-pos: 50% 50%;
+    filter: blur(18px) saturate(1.2) brightness(0.5);
+}
+
+body.fixtures-page .team-feed-crest {
+    position: absolute;
+    z-index: 3;
+    top: 48%;
+    left: 50%;
+    width: 44%;
+    max-width: 168px;
+    aspect-ratio: 1;
+    object-fit: contain;
+    filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.65));
+    transform: translate(-50%, -50%);
+}
+
+body.fixtures-page :is(.next-team, .fixture-modal-team).is-offline .team-feed-crest {
+    opacity: 0.45;
+    filter: grayscale(1);
+}
+
+body.fixtures-page :is(.next-team, .fixture-modal-team) .nl-feed-caption b {
+    font-size: clamp(1.05rem, 1.7vw, 1.6rem);
+}
+
+body.fixtures-page :is(.next-team, .fixture-modal-team):last-child .nl-feed-caption {
+    right: 0;
+    left: auto;
+    justify-items: end;
+}
+
+/* Colonne centrale : affiche + coup d'envoi */
+body.fixtures-page .next-fixture-kickoff {
+    position: relative;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 6px;
+    padding: 22px 16px;
+    background:
+        var(--scanlines),
+        radial-gradient(90% 60% at 50% 40%, rgba(31, 91, 255, 0.22), transparent 70%),
+        var(--screen);
     text-align: center;
 }
 
-.next-team img {
-    width: 66px;
-    height: 66px;
-    margin-bottom: 13px;
-    object-fit: contain;
-    filter: grayscale(0.25) drop-shadow(0 0 12px rgba(255, 255, 255, 0.1));
+body.fixtures-page .next-fixture-stage {
+    margin: 0 0 4px;
+    padding: 5px 10px;
+    border: 1px solid var(--line-strong);
+    background: var(--ink);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--track-micro);
+    text-transform: uppercase;
 }
 
-.next-team strong {
-    max-width: 145px;
-    color: var(--fixture-paper);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.7rem;
-    line-height: 1.45;
+body.fixtures-page .next-fixture-kickoff em {
+    color: var(--blue-2);
+    font-family: var(--display);
+    font-size: clamp(2.6rem, 4.6vw, 4.4rem);
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.85;
+    text-shadow: var(--fringe), 0 0 30px rgba(31, 91, 255, 0.55);
 }
 
-.next-fixture-kickoff {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 104px;
-    border-right: 1px solid var(--fixture-line);
-    border-left: 1px solid var(--fixture-line);
+body.fixtures-page .next-fixture-kickoff small {
+    margin-top: 8px;
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-label);
+    font-weight: 600;
+    letter-spacing: var(--track-micro);
 }
 
-.next-fixture-kickoff small,
-.next-fixture-kickoff span {
-    color: var(--fixture-muted);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.48rem;
-    letter-spacing: 0.12em;
+body.fixtures-page .next-fixture-kickoff strong {
+    color: #fff;
+    font-family: var(--display);
+    font-size: clamp(1.9rem, 2.6vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
 }
 
-.next-fixture-kickoff strong {
-    margin: 7px 0;
-    color: var(--fixture-paper);
-    font-family: "Orbitron", sans-serif;
-    font-size: 1.75rem;
+body.fixtures-page .next-fixture-kickoff > span {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
 }
 
-.next-fixture-countdown {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 61px;
-    padding: 12px 18px;
-    border-top: 1px solid var(--fixture-line);
-    background: rgba(89, 231, 255, 0.025);
-}
-
-.next-fixture-countdown>span {
-    margin-right: 22px;
-    color: var(--fixture-muted);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.48rem;
-    letter-spacing: 0.15em;
-}
-
-.next-fixture-countdown>strong {
-    min-width: 58px;
-    color: var(--fixture-cyan);
-    font-family: "Orbitron", sans-serif;
-    font-size: 1.35rem;
-}
-
-.next-fixture-countdown small {
-    margin-left: 3px;
-    color: var(--fixture-muted);
-    font-size: 0.48rem;
-}
-
-.next-fixture-open {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 17px 20px;
-    border: 0;
-    border-top: 1px solid rgba(173, 255, 47, 0.38);
-    color: #081006;
-    background: var(--fixture-acid);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.58rem;
-    font-weight: 900;
-    letter-spacing: 0.12em;
-    cursor: pointer;
-}
-
-.next-fixture-open:hover {
-    color: #081006;
-    background: #c3ff68;
-}
-
-.next-fixture-open span {
-    font-size: 1rem;
-}
-
-.season-track {
+/* Barre basse : compte à rebours géant + accès au dossier */
+body.fixtures-page .next-fixture-bar {
     display: grid;
-    grid-template-columns: 250px 1fr;
-    min-height: 112px;
-    border-right: 1px solid var(--fixture-line);
-    border-bottom: 1px solid var(--fixture-line);
-    border-left: 1px solid var(--fixture-line);
-    background: rgba(5, 9, 12, 0.84);
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 18px 28px;
+    padding: 18px clamp(16px, 2vw, 28px) 20px;
+    border-top: 1px solid var(--line);
+    background:
+        var(--scanlines),
+        linear-gradient(90deg, rgba(31, 91, 255, 0.16), transparent 60%),
+        var(--ink);
 }
 
-.season-track-label {
+body.fixtures-page .next-fixture-countdown {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 24px 28px;
-    border-right: 1px solid var(--fixture-line);
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px clamp(10px, 1.6vw, 22px);
+    min-width: 0;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+    text-transform: uppercase;
 }
 
-.season-track-label span {
+body.fixtures-page .next-fixture-countdown-label {
+    flex-basis: 100%;
     margin-bottom: 8px;
-    color: var(--fixture-acid);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.54rem;
-    letter-spacing: 0.16em;
+    color: var(--blue-3);
 }
 
-.season-track-label strong {
-    color: var(--fixture-paper);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.65rem;
-    line-height: 1.5;
+body.fixtures-page .next-fixture-countdown strong {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    color: #fff;
+    font-family: var(--display);
+    font-size: clamp(3rem, 5.6vw, 5.6rem);
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.82;
+    text-shadow: var(--fringe), 0 0 30px rgba(31, 91, 255, 0.5);
+    font-variant-numeric: tabular-nums;
 }
 
-.season-track-months {
+body.fixtures-page .next-fixture-countdown strong small {
+    color: var(--blue-2);
+    font-family: var(--mono);
+    font-size: max(var(--fs-label), 0.2em);
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-shadow: none;
+}
+
+body.fixtures-page .next-fixture-empty {
+    min-height: 300px;
+    border: 0;
+    border-radius: 0;
+}
+
+/* -------------------------------------------------------------------------
+   02. Sélecteur de fenêtres (un canal par mois)
+   ------------------------------------------------------------------------- */
+
+body.fixtures-page .season-track {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+    gap: var(--seam);
+    margin-top: clamp(28px, 3vw, 44px);
+    padding: var(--seam);
+    border: 1px solid var(--line-strong);
+    background: var(--bezel);
 }
 
-.season-month {
+body.fixtures-page .season-track-label {
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: 8px;
+    padding: 14px 18px;
+    background: var(--scanlines), var(--surface);
+}
+
+body.fixtures-page .season-track-label strong {
+    color: #fff;
+    font-family: var(--display);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.1;
+    text-transform: uppercase;
+}
+
+body.fixtures-page .season-track-label small {
+    color: var(--dim);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+    text-transform: uppercase;
+}
+
+body.fixtures-page .season-track-months {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: var(--seam);
+}
+
+body.fixtures-page .season-month {
     position: relative;
     display: grid;
-    grid-template-columns: 38px 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-content: center;
     align-items: center;
-    min-width: 0;
-    padding: 22px 26px;
-    border: 0;
-    border-right: 1px solid var(--fixture-line);
-    color: var(--fixture-muted);
-    background: transparent;
-    text-align: left;
-    cursor: pointer;
+    gap: 6px 14px;
+    min-height: 78px;
+    padding: 12px 18px;
+    background: var(--scanlines), var(--surface);
+    color: var(--muted);
+    transition: background 160ms ease, color 160ms ease;
 }
 
-.season-month:last-child {
-    border-right: 0;
+body.fixtures-page .season-month span {
+    grid-row: span 2;
+    padding: 4px 6px;
+    border: 1px solid var(--line-strong);
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
 }
 
-.season-month::after {
+body.fixtures-page .season-month strong {
+    color: #fff;
+    font-family: var(--display);
+    font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1;
+}
+
+body.fixtures-page .season-month small {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+    white-space: nowrap;
+}
+
+body.fixtures-page .season-month:hover {
+    background: var(--scanlines), var(--surface-3);
+}
+
+body.fixtures-page .season-month.is-current {
+    background: var(--scanlines), linear-gradient(180deg, var(--blue-2), var(--blue));
+    color: #fff;
+}
+
+body.fixtures-page .season-month.is-current span {
+    border-color: rgba(255, 255, 255, 0.55);
+    color: #fff;
+}
+
+body.fixtures-page .season-month.is-current small {
+    color: rgba(255, 255, 255, 0.86);
+}
+
+body.fixtures-page .season-month.is-current::after {
     position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 2px;
-    background: transparent;
-    content: "";
+    top: 10px;
+    right: 12px;
+    content: "À L’ÉCRAN";
+    color: #fff;
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--track-micro);
 }
 
-.season-month:hover,
-.season-month.is-current {
-    color: var(--fixture-paper);
-    background: rgba(173, 255, 47, 0.04);
+/* -------------------------------------------------------------------------
+   03. Tour de contrôle : console, matrice, conducteur
+   ------------------------------------------------------------------------- */
+
+body.fixtures-page .fixture-console {
+    margin-top: clamp(64px, 7vw, 104px);
+    scroll-margin-top: 110px;
 }
 
-.season-month.is-current::after {
-    background: var(--fixture-acid);
-    box-shadow: 0 0 12px rgba(173, 255, 47, 0.42);
+body.fixtures-page .fixture-filter-body {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 0.9fr);
 }
 
-.season-month>span {
-    grid-row: 1 / 3;
-    color: #42505b;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.78rem;
-}
-
-.season-month strong {
-    align-self: end;
-    color: inherit;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.76rem;
-}
-
-.season-month small {
-    align-self: start;
-    margin-top: 5px;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.46rem;
-    letter-spacing: 0.12em;
-}
-
-.fixture-console,
-.fixture-windows {
-    margin-top: 78px;
-    border: 1px solid var(--fixture-line);
-    background: rgba(5, 9, 12, 0.8);
-}
-
-body.nebula-page.fixtures-page .indexed-section-head {
-    display: grid;
-    grid-template-columns: 105px minmax(0, 1.45fr) minmax(300px, 0.7fr);
-    min-height: 128px;
-    border-bottom: 1px solid var(--fixture-line) !important;
-}
-
-.indexed-section-head .section-index {
-    display: flex;
+body.fixtures-page :is(.fixture-category-tabs, .fixture-view-tabs) .nl-key {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-right: 1px solid var(--fixture-line);
-    color: #33404b;
-    font-family: "Orbitron", sans-serif;
-    font-size: 2rem;
-    font-weight: 800;
+    gap: 8px;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    background: linear-gradient(180deg, rgba(16, 34, 71, 0.9), rgba(6, 16, 40, 0.9));
+    color: #b8c5e6;
+    font-family: var(--mono);
+    font-size: var(--fs-label);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-align: center;
+    text-transform: uppercase;
 }
 
-.indexed-section-head>div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-width: 0;
-    padding: 25px 34px;
+body.fixtures-page .fixture-category-tabs .nl-key b {
+    padding: 2px 5px;
+    background: rgba(1, 4, 12, 0.6);
+    color: var(--blue-3);
+    font-size: var(--fs-micro);
+    font-weight: 600;
 }
 
-.indexed-section-head small {
-    margin-bottom: 9px;
-    color: var(--fixture-cyan);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.55rem;
-    font-weight: 800;
-    letter-spacing: 0.16em;
+body.fixtures-page :is(.fixture-category-tabs, .fixture-view-tabs) .nl-key:hover {
+    border-color: var(--line-strong);
+    color: #fff;
 }
 
-.indexed-section-head h2 {
-    margin: 0;
-    color: var(--fixture-paper);
-    font-family: "Orbitron", sans-serif;
-    font-size: clamp(1.45rem, 2.5vw, 2.25rem);
-    font-weight: 700;
-    letter-spacing: -0.045em;
+body.fixtures-page :is(.fixture-category-tabs, .fixture-view-tabs) .nl-key.is-active {
+    border-color: var(--blue-2);
+    background: linear-gradient(180deg, var(--blue-2), var(--blue));
+    color: #fff;
+    box-shadow: 0 0 18px rgba(31, 91, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-.indexed-section-head>p {
-    display: flex;
-    align-items: center;
-    margin: 0;
-    padding: 25px 34px;
-    border-left: 1px solid var(--fixture-line);
-    color: #8596a2;
-    font-family: "Inter", sans-serif;
-    font-size: 0.85rem;
-    line-height: 1.7;
+body.fixtures-page .fixture-category-tabs .nl-key.is-active b {
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--blue-deep);
 }
 
-.fixture-filter-deck {
+body.fixtures-page .fixtures-layout {
     display: grid;
-    grid-template-columns: minmax(480px, 1.35fr) minmax(250px, 0.65fr) 260px;
-    gap: 26px;
-    padding: 28px 30px 30px;
-    border-bottom: 1px solid var(--fixture-line);
-    background: rgba(255, 255, 255, 0.012);
-}
-
-.fixture-filter-block {
-    min-width: 0;
-    padding: 0;
-}
-
-.fixture-filter-block+.fixture-filter-block {
-    border-left: 0;
-}
-
-.fixture-filter-label {
-    display: block;
-    margin-bottom: 12px;
-    color: var(--fixture-acid);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.5rem;
-    font-weight: 800;
-    letter-spacing: 0.16em;
-}
-
-.fixture-category-tabs,
-.fixture-view-tabs {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    border: 1px solid var(--fixture-line-bright);
-}
-
-.fixture-view-tabs {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.fx-cat-btn,
-.fx-view-btn {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 54px;
-    padding: 0 13px;
-    border: 0;
-    border-right: 1px solid var(--fixture-line-bright);
-    color: #8d9aa4;
-    background: rgba(255, 255, 255, 0.018);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.52rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-}
-
-.fx-cat-btn:last-child,
-.fx-view-btn:last-child {
-    border-right: 0;
-}
-
-.fx-cat-btn b {
-    color: #4c5b66;
-    font-size: 0.48rem;
-}
-
-.fx-cat-btn:hover,
-.fx-view-btn:hover {
-    color: var(--fixture-paper);
-    background: rgba(173, 255, 47, 0.04);
-}
-
-.fx-cat-btn.is-active,
-.fx-view-btn.is-active {
-    color: var(--fixture-acid);
-    background: rgba(173, 255, 47, 0.12);
-    box-shadow: inset 0 -2px 0 var(--fixture-acid);
-}
-
-.fx-cat-btn.is-active b {
-    color: var(--fixture-acid);
-}
-
-.fixture-select {
-    width: 100%;
-    min-height: 56px;
-    padding: 0 15px;
-    border: 1px solid var(--fixture-line-bright);
-    border-radius: 0;
-    outline: 0;
-    color: var(--fixture-paper);
-    background: #0b1116;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.56rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-}
-
-.fixture-select:focus {
-    border-color: var(--fixture-acid);
-    box-shadow: 0 0 0 1px var(--fixture-acid);
-}
-
-.fixtures-layout {
-    display: grid;
-    grid-template-columns: minmax(410px, 0.82fr) minmax(0, 1.35fr);
-    gap: 34px;
+    grid-template-columns: minmax(340px, 0.74fr) minmax(0, 1.5fr);
     align-items: start;
-    padding: 34px;
-    background: rgba(255, 255, 255, 0.008);
+    gap: clamp(20px, 2.4vw, 34px);
+    margin-top: var(--sp-6);
 }
 
-.fixtures-layout.is-list-view {
-    grid-template-columns: 1fr;
+body.fixtures-page .fixtures-layout.is-list-view {
+    grid-template-columns: minmax(0, 1fr);
 }
 
-.fixtures-layout.is-list-view .calendar-section {
+body.fixtures-page .fixtures-layout.is-list-view .calendar-section {
     display: none;
 }
 
-.calendar-section {
-    min-width: 0;
-    border-right: 0;
-}
-
-.calendar-card {
+/* Matrice mensuelle : un moniteur */
+body.fixtures-page .calendar-screen {
     position: sticky;
-    top: 104px;
-    min-width: 0;
-    border: 1px solid var(--fixture-line);
-    background: rgba(7, 12, 16, 0.94);
-}
-
-body.nebula-page.fixtures-page .calendar-header {
-    min-height: 168px;
-    padding: 27px 36px !important;
-    border-bottom: 1px solid var(--fixture-line) !important;
-}
-
-.calendar-kicker {
-    display: block;
-    margin-bottom: 18px;
-    color: var(--fixture-muted);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.48rem;
-    letter-spacing: 0.16em;
-}
-
-.calendar-navigation {
-    display: grid;
-    grid-template-columns: 38px minmax(0, 1fr) 38px;
-    align-items: center;
-}
-
-.calendar-navigation h3 {
-    margin: 0;
-    color: var(--fixture-paper);
-    font-family: "Orbitron", sans-serif;
-    font-size: clamp(0.95rem, 1.5vw, 1.25rem);
-    text-align: center;
-}
-
-.month-nav-btn {
-    display: grid;
-    width: 38px;
-    height: 38px;
-    padding: 0;
-    border: 1px solid var(--fixture-line-bright);
-    color: var(--fixture-paper);
-    background: transparent;
-    place-items: center;
-    cursor: pointer;
-}
-
-.month-nav-btn:hover {
-    border-color: var(--fixture-acid);
-    color: var(--fixture-acid);
-    background: rgba(173, 255, 47, 0.08);
-}
-
-.next-date-btn {
-    display: block;
-    margin: 16px auto 0;
-    padding: 7px 12px;
-    border: 0;
-    color: var(--fixture-acid);
-    background: transparent;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.48rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    cursor: pointer;
-}
-
-.next-date-btn:hover {
-    color: #d0ff8b;
-}
-
-.calendar-weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    border-bottom: 1px solid var(--fixture-line);
-}
-
-.calendar-weekdays span {
-    padding: 14px 4px;
-    border-right: 1px solid var(--fixture-line);
-    color: #63727c;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.45rem;
-    text-align: center;
-}
-
-.calendar-weekdays span:last-child {
-    border-right: 0;
-}
-
-.calendar-days-grid {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-}
-
-.calendar-day {
-    position: relative;
-    aspect-ratio: 1;
-    min-width: 0;
-    padding: 7px;
-    border: 0;
-    border-right: 1px solid var(--fixture-line);
-    border-bottom: 1px solid var(--fixture-line);
-    color: #8b9aa5;
-    background: transparent;
-    cursor: pointer;
-}
-
-.calendar-day:nth-child(7n) {
-    border-right: 0;
-}
-
-.calendar-day:nth-last-child(-n + 7) {
-    border-bottom: 0;
-}
-
-.calendar-day:hover {
-    color: var(--fixture-paper);
-    background: rgba(89, 231, 255, 0.045);
-}
-
-.calendar-day.is-outside {
-    color: #313b43;
-    background: rgba(255, 255, 255, 0.01);
-}
-
-.calendar-day.is-today::after {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--fixture-cyan);
-    box-shadow: 0 0 8px var(--fixture-cyan);
-    content: "";
-}
-
-.calendar-day.is-selected {
-    z-index: 1;
-    color: var(--fixture-acid);
-    background: rgba(173, 255, 47, 0.1);
-    box-shadow: inset 0 0 0 1px var(--fixture-acid);
-}
-
-.calendar-day.has-fixture {
-    color: var(--fixture-paper);
+    top: 116px;
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-mon);
     background:
-        linear-gradient(135deg, transparent 70%, rgba(89, 231, 255, 0.07)),
-        rgba(255, 255, 255, 0.015);
+        var(--glare),
+        radial-gradient(110% 70% at 50% 0%, rgba(31, 91, 255, 0.14), transparent 62%),
+        var(--screen);
+    box-shadow:
+        0 0 0 3px var(--bezel),
+        0 0 0 4px rgba(77, 128, 255, 0.12),
+        0 24px 56px rgba(0, 0, 0, 0.5);
 }
 
-.calendar-day-number {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.55rem;
-    font-weight: 700;
+body.fixtures-page .calendar-osd {
+    background: rgba(1, 4, 12, 0.7);
 }
 
-.calendar-day>strong {
-    position: absolute;
-    right: 8px;
-    bottom: 8px;
-    color: #53626c;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.48rem;
-}
-
-.calendar-day-signals {
-    position: absolute;
-    bottom: 8px;
-    left: 8px;
-    display: flex;
+body.fixtures-page .calendar-header {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
     align-items: center;
+    gap: 12px;
+    padding: 18px 16px 12px;
+}
+
+body.fixtures-page .calendar-header h3 {
+    margin: 0;
+    color: #fff;
+    font-family: var(--display);
+    font-size: clamp(1.4rem, 2vw, 2rem);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    text-align: center;
+    text-shadow: var(--fringe);
+    text-transform: uppercase;
+    overflow-wrap: normal;
+}
+
+body.fixtures-page .month-nav-btn {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-ctl);
+    background: var(--surface);
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: 18px;
+    text-align: center;
+    transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+body.fixtures-page .month-nav-btn:hover {
+    border-color: var(--blue-2);
+    background: var(--blue);
+    color: #fff;
+}
+
+body.fixtures-page .calendar-weekdays,
+body.fixtures-page .calendar-days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: 3px;
+    padding-inline: 14px;
 }
 
-.calendar-day-completed,
-.legend-completed {
+body.fixtures-page .calendar-weekdays span {
+    padding: 6px 0;
+    color: var(--dim);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-align: center;
+}
+
+body.fixtures-page .calendar-days-grid {
+    padding-block: 4px 14px;
+}
+
+body.fixtures-page .calendar-day {
     position: relative;
-    display: inline-block;
-    flex: 0 0 auto;
-    width: 9px;
-    height: 9px;
+    display: grid;
+    min-width: 0;
+    min-height: 0;
+    aspect-ratio: 1 / 0.9;
+    align-content: space-between;
+    padding: 6px 6px 5px;
+    border: 1px solid var(--line-soft);
+    border-radius: 2px;
+    background: rgba(10, 23, 52, 0.45);
+    color: var(--muted);
+    text-align: left;
+    transition: border-color 140ms ease, background 140ms ease;
 }
 
-.calendar-day-completed::before,
-.calendar-day-completed::after,
-.legend-completed::before,
-.legend-completed::after {
+body.fixtures-page .calendar-day:hover {
+    border-color: var(--blue-2);
+}
+
+body.fixtures-page .calendar-day-number {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+body.fixtures-page .calendar-day > strong {
     position: absolute;
-    top: 4px;
-    left: 0;
-    width: 9px;
-    height: 1px;
-    background: var(--fixture-violet);
-    box-shadow: 0 0 6px var(--fixture-violet);
-    content: "";
+    top: 5px;
+    right: 6px;
+    color: #fff;
+    font-family: var(--display);
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 1;
 }
 
-.calendar-day-completed::before,
-.legend-completed::before {
-    transform: rotate(45deg);
+body.fixtures-page .calendar-day-signals {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    min-height: 4px;
 }
 
-.calendar-day-completed::after,
-.legend-completed::after {
-    transform: rotate(-45deg);
+body.fixtures-page .calendar-day-signals i {
+    flex: 1;
+    height: 4px;
+    background: var(--blue-2);
+    box-shadow: 0 0 6px rgba(61, 123, 255, 0.6);
 }
 
-.calendar-day-signals i,
-.legend-dot,
-.milestone-breakdown i {
-    display: inline-block;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--fixture-cyan);
-    box-shadow: 0 0 7px currentColor;
+body.fixtures-page .calendar-day-signals i.is-ncl {
+    background: #fff;
+    box-shadow: none;
 }
 
-.calendar-day-signals i.is-ligue,
-.legend-dot.is-ligue,
-.milestone-breakdown i.is-ligue {
-    color: var(--fixture-cyan);
-    background: var(--fixture-cyan);
+body.fixtures-page .calendar-day-signals i.is-finale {
+    background: #fff;
+    box-shadow: 0 0 10px #fff;
 }
 
-.calendar-day-signals i.is-ncl,
-.legend-dot.is-ncl,
-.milestone-breakdown i.is-ncl {
-    color: var(--fixture-red);
-    background: var(--fixture-red);
+body.fixtures-page .calendar-day-signals i.is-amical {
+    background: repeating-linear-gradient(90deg, var(--muted) 0 3px, transparent 3px 5px);
+    box-shadow: none;
 }
 
-.calendar-day-signals i.is-amical,
-.legend-dot.is-amical,
-.milestone-breakdown i.is-amical {
-    color: var(--fixture-acid);
-    background: var(--fixture-acid);
+body.fixtures-page .calendar-day-completed {
+    width: 8px;
+    height: 4px;
+    flex: none;
+    background: var(--offline);
 }
 
-.calendar-day-signals i.is-finale,
-.legend-dot.is-finale,
-.milestone-breakdown i.is-finale {
-    color: var(--fixture-violet);
-    background: var(--fixture-violet);
+body.fixtures-page .calendar-day.is-outside {
+    opacity: 0.32;
 }
 
-.calendar-legend {
+body.fixtures-page .calendar-day.has-fixture {
+    border-color: var(--line-strong);
+    background:
+        var(--scanlines),
+        linear-gradient(180deg, rgba(31, 91, 255, 0.34), rgba(31, 91, 255, 0.12));
+    color: #fff;
+}
+
+body.fixtures-page .calendar-day.is-today {
+    border-style: dashed;
+    border-color: var(--blue-3);
+}
+
+body.fixtures-page .calendar-day.is-today .calendar-day-number {
+    color: var(--blue-3);
+}
+
+body.fixtures-page .calendar-day.is-selected {
+    border-color: #fff;
+    background: var(--scanlines), var(--blue);
+    color: #fff;
+    box-shadow: 0 0 24px rgba(31, 91, 255, 0.6);
+}
+
+body.fixtures-page .calendar-day.is-selected .calendar-day-signals i {
+    background: #fff;
+}
+
+body.fixtures-page .calendar-footer {
+    display: grid;
+    gap: 12px;
+    padding: 12px 14px 14px;
+    border-top: 1px solid var(--line-soft);
+    background: rgba(1, 4, 12, 0.5);
+}
+
+body.fixtures-page .calendar-legend {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px 22px;
-    padding: 18px 22px;
-    border-top: 1px solid var(--fixture-line);
+    gap: 8px 16px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
-.calendar-legend>span {
-    display: flex;
+body.fixtures-page .calendar-legend span {
+    display: inline-flex;
     align-items: center;
     gap: 7px;
-    color: #6f7f8a;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.43rem;
-    letter-spacing: 0.08em;
 }
 
-.legend-frame {
-    width: 7px;
-    height: 7px;
-    border: 1px solid var(--fixture-acid);
+body.fixtures-page .calendar-legend i {
+    display: inline-block;
+    width: 16px;
+    height: 4px;
+    background: var(--blue-2);
 }
 
-.fixtures-list-section {
-    min-width: 0;
-    border: 1px solid var(--fixture-line);
-    background: rgba(7, 12, 16, 0.72);
+body.fixtures-page .calendar-legend .is-ncl {
+    background: #fff;
 }
 
-body.nebula-page.fixtures-page .fixture-list-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 122px;
-    padding: 27px 38px !important;
-    border-bottom: 1px solid var(--fixture-line) !important;
+body.fixtures-page .calendar-legend .is-finale {
+    background: #fff;
+    box-shadow: 0 0 8px #fff;
 }
 
-.fixture-list-head small {
-    display: block;
-    margin-bottom: 8px;
-    color: var(--fixture-cyan);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.48rem;
-    letter-spacing: 0.16em;
+body.fixtures-page .calendar-legend .is-amical {
+    background: repeating-linear-gradient(90deg, var(--muted) 0 3px, transparent 3px 5px);
 }
 
-.fixture-list-head h3 {
-    margin: 0;
-    color: var(--fixture-paper);
-    font-family: "Orbitron", sans-serif;
-    font-size: clamp(1rem, 1.8vw, 1.45rem);
+body.fixtures-page .calendar-legend .legend-completed {
+    width: 8px;
+    background: var(--offline);
 }
 
-.reset-filter-btn {
-    padding: 10px 13px;
-    border: 1px solid rgba(255, 83, 101, 0.45);
-    color: var(--fixture-red);
-    background: rgba(255, 83, 101, 0.05);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.48rem;
-    font-weight: 800;
-    letter-spacing: 0.09em;
-    cursor: pointer;
+body.fixtures-page .calendar-legend .legend-frame {
+    width: 12px;
+    height: 12px;
+    border: 1px solid #fff;
+    background: var(--blue);
 }
 
-.reset-filter-btn:hover {
-    background: rgba(255, 83, 101, 0.13);
-}
-
-.fixtures-cards-container {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    min-width: 0;
-    padding: 28px;
-}
-
-.fixture-card {
-    --fixture-category: var(--fixture-cyan);
-    position: relative;
-    display: grid;
-    grid-template-columns: 86px minmax(0, 1fr);
-    min-width: 0;
-    border: 1px solid var(--fixture-line);
-    background: rgba(8, 13, 18, 0.55);
-    overflow: hidden;
-    transition: background 180ms ease;
-}
-
-.fixture-card:last-child {
-    border-bottom: 1px solid var(--fixture-line);
-}
-
-.fixture-card::before {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 2px;
-    background: var(--fixture-category);
-    content: "";
-    box-shadow: 0 0 13px color-mix(in srgb, var(--fixture-category), transparent 40%);
-}
-
-.fixture-card.is-ncl {
-    --fixture-category: var(--fixture-red);
-}
-
-.fixture-card.is-amical {
-    --fixture-category: var(--fixture-acid);
-}
-
-.fixture-card.is-finale {
-    --fixture-category: var(--fixture-violet);
-}
-
-.fixture-card:hover {
-    border-color: color-mix(in srgb, var(--fixture-category), transparent 58%);
-    background: color-mix(in srgb, var(--fixture-category), transparent 96%);
-}
-
-.fixture-card-rail {
-    display: flex;
-    flex-direction: column;
+body.fixtures-page .next-date-btn {
+    display: inline-flex;
+    min-height: 44px;
     align-items: center;
     justify-content: center;
-    border-right: 1px solid var(--fixture-line);
+    gap: 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: 2px;
+    background: rgba(6, 16, 40, 0.7);
+    color: var(--paper);
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-transform: uppercase;
+    transition: background 160ms ease, border-color 160ms ease;
 }
 
-.fixture-card-rail>span {
-    margin-bottom: 15px;
-    color: #394650;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.48rem;
+body.fixtures-page .next-date-btn:hover {
+    border-color: var(--blue-2);
+    background: var(--blue);
 }
 
-.fixture-card-rail b {
-    color: var(--fixture-paper);
-    font-family: "Orbitron", sans-serif;
-    font-size: 1.4rem;
+body.fixtures-page .next-date-btn span {
+    color: var(--blue-3);
+    font-family: var(--mono);
 }
 
-.fixture-card-rail small {
-    margin-top: 3px;
-    color: var(--fixture-muted);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.46rem;
+body.fixtures-page .next-date-btn:hover span {
+    color: #fff;
 }
 
-.fixture-card-main {
+/* Conducteur : une ligne par rencontre, colonnes partagées avec l'en-tête */
+body.fixtures-page .fixtures-list-section {
+    --rundown-cols: 108px minmax(0, 1fr) 132px minmax(0, 1fr) 148px;
     min-width: 0;
-    padding: 27px 30px 0;
 }
 
-.fixture-card-meta {
+body.fixtures-page .fixture-list-head {
     display: flex;
-    align-items: center;
-    min-width: 0;
-    gap: 14px;
-    color: #72838e;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.47rem;
-    letter-spacing: 0.1em;
-    min-height: 0 !important;
-    padding: 0 !important;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 0 0 16px;
 }
 
-.fixture-card-meta time {
-    margin-left: auto;
-    color: #687883;
+body.fixtures-page .fixture-list-head small {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--track-micro);
+}
+
+body.fixtures-page .fixture-list-head small::before {
+    width: 8px;
+    height: 8px;
+    content: "";
+    border-radius: 50%;
+    background: var(--blue-2);
+    box-shadow: 0 0 10px var(--blue-2);
+}
+
+body.fixtures-page .fixture-list-head h3 {
+    margin: 8px 0 0;
+    color: #fff;
+    font-family: var(--display);
+    font-size: clamp(1.7rem, 2.8vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 0.92;
+    text-transform: uppercase;
+    overflow-wrap: normal;
+}
+
+body.fixtures-page .reset-filter-btn {
+    display: inline-flex;
+    min-height: 40px;
+    flex: none;
+    align-items: center;
+    padding: 0 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: 2px;
+    background: rgba(6, 16, 40, 0.7);
+    color: var(--paper);
+    font-family: var(--display);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+body.fixtures-page .reset-filter-btn:hover {
+    border-color: var(--blue-2);
+    background: var(--blue-soft);
+}
+
+body.fixtures-page .fixture-rundown-head {
+    display: grid;
+    grid-template-columns: var(--rundown-cols);
+    align-items: center;
+    min-height: 40px;
+    border: 1px solid var(--blue-2);
+    border-bottom: 0;
+    border-radius: var(--r-mon) var(--r-mon) 0 0;
+    background: var(--blue);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--track-micro);
+    text-transform: uppercase;
+}
+
+body.fixtures-page .fixture-rundown-head span {
+    padding: 0 16px;
+    white-space: nowrap;
+}
+
+body.fixtures-page .fixture-rundown-head span:nth-child(2) {
     text-align: right;
 }
 
-.fixture-category-tag {
-    position: relative;
-    padding-left: 13px;
-    color: var(--fixture-cyan);
-    font-weight: 900;
+body.fixtures-page .fixture-rundown-head span:nth-child(3) {
+    text-align: center;
 }
 
-.fixture-category-tag::before {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: currentColor;
-    box-shadow: 0 0 8px currentColor;
-    transform: translateY(-50%);
-    content: "";
-}
-
-.fixture-category-tag.is-ncl {
-    color: var(--fixture-red);
-}
-
-.fixture-category-tag.is-amical {
-    color: var(--fixture-acid);
-}
-
-.fixture-category-tag.is-finale {
-    color: var(--fixture-violet);
-}
-
-.fixture-versus {
+body.fixtures-page .fixtures-cards-container {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 96px minmax(0, 1fr);
-    align-items: center;
-    gap: 18px;
-    min-height: 154px;
+    gap: var(--seam);
+    padding: var(--seam);
+    border: 1px solid var(--line-strong);
+    border-top: 0;
+    border-radius: 0 0 var(--r-mon) var(--r-mon);
+    background: var(--bezel);
 }
 
-.fixture-team {
+body.fixtures-page .fixture-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--rundown-cols);
+    grid-template-areas:
+        "rail meta meta meta foot"
+        "rail home kick away foot";
+    grid-template-rows: auto minmax(0, 1fr);
+    min-height: 124px;
+    background:
+        var(--scanlines),
+        linear-gradient(90deg, rgba(31, 91, 255, 0.1), transparent 46%),
+        var(--surface);
+    transition: background 160ms ease, box-shadow 160ms ease;
+}
+
+body.fixtures-page .fixture-card:hover {
+    background:
+        var(--scanlines),
+        linear-gradient(90deg, rgba(31, 91, 255, 0.2), transparent 60%),
+        var(--surface-2);
+    box-shadow: inset 0 0 0 1px var(--blue-2);
+}
+
+body.fixtures-page .fixture-card-main,
+body.fixtures-page .fixture-versus {
+    display: contents;
+}
+
+body.fixtures-page .fixture-card-rail {
+    grid-area: rail;
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: 6px;
+    padding: 14px 16px;
+    border-top: 3px solid var(--blue);
+    border-right: 1px solid var(--line);
+    background: var(--scanlines), var(--screen);
+}
+
+body.fixtures-page .fixture-card-rail span,
+body.fixtures-page .fixture-card-rail small {
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+body.fixtures-page .fixture-card-rail small {
+    color: var(--muted);
+}
+
+body.fixtures-page .fixture-card-rail b {
+    color: #fff;
+    font-family: var(--display);
+    font-size: clamp(2.4rem, 3.4vw, 3.2rem);
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.8;
+    text-shadow: var(--fringe);
+}
+
+/* NCL : le créneau passe en blanc (couleur de l'étiquette NCL) */
+body.fixtures-page .fixture-card:is(.is-ncl, .is-finale) .fixture-card-rail {
+    border-top-color: #fff;
+    background: var(--scanlines), #fff;
+}
+
+body.fixtures-page .fixture-card:is(.is-ncl, .is-finale) .fixture-card-rail :is(span, small, b) {
+    color: var(--blue-deep);
+    text-shadow: none;
+}
+
+body.fixtures-page .fixture-card.is-finale {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5), 0 0 30px rgba(141, 176, 255, 0.18);
+}
+
+body.fixtures-page .fixture-card.is-amical .fixture-card-rail {
+    border-top-style: dashed;
+    border-top-color: var(--muted);
+}
+
+body.fixtures-page .fixture-card.is-finished .fixture-card-rail {
+    border-top-color: var(--offline);
+}
+
+body.fixtures-page .fixture-card-meta {
+    grid-area: meta;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 12px;
+    min-width: 0;
+    padding: 12px 16px 0;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+    text-transform: uppercase;
+}
+
+body.fixtures-page .fixture-card-stage {
+    color: #fff;
+    font-weight: 600;
+}
+
+body.fixtures-page .fixture-card-meta time {
+    margin-left: auto;
+    color: var(--dim);
+}
+
+body.fixtures-page .fixture-team {
     display: flex;
     align-items: center;
-    min-width: 0;
     gap: 14px;
+    min-width: 0;
+    padding: 10px 16px 14px;
 }
 
-.fixture-team.is-home {
+body.fixtures-page .fixture-team.is-home {
+    grid-area: home;
     justify-content: flex-end;
     text-align: right;
 }
 
-.fixture-team img {
-    flex: 0 0 auto;
-    width: 50px;
-    height: 50px;
+body.fixtures-page .fixture-team.is-away {
+    grid-area: away;
+    justify-content: flex-start;
+}
+
+body.fixtures-page .fixture-team > div {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+}
+
+body.fixtures-page .fixture-team small {
+    color: var(--dim);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+}
+
+body.fixtures-page .fixture-team strong {
+    justify-self: end;
+    padding-bottom: 3px;
+    color: #fff;
+    font-family: var(--display);
+    font-size: clamp(1rem, 1.3vw, 1.2rem);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    line-height: 1.05;
+    text-transform: uppercase;
+    box-shadow: inset 0 -2px 0 var(--home, var(--blue-2));
+    overflow-wrap: normal;
+}
+
+body.fixtures-page .fixture-team.is-away strong {
+    justify-self: start;
+    box-shadow: inset 0 -2px 0 var(--away, var(--blue-2));
+}
+
+body.fixtures-page .fixture-team img {
+    width: 54px;
+    height: 54px;
+    flex: none;
+    padding: 6px;
+    border: 1px solid var(--line);
+    background: radial-gradient(circle at 50% 40%, rgba(31, 91, 255, 0.24), transparent 70%), var(--bezel);
     object-fit: contain;
-    filter: grayscale(0.2) drop-shadow(0 0 9px rgba(255, 255, 255, 0.08));
 }
 
-.fixture-team div {
-    min-width: 0;
+body.fixtures-page .fixture-team.is-unknown strong {
+    color: var(--offline);
+    box-shadow: inset 0 -2px 0 var(--offline);
 }
 
-.fixture-team small {
-    display: block;
-    margin-bottom: 6px;
-    color: #53636e;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.43rem;
-    letter-spacing: 0.12em;
-}
-
-.fixture-team strong {
-    display: block;
-    color: var(--fixture-paper);
-    font-family: "Orbitron", sans-serif;
-    font-size: clamp(0.66rem, 1vw, 0.83rem);
-    line-height: 1.45;
-}
-
-.fixture-kickoff {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 80px;
-}
-
-.fixture-kickoff::before,
-.fixture-kickoff::after {
-    position: absolute;
-    top: 50%;
-    width: 18px;
-    height: 1px;
-    background: var(--fixture-line-bright);
-    content: "";
-}
-
-.fixture-kickoff::before {
-    left: -9px;
-}
-
-.fixture-kickoff::after {
-    right: -9px;
-}
-
-.fixture-kickoff strong {
-    display: flex;
-    align-items: center;
-    color: var(--fixture-paper);
-    font-family: "Orbitron", sans-serif;
-    font-size: 1.25rem;
-}
-
-.fixture-kickoff strong i {
-    margin: 0 7px;
-    color: #4d5a63;
-    font-style: normal;
-}
-
-.fixture-kickoff small {
-    margin-top: 6px;
-    color: var(--fixture-muted);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.4rem;
-    letter-spacing: 0.1em;
-}
-
-.fixture-card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 58px;
-    border-top: 1px solid var(--fixture-line);
-}
-
-.fixture-card-footer>span {
-    color: #657681;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.43rem;
-    letter-spacing: 0.08em;
-}
-
-.fixture-open-button {
-    align-self: stretch;
-    min-width: 150px;
-    padding: 0 15px;
-    border: 0;
-    border-left: 1px solid var(--fixture-line);
-    color: #9aabb5;
-    background: transparent;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.45rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-}
-
-.fixture-open-button b {
-    margin-left: 10px;
-    color: var(--fixture-acid);
-}
-
-.fixture-open-button:hover {
-    color: var(--fixture-acid);
-    background: rgba(173, 255, 47, 0.055);
-}
-
-.fixture-empty-state {
-    display: grid;
-    grid-template-columns: 90px minmax(0, 1fr) auto;
-    align-items: center;
-    min-height: 190px;
-    padding: 25px 30px;
-}
-
-.fixture-empty-state>span {
-    color: #26323a;
-    font-family: "Orbitron", sans-serif;
-    font-size: 2.5rem;
-    font-weight: 800;
-}
-
-.fixture-empty-state strong {
-    color: var(--fixture-paper);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.85rem;
-}
-
-.fixture-empty-state p {
-    margin: 10px 0 0;
-    color: var(--fixture-muted);
-    font-family: "Inter", sans-serif;
-    font-size: 0.8rem;
-}
-
-.fixture-empty-state button {
-    padding: 12px 15px;
-    border: 1px solid var(--fixture-line-bright);
-    color: var(--fixture-acid);
-    background: transparent;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.48rem;
-    cursor: pointer;
-}
-
-.fixture-windows {
-    margin-top: 62px;
-}
-
-.indexed-section-head.compact {
-    min-height: 112px;
-}
-
-.fixture-milestones {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.fixture-milestone {
-    position: relative;
-    display: grid;
-    grid-template-columns: 42px minmax(0, 1fr) auto;
-    grid-template-rows: 1fr auto;
-    min-height: 280px;
-    padding: 28px;
-    border: 0;
-    border-right: 1px solid var(--fixture-line);
-    color: inherit;
+/* Équipe à déterminer : une mini-mire de test à la place du blason */
+body.fixtures-page .fixture-team.is-unknown img {
     background:
-        linear-gradient(155deg, transparent 65%, rgba(89, 231, 255, 0.035)),
-        rgba(8, 13, 18, 0.44);
-    text-align: left;
-    cursor: pointer;
-    overflow: hidden;
+        var(--noise),
+        var(--mire) top / 100% 70% no-repeat,
+        var(--mire-low) bottom / 100% 30% no-repeat;
+    background-size: 90px 90px, 100% 70%, 100% 30%;
+    opacity: 0.55;
+    filter: grayscale(0.4);
 }
 
-.fixture-milestone:last-child {
-    border-right: 0;
-}
-
-.fixture-milestone::before {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    height: 2px;
-    background: transparent;
-    content: "";
-}
-
-.fixture-milestone:hover {
-    background-color: rgba(89, 231, 255, 0.04);
-}
-
-.fixture-milestone:hover::before {
-    background: var(--fixture-acid);
-}
-
-.milestone-index {
-    color: #3f4c55;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.62rem;
-}
-
-.milestone-copy small {
-    color: var(--fixture-cyan);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.43rem;
-    letter-spacing: 0.12em;
-}
-
-.milestone-copy h3 {
-    margin: 20px 0 8px;
-    color: var(--fixture-paper);
-    font-family: "Orbitron", sans-serif;
-    font-size: clamp(1.3rem, 2.2vw, 2rem);
-}
-
-.milestone-copy p {
-    margin: 0;
-    color: var(--fixture-muted);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.5rem;
-    letter-spacing: 0.1em;
-}
-
-.milestone-volume {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-}
-
-.milestone-volume strong {
-    color: transparent;
-    font-family: "Orbitron", sans-serif;
-    font-size: 3.2rem;
-    font-weight: 800;
-    line-height: 0.8;
-    -webkit-text-stroke: 1px rgba(241, 245, 247, 0.32);
-}
-
-.milestone-volume span {
-    margin-top: 10px;
-    color: #5c6b75;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.42rem;
-    letter-spacing: 0.12em;
-}
-
-.milestone-breakdown {
-    grid-column: 2 / 4;
-    align-self: end;
-    display: flex;
-    gap: 22px;
-    padding-top: 21px;
-    border-top: 1px solid var(--fixture-line);
-}
-
-.milestone-breakdown span {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    color: #72838e;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.44rem;
-}
-
-.milestone-arrow {
-    position: absolute;
-    right: 25px;
-    bottom: 23px;
-    color: var(--fixture-acid);
-    font-family: "Orbitron", sans-serif;
-}
-
-.fixture-modal[hidden] {
-    display: none;
-}
-
-.fixture-modal {
-    position: fixed;
-    inset: 0;
-    z-index: 5000;
+body.fixtures-page .fixture-kickoff {
+    grid-area: kick;
     display: grid;
-    padding: 22px;
-    place-items: center;
-}
-
-.fixture-modal-backdrop {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    border: 0;
-    background: rgba(1, 3, 5, 0.88);
-    backdrop-filter: blur(8px);
-    cursor: default;
-}
-
-.fixture-modal-panel {
-    position: relative;
-    z-index: 1;
-    width: min(100%, 920px);
-    max-height: calc(100vh - 44px);
-    border: 1px solid var(--fixture-line-bright);
-    background:
-        linear-gradient(rgba(89, 231, 255, 0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(89, 231, 255, 0.025) 1px, transparent 1px),
-        #070c10;
-    background-size: 42px 42px;
-    box-shadow: 0 38px 120px rgba(0, 0, 0, 0.72);
-    overflow: hidden;
-    animation: fixture-panel-in 220ms ease both;
-}
-
-@keyframes fixture-panel-in {
-    from {
-        opacity: 0;
-        transform: translateY(15px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-body.nebula-page.fixtures-page .fixture-modal-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 92px;
-    padding: 0 0 0 28px !important;
-    border-bottom: 1px solid var(--fixture-line) !important;
-}
-
-.fixture-modal-head small {
-    display: block;
-    margin-bottom: 7px;
-    color: var(--fixture-acid);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.48rem;
-    letter-spacing: 0.15em;
-}
-
-.fixture-modal-head h2 {
-    margin: 0;
-    font-family: "Orbitron", sans-serif;
-    font-size: 1.15rem;
-}
-
-.fixture-modal-close {
-    align-self: stretch;
-    width: 91px;
-    border: 0;
-    border-left: 1px solid var(--fixture-line);
-    color: var(--fixture-paper);
-    background: transparent;
-    font-family: "Orbitron", sans-serif;
-    font-size: 1.5rem;
-    cursor: pointer;
-}
-
-.fixture-modal-close:hover {
-    color: var(--fixture-acid);
-    background: rgba(173, 255, 47, 0.06);
-}
-
-.fixture-modal-content {
-    max-height: calc(100vh - 136px);
-    overflow-y: auto;
-}
-
-.fixture-modal-summary {
-    position: relative;
-    padding: 30px;
-    border-bottom: 1px solid var(--fixture-line);
-}
-
-.fixture-modal-summary::before {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    height: 2px;
-    background: var(--fixture-cyan);
-    content: "";
-}
-
-.fixture-modal-summary.is-ncl::before {
-    background: var(--fixture-red);
-}
-
-.fixture-modal-summary.is-amical::before {
-    background: var(--fixture-acid);
-}
-
-.fixture-modal-summary.is-finale::before {
-    background: var(--fixture-violet);
-    box-shadow: 0 0 15px color-mix(in srgb, var(--fixture-violet), transparent 35%);
-}
-
-.fixture-modal-date {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: end;
-    margin-bottom: 28px;
-}
-
-.fixture-modal-date span {
-    color: var(--fixture-cyan);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.6rem;
-    font-weight: 800;
-}
-
-.fixture-modal-date strong {
-    grid-row: 1 / 3;
-    grid-column: 2;
-    color: var(--fixture-paper);
-    font-family: "Orbitron", sans-serif;
-    font-size: 1.7rem;
-}
-
-.fixture-modal-date small {
-    margin-top: 7px;
-    color: var(--fixture-muted);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.45rem;
-    letter-spacing: 0.1em;
-}
-
-.fixture-modal-versus {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 190px minmax(0, 1fr);
-    align-items: center;
-    min-height: 190px;
-    border-top: 1px solid var(--fixture-line);
-    border-bottom: 1px solid var(--fixture-line);
-}
-
-.fixture-modal-versus>div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 0;
+    align-content: center;
+    justify-items: center;
+    gap: 5px;
+    margin: 8px 0 14px;
+    padding: 10px 6px;
+    border: 1px solid var(--line-strong);
+    background: var(--scanlines), var(--ink);
     text-align: center;
 }
 
-.fixture-modal-versus img {
-    width: 78px;
-    height: 78px;
-    margin-bottom: 16px;
-    object-fit: contain;
+body.fixtures-page .fixture-kickoff strong {
+    color: #fff;
+    font-family: var(--display);
+    font-size: clamp(1.5rem, 2vw, 1.9rem);
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 0.9;
+    font-variant-numeric: tabular-nums;
 }
 
-.fixture-modal-versus small,
-.fixture-modal-versus p span {
-    color: var(--fixture-muted);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.45rem;
-    letter-spacing: 0.12em;
+body.fixtures-page .fixture-kickoff strong i {
+    margin: 0 0.12em;
+    color: var(--blue-2);
+    font-style: normal;
 }
 
-.fixture-modal-versus>div strong {
-    margin-top: 7px;
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.82rem;
+body.fixtures-page .fixture-kickoff small {
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
 }
 
-.fixture-modal-versus p {
+body.fixtures-page .fixture-card-footer {
+    grid-area: foot;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    border-left: 1px solid var(--line);
+    background: rgba(1, 4, 12, 0.35);
+}
+
+body.fixtures-page .fixture-card-footer > span {
+    padding: 12px 14px 0;
+    color: var(--dim);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+
+body.fixtures-page .fixture-open-button {
     display: flex;
-    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 44px;
+    padding: 10px 14px 14px;
+    color: var(--paper);
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: background 160ms ease, color 160ms ease;
+}
+
+body.fixtures-page .fixture-open-button b {
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: 16px;
+}
+
+body.fixtures-page .fixture-open-button:hover {
+    background: var(--blue);
+    color: #fff;
+}
+
+body.fixtures-page .fixture-open-button:hover b {
+    color: #fff;
+}
+
+/* État vide : mire de test */
+body.fixtures-page .fixture-empty-state {
+    min-height: 320px;
+    border: 0;
+    border-radius: 0;
+}
+
+/* -------------------------------------------------------------------------
+   04. Phases de la saison : bande bleue pleine, écrans noirs
+   ------------------------------------------------------------------------- */
+
+body.fixtures-page .fixture-windows {
+    margin-top: clamp(80px, 9vw, 128px);
+    padding-block: clamp(48px, 6vw, 92px);
+}
+
+body.fixtures-page .fixture-windows-inner {
+    width: var(--page);
+    margin-inline: auto;
+}
+
+body.fixtures-page .fixture-windows-head {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1.4fr) minmax(0, 0.8fr);
+    align-items: end;
+    gap: var(--sp-5) clamp(20px, 3vw, 48px);
+    margin-bottom: var(--sp-6);
+    padding-bottom: var(--sp-5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+body.fixtures-page .fixture-windows-head .nl-chno {
+    background: var(--ink);
+    box-shadow: none;
+}
+
+body.fixtures-page .fixture-windows-head .nl-kicker,
+body.fixtures-page .fixture-windows-head .nl-section-note {
+    color: rgba(255, 255, 255, 0.86);
+}
+
+body.fixtures-page .fixture-windows-head .nl-section-title em {
+    color: var(--ink);
+}
+
+body.fixtures-page .fixture-milestones {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--seam);
+    padding: var(--seam);
+    background: var(--bezel);
+    box-shadow: 0 30px 80px rgba(0, 8, 40, 0.5);
+}
+
+body.fixtures-page .fixture-milestone {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+        "idx idx"
+        "copy vol"
+        "meter meter"
+        "brk brk";
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    min-height: 300px;
+    overflow: hidden;
+    background:
+        var(--scanlines),
+        radial-gradient(90% 70% at 100% 100%, rgba(31, 91, 255, 0.26), transparent 70%),
+        var(--ink);
+    color: #fff;
+    text-align: left;
+    transition: background 180ms ease;
+}
+
+body.fixtures-page .fixture-milestone:hover {
+    background:
+        var(--scanlines),
+        radial-gradient(90% 70% at 100% 100%, rgba(31, 91, 255, 0.45), transparent 70%),
+        var(--surface);
+}
+
+body.fixtures-page .fixture-milestone:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -4px;
+}
+
+body.fixtures-page .milestone-index {
+    grid-area: idx;
+    display: flex;
     align-items: center;
-    justify-content: center;
-    min-height: 130px;
+    min-height: 38px;
+    padding: 0 44px 0 14px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(31, 91, 255, 0.12);
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+    white-space: nowrap;
+}
+
+body.fixtures-page .milestone-index b {
+    margin-right: 6px;
+    color: #fff;
+    font-weight: 600;
+}
+
+body.fixtures-page .milestone-copy {
+    grid-area: copy;
+    display: grid;
+    align-content: end;
+    gap: 10px;
+    padding: 18px 16px 16px;
+}
+
+body.fixtures-page .milestone-copy small {
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+}
+
+body.fixtures-page .milestone-month {
+    color: #fff;
+    font-family: var(--display);
+    font-size: clamp(1.8rem, 2.8vw, 2.6rem);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 0.9;
+    text-transform: uppercase;
+    overflow-wrap: normal;
+}
+
+body.fixtures-page .milestone-volume {
+    grid-area: vol;
+    display: grid;
+    align-content: end;
+    justify-items: end;
+    gap: 6px;
+    padding: 18px 16px 14px 0;
+}
+
+body.fixtures-page .milestone-volume strong {
+    color: #fff;
+    font-family: var(--display);
+    font-size: clamp(4.4rem, 8vw, 7.6rem);
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 0.78;
+    text-shadow: var(--fringe), 0 0 36px rgba(31, 91, 255, 0.6);
+}
+
+body.fixtures-page .milestone-volume span {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+}
+
+body.fixtures-page .milestone-meter {
+    grid-area: meter;
+    display: flex;
+    height: 12px;
+    margin: 0 16px;
+    background: rgba(141, 176, 255, 0.14);
+    -webkit-mask-image: repeating-linear-gradient(90deg, #000 0 9px, transparent 9px 12px);
+    mask-image: repeating-linear-gradient(90deg, #000 0 9px, transparent 9px 12px);
+}
+
+body.fixtures-page .milestone-meter i {
+    display: block;
+    height: 100%;
+}
+
+body.fixtures-page .milestone-meter i.is-ligue {
+    flex: var(--ligue, 0) 0 0;
+    background: linear-gradient(90deg, var(--blue-deep), var(--blue) 60%, var(--blue-3));
+}
+
+body.fixtures-page .milestone-meter i.is-ncl {
+    flex: var(--ncl, 0) 0 0;
+    background: #fff;
+}
+
+body.fixtures-page .milestone-breakdown {
+    grid-area: brk;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    padding: 12px 16px 16px;
+    color: #c9d4ef;
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: 0.04em;
+}
+
+body.fixtures-page .milestone-breakdown span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+body.fixtures-page .milestone-breakdown i {
+    width: 14px;
+    height: 4px;
+    background: var(--blue-2);
+}
+
+body.fixtures-page .milestone-breakdown i.is-ncl {
+    background: #fff;
+}
+
+body.fixtures-page .milestone-arrow {
+    position: absolute;
+    top: 9px;
+    right: 14px;
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 16px;
+    line-height: 1;
+}
+
+/* -------------------------------------------------------------------------
+   05. Flux associés
+   ------------------------------------------------------------------------- */
+
+body.fixtures-page .fixture-crosslinks {
+    display: grid;
+    gap: var(--sp-4);
+    margin-top: clamp(64px, 7vw, 104px);
+}
+
+body.fixtures-page .fixture-crosslink-wall {
+    --wall-cols: 3;
+    --wall-cols-sm: 1;
+    --feed-ratio-sm: 16 / 7;
+}
+
+body.fixtures-page .fixture-crosslink-wall .nl-feed {
+    aspect-ratio: 16 / 8;
+}
+
+/* -------------------------------------------------------------------------
+   06. Dossier de rencontre (modale)
+   ------------------------------------------------------------------------- */
+
+body.fixtures-page .fixture-modal-backdrop {
+    border: 0;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+body.fixtures-page .fixture-modal-panel {
+    width: min(880px, 100%);
+}
+
+body.fixtures-page .fixture-modal-head {
+    position: sticky;
+    z-index: 8;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(90deg, #0b2266, #06122d 70%);
+}
+
+body.fixtures-page .fixture-modal-head small {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-weight: 500;
+    letter-spacing: var(--track-micro);
+    text-transform: uppercase;
+}
+
+body.fixtures-page .fixture-modal-head h2 {
+    margin: 8px 0 0;
+    color: #fff;
+    font-family: var(--display);
+    font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+body.fixtures-page .fixture-modal-close {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line-strong);
+    border-radius: 2px;
+    background: var(--blue-soft);
+    color: var(--paper);
+    font-family: var(--mono);
+    font-size: 20px;
+    text-align: center;
+}
+
+body.fixtures-page .fixture-modal-close:hover {
+    border-color: var(--blue-2);
+    background: var(--blue);
+    color: #fff;
+}
+
+body.fixtures-page .fixture-modal-content {
+    display: grid;
+    gap: var(--sp-4);
+}
+
+body.fixtures-page .fixture-modal-summary {
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-mon);
+    background: var(--bezel);
+}
+
+body.fixtures-page .fixture-modal-date {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(31, 91, 255, 0.12);
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+    text-transform: uppercase;
+}
+
+body.fixtures-page .fixture-modal-date strong {
+    color: #fff;
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+body.fixtures-page .fixture-modal-date small {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: var(--fs-micro);
+}
+
+body.fixtures-page .fixture-modal-versus {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: var(--seam);
+}
+
+body.fixtures-page .fixture-modal-team {
+    min-height: 220px;
+}
+
+body.fixtures-page .fixture-modal-center {
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 10px;
     margin: 0;
-    border-right: 1px solid var(--fixture-line);
-    border-left: 1px solid var(--fixture-line);
+    padding: 18px 24px;
+    background: var(--scanlines), var(--screen);
+    text-align: center;
 }
 
-.fixture-modal-versus p strong {
-    margin-bottom: 12px;
-    font-family: "Orbitron", sans-serif;
-    font-size: 2.15rem;
+body.fixtures-page .fixture-modal-center strong {
+    color: var(--blue-2);
+    font-family: var(--display);
+    font-size: clamp(2.8rem, 6vw, 4.6rem);
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.85;
+    text-shadow: var(--fringe), 0 0 30px rgba(31, 91, 255, 0.5);
+    white-space: nowrap;
 }
 
-.fixture-modal-grid {
+body.fixtures-page .fixture-modal-center span {
+    max-width: 130px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+    line-height: 1.4;
+}
+
+body.fixtures-page .fixture-modal-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    border-bottom: 1px solid var(--fixture-line);
+    gap: var(--seam);
 }
 
-.fixture-modal-grid>div {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    padding: 22px;
-    border-right: 1px solid var(--fixture-line);
+body.fixtures-page .fixture-modal-grid > div {
+    display: grid;
+    align-content: space-between;
+    gap: 10px;
+    min-height: 92px;
+    padding: 12px 14px 14px;
+    border-top: 3px solid var(--blue);
+    background: var(--scanlines), var(--surface);
 }
 
-.fixture-modal-grid>div:last-child {
-    border-right: 0;
+body.fixtures-page .fixture-modal-grid small {
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
 }
 
-.fixture-modal-grid small {
-    margin-bottom: 10px;
-    color: var(--fixture-muted);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.42rem;
-    letter-spacing: 0.1em;
+body.fixtures-page .fixture-modal-grid strong {
+    color: #fff;
+    font-family: var(--display);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    line-height: 1.2;
 }
 
-.fixture-modal-grid strong {
-    color: var(--fixture-paper);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.58rem;
-    line-height: 1.5;
+body.fixtures-page .fixture-modal-note {
+    padding: 14px 16px;
+    border-left: 3px solid var(--blue);
+    background: var(--blue-soft);
 }
 
-.fixture-modal-note {
-    padding: 25px 30px 30px;
+body.fixtures-page .fixture-modal-note span {
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
 }
 
-.fixture-modal-note span {
-    color: var(--fixture-acid);
-    font-family: "Orbitron", sans-serif;
-    font-size: 0.48rem;
-    font-weight: 800;
-    letter-spacing: 0.13em;
+body.fixtures-page .fixture-modal-note p {
+    margin: 8px 0 0;
+    color: #d0daf4;
+    font-size: 14px;
+    line-height: 1.6;
 }
 
-.fixture-modal-note p {
-    max-width: 720px;
-    margin: 13px 0 0;
-    color: #93a3ae;
-    font-family: "Inter", sans-serif;
-    font-size: 0.82rem;
-    line-height: 1.75;
-}
+/* -------------------------------------------------------------------------
+   07. Petits écrans
+   ------------------------------------------------------------------------- */
 
-@media (max-width: 1240px) {
-    .fixture-hero {
-        grid-template-columns: minmax(0, 1fr) 430px;
+@media (max-width: 1180px) {
+    body.fixtures-page .fixture-hero-head {
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    .fixture-hero-copy {
-        padding-right: 42px;
-        padding-left: 42px;
+    body.fixtures-page .fixtures-layout {
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    .next-fixture-panel {
-        padding: 32px;
+    body.fixtures-page .calendar-screen {
+        position: relative;
+        top: auto;
+        max-width: 620px;
     }
 
-    .fixture-filter-deck {
-        grid-template-columns: 1fr 1fr;
-        gap: 22px;
-        padding: 24px;
+    body.fixtures-page .fixture-filter-body {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
 
-    .fixture-filter-block:first-child {
-        grid-column: 1 / 3;
-        border-bottom: 0;
-    }
-
-    .fixture-view-filter {
-        border-left: 0;
-    }
-
-    .fixtures-layout {
-        grid-template-columns: 390px minmax(0, 1fr);
-    }
-
-    .fixture-card {
-        grid-template-columns: 64px minmax(0, 1fr);
-    }
-
-    .fixture-card-main {
-        padding-right: 17px;
-        padding-left: 17px;
-    }
-
-    .fixture-versus {
-        grid-template-columns: minmax(0, 1fr) 78px minmax(0, 1fr);
-        gap: 10px;
-    }
-
-    .fixture-team {
-        gap: 9px;
-    }
-
-    .fixture-team img {
-        width: 42px;
-        height: 42px;
+    body.fixtures-page .fixture-filter-body > .fixture-filter-block:first-child {
+        grid-column: 1 / -1;
     }
 }
 
-@media (max-width: 980px) {
-    .fixture-command {
-        padding-right: 18px;
-        padding-left: 18px;
+@media (max-width: 860px) {
+    body.fixtures-page .season-track {
+        grid-template-columns: minmax(0, 1fr);
     }
 
-    .fixture-hero {
-        grid-template-columns: 1fr;
+    body.fixtures-page .fixtures-list-section {
+        --rundown-cols: 84px minmax(0, 1fr) 104px minmax(0, 1fr) 120px;
     }
 
-    .fixture-hero-copy {
-        min-height: 570px;
+    body.fixtures-page .fixture-windows-head {
+        grid-template-columns: auto minmax(0, 1fr);
     }
 
-    .next-fixture-panel {
-        min-height: 560px;
-        border-top: 1px solid var(--fixture-line);
-        border-left: 0;
-    }
-
-    .season-track {
-        grid-template-columns: 1fr;
-    }
-
-    .season-track-label {
-        min-height: 90px;
-        border-right: 0;
-        border-bottom: 1px solid var(--fixture-line);
-    }
-
-    .indexed-section-head {
-        grid-template-columns: 84px 1fr;
-    }
-
-    .indexed-section-head>p {
-        grid-column: 1 / 3;
-        min-height: 78px;
-        border-top: 1px solid var(--fixture-line);
-        border-left: 0;
-    }
-
-    .fixtures-layout {
-        grid-template-columns: 1fr;
-        gap: 26px;
-        padding: 26px;
-    }
-
-    .calendar-section {
-        border-right: 0;
-        border-bottom: 0;
-    }
-
-    .calendar-card {
-        position: static;
-    }
-
-    .calendar-day {
-        min-height: 62px;
-        aspect-ratio: auto;
-    }
-
-    .fixture-milestones {
-        grid-template-columns: 1fr;
-    }
-
-    .fixture-milestone {
-        min-height: 220px;
-        border-right: 0;
-        border-bottom: 1px solid var(--fixture-line);
-    }
-
-    .fixture-milestone:last-child {
-        border-bottom: 0;
+    body.fixtures-page .fixture-windows-head .nl-section-note {
+        grid-column: 1 / -1;
     }
 }
 
 @media (max-width: 680px) {
-    .fixture-command {
-        padding-right: 10px;
-        padding-bottom: 70px;
-        padding-left: 10px;
+    body.fixtures-page .fixture-hero-inner {
+        padding-block: 44px 32px;
     }
 
-    .fixture-hero-copy {
-        min-height: 510px;
-        padding: 60px 24px 42px;
+    body.fixtures-page .fixture-title {
+        font-size: clamp(2.9rem, 13vw, 4rem);
+        line-height: 0.88;
     }
 
-    .fixture-hero h1 {
-        font-size: clamp(3.4rem, 17vw, 5.4rem);
+    body.fixtures-page .fixture-hero-stats .nl-stat {
+        min-height: 112px;
+        gap: 10px;
+        padding: 12px 10px;
     }
 
-    .fixture-intro {
-        margin-top: 32px;
-        font-size: 0.86rem;
+    body.fixtures-page .fixture-hero-stats .nl-stat-value {
+        font-size: 2.4rem;
     }
 
-    .fixture-hero-stats {
-        margin-top: 34px;
-    }
-
-    .fixture-hero-stats>div {
-        display: block;
-        padding: 14px 7px;
-    }
-
-    .fixture-hero-stats>div+div {
-        padding-left: 10px;
-    }
-
-    .fixture-hero-stats strong {
-        display: block;
-        margin: 0 0 7px;
-        font-size: 1.65rem;
-    }
-
-    .fixture-hero-stats span {
-        font-size: 0.4rem;
-    }
-
-    .next-fixture-panel {
-        min-height: 520px;
-        padding: 24px 13px;
-    }
-
-    .next-fixture-matchup {
-        grid-template-columns: minmax(0, 1fr) 72px minmax(0, 1fr);
-        padding-right: 11px;
-        padding-left: 11px;
-    }
-
-    .next-team img {
-        width: 52px;
-        height: 52px;
-    }
-
-    .next-team strong {
-        font-size: 0.58rem;
-    }
-
-    .next-fixture-kickoff strong {
-        font-size: 1.15rem;
-    }
-
-    .next-fixture-countdown>span {
+    body.fixtures-page .fixture-hero-stats .nl-stat-note {
         display: none;
     }
 
-    .season-track-months {
-        grid-template-columns: 1fr;
+    body.fixtures-page .next-fixture-matchup {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-areas:
+            "home away"
+            "kick kick";
     }
 
-    .season-month {
-        min-height: 82px;
-        border-right: 0;
-        border-bottom: 1px solid var(--fixture-line);
+    body.fixtures-page .next-fixture-matchup > .next-team:first-child {
+        grid-area: home;
     }
 
-    .season-month:last-child {
-        border-bottom: 0;
+    body.fixtures-page .next-fixture-matchup > .next-team:last-child {
+        grid-area: away;
     }
 
-    .fixture-console,
-    .fixture-windows {
-        margin-top: 44px;
+    body.fixtures-page .next-fixture-kickoff {
+        grid-area: kick;
+        grid-template-columns: auto auto auto;
+        grid-template-areas:
+            "stage stage stage"
+            "vs date time"
+            "vs label label";
+        align-items: center;
+        justify-content: center;
+        gap: 4px 14px;
+        padding: 16px;
     }
 
-    .indexed-section-head {
-        grid-template-columns: 62px 1fr;
+    body.fixtures-page .next-fixture-stage {
+        grid-area: stage;
+        justify-self: center;
+        margin-bottom: 8px;
     }
 
-    .indexed-section-head .section-index {
-        font-size: 1.25rem;
+    body.fixtures-page .next-fixture-kickoff em {
+        grid-area: vs;
+        font-size: 3rem;
     }
 
-    .indexed-section-head>div,
-    .indexed-section-head>p {
-        padding: 21px 18px;
+    body.fixtures-page .next-fixture-kickoff small {
+        grid-area: date;
+        margin: 0;
     }
 
-    .indexed-section-head h2 {
-        font-size: 1.15rem;
-        line-height: 1.35;
+    body.fixtures-page .next-fixture-kickoff strong {
+        grid-area: time;
+        font-size: 1.7rem;
     }
 
-    .fixture-filter-deck {
-        grid-template-columns: 1fr;
-        gap: 18px;
-        padding: 18px;
+    body.fixtures-page .next-fixture-kickoff > span {
+        grid-area: label;
     }
 
-    .fixture-filter-block:first-child {
-        grid-column: auto;
+    body.fixtures-page :is(.next-team, .fixture-modal-team) {
+        min-height: 176px;
     }
 
-    .fixture-filter-block+.fixture-filter-block {
-        border-top: 0;
+    body.fixtures-page :is(.next-team, .fixture-modal-team) .nl-feed-osd {
+        padding: 9px 8px;
+    }
+
+    body.fixtures-page :is(.next-team, .fixture-modal-team) .nl-feed-caption small,
+    body.fixtures-page .team-feed-side {
+        display: none;
+    }
+
+    body.fixtures-page :is(.next-team, .fixture-modal-team) .nl-feed-caption b {
+        font-size: 14px;
+        white-space: normal;
+        overflow-wrap: normal;
+    }
+
+    body.fixtures-page .team-feed-crest {
+        top: 46%;
+        width: 52%;
+    }
+
+    body.fixtures-page .next-fixture-bar {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    body.fixtures-page .next-fixture-countdown strong {
+        font-size: clamp(2.6rem, 14vw, 3.6rem);
+    }
+
+    body.fixtures-page .next-fixture-open {
+        width: 100%;
+    }
+
+    body.fixtures-page .season-track-label {
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+    }
+
+    body.fixtures-page .season-track-label small {
+        grid-column: 1 / -1;
+    }
+
+    body.fixtures-page .season-track-months {
+        grid-auto-flow: row;
+    }
+
+    body.fixtures-page .season-month {
+        min-height: 60px;
+        padding: 10px 14px;
+    }
+
+    body.fixtures-page .fixture-filter-body {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    body.fixtures-page .fixture-category-tabs {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        overflow: visible;
+    }
+
+    body.fixtures-page :is(.fixture-category-tabs, .fixture-view-tabs) .nl-key {
+        min-width: 0;
+        min-height: 44px;
+        flex: 1 1 0;
+    }
+
+    body.fixtures-page .calendar-weekdays,
+    body.fixtures-page .calendar-days-grid {
+        gap: 2px;
+        padding-inline: 8px;
+    }
+
+    body.fixtures-page .calendar-day {
+        min-height: 0;
+        aspect-ratio: 1 / 1.05;
+        padding: 4px;
+    }
+
+    body.fixtures-page .calendar-day-number {
+        font-size: 11px;
+    }
+
+    body.fixtures-page .calendar-day > strong {
+        top: auto;
+        right: 4px;
+        bottom: 9px;
+        font-size: 12px;
+    }
+
+    body.fixtures-page .fixture-list-head {
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    body.fixtures-page .fixture-rundown-head {
+        display: none;
+    }
+
+    body.fixtures-page .fixtures-cards-container {
+        border-top: 1px solid var(--line-strong);
+        border-radius: var(--r-mon);
+    }
+
+    body.fixtures-page .fixtures-list-section {
+        --rundown-cols: 62px minmax(0, 1fr) 74px minmax(0, 1fr);
+    }
+
+    body.fixtures-page .fixture-card {
+        grid-template-areas:
+            "rail meta meta meta"
+            "rail home kick away"
+            "rail foot foot foot";
+        grid-template-rows: auto auto auto;
+        min-height: 0;
+    }
+
+    body.fixtures-page .fixture-card-rail {
+        align-content: start;
+        justify-items: center;
+        padding: 12px 6px;
+        text-align: center;
+    }
+
+    body.fixtures-page .fixture-card-rail b {
+        font-size: 2.1rem;
+    }
+
+    body.fixtures-page .fixture-card-meta {
+        padding: 10px 10px 0;
+    }
+
+    body.fixtures-page .fixture-card-meta time {
+        display: none;
+    }
+
+    body.fixtures-page .fixture-team,
+    body.fixtures-page .fixture-team.is-home,
+    body.fixtures-page .fixture-team.is-away {
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 8px;
+        padding: 10px 4px 8px;
+        text-align: center;
+    }
+
+    body.fixtures-page .fixture-team.is-home {
+        flex-direction: column-reverse;
+        justify-content: flex-end;
+    }
+
+    body.fixtures-page .fixture-team small {
+        display: none;
+    }
+
+    body.fixtures-page .fixture-team strong,
+    body.fixtures-page .fixture-team.is-away strong {
+        justify-self: center;
+        font-size: 13px;
+    }
+
+    body.fixtures-page .fixture-team img {
+        width: 46px;
+        height: 46px;
+    }
+
+    body.fixtures-page .fixture-kickoff {
+        align-self: start;
+        margin: 10px 0 8px;
+        padding: 8px 4px;
+    }
+
+    body.fixtures-page .fixture-kickoff strong {
+        font-size: 1.3rem;
+    }
+
+    body.fixtures-page .fixture-card:not(.is-finished) .fixture-kickoff small {
+        display: none;
+    }
+
+    body.fixtures-page .fixture-section-head .nl-section-title {
+        font-size: clamp(1.7rem, 7.6vw, 2.1rem);
+    }
+
+    body.fixtures-page .fixture-card-footer {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto;
+        align-items: center;
+        border-top: 1px solid var(--line);
         border-left: 0;
     }
 
-    .fixtures-layout {
-        gap: 18px;
+    body.fixtures-page .fixture-card-footer > span {
+        padding: 0 10px;
+    }
+
+    body.fixtures-page .fixture-open-button {
+        align-items: center;
+        padding: 0 14px;
+    }
+
+    body.fixtures-page .fixture-windows-head {
+        gap: 16px;
+    }
+
+    body.fixtures-page .fixture-milestones {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    body.fixtures-page .fixture-milestone {
+        min-height: 230px;
+    }
+
+    body.fixtures-page .milestone-volume strong {
+        font-size: 4.6rem;
+    }
+
+    body.fixtures-page .fixture-modal-head {
+        padding: 12px 14px;
+    }
+
+    body.fixtures-page .fixture-modal-content {
         padding: 14px;
     }
 
-    .fixture-category-tabs {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    body.fixtures-page .fixture-modal-versus {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-areas:
+            "home away"
+            "mid mid";
     }
 
-    .fx-cat-btn:nth-child(2) {
-        border-right: 0;
+    body.fixtures-page .fixture-modal-versus > .fixture-modal-team:first-child {
+        grid-area: home;
     }
 
-    .fx-cat-btn:nth-child(-n + 2) {
-        border-bottom: 1px solid var(--fixture-line-bright);
+    body.fixtures-page .fixture-modal-versus > .fixture-modal-team:last-child {
+        grid-area: away;
     }
 
-    body.nebula-page.fixtures-page .calendar-header {
-        padding-right: 15px !important;
-        padding-left: 15px !important;
-    }
-
-    .calendar-weekdays span {
-        font-size: 0.36rem;
-    }
-
-    .calendar-day {
-        min-height: 49px;
-        padding: 5px;
-    }
-
-    .calendar-day-number {
-        top: 6px;
-        left: 6px;
-        font-size: 0.45rem;
-    }
-
-    .calendar-day>strong {
-        display: none;
-    }
-
-    .calendar-day-signals {
-        bottom: 6px;
-        left: 6px;
-    }
-
-    .calendar-legend {
-        gap: 13px;
-        padding-right: 15px;
-        padding-left: 15px;
-    }
-
-    body.nebula-page.fixtures-page .fixture-list-head {
-        align-items: flex-start;
-        min-height: 112px;
-        padding: 20px 16px !important;
-    }
-
-    .fixtures-cards-container {
+    body.fixtures-page .fixture-modal-center {
+        grid-area: mid;
+        grid-template-columns: auto auto;
+        align-items: center;
         gap: 14px;
         padding: 14px;
     }
 
-    .fixture-card {
-        grid-template-columns: 52px minmax(0, 1fr);
-    }
-
-    .fixture-card-main {
-        padding: 16px 12px 0;
-    }
-
-    .fixture-card-meta {
-        flex-wrap: wrap;
-        gap: 8px 11px;
-    }
-
-    .fixture-card-meta time {
-        flex-basis: 100%;
-        margin-left: 0;
+    body.fixtures-page .fixture-modal-center span {
+        max-width: none;
         text-align: left;
     }
 
-    .fixture-versus {
-        grid-template-columns: minmax(0, 1fr) 54px minmax(0, 1fr);
-        gap: 4px;
-        min-height: 132px;
-    }
-
-    .fixture-team {
-        flex-direction: column;
-        gap: 7px;
-        text-align: center;
-    }
-
-    .fixture-team.is-home {
-        flex-direction: column-reverse;
-        text-align: center;
-    }
-
-    .fixture-team img {
-        width: 38px;
-        height: 38px;
-    }
-
-    .fixture-team small {
-        display: none;
-    }
-
-    .fixture-team strong {
-        font-size: 0.52rem;
-    }
-
-    .fixture-kickoff strong {
-        font-size: 0.85rem;
-    }
-
-    .fixture-kickoff small {
-        font-size: 0.33rem;
-        text-align: center;
-    }
-
-    .fixture-card-footer {
-        align-items: stretch;
-        margin-right: -12px;
-    }
-
-    .fixture-card-footer>span {
-        display: none;
-    }
-
-    .fixture-open-button {
-        width: 100%;
-        min-height: 46px;
-        border-left: 0;
-    }
-
-    .fixture-empty-state {
-        grid-template-columns: 50px 1fr;
-        gap: 12px;
-        padding: 24px 16px;
-    }
-
-    .fixture-empty-state button {
-        grid-column: 1 / 3;
-        margin-top: 15px;
-    }
-
-    .fixture-milestone {
-        grid-template-columns: 32px 1fr;
-        padding: 23px 18px;
-    }
-
-    .milestone-volume {
-        position: absolute;
-        top: 24px;
-        right: 18px;
-    }
-
-    .milestone-volume strong {
-        font-size: 2rem;
-    }
-
-    .milestone-breakdown {
-        grid-column: 2;
-    }
-
-    .fixture-modal {
-        padding: 7px;
-    }
-
-    .fixture-modal-panel {
-        max-height: calc(100vh - 14px);
-    }
-
-    body.nebula-page.fixtures-page .fixture-modal-head {
-        min-height: 77px;
-        padding-left: 17px !important;
-    }
-
-    .fixture-modal-close {
-        width: 70px;
-    }
-
-    .fixture-modal-content {
-        max-height: calc(100vh - 91px);
-    }
-
-    .fixture-modal-summary {
-        padding: 22px 14px;
-    }
-
-    .fixture-modal-date {
-        grid-template-columns: 1fr;
-    }
-
-    .fixture-modal-date strong {
-        grid-row: auto;
-        grid-column: auto;
-        margin-top: 12px;
-        font-size: 1.25rem;
-    }
-
-    .fixture-modal-versus {
-        grid-template-columns: minmax(0, 1fr) 82px minmax(0, 1fr);
-        min-height: 170px;
-    }
-
-    .fixture-modal-versus img {
-        width: 48px;
-        height: 48px;
-    }
-
-    .fixture-modal-versus>div strong {
-        font-size: 0.56rem;
-    }
-
-    .fixture-modal-versus p strong {
-        font-size: 1.25rem;
-    }
-
-    .fixture-modal-versus p span {
-        padding: 0 6px;
-        font-size: 0.32rem;
-        text-align: center;
-    }
-
-    .fixture-modal-grid {
+    body.fixtures-page .fixture-modal-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .fixture-modal-grid>div:nth-child(2) {
-        border-right: 0;
-    }
-
-    .fixture-modal-grid>div:nth-child(-n + 2) {
-        border-bottom: 1px solid var(--fixture-line);
+    body.fixtures-page .fixture-modal-date small {
+        margin-left: 0;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .fixture-modal-panel {
-        animation: none;
-    }
-
-    html {
-        scroll-behavior: auto;
+    body.fixtures-page :is(.fixture-card, .season-month, .fixture-milestone, .calendar-day, .fixture-open-button) {
+        transition: none;
     }
 }

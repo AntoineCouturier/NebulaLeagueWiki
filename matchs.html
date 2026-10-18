@@ -28,15 +28,15 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="CSS/style.css">
     <link rel="stylesheet" href="CSS/hamburger.css">
     <link rel="stylesheet" href="CSS/global-theme.css">
     <link rel="stylesheet" href="CSS/match.css">
     <link rel="stylesheet" href="CSS/responsive.css">
+    <link rel="stylesheet" href="CSS/theme-monitor.css">
     <script src="JavaScript/reveal.js"></script>
 </head>
 
-<body class="nebula-page matches-page match-control-page">
+<body class="nebula-page matches-page match-control-page nl-migrated">
 
     <header class="site-header" id="top">
         <a class="brand" href="#top" aria-label="Nebula League, retour en haut">
@@ -65,82 +65,138 @@
         </div>
     </header>
 
-    <section class="match-command-hero">
-        <div class="match-hero-copy">
-            <p class="match-kicker"><span>NL–04</span> MATCH INTELLIGENCE</p>
-            <h1>CHAQUE BUT<br><em>LAISSE UNE TRACE</em></h1>
-            <p class="match-hero-text">Relisez chaque rencontre comme un signal : évolution du score, impact des
-                joueurs et moments qui ont fait basculer le match.</p>
-            <div class="match-hero-stats" id="matchHeroStats" aria-label="Statistiques générales des matchs"></div>
+    <!-- 01. Multiplex : un écran par club (flux générés par match-page.js) -->
+    <section class="match-command-hero nl-hero nl-hero--wall" aria-labelledby="matchPageTitle">
+        <div class="osd">
+            <span class="rec">REC</span>
+            <span>CAM 05 <b>//</b> RÉGIE DES MATCHS</span>
+            <span class="osd-hide-sm">MULTIPLEX — <b>LIGUE · NCL · AMICAL</b></span>
+            <span class="jp osd-hide-sm">ライブ記録</span>
+            <span class="osd-hide-sm">DURÉE 12:00 // MT 06:00</span>
         </div>
 
-        <aside class="featured-match" id="featuredMatch" aria-label="Dernier match enregistré"></aside>
+        <div class="nl-hero-wall match-wall" data-match-wall aria-hidden="true"></div>
+
+        <div class="nl-hero-inner match-hero-inner">
+            <p class="nl-kicker"><span class="nl-ch">CH 05</span> Ligue // Centre des matchs</p>
+            <h1 id="matchPageTitle" class="nl-headline match-title">Chaque but <em>laisse une trace</em></h1>
+            <p class="nl-lead">Relisez chaque rencontre comme un signal&nbsp;: <b>évolution du score</b>, impact des
+                joueurs et moments qui ont fait basculer le match.</p>
+            <div class="match-hero-stats nl-stats" id="matchHeroStats" aria-label="Statistiques générales des matchs"></div>
+        </div>
     </section>
 
-    <main class="match-archive">
-        <section class="match-control">
-            <div class="match-section-heading">
-                <span>01</span>
-                <div><small>ARCHIVE DE DIFFUSION</small>
-                    <h2>CENTRE DES MATCHS</h2>
-                </div>
-                <p>Filtrez les rencontres puis ouvrez le replay pour étudier chaque action et chaque performance.</p>
+    <!-- 02. Écran vedette : dernier match ou mire d'attente -->
+    <section class="match-stage nl-band" aria-labelledby="matchStageTitle">
+        <div class="match-stage-inner">
+            <div class="match-stage-head">
+                <p class="nl-kicker"><span class="nl-ch">CH 01</span> Écran vedette // Dernier signal reçu</p>
+                <h2 id="matchStageTitle" class="match-stage-title">Le dernier <em>direct</em></h2>
+                <p class="match-stage-note">Le match le plus récent passe en boucle sur l'écran principal. Ouvrez le
+                    replay pour revivre chaque but.</p>
+            </div>
+            <aside class="featured-match" id="featuredMatch" aria-label="Dernier match enregistré"></aside>
+        </div>
+    </section>
+
+    <main class="match-archive" id="archives">
+        <section class="match-control nl-console" aria-labelledby="matchConsoleTitle">
+            <div class="nl-console-head">
+                <span class="nl-ch">CH 02</span>
+                <h2 id="matchConsoleTitle">Console de tri</h2>
+                <p>Filtrez les rencontres par compétition, saison ou équipe.</p>
             </div>
 
-            <div class="match-filter-bar">
-                <div class="match-filter-category">
-                    <span>COMPÉTITION</span>
-                    <div class="match-category-tabs" id="categoryFilterGroup">
-                        <button type="button" class="match-control-button match-filter-tab active" data-cat="all"
-                            aria-pressed="true">TOUS</button>
-                        <button type="button" class="match-control-button match-filter-tab" data-cat="ligue"
-                            aria-pressed="false">LIGUE</button>
-                        <button type="button" class="match-control-button match-filter-tab" data-cat="ncl"
+            <div class="match-console-body nl-console-body">
+                <div class="match-filter-category nl-field">
+                    <span class="nl-field-label" id="matchCategoryLabel">Compétition</span>
+                    <div class="match-category-tabs nl-keys" id="categoryFilterGroup" role="group"
+                        aria-labelledby="matchCategoryLabel">
+                        <button type="button" class="match-control-button match-filter-tab nl-key active" data-cat="all"
+                            aria-pressed="true">Tous</button>
+                        <button type="button" class="match-control-button match-filter-tab nl-key" data-cat="ligue"
+                            aria-pressed="false">Ligue</button>
+                        <button type="button" class="match-control-button match-filter-tab nl-key" data-cat="ncl"
                             aria-pressed="false">NCL</button>
-                        <button type="button" class="match-control-button match-filter-tab" data-cat="amical"
-                            aria-pressed="false">AMICAL</button>
+                        <button type="button" class="match-control-button match-filter-tab nl-key" data-cat="amical"
+                            aria-pressed="false">Amical</button>
                     </div>
                 </div>
 
-                <div class="match-filter-season">
-                    <span>SAISON</span>
-                    <div class="match-season-select-shell">
-                        <select class="match-season-select" id="seasonFilter"
-                            aria-label="Filtrer l'historique par saison"></select>
-                        <span aria-hidden="true">⌄</span>
-                    </div>
-                </div>
+                <label class="match-filter-season nl-field" for="seasonFilter">
+                    <span class="nl-field-label">Saison</span>
+                    <select class="match-season-select nl-input" id="seasonFilter"
+                        aria-label="Filtrer l'historique par saison"></select>
+                </label>
 
-                <div class="match-filter-club">
-                    <span>ÉQUIPE</span>
+                <div class="match-filter-club nl-field">
+                    <span class="nl-field-label">Équipe</span>
                     <div class="match-club-dropdown" id="clubDropdown">
-                        <button type="button" class="match-control-button match-club-trigger" id="dropdownCurrent"
+                        <button type="button" class="match-control-button match-club-trigger nl-input" id="dropdownCurrent"
                             aria-expanded="false" aria-controls="dropdownMenu">
                             <span class="dropdown-current-content">
                                 <span class="dropdown-current-label">Toutes les équipes</span>
                             </span>
-                            <span class="match-dropdown-caret">＋</span>
+                            <span class="match-dropdown-caret" aria-hidden="true"></span>
                         </button>
                         <div class="match-club-menu" id="dropdownMenu" role="listbox"></div>
                     </div>
                 </div>
 
-                <button type="button" class="match-control-button match-sort-toggle" id="sortToggle" data-order="desc"
-                    aria-label="Trier les matchs du plus récent au plus ancien">
-                    <span><small>ORDRE DES ARCHIVES</small><strong>DATE</strong></span>
-                    <span class="match-sort-arrow">↓</span>
-                </button>
+                <div class="match-filter-sort nl-field">
+                    <span class="nl-field-label">Ordre des archives</span>
+                    <button type="button" class="match-control-button match-sort-toggle nl-input" id="sortToggle" data-order="desc"
+                        aria-label="Trier les matchs du plus récent au plus ancien">
+                        <span>Date</span>
+                        <span class="match-sort-arrow">↓</span>
+                    </button>
+                </div>
             </div>
         </section>
 
-        <section class="match-results">
-            <div class="match-results-topline">
-                <span><i></i> ARCHIVE SYNCHRONISÉE</span>
-                <strong id="matchResultCount">00 MATCH</strong>
+        <section class="match-results" aria-labelledby="matchArchiveTitle">
+            <div class="nl-section-head match-results-head">
+                <div class="nl-chno"><small>CH</small><b>03</b></div>
+                <div>
+                    <p class="nl-kicker">Archive de diffusion</p>
+                    <h2 id="matchArchiveTitle" class="nl-section-title">Les <em>replays</em></h2>
+                </div>
+                <p class="nl-section-note">Chaque rencontre terminée devient un dossier&nbsp;: score, ligne des buts,
+                    buteurs et homme du match. Ouvrez le replay pour l'analyse complète.</p>
             </div>
-            <div class="match-list" id="matchList"></div>
+            <div class="match-results-topline">
+                <p class="match-results-live"><span class="rec">DIRECT</span> Registre synchronisé</p>
+                <strong class="match-results-count" id="matchResultCount">00 MATCH</strong>
+            </div>
+            <div class="match-feed-list" id="matchList"></div>
         </section>
     </main>
+
+    <footer class="nl-footer">
+        <div class="nl-footer-main">
+            <a class="footer-brand" href="index.html">
+                <span class="brand-mark"><span></span></span>
+                <strong>NEBULA LEAGUE</strong>
+            </a>
+            <p>Ligue privée Azure Latch. Toutes les rencontres sont enregistrées, chaque statistique est archivée.</p>
+        </div>
+        <nav class="nl-footer-links" aria-label="Accès rapides">
+            <p>Accès rapides</p>
+            <a href="fixtures.html">Calendrier</a>
+            <a href="saison.html">Saisons</a>
+            <a href="headtohead.html">Face à face</a>
+            <a href="stats.html">Records</a>
+            <a href="club.html">Clubs</a>
+            <a href="rules.html">Règles</a>
+        </nav>
+        <div class="nl-footer-osd">
+            <span class="rec">REC</span>
+            <span>NL-CTRL // FIN DU FLUX</span>
+            <span class="jp">ライブ記録</span>
+            <span>© NEBULA LEAGUE</span>
+            <a href="#top">Retour en haut ↑</a>
+        </div>
+    </footer>
 
     <div class="match-detail-layer" id="matchDetailLayer" aria-hidden="true">
         <div class="match-detail-panel" id="matchDetailPanel" role="dialog" aria-modal="true"

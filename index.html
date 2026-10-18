@@ -26,17 +26,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,500;0,600;0,700;1,600;1,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
     <link rel="stylesheet" href="CSS/hamburger.css">
     <link rel="stylesheet" href="CSS/global-theme.css">
     <link rel="stylesheet" href="CSS/home.css">
     <link rel="stylesheet" href="CSS/responsive.css">
+    <link rel="stylesheet" href="CSS/theme-monitor.css">
     <script src="JavaScript/reveal.js"></script>
 </head>
 
-<body class="nebula-page home-page">
+<body class="nebula-page home-page nl-migrated">
     <header class="site-header" id="top">
         <a class="brand" href="#top" aria-label="Nebula League, retour en haut">
             <span class="brand-mark"><span></span></span>
@@ -65,336 +66,260 @@
     </header>
 
     <main class="home-main">
-        <section class="home-hero" aria-labelledby="home-title">
-            <div class="home-grid" aria-hidden="true"></div>
-            <div class="home-scanline" aria-hidden="true"></div>
-
-            <div class="home-hero-copy">
-                <p class="home-eyebrow"><span>NL—00</span> COMPÉTITION PRIVÉE // AZURE LATCH</p>
-                <h1 id="home-title"><span>NEBULA</span><em>LEAGUE</em></h1>
-                <p class="home-lead">
-                    Une ligue entre rivaux. Des valeurs qui évoluent, des titres à conquérir et chaque match
-                    archivé. Entre dans la base de données et trouve ta place sur le terrain.
+        <!-- 01. Écran maître : le mur de surveillance (flux générés par home-feed.js) -->
+        <section class="nl-hero nl-hero--wall home-hero-wall" aria-labelledby="home-title">
+            <div class="osd">
+                <span class="rec">REC</span>
+                <span>CAM 00 <b>//</b> SALLE DE CONTRÔLE</span>
+                <span class="osd-hide-sm">MUR PRINCIPAL — <b><span data-count="players" data-pad="2">11</span> SUJETS</b></span>
+                <span class="jp osd-hide-sm">ブルーロック</span>
+                <span class="osd-hide-sm">ISO 3200 · ZOOM ×1.0</span>
+            </div>
+            <div class="nl-hero-wall home-wall" data-feed="wall" aria-hidden="true"></div>
+            <div class="nl-hero-inner">
+                <p class="nl-kicker"><span class="nl-ch">CH 00</span> Ligue privée // Azure Latch</p>
+                <h1 id="home-title" class="nl-headline nl-headline--xl home-title"><span>Nebula</span> <em>League</em></h1>
+                <p class="home-tagline">Ton ego est sous surveillance.</p>
+                <p class="nl-lead">
+                    <b data-count="players">11</b> joueurs, <b data-count="clubs">5</b> clubs et un seul classement.
+                    Chaque match est enregistré, chaque statistique archivée&nbsp;: entre dans la salle de contrôle
+                    et trouve ta place sur le terrain.
                 </p>
-
-                <div class="home-actions">
-                    <a class="home-primary-cta" href="title.html">Explorer les titres <span>↘</span></a>
-                    <a class="home-secondary-cta" href="#directory">Ouvrir le hub <span>↓</span></a>
-                </div>
-
-                <dl class="home-metrics" aria-label="La ligue en chiffres">
-                    <div>
-                        <dt data-count="characters" data-pad="2">26</dt>
-                        <dd>Personnages<br>archivés</dd>
-                    </div>
-                    <div>
-                        <dt data-count="players" data-pad="2">10</dt>
-                        <dd>Joueurs<br>enregistrés</dd>
-                    </div>
-                    <div>
-                        <dt data-count="clubs" data-pad="2">05</dt>
-                        <dd>Clubs<br>en lice</dd>
-                    </div>
-                </dl>
-            </div>
-
-            <div class="home-hero-visual" aria-label="Système orbital des clubs de la Nebula League">
-                <div class="home-orbit" aria-hidden="true">
-                    <div class="orbit-ring orbit-ring-one"></div>
-                    <div class="orbit-ring orbit-ring-two"></div>
-                    <div class="orbit-axis"></div>
-
-                    <div class="orbit-core">
-                        <span class="orbit-core-label">NEBULA</span>
-                        <strong>NL</strong>
-                        <small>CORE // 01</small>
-                    </div>
-
-                    <span class="orbit-point orbit-point-one"></span>
-                    <span class="orbit-point orbit-point-two"></span>
-                    <span class="orbit-point orbit-point-three"></span>
-                </div>
-
-                <div class="home-system-card">
-                    <div class="system-card-head">
-                        <span>SYSTEM STATUS</span>
-                        <strong><i></i> ONLINE</strong>
-                    </div>
-                    <div class="system-card-body">
-                        <p><span>Saison active</span><strong data-active-season>--</strong></p>
-                        <p><span>Archive centrale</span><strong>SYNC</strong></p>
-                        <p><span>Dernière entrée</span><strong>LIVE</strong></p>
-                    </div>
-                    <a href="fixtures.html">Consulter le calendrier <span>↗</span></a>
+                <div class="nl-hero-actions">
+                    <a class="nl-btn" href="players.html">Voir les joueurs <span>↘</span></a>
+                    <a class="nl-btn nl-btn-ghost" href="#directory">Ouvrir le mur <span>↓</span></a>
                 </div>
             </div>
-
-            <a class="home-scroll-cue" href="#directory" aria-label="Découvrir la suite">
-                <span>SCROLL TO ACCESS</span><i></i>
-            </a>
         </section>
 
-        <section class="home-feed" aria-labelledby="feed-title">
-            <div class="feed-heading">
-                <p class="home-eyebrow"><span>NL—01</span> LIVE FEED</p>
-                <h2 id="feed-title">EN CE MOMENT</h2>
+        <!-- 02. Registre : les chiffres de la ligue -->
+        <section class="home-stats nl-stats" aria-label="La ligue en chiffres">
+            <div class="nl-stat nl-stat--solid">
+                <span class="nl-stat-label">Saison en cours</span>
+                <strong class="nl-stat-value"><span data-active-season>01</span></strong>
+                <span class="nl-stat-note">Ligue, NCL et matchs amicaux</span>
             </div>
-            <div class="feed-grid">
-                <article class="feed-panel">
-                    <header><span>01 // DERNIERS RÉSULTATS</span><a href="matchs.html">Tous les matchs <i>↗</i></a></header>
-                    <div class="feed-body" data-feed="results"></div>
+            <div class="nl-stat">
+                <span class="nl-stat-label">CAM 04 // Personnages</span>
+                <strong class="nl-stat-value" data-count="characters" data-pad="2">29</strong>
+                <span class="nl-stat-note">Archivés avec leurs titres</span>
+            </div>
+            <div class="nl-stat">
+                <span class="nl-stat-label">CAM 05 // Joueurs</span>
+                <strong class="nl-stat-value" data-count="players" data-pad="2">11</strong>
+                <span class="nl-stat-note">Sujets sous surveillance</span>
+            </div>
+            <div class="nl-stat">
+                <span class="nl-stat-label">CAM 06 // Clubs</span>
+                <strong class="nl-stat-value" data-count="clubs" data-pad="2">05</strong>
+                <span class="nl-stat-note">Engagés dans la ligue</span>
+            </div>
+        </section>
+
+        <!-- 03. Régie : classement, prochain match, résultats -->
+        <section class="home-regie" aria-labelledby="regie-title">
+            <div class="nl-section-head">
+                <div class="nl-chno" aria-hidden="true"><small>CH</small><b>01</b></div>
+                <div>
+                    <p class="nl-kicker">Régie // En direct de la salle</p>
+                    <h2 id="regie-title" class="nl-section-title">Le direct <em>de la ligue</em></h2>
+                </div>
+                <p class="nl-section-note">Le classement ego, la prochaine rencontre et les derniers scores, recalculés à
+                    chaque visite.</p>
+            </div>
+
+            <div class="regie-grid">
+                <article class="mon regie-ranking" aria-labelledby="ranking-title">
+                    <div class="osd">
+                        <span><b>CAM 01</b> // CLASSEMENT EGO</span>
+                        <span class="rec">DIRECT</span>
+                    </div>
+                    <h3 id="ranking-title" class="nl-sr">Classement ego</h3>
+                    <div class="feed-body" data-feed="leaders"></div>
+                    <a class="regie-foot" href="players.html">Tout le classement <i>↗</i></a>
                 </article>
-                <article class="feed-panel feed-panel-next">
-                    <header><span>02 // PROCHAINE RENCONTRE</span><a href="fixtures.html">Calendrier <i>↗</i></a></header>
+
+                <article class="mon regie-next" aria-labelledby="next-title">
+                    <div class="osd">
+                        <span><b>CAM 02</b> // PROCHAINE RENCONTRE</span>
+                        <a href="fixtures.html">Calendrier <i>↗</i></a>
+                    </div>
+                    <h3 id="next-title" class="nl-sr">Prochaine rencontre</h3>
                     <div class="feed-body" data-feed="next"></div>
                 </article>
-                <article class="feed-panel">
-                    <header><span>03 // EN TÊTE DE LA LIGUE</span><a href="stats.html">Records <i>↗</i></a></header>
-                    <div class="feed-body" data-feed="leaders"></div>
+
+                <article class="mon regie-results" aria-labelledby="results-title">
+                    <div class="osd">
+                        <span><b>CAM 03</b> // RÉSULTATS</span>
+                        <a href="matchs.html">Matchs <i>↗</i></a>
+                    </div>
+                    <h3 id="results-title" class="nl-sr">Derniers résultats</h3>
+                    <div class="feed-body" data-feed="results"></div>
                 </article>
             </div>
         </section>
 
+        <!-- 04. Le mur des canaux : un flux caméra par rubrique -->
         <section class="home-directory" id="directory" aria-labelledby="directory-title">
-            <div class="directory-heading">
+            <div class="nl-section-head nl-section-head--band">
+                <div class="nl-chno" aria-hidden="true"><small>CH</small><b>02</b></div>
                 <div>
-                    <p class="home-eyebrow"><span>NL—02</span> LEAGUE DIRECTORY</p>
-                    <h2 id="directory-title">TOUTE LA LIGUE.<br><em>UN SEUL HUB.</em></h2>
+                    <p class="nl-kicker">Mur des canaux // 12 écrans ouverts</p>
+                    <h2 id="directory-title" class="nl-section-title">Toute la ligue, <em>un seul mur.</em></h2>
                 </div>
-                <p>
-                    Passe des profils aux archives, suis la valeur des joueurs ou replonge dans chaque confrontation.
-                    Toutes les données de la ligue sont accessibles ici.
-                </p>
+                <p class="nl-section-note">Profils, archives, valeurs, confrontations&nbsp;: chaque écran ouvre un canal
+                    de la ligue.</p>
             </div>
 
-            <div class="home-portals">
-                <a class="portal-card portal-featured" href="title.html">
-                    <span class="portal-index">01 / ARCHIVES</span>
-                    <div class="portal-copy">
-                        <p><span data-count="characters">26</span> personnages — Titres communs à Mastery</p>
-                        <h3>PERSONNAGES<br>&amp; TITRES</h3>
-                        <span class="portal-arrow">↗</span>
-                    </div>
-                    <div class="portal-orbit" aria-hidden="true">
-                        <i></i><i></i><i></i><strong data-count="characters">26</strong>
-                    </div>
+            <div class="nl-wall home-portals">
+                <a class="nl-feed portal-feed portal-wide" href="title.html">
+                    <img class="nl-feed-img" src="images/icons/isagi.webp" alt="" style="--feed-pos: 40% 30%">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd" aria-hidden="true"><span><b>CAM 01</b> // ARCHIVES</span><span class="rec">REC</span></span>
+                    <span class="nl-feed-tc" aria-hidden="true">TC 01:12:04:18</span>
+                    <strong class="nl-feed-figure" data-count="characters">29</strong>
+                    <span class="nl-feed-caption"><small>CH 01 // Titres communs à Mastery</small><b>Personnages &amp; titres</b></span>
                 </a>
 
-                <a class="portal-card portal-players" href="players.html">
-                    <span class="portal-index">02 / ROSTER</span>
-                    <div class="portal-copy">
-                        <p>Profils, postes et valeurs</p>
-                        <h3>JOUEURS</h3>
-                        <span class="portal-arrow">↗</span>
-                    </div>
-                    <strong class="portal-figure" data-count="players" data-pad="2">10</strong>
+                <a class="nl-feed portal-feed" href="players.html">
+                    <img class="nl-feed-img" src="Joueurs/images-joueurs/dylan.webp" alt="" style="--feed-pos: 50% 34%">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd" aria-hidden="true"><span><b>CAM 02</b> // ROSTER</span><span class="rec">REC</span></span>
+                    <span class="nl-feed-tc" aria-hidden="true">TC 00:47:31:02</span>
+                    <strong class="nl-feed-figure" data-count="players" data-pad="2">11</strong>
+                    <span class="nl-feed-caption"><small>CH 02 // Profils, postes, valeurs</small><b>Joueurs</b></span>
                 </a>
 
-                <a class="portal-card portal-clubs" href="club.html">
-                    <span class="portal-index">03 / TEAMS</span>
-                    <div class="portal-copy">
-                        <p>Effectifs et identités de jeu</p>
-                        <h3>CLUBS</h3>
-                        <span class="portal-arrow">↗</span>
-                    </div>
-                    <div class="portal-club-marks" aria-hidden="true">
-                        <img src="images/clubs_icon/Bastard_Munchen.webp" alt="">
-                        <img src="images/clubs_icon/PXG.webp" alt="">
-                        <img src="images/clubs_icon/Manshine_City.webp" alt="">
-                    </div>
+                <a class="nl-feed portal-feed portal-crest" href="club.html">
+                    <img class="nl-feed-img" src="images/clubs_icon/Bastard_Munchen.webp" alt="" style="--feed-pos: 50% 40%; --feed-zoom: 1.5">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd" aria-hidden="true"><span><b>CAM 03</b> // CLUBS</span><span class="rec">REC</span></span>
+                    <span class="nl-feed-tc" aria-hidden="true">TC 02:05:55:11</span>
+                    <strong class="nl-feed-figure" data-count="clubs" data-pad="2">05</strong>
+                    <span class="nl-feed-caption"><small>CH 03 // Effectifs et identités</small><b>Clubs</b></span>
                 </a>
 
-                <a class="portal-card portal-value" href="valeur.html">
-                    <span class="portal-index">04 / MARKET</span>
-                    <div class="portal-copy">
-                        <p>Progression et cotations</p>
-                        <h3>VALEURS</h3>
-                        <span class="portal-arrow">↗</span>
-                    </div>
-                    <svg class="portal-art portal-art-value" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
-                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
-                        <path class="pa-fine pa-faint" d="M14 66h96M14 66V12M14 52h4M14 38h4M14 24h4" />
-                        <rect class="pa-bar pa-bar-1" x="19" y="44" width="10" height="22" /><rect class="pa-bar pa-bar-2" x="33" y="36" width="10" height="30" /><rect class="pa-bar pa-bar-3" x="47" y="40" width="10" height="26" /><rect class="pa-bar pa-bar-4" x="61" y="26" width="10" height="40" /><rect class="pa-bar pa-bar-5" x="75" y="18" width="10" height="48" /><rect class="pa-bar pa-bar-6" x="89" y="8" width="10" height="58" />
-                        <path class="pa-trend" pathLength="1" d="M24 40l14-8 14 4 14-14 14-8 14-10" />
-                        <circle class="pa-dot" cx="94" cy="8" r="3" />
-                        <text class="pa-text" x="110" y="76" text-anchor="end">¥ +</text>
-                    </svg>
+                <a class="nl-feed portal-feed" href="valeur.html">
+                    <img class="nl-feed-img" src="images/icons/reo.webp" alt="" style="--feed-pos: 50% 28%">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd" aria-hidden="true"><span><b>CAM 04</b> // MARCHÉ</span><span class="rec">REC</span></span>
+                    <span class="nl-feed-tc" aria-hidden="true">TC 00:09:12:40</span>
+                    <span class="nl-feed-caption"><small>CH 04 // Cotes en ¥</small><b>Valeurs</b></span>
                 </a>
 
-                <a class="portal-card portal-matches" href="matchs.html">
-                    <span class="portal-index">05 / TIMELINE</span>
-                    <div class="portal-copy">
-                        <p>Chaque score, chaque résultat</p>
-                        <h3>MATCHS</h3>
-                        <span class="portal-arrow">↗</span>
-                    </div>
-                    <svg class="portal-art portal-art-matches" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
-                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
-                        <rect class="pa-fine" x="34" y="8" width="52" height="20" rx="2" />
-                        <text class="pa-score" x="60" y="22.5" text-anchor="middle">2 – 1</text>
-                        <path class="pa-fine pa-faint" d="M10 52h100M10 47v10m50-10v10m50-10v10" />
-                        <text class="pa-text" x="10" y="72">0'</text>
-                        <text class="pa-text" x="60" y="72" text-anchor="middle">MT</text>
-                        <text class="pa-text" x="110" y="72" text-anchor="end">FIN</text>
-                        <g class="pa-event pa-event-1"><circle cx="28" cy="52" r="4.5" /><path class="pa-fine" d="M28 49.5l2 1.5-.8 2.4h-2.4l-.8-2.4z" /></g><g class="pa-event pa-event-2"><circle cx="66" cy="52" r="4.5" /><path class="pa-fine" d="M66 49.5l2 1.5-.8 2.4h-2.4l-.8-2.4z" /></g><g class="pa-event pa-event-3"><circle cx="92" cy="52" r="4.5" /><path class="pa-fine" d="M92 49.5l2 1.5-.8 2.4h-2.4l-.8-2.4z" /></g>
-                        <path class="pa-playhead" d="M10 42v20" />
-                    </svg>
+                <a class="nl-feed portal-feed portal-split" href="matchs.html" data-feed-status="matches">
+                    <img class="nl-feed-img" src="images/clubs_icon/Bastard_Munchen.webp" alt="" style="--feed-pos: 50% 45%; --feed-zoom: 1.3">
+                    <img class="nl-feed-img" src="images/clubs_icon/Manshine_City.webp" alt="" style="--feed-pos: 50% 40%; --feed-zoom: 1.3">
+                    <span class="nl-feed-mire" data-label="PAS DE SIGNAL" hidden></span>
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd" aria-hidden="true"><span><b>CAM 05</b> // TERRAIN</span><span class="rec" data-feed-rec>REC</span></span>
+                    <span class="nl-feed-tc" aria-hidden="true">TC 00:00:00:00</span>
+                    <span class="nl-feed-caption"><small>CH 05 // Chaque score</small><b>Matchs</b></span>
                 </a>
 
-                <a class="portal-card portal-records" href="stats.html">
-                    <span class="portal-index">06 / RECORDS</span>
-                    <div class="portal-copy">
-                        <p>Les performances qui restent</p>
-                        <h3>RECORDS</h3>
-                        <span class="portal-arrow">↗</span>
-                    </div>
-                    <svg class="portal-art portal-art-records" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
-                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
-                        <circle class="pa-fine pa-faint" cx="60" cy="40" r="32" />
-                        <circle class="pa-ring" cx="60" cy="40" r="22" />
-                        <circle class="pa-fine" cx="60" cy="40" r="12" />
-                        <circle class="pa-solid" cx="60" cy="40" r="3.5" />
-                        <path class="pa-fine pa-faint" d="M60 2v14m0 48v14M22 40h14m48 0h14" />
-                        <g class="pa-arrow"><path d="M60 40 100 10" /><path d="M100 10l-1 7m1-7-7 1M96 13l-6 1m3-4-1 6" /></g>
-                        <text class="pa-text" x="110" y="76" text-anchor="end">MAX</text>
-                    </svg>
+                <a class="nl-feed portal-feed" href="stats.html">
+                    <img class="nl-feed-img" src="images/icons/barou.webp" alt="" style="--feed-pos: 50% 30%">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd" aria-hidden="true"><span><b>CAM 06</b> // RECORDS</span><span class="rec">REC</span></span>
+                    <span class="nl-feed-tc" aria-hidden="true">TC 03:33:08:21</span>
+                    <span class="nl-feed-caption"><small>CH 06 // Ce qui reste</small><b>Records</b></span>
                 </a>
 
-                <a class="portal-card portal-rules" href="rules.html">
-                    <span class="portal-index">07 / PROTOCOLE</span>
-                    <div class="portal-copy">
-                        <p>Cadre officiel de la ligue</p>
-                        <h3>RÈGLES</h3>
-                        <span class="portal-arrow">↗</span>
-                    </div>
-                    <svg class="portal-art portal-art-rules" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
-                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
-                        <path class="pa-fine pa-faint" d="M8 66h104" />
-                        <path class="pa-offside" d="M64 8v62" />
-                        <circle class="pa-fine" cx="80" cy="30" r="5" />
-                        <circle class="pa-fine" cx="80" cy="54" r="5" />
-                        <g class="pa-attacker"><circle class="pa-solid" cx="40" cy="42" r="5" /></g>
-                        <g class="pa-flag"><path d="M104 66V22" /><path class="pa-solid" d="M104 22h12l-3 5 3 5h-12z" /></g>
-                        <text class="pa-text" x="8" y="12">HORS-JEU</text>
-                    </svg>
+                <a class="nl-feed portal-feed" href="rules.html">
+                    <img class="nl-feed-img" src="images/icons/niko.webp" alt="" style="--feed-pos: 50% 30%">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd" aria-hidden="true"><span><b>CAM 07</b> // PROTOCOLE</span><span class="rec">REC</span></span>
+                    <span class="nl-feed-tc" aria-hidden="true">TC 00:31:44:09</span>
+                    <span class="nl-feed-caption"><small>CH 07 // Cadre officiel</small><b>Règles</b></span>
                 </a>
 
-                <a class="portal-card portal-headtohead" href="headtohead.html">
-                    <span class="portal-index">08 / COMPARAISON</span>
-                    <div class="portal-copy">
-                        <p>Clubs et joueurs en duel</p>
-                        <h3>FACE À FACE</h3>
-                        <span class="portal-arrow">↗</span>
-                    </div>
-                    <svg class="portal-art portal-art-versus" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
-                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
-                        <path class="pa-hex" d="M24 22l14 8v16l-14 8-14-8V30z" />
-                        <path class="pa-hex pa-hex-b" d="M96 22l14 8v16l-14 8-14-8V30z" />
-                        <text class="pa-text pa-text-big" x="24" y="42" text-anchor="middle">A</text>
-                        <text class="pa-text pa-text-big" x="96" y="42" text-anchor="middle">B</text>
-                        <path class="pa-beam pa-beam-a" d="M38 38h18" />
-                        <path class="pa-beam pa-beam-b" d="M82 38H64" />
-                        <g class="pa-spark"><path d="M60 30v-6m0 22v6m-8-14h-6m22 0h6m-19-7-4-4m10 0 4-4m-10 18-4 4m10 0 4 4" /></g>
-                        <text class="pa-text" x="60" y="74" text-anchor="middle">VS</text>
-                    </svg>
+                <a class="nl-feed portal-feed portal-split portal-versus" href="headtohead.html">
+                    <img class="nl-feed-img" src="Joueurs/images-joueurs/anto.webp" alt="" style="--feed-pos: 50% 30%">
+                    <img class="nl-feed-img" src="Joueurs/images-joueurs/william.webp" alt="" style="--feed-pos: 50% 26%">
+                    <span class="portal-vs" aria-hidden="true">VS</span>
+                    <span class="nl-feed-osd" aria-hidden="true"><span><b>CAM 08</b> // DUEL</span><span class="rec">REC</span></span>
+                    <span class="nl-feed-tc" aria-hidden="true">TC 01:08:16:33</span>
+                    <span class="nl-feed-caption"><small>CH 08 // Clubs et joueurs</small><b>Face à face</b></span>
                 </a>
 
-                <a class="portal-card portal-seasons" href="saison.html">
-                    <span class="portal-index">09 / CYCLES</span>
-                    <div class="portal-copy">
-                        <p>Progression de la compétition</p>
-                        <h3>SAISONS</h3>
-                        <span class="portal-arrow">↗</span>
-                    </div>
-                    <svg class="portal-art portal-art-seasons" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
-                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
-                        <circle class="pa-fine pa-faint" cx="60" cy="40" r="28" />
-                        <circle class="pa-cycle" pathLength="1" cx="60" cy="40" r="28" />
-                        <path class="pa-fine" d="M86 26l2 8-8 0" />
-                        <text class="pa-score" x="60" y="46" text-anchor="middle">01</text>
-                        <text class="pa-text" x="60" y="56" text-anchor="middle">SAISON</text>
-                        <circle class="pa-fine pa-faint" cx="60.0" cy="6.0" r="2" /><circle class="pa-fine pa-faint" cx="94.0" cy="40.0" r="2" /><circle class="pa-fine pa-faint" cx="60.0" cy="74.0" r="2" /><circle class="pa-fine pa-faint" cx="26.0" cy="40.0" r="2" />
-                    </svg>
+                <a class="nl-feed portal-feed" href="saison.html">
+                    <img class="nl-feed-img" src="images/icons/kaiser.webp" alt="" style="--feed-pos: 50% 30%">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd" aria-hidden="true"><span><b>CAM 09</b> // CYCLES</span><span class="rec">REC</span></span>
+                    <span class="nl-feed-tc" aria-hidden="true">TC 00:58:02:14</span>
+                    <span class="nl-feed-caption"><small>CH 09 // Saison <span data-active-season>01</span></small><b>Saisons</b></span>
                 </a>
 
-                <a class="portal-card portal-calendar" href="fixtures.html">
-                    <span class="portal-index">10 / PLANNING</span>
-                    <div class="portal-copy">
-                        <p>Prochaines rencontres</p>
-                        <h3>CALENDRIER</h3>
-                        <span class="portal-arrow">↗</span>
-                    </div>
-                    <svg class="portal-art portal-art-calendar" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
-                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
-                        <rect class="pa-fine" x="20" y="10" width="80" height="62" rx="2" />
-                        <path class="pa-fine" d="M20 22h80M36 6v8m48-8v8" />
-                        <path class="pa-fine pa-faint" d="M20 38h80M20 55h80M36 22v50m16-50v50m16-50v50m16-50v50" />
-                        <rect class="pa-day" x="52" y="38" width="16" height="17" />
-                        <path class="pa-check" pathLength="1" d="M55 47l4 4 7-8" />
-                        <text class="pa-text" x="60" y="19" text-anchor="middle">JANV.</text>
-                    </svg>
+                <a class="nl-feed portal-feed" href="fixtures.html">
+                    <img class="nl-feed-img" src="images/icons/sae.webp" alt="" style="--feed-pos: 50% 26%">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd" aria-hidden="true"><span><b>CAM 10</b> // PLANNING</span><span class="rec">REC</span></span>
+                    <span class="nl-feed-tc" aria-hidden="true">TC 00:12:27:05</span>
+                    <span class="nl-feed-caption"><small>CH 10 // Prochaines rencontres</small><b>Calendrier</b></span>
                 </a>
 
-                <a class="portal-card portal-progression" href="progression.html">
-                    <span class="portal-index">11 / ÉVOLUTION</span>
-                    <div class="portal-copy">
-                        <p>Chaque match laisse une trace</p>
-                        <h3>PROGRESSION</h3>
-                        <span class="portal-arrow">↗</span>
-                    </div>
-                    <svg class="portal-art portal-art-progress" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
-                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
-                        <path class="pa-fine pa-faint" d="M10 70h100M10 70V8M10 54h100M10 38h100M10 22h100" />
-                        <path class="pa-curve" pathLength="1" d="M12 64l18-6 16 4 18-16 16 2 16-20 14-14" />
-                        <circle class="pa-node pa-node-1" cx="30" cy="58" r="2.6" /><circle class="pa-node pa-node-2" cx="46" cy="62" r="2.6" /><circle class="pa-node pa-node-3" cx="64" cy="46" r="2.6" /><circle class="pa-node pa-node-4" cx="80" cy="48" r="2.6" /><circle class="pa-node pa-node-5" cx="96" cy="28" r="2.6" />
-                        <path class="pa-fine" d="M110 14l-6-1m6 1-1 6" />
-                        <text class="pa-text" x="110" y="78" text-anchor="end">+12</text>
-                    </svg>
+                <a class="nl-feed portal-feed" href="progression.html">
+                    <img class="nl-feed-img" src="images/icons/rin.webp" alt="" style="--feed-pos: 50% 30%">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd" aria-hidden="true"><span><b>CAM 11</b> // ÉVOLUTION</span><span class="rec">REC</span></span>
+                    <span class="nl-feed-tc" aria-hidden="true">TC 02:41:50:27</span>
+                    <span class="nl-feed-caption"><small>CH 11 // Chaque match compte</small><b>Progression</b></span>
                 </a>
 
-                <a class="portal-card portal-dream" href="dream-team.html">
-                    <span class="portal-index">12 / BEST FIVE</span>
-                    <div class="portal-copy">
-                        <p>La sélection qui domine</p>
-                        <h3>ÉQUIPES IDÉALES</h3>
-                        <span class="portal-arrow">↗</span>
-                    </div>
-                    <svg class="portal-art portal-art-team" viewBox="0 0 120 80" aria-hidden="true" focusable="false">
-                        <path class="pa-frame" d="M2 8V2h6m104 0h6v6m0 64v6h-6M8 78H2v-6" />
-                        <path class="pa-fine pa-faint" d="M60 10 92 34 80 70H40L28 34z" />
-                        <path class="pa-fine pa-faint pa-links" d="M60 10 60 42M92 34 60 42M80 70 60 42M40 70 60 42M28 34 60 42" />
-                        <circle class="pa-player pa-player-1" cx="60" cy="10" r="5" /><circle class="pa-player pa-player-2" cx="92" cy="34" r="5" /><circle class="pa-player pa-player-3" cx="80" cy="70" r="5" /><circle class="pa-player pa-player-4" cx="40" cy="70" r="5" /><circle class="pa-player pa-player-5" cx="28" cy="34" r="5" />
-                        <path class="pa-solid pa-star" d="M60 34l2.4 5 5.6.6-4.2 3.8 1.2 5.6-5-2.9-5 2.9 1.2-5.6-4.2-3.8 5.6-.6z" />
-                        <text class="pa-text" x="112" y="12" text-anchor="end">TOP 5</text>
-                    </svg>
+                <a class="nl-feed portal-feed portal-mosaic" href="dream-team.html">
+                    <img class="nl-feed-img" src="Joueurs/images-joueurs/alessio.webp" alt="" style="--feed-pos: 50% 18%">
+                    <img class="nl-feed-img" src="Joueurs/images-joueurs/theo.webp" alt="" style="--feed-pos: 50% 30%">
+                    <img class="nl-feed-img" src="Joueurs/images-joueurs/imrane.webp" alt="" style="--feed-pos: 50% 30%">
+                    <img class="nl-feed-img" src="Joueurs/images-joueurs/matheo.webp" alt="" style="--feed-pos: 50% 30%">
+                    <span class="nl-feed-osd" aria-hidden="true"><span><b>CAM 12</b> // BEST FIVE</span><span class="rec">REC</span></span>
+                    <span class="nl-feed-tc" aria-hidden="true">TC 00:05:05:05</span>
+                    <span class="nl-feed-caption"><small>CH 12 // La sélection qui domine</small><b>Équipes idéales</b></span>
                 </a>
             </div>
         </section>
 
-        <section class="home-final">
-            <div class="home-final-grid" aria-hidden="true"></div>
-            <p class="home-eyebrow"><span>NL—03</span> ENTER THE PITCH</p>
-            <h2>TON EGO.<br><em>TA TRACE.</em></h2>
-            <p>
-                Rejoins le serveur, entre sur le terrain et transforme chaque action en donnée permanente
-                dans l’histoire de la Nebula League.
-            </p>
-            <div class="home-actions">
-                <a class="home-primary-cta" href="https://discord.gg/Ab9tFpzm" target="_blank" rel="noreferrer">
-                    Rejoindre Discord <span>↗</span>
-                </a>
-                <a class="home-secondary-cta" href="rules.html">Lire les règles <span>→</span></a>
+        <!-- 05. Appel final : le bandeau bleu Blue Lock -->
+        <section class="home-final nl-band nl-bleed" aria-labelledby="final-title">
+            <span class="final-katakana" aria-hidden="true">エゴ</span>
+            <div class="final-inner">
+                <p class="final-osd"><span class="rec">REC</span> CAM 13 // VESTIAIRE — FIN DE TRANSMISSION</p>
+                <h2 id="final-title">Ton ego.<br><em>Ta trace.</em></h2>
+                <p class="final-copy">
+                    Rejoins le serveur, entre sur le terrain et transforme chaque action en donnée permanente
+                    dans l’histoire de la Nebula League. Il n’y a qu’une place de numéro&nbsp;1.
+                </p>
+                <div class="nl-hero-actions">
+                    <a class="nl-btn nl-btn-light" href="https://discord.gg/Ab9tFpzm" target="_blank" rel="noreferrer">
+                        Rejoindre Discord <span>↗</span>
+                    </a>
+                    <a class="nl-btn nl-btn-ghost final-ghost" href="rules.html">Lire les règles <span>→</span></a>
+                </div>
             </div>
+            <div class="final-rank" aria-hidden="true">#001</div>
         </section>
     </main>
 
-    <footer class="home-footer">
-        <a class="footer-brand" href="#top">
-            <span class="brand-mark"><span></span></span>
-            <strong>NEBULA LEAGUE</strong>
-        </a>
-        <p>PRIVATE AZURE LATCH LEAGUE // DATABASE ONLINE</p>
-        <div>
+    <footer class="home-footer nl-footer">
+        <div class="nl-footer-main">
+            <a class="footer-brand" href="#top">
+                <span class="brand-mark"><span></span></span>
+                <strong>NEBULA LEAGUE</strong>
+            </a>
+            <p>Ligue privée Azure Latch. Toutes les rencontres sont enregistrées, chaque statistique est archivée.</p>
+        </div>
+        <nav class="nl-footer-links" aria-label="Accès rapides">
+            <p>Accès rapides</p>
+            <a href="players.html">Joueurs</a>
+            <a href="matchs.html">Matchs</a>
+            <a href="saison.html">Saisons</a>
+            <a href="club.html">Clubs</a>
+            <a href="stats.html">Records</a>
+            <a href="rules.html">Règles</a>
+        </nav>
+        <div class="nl-footer-osd">
+            <span class="rec">REC</span>
+            <span>NL-CTRL // FIN DU FLUX</span>
+            <span class="jp">ブルーロック</span>
             <span>© <span id="current-year">2026</span> NEBULA</span>
             <a href="#top">Retour en haut ↑</a>
         </div>

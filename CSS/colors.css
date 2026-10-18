@@ -6,8 +6,10 @@
   --line: rgba(255, 255, 255, 0.12);
   --muted: #858d98;
   --paper: #f4f7f9;
-  --acid: #adff2f;
-  --cyan: #63e7ff;
+  /* Direction « salle de contrôle » : l'acide et le cyan historiques
+     deviennent les bleus du thème (theme-monitor.css redéfinit tout). */
+  --acid: #3d7bff;
+  --cyan: #8db0ff;
   --display: "Arial Black", "Arial Narrow", Impact, sans-serif;
   --sans: "Segoe UI", Arial, sans-serif;
   --mono: "Courier New", monospace;

@@ -45,8 +45,44 @@ document.addEventListener("DOMContentLoaded", () => {
         return SEASON_CLUBS[key] || {
             name: key || "Non référencé",
             logo: "images/logos/nebula.png",
-            color: "#8a99a5"
+            color: "var(--offline)"
         };
+    }
+
+    function pad(value, size = 2) {
+        return String(value).padStart(size, "0");
+    }
+
+    // Jours restants avant le premier match de Ligue du cycle (null si le
+    // cycle a commencé ou si la date est passée).
+    function kickoffCountdown(season) {
+        if (!season || season.leagueMatches.length || season.status !== "active") return null;
+        const firstDate = SEASON_FIXTURES
+            .filter(fixture => fixture.category === "ligue" && Number(fixture.season) === Number(season.number) && fixture.date)
+            .map(fixture => fixture.date)
+            .sort()[0] || season.startDate;
+        if (!firstDate) return null;
+        const [year, month, day] = firstDate.split("-").map(Number);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const days = Math.round((new Date(year, month - 1, day) - today) / 86400000);
+        if (days < 0) return null;
+        return {
+            days,
+            date: firstDate,
+            label: days === 0 ? "AUJOURD’HUI" : days === 1 ? "DEMAIN" : `J-${days}`
+        };
+    }
+
+    // Écran « pas de signal » réutilisable (états vides)
+    function noSignal(code, title, text, extraClass = "") {
+        return `
+            <div class="nl-nosignal ${extraClass}">
+                <span class="nl-nosignal-code">${code}</span>
+                <strong>${title}</strong>
+                ${text ? `<p>${text}</p>` : ""}
+            </div>
+        `;
     }
 
     function clubLink(key) {
@@ -252,118 +288,208 @@ document.addEventListener("DOMContentLoaded", () => {
         ];
 
         document.getElementById("seasonHeroStats").innerHTML = stats.map(([value, label]) => `
-            <div><strong>${String(value).padStart(2, "0")}</strong><span>${label}</span></div>
+            <div class="season-hero-stat"><span>${label}</span><strong>${String(value).padStart(2, "0")}</strong></div>
         `).join("");
 
         if (active) {
+            const cycle = document.querySelector(".season-cycle");
             document.getElementById("seasonCycleNumber").textContent = String(active.number).padStart(2, "0");
             document.getElementById("seasonCycleStatus").textContent = statusLabel(active);
             document.getElementById("seasonCycleProgress").textContent = `${active.progress}% SYNCHRONISÉ`;
-            document.querySelector(".season-cycle")?.style.setProperty("--cycle-progress", `${active.progress * 3.6}deg`);
+            cycle?.style.setProperty("--cycle-progress", `${active.progress * 3.6}deg`);
+            cycle?.querySelector(".nl-vu")?.style.setProperty("--v", active.progress);
         }
+
+        renderHeroWall(active);
+    }
+
+    // Multivue du héros : un flux par club engagé, le compte à rebours du
+    // coup d'envoi et l'écran du cycle suivant (décoratif, liens vers les clubs).
+    function renderHeroWall(active) {
+        const wall = document.querySelector("[data-season-wall]");
+        if (!wall) return;
+        const started = Boolean(active?.leagueMatches.length);
+        const countdown = kickoffCountdown(active);
+        const clubs = Object.values(SEASON_CLUBS);
+
+        const feeds = clubs.map((info, index) => {
+            const rank = active ? active.standings.findIndex(row => row.club === info.key) : -1;
+            const row = rank >= 0 ? active.standings[rank] : null;
+            return `
+                <a class="nl-feed season-club-feed" href="${clubLink(info.key)}" style="--club:${info.color}"
+                    aria-label="${escapeHtml(info.name)}, dossier du club">
+                    <img class="nl-feed-img" src="${escapeHtml(info.logo)}" alt="">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd" aria-hidden="true"><span><b>CAM ${pad(index + 2)}</b></span><span class="rec">REC</span></span>
+                    ${started && row ? `<strong class="nl-feed-figure" aria-hidden="true">${row.pts}<small>PTS</small></strong>` : ""}
+                    <span class="nl-feed-caption" aria-hidden="true">
+                        <small>${started && row ? `#${pad(rank + 1)} // ${row.w}-${row.d}-${row.l}` : "ENGAGÉ"}</small>
+                        <b>${escapeHtml(info.shortName || info.name)}</b>
+                    </span>
+                    <span class="season-club-bar" aria-hidden="true"></span>
+                </a>
+            `;
+        });
+
+        const signal = countdown
+            ? `<strong>${countdown.label}</strong><span>COUP D’ENVOI · ${compactDate(countdown.date)}</span>`
+            : `<strong>${pad(active?.leagueMatches.length || 0)}<small>/${active?.expectedLeagueMatches || 0}</small></strong><span>MATCHS DE LIGUE JOUÉS</span>`;
+
+        wall.innerHTML = `
+            ${feeds.join("")}
+            <div class="season-wall-signal" aria-hidden="true">
+                <span class="season-wall-signal-osd"><b>CAM ${pad(clubs.length + 2)}</b> // ${countdown ? "DÉCOMPTE" : "COMPTEUR"}</span>
+                ${signal}
+            </div>
+            <div class="nl-feed is-offline season-wall-mire" aria-hidden="true">
+                <span class="nl-feed-mire" data-label="PAS DE SIGNAL"></span>
+                <span class="nl-feed-osd"><span><b>CAM ${pad(clubs.length + 3)}</b> // CYCLE ${pad(Number(active?.number || 0) + 1)}</span><span class="rec is-off">HORS LIGNE</span></span>
+                <span class="nl-feed-caption"><small>PROCHAIN CYCLE // EN ATTENTE</small></span>
+            </div>
+        `;
     }
 
     function renderSwitcher() {
+        const latest = seasons[0];
         switcher.innerHTML = seasons.map((season, index) => {
             const selected = season.id === selectedId;
             return `
-                <button class="season-control-button season-switch${selected ? " is-selected" : ""}" type="button"
+                <button class="season-control-button season-switch nl-channel${selected ? " is-selected" : ""}" type="button"
                     role="tab" aria-selected="${selected}" data-season-select="${escapeHtml(season.id)}">
-                    <span>${String(index + 1).padStart(2, "0")}</span>
-                    <div><small>${statusLabel(season)}</small><strong>SAISON ${String(season.number).padStart(2, "0")}</strong></div>
-                    <em>${compactDate(season.startDate)}</em>
-                    <i></i>
+                    <span class="nl-channel-num">CH ${pad(index + 1)}</span>
+                    <span class="season-switch-label"><small>${statusLabel(season)} // ${compactDate(season.startDate)}</small><strong>Saison ${pad(season.number)}</strong></span>
                 </button>
             `;
-        }).join("");
+        }).join("") + (latest?.status === "active" ? `
+            <div class="season-switch season-switch-slot" aria-hidden="true">
+                <span class="nl-channel-num">CH ${pad(seasons.length + 1)}</span>
+                <span class="season-switch-label"><small>HORS ANTENNE // À VENIR</small><strong>Saison ${pad(Number(latest.number) + 1)}</strong></span>
+            </div>
+        ` : "");
     }
 
+    // Écran « CAM 02 » : le club en tête, filmé ; sinon une mire d'attente.
     function renderLeaderIdentity(season) {
         if (!season.leader) {
             return `
-                <div class="season-leader-empty">
-                    <span>—</span>
-                    <div><small>LEADER ACTUEL</small><strong>EN ATTENTE DU PREMIER RÉSULTAT</strong></div>
+                <div class="season-leader-empty season-screen">
+                    <div class="osd"><span><b>CAM 02</b> // LEADER ACTUEL</span><span class="rec is-off">HORS LIGNE</span></div>
+                    ${noSignal("SIGNAL 00", "En attente du premier résultat", "Le leader du cycle apparaîtra ici dès la première journée de Ligue.")}
                 </div>
             `;
         }
         const info = clubInfo(season.leader.club);
         const label = season.status === "finished" ? "CHAMPION DE L’ÉDITION" : "LEADER PROVISOIRE";
         return `
-            <a class="season-leader-card" href="${clubLink(season.leader.club)}" style="--club-accent:${info.color}">
-                <img src="${escapeHtml(info.logo)}" alt="">
-                <div><small>${label}</small><strong>${escapeHtml(info.name)}</strong><span>${season.leader.pts} PTS · ${season.leader.gf} BUTS</span></div>
-                <i>↗</i>
+            <a class="season-leader-card nl-feed is-locked" href="${clubLink(season.leader.club)}" style="--club:${info.color}">
+                <img class="nl-feed-img" src="${escapeHtml(info.logo)}" alt="">
+                <span class="nl-feed-lock" aria-hidden="true"></span>
+                <span class="nl-feed-osd"><span><b>CAM 02</b> // ${label}</span><span class="rec">DIRECT</span></span>
+                <strong class="nl-feed-figure">${season.leader.pts}<small>PTS</small></strong>
+                <span class="nl-feed-caption"><small>#001 // ${season.leader.gf} BUTS · ${season.leader.w}-${season.leader.d}-${season.leader.l}</small><b>${escapeHtml(info.name)}</b></span>
             </a>
         `;
     }
 
     function renderMetrics(season) {
         const metrics = [
-            [season.leagueMatches.length, "MATCHS JOUÉS"],
-            [season.totalGoals, "BUTS MARQUÉS"],
-            [season.playerCount, "JOUEURS ACTIFS"],
-            [season.standings.length, "CLUBS ENGAGÉS"]
+            [season.leagueMatches.length, "Matchs joués"],
+            [season.totalGoals, "Buts marqués"],
+            [season.playerCount, "Joueurs actifs"],
+            [season.standings.length, "Clubs engagés"]
         ];
+        return metricGrid(metrics);
+    }
+
+    function metricGrid(metrics) {
         return `
-            <div class="season-metric-grid">
-                ${metrics.map(([value, label]) => `
-                    <div><strong>${String(value).padStart(2, "0")}</strong><span>${label}</span></div>
+            <div class="season-metric-grid nl-stats">
+                ${metrics.map(([value, label], index) => `
+                    <div class="nl-stat${index === metrics.length - 1 ? " nl-stat--solid" : ""}">
+                        <span class="nl-stat-label">${label}</span>
+                        <strong class="nl-stat-value">${pad(value)}</strong>
+                    </div>
                 `).join("")}
             </div>
         `;
     }
 
-    function renderProgress(season) {
+    // Écran « CAM 03 » : compteur géant + vumètre segmenté
+    function progressScreen(label, done, expected, progress, note) {
         return `
-            <div class="season-progress-module" style="--progress:${season.progress * 3.6}deg">
-                <div class="season-progress-ring"><strong>${season.progress}</strong><span>%</span></div>
-                <div>
-                    <small>PROGRESSION DU CYCLE</small>
-                    <strong>${season.leagueMatches.length} / ${season.expectedLeagueMatches} MATCHS</strong>
-                    <span>${season.status === "active" ? "Synchronisation en temps réel" : "Archive terminée"}</span>
+            <div class="season-progress-module season-screen" style="--progress:${progress * 3.6}deg">
+                <div class="osd"><span><b>CAM 03</b> // ${label}</span><span>${progress}%</span></div>
+                <div class="season-progress-body">
+                    <strong class="season-progress-count">${pad(done)}<small>/${pad(expected)} matchs</small></strong>
+                    <div class="nl-vu${progress >= 100 ? " nl-vu--max" : ""}" style="--v:${progress}" role="meter" aria-label="${label}"
+                        aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress}"></div>
+                    <p class="season-progress-note">${note}</p>
                 </div>
             </div>
         `;
     }
 
+    function renderProgress(season) {
+        const countdown = kickoffCountdown(season);
+        const note = countdown
+            ? `<b>${countdown.label}</b> Coup d’envoi le ${compactDate(countdown.date)}`
+            : season.status === "active" ? "<b>EN DIRECT</b> Synchronisation en temps réel" : "<b>ARCHIVE</b> Cycle terminé";
+        return progressScreen("PROGRESSION DU CYCLE", season.leagueMatches.length, season.expectedLeagueMatches, season.progress, note);
+    }
+
     function renderStandingsPreview(season) {
-        const maximum = Math.max(...season.standings.map(row => row.pts), 1);
         return `
-            <section class="season-ranking-panel">
-                <header><div><small>TABLEAU DE LIGUE</small><h3>CLASSEMENT CLUBS</h3></div><span>PTS</span></header>
-                <div class="season-standing-list">
-                    ${season.standings.map((row, index) => {
-                        const info = clubInfo(row.club);
-                        const played = row.w + row.d + row.l;
-                        return `
-                            <a href="${clubLink(row.club)}" class="season-standing-row${index === 0 && season.leagueMatches.length ? " is-leading" : ""}"
-                                style="--club-accent:${info.color}">
-                                <span>${String(index + 1).padStart(2, "0")}</span>
-                                <img src="${escapeHtml(info.logo)}" alt="">
-                                <div><strong>${escapeHtml(info.name)}</strong><small>${played} MJ · ${row.w}-${row.d}-${row.l}</small></div>
-                                <i><b style="width:${(row.pts / maximum) * 100}%"></b></i>
-                                <em>${row.pts}</em>
-                            </a>
-                        `;
-                    }).join("")}
+            <section class="season-ranking-panel season-standings-panel">
+                <div class="season-panel-head">
+                    <p class="nl-kicker"><span class="nl-ch">CAM 06</span> Tableau de ligue</p>
+                    <h3>Classement clubs</h3>
+                </div>
+                <div class="season-table-wrap nl-table-wrap">
+                    <table class="season-table season-standing-list nl-table">
+                        <thead><tr><th>#</th><th>Club</th><th>MJ</th><th>V-N-D</th><th>Diff</th><th class="is-hl">Pts</th></tr></thead>
+                        <tbody>
+                            ${season.standings.map((row, index) => {
+                                const info = clubInfo(row.club);
+                                const played = row.w + row.d + row.l;
+                                const difference = goalDifference(row);
+                                return `
+                                    <tr class="season-standing-row${index === 0 && season.leagueMatches.length ? " is-leading" : ""}" style="--club:${info.color}">
+                                        <td class="nl-num">${pad(index + 1)}</td>
+                                        <td class="nl-strong"><a href="${clubLink(row.club)}"><img src="${escapeHtml(info.logo)}" alt="">${escapeHtml(info.name)}</a></td>
+                                        <td>${played}</td>
+                                        <td>${row.w}-${row.d}-${row.l}</td>
+                                        <td>${difference > 0 ? "+" : ""}${difference}</td>
+                                        <td class="is-hl">${row.pts}</td>
+                                    </tr>
+                                `;
+                            }).join("")}
+                        </tbody>
+                    </table>
                 </div>
             </section>
         `;
     }
 
-    function leaderEntry(label, code, ranking, key, accent) {
+    // Un flux caméra par leader individuel ; sans donnée, une mire.
+    function leaderEntry(label, code, ranking, key, accent, cam = 7) {
         const player = ranking[0];
+        const profile = player ? playerProfile(player.name) : null;
+        if (!player) {
+            return `
+                <a class="season-player-leader nl-feed is-offline" href="players.html" style="--leader-accent:${accent}">
+                    <span class="nl-feed-mire" data-label="PAS DE SIGNAL"></span>
+                    <span class="nl-feed-osd"><span><b>CAM ${pad(cam)}</b></span><span class="rec is-off">HORS LIGNE</span></span>
+                    <span class="nl-feed-caption"><small>${code} // ${label}</small><b>Non attribué</b></span>
+                </a>
+            `;
+        }
         return `
-            <a class="season-player-leader" href="${player ? playerLink(player.name) : "players.html"}"
-                style="--leader-accent:${accent}">
-                <span>${code}</span>
-                <div>
-                    <small>${label}</small>
-                    <strong>${player ? escapeHtml(player.name) : "NON ATTRIBUÉ"}</strong>
-                    <em>${player ? `${player[key]} · ${escapeHtml(clubInfo(player.club).name)}` : "AUCUNE DONNÉE"}</em>
-                </div>
-                <i>↗</i>
+            <a class="season-player-leader nl-feed" href="${playerLink(player.name)}" style="--leader-accent:${accent}">
+                ${profile?.avatar ? `<img class="nl-feed-img" src="${escapeHtml(profile.avatar)}" alt="">` : ""}
+                <span class="nl-feed-lock" aria-hidden="true"></span>
+                <span class="nl-feed-osd"><span><b>CAM ${pad(cam)}</b> // ${code}</span><span class="rec">REC</span></span>
+                <strong class="nl-feed-figure">${player[key]}</strong>
+                <span class="nl-feed-caption"><small>${label}</small><b>${escapeHtml(player.name)}</b></span>
             </a>
         `;
     }
@@ -371,29 +497,46 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderLeadersPreview(season) {
         return `
             <section class="season-ranking-panel player-leaders-panel">
-                <header><div><small>INDEX INDIVIDUEL</small><h3>LEADERS DE SAISON</h3></div><span>TOP</span></header>
+                <div class="season-panel-head">
+                    <p class="nl-kicker"><span class="nl-ch">CAM 07-09</span> Index individuel</p>
+                    <h3>Leaders de saison</h3>
+                </div>
                 <div class="season-player-leaders">
-                    ${leaderEntry("MEILLEUR BUTEUR", "GLS", season.topScorers, "goals", "#ff536e")}
-                    ${leaderEntry("MEILLEUR PASSEUR", "AST", season.topAssists, "assists", "#58ddff")}
-                    ${leaderEntry("CONTRIBUTIONS", "G+A", season.topContributors, "total", "#9bff20")}
+                    ${leaderEntry("Meilleur buteur", "GLS", season.topScorers, "goals", "var(--blue-2)", 7)}
+                    ${leaderEntry("Meilleur passeur", "AST", season.topAssists, "assists", "var(--blue-3)", 8)}
+                    ${leaderEntry("Contributions", "G+A", season.topContributors, "total", "var(--white)", 9)}
                 </div>
             </section>
         `;
     }
 
+    // Palmarès : une bande bleue pleine, bord à bord, avec un cachet par distinction
     function renderRewards(season) {
         const rewards = window.NEBULA_DATA?.resolveSeasonRewards
             ? window.NEBULA_DATA.resolveSeasonRewards(season)
             : (season.rewards || EMPTY_REWARDS);
+        const pending = value => /non attribu/i.test(String(value || "")) || !value;
 
         return `
-            <div class="season-awards">
-                ${rewards.map(reward => `
-                    <div class="season-award">
-                        <span>${escapeHtml(reward.code)}</span>
-                        <div><small>${escapeHtml(reward.label)}</small><strong>${escapeHtml(reward.value)}</strong></div>
+            <div class="season-awards nl-band nl-bleed">
+                <div class="season-awards-inner">
+                    <div class="season-awards-head">
+                        <p class="nl-kicker"><span class="nl-ch">CH 01-D</span> Palmarès // Cycle ${pad(season.number)}</p>
+                        <h3>Distinctions <em>du cycle</em></h3>
+                        <p>Remises en fin de saison, d’après les résultats enregistrés.</p>
                     </div>
-                `).join("")}
+                    <div class="season-award-grid">
+                        ${rewards.map((reward, index) => `
+                            <div class="season-award${pending(reward.value) ? " is-pending" : ""}">
+                                <span class="season-award-code"><small>${pad(index + 1)}</small>${escapeHtml(reward.code)}</span>
+                                <span class="season-award-label">${escapeHtml(reward.label)}</span>
+                                ${pending(reward.value)
+                                    ? `<span class="nl-nc"><b>Non attribué</b><small>EN JEU // CYCLE ${pad(season.number)}</small></span>`
+                                    : `<strong class="season-award-value">${escapeHtml(reward.value)}</strong>`}
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
             </div>
         `;
     }
@@ -555,18 +698,18 @@ document.addEventListener("DOMContentLoaded", () => {
         const hasNcl = nclFixturesForSeason(season).length > 0;
         return `
             <div class="season-competition-toggle" role="tablist" aria-label="Compétition affichée">
-                <div>
-                    <small>COMPÉTITION</small>
-                    <strong>${selectedCompetition === "ncl" ? "NEBULA CHAMPIONS LEAGUE" : "NEBULA LEAGUE"}</strong>
+                <div class="season-competition-label">
+                    <small>Flux // Compétition</small>
+                    <strong>${selectedCompetition === "ncl" ? "Nebula Champions League" : "Nebula League"}</strong>
                 </div>
-                <button type="button" class="${selectedCompetition === "league" ? "is-active" : ""}"
+                <button type="button" class="season-competition-button nl-channel${selectedCompetition === "league" ? " is-active" : ""}"
                     role="tab" aria-selected="${selectedCompetition === "league"}" data-competition-view="league">
-                    <span>01</span> LIGUE
+                    <span class="nl-channel-num">CH A</span> Ligue
                 </button>
-                <button type="button" class="${selectedCompetition === "ncl" ? "is-active" : ""}"
+                <button type="button" class="season-competition-button nl-channel${selectedCompetition === "ncl" ? " is-active" : ""}"
                     role="tab" aria-selected="${selectedCompetition === "ncl"}" data-competition-view="ncl"
                     ${hasNcl ? "" : "disabled"}>
-                    <span>02</span> NCL
+                    <span class="nl-channel-num">CH B</span> NCL
                 </button>
             </div>
         `;
@@ -574,7 +717,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderNclMatchCard(season, fixture, extraClass = "") {
         if (!fixture) {
-            return `<div class="ncl-match-card is-locked ${extraClass}"><span>CRÉNEAU VERROUILLÉ</span></div>`;
+            return `<div class="ncl-match-card is-locked ${extraClass}"><span class="ncl-match-osd"><span>CRÉNEAU VERROUILLÉ</span><em>HORS LIGNE</em></span></div>`;
         }
 
         const match = nclMatchForFixture(season, fixture);
@@ -586,25 +729,28 @@ document.addEventListener("DOMContentLoaded", () => {
         const stage = fixture.stage || "Phase finale";
         const isFinal = fixture.valueTier === "finale" || String(stage).toLowerCase() === "finale";
 
+        const homeWins = isComplete && Number(match.scoreHome) > Number(match.scoreAway);
+        const awayWins = isComplete && Number(match.scoreAway) > Number(match.scoreHome);
+
         return `
             <button type="button"
-                class="ncl-match-card${isComplete ? " is-complete" : ""}${isFinal ? " is-final" : ""} ${extraClass}"
+                class="season-control-button ncl-match-card${isComplete ? " is-complete" : ""}${isFinal ? " is-final" : ""}${home && away ? "" : " is-pending"} ${extraClass}"
                 data-open-ncl-match="${escapeHtml(fixture.id)}">
-                <header>
+                <span class="ncl-match-osd">
                     <span>${escapeHtml(stage)}</span>
                     <em>${isComplete ? "TERMINÉ" : home && away ? "PROGRAMMÉ" : "VERROUILLÉ"}</em>
-                </header>
-                <div class="ncl-match-team">
+                </span>
+                <span class="ncl-match-team${homeWins ? " is-winner" : ""}${home ? "" : " is-unknown"}" style="--club:${home ? homeInfo.color : "var(--offline)"}">
                     <img src="${escapeHtml(homeInfo.logo)}" alt="">
-                    <strong>${home ? escapeHtml(homeInfo.name) : "À DÉTERMINER"}</strong>
+                    <strong>${home ? escapeHtml(homeInfo.name) : "À déterminer"}</strong>
                     <b>${isComplete ? Number(match.scoreHome) : "—"}</b>
-                </div>
-                <div class="ncl-match-team">
+                </span>
+                <span class="ncl-match-team${awayWins ? " is-winner" : ""}${away ? "" : " is-unknown"}" style="--club:${away ? awayInfo.color : "var(--offline)"}">
                     <img src="${escapeHtml(awayInfo.logo)}" alt="">
-                    <strong>${away ? escapeHtml(awayInfo.name) : "À DÉTERMINER"}</strong>
+                    <strong>${away ? escapeHtml(awayInfo.name) : "À déterminer"}</strong>
                     <b>${isComplete ? Number(match.scoreAway) : "—"}</b>
-                </div>
-                <footer><span>${compactDate(fixture.date)}</span><i>${isComplete ? "OUVRIR LE RAPPORT" : "VOIR LE CRÉNEAU"} ↗</i></footer>
+                </span>
+                <span class="ncl-match-foot"><span>${compactDate(fixture.date)}</span><i>${isComplete ? "Ouvrir le rapport" : "Voir le créneau"} ↗</i></span>
             </button>
         `;
     }
@@ -619,10 +765,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (quarters.length) {
             return `
                 <section class="ncl-bracket-panel is-eight-team">
-                    <header>
-                        <div><small>ÉLIMINATION DIRECTE · TOP 08</small><h3>TABLEAU NCL</h3></div>
+                    <div class="ncl-bracket-head osd">
+                        <span><b>CAM 10</b> // ÉLIMINATION DIRECTE · TOP 08 // TABLEAU NCL</span>
                         <span>${String(ncl.completed).padStart(2, "0")} / ${String(ncl.expected).padStart(2, "0")} TERMINÉS</span>
-                    </header>
+                    </div>
                     <div class="ncl-bracket ncl-expanded-bracket">
                         <div class="ncl-expanded-flow">
                             <div class="ncl-round ncl-quarter-round">
@@ -664,10 +810,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         return `
             <section class="ncl-bracket-panel">
-                <header>
-                    <div><small>ÉLIMINATION DIRECTE</small><h3>TABLEAU NCL</h3></div>
+                <div class="ncl-bracket-head osd">
+                    <span><b>CAM 10</b> // ÉLIMINATION DIRECTE // TABLEAU NCL</span>
                     <span>${String(ncl.completed).padStart(2, "0")} / ${String(ncl.expected).padStart(2, "0")} TERMINÉS</span>
-                </header>
+                </div>
                 <div class="ncl-bracket">
                     <div class="ncl-main-flow">
                         <div class="ncl-round ncl-semi-round">
@@ -698,26 +844,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderNclStandingsPreview(ncl) {
-        const maximum = Math.max(...ncl.standings.map(row => row.wins), 1);
         return `
-            <section class="season-ranking-panel ncl-club-index">
-                <header><div><small>INDEX PHASE FINALE</small><h3>PARCOURS DES CLUBS</h3></div><span>V</span></header>
-                <div class="season-standing-list">
-                    ${ncl.standings.length ? ncl.standings.map((row, index) => {
-                        const info = clubInfo(row.club);
-                        const difference = row.gf - row.ga;
-                        return `
-                            <a href="${clubLink(row.club)}" class="season-standing-row${ncl.champion === row.club ? " is-leading" : ""}"
-                                style="--club-accent:${info.color}">
-                                <span>${String(index + 1).padStart(2, "0")}</span>
-                                <img src="${escapeHtml(info.logo)}" alt="">
-                                <div><strong>${escapeHtml(info.name)}</strong><small>${row.played} MJ · ${row.wins} V · DIFF ${difference > 0 ? "+" : ""}${difference}</small></div>
-                                <i><b style="width:${(row.wins / maximum) * 100}%"></b></i>
-                                <em>${row.wins}</em>
-                            </a>
-                        `;
-                    }).join("") : `<div class="season-no-data">Les qualifiés apparaîtront à la fin de la Ligue.</div>`}
+            <section class="season-ranking-panel season-standings-panel ncl-club-index">
+                <div class="season-panel-head">
+                    <p class="nl-kicker"><span class="nl-ch">CAM 06</span> Index phase finale</p>
+                    <h3>Parcours des clubs</h3>
                 </div>
+                ${ncl.standings.length ? `
+                    <div class="season-table-wrap nl-table-wrap">
+                        <table class="season-table season-standing-list nl-table">
+                            <thead><tr><th>#</th><th>Club</th><th>MJ</th><th>Diff</th><th class="is-hl">V</th></tr></thead>
+                            <tbody>
+                                ${ncl.standings.map((row, index) => {
+                                    const info = clubInfo(row.club);
+                                    const difference = row.gf - row.ga;
+                                    return `
+                                        <tr class="season-standing-row${ncl.champion === row.club ? " is-leading" : ""}" style="--club:${info.color}">
+                                            <td class="nl-num">${pad(index + 1)}</td>
+                                            <td class="nl-strong"><a href="${clubLink(row.club)}"><img src="${escapeHtml(info.logo)}" alt="">${escapeHtml(info.name)}</a></td>
+                                            <td>${row.played}</td>
+                                            <td>${difference > 0 ? "+" : ""}${difference}</td>
+                                            <td class="is-hl">${row.wins}</td>
+                                        </tr>
+                                    `;
+                                }).join("")}
+                            </tbody>
+                        </table>
+                    </div>
+                ` : noSignal("QUALIF. 00", "Tableau en attente", "Les qualifiés apparaîtront à la fin de la Ligue.", "season-no-data")}
             </section>
         `;
     }
@@ -725,13 +879,40 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderNclLeadersPreview(ncl) {
         return `
             <section class="season-ranking-panel player-leaders-panel">
-                <header><div><small>PERFORMANCES NCL</small><h3>LEADERS DE LA PHASE FINALE</h3></div><span>TOP</span></header>
+                <div class="season-panel-head">
+                    <p class="nl-kicker"><span class="nl-ch">CAM 07-09</span> Performances NCL</p>
+                    <h3>Leaders de la phase finale</h3>
+                </div>
                 <div class="season-player-leaders">
-                    ${leaderEntry("MEILLEUR BUTEUR", "GLS", ncl.topScorers, "goals", "#ff536e")}
-                    ${leaderEntry("MEILLEUR PASSEUR", "AST", ncl.topAssists, "assists", "#58ddff")}
-                    ${leaderEntry("CONTRIBUTIONS", "G+A", ncl.topContributors, "total", "#9bff20")}
+                    ${leaderEntry("Meilleur buteur", "GLS", ncl.topScorers, "goals", "var(--blue-2)", 7)}
+                    ${leaderEntry("Meilleur passeur", "AST", ncl.topAssists, "assists", "var(--blue-3)", 8)}
+                    ${leaderEntry("Contributions", "G+A", ncl.topContributors, "total", "var(--white)", 9)}
                 </div>
             </section>
+        `;
+    }
+
+    // Bandeau de titre du dossier (numéro géant + statut + période)
+    function dossierHead(number, status, live, title, dateLabel, dates, numberLabel = "CYCLE") {
+        return `
+            <div class="season-dossier-head">
+                <span class="season-dossier-number"><small>${numberLabel}</small>${number}</span>
+                <div class="season-dossier-title">
+                    <p><span class="rec${live ? "" : " is-off"}">${live ? "DIRECT" : "ARCHIVE"}</span> ${status}</p>
+                    <h2>${title}</h2>
+                </div>
+                <div class="season-dossier-date"><small>${dateLabel}</small><strong>${dates}</strong></div>
+            </div>
+        `;
+    }
+
+    function dossierActions(button) {
+        return `
+            <div class="season-dossier-actions">
+                ${button}
+                <a class="nl-btn nl-btn-ghost" href="matchs.html">Consulter les matchs <span>→</span></a>
+                <a class="nl-btn nl-btn-ghost" href="fixtures.html">Voir le calendrier <span>→</span></a>
+            </div>
         `;
     }
 
@@ -740,39 +921,36 @@ document.addEventListener("DOMContentLoaded", () => {
         const firstDate = ncl.fixtures[0]?.date;
         const lastDate = ncl.fixtures.at(-1)?.date;
         const championInfo = ncl.champion ? clubInfo(ncl.champion) : null;
+        const activeClubs = ncl.matches.length ? new Set(ncl.matches.flatMap(match => [match.home, match.away])).size : 0;
 
         dossier.innerHTML = `
             <article class="season-dossier ncl-dossier" data-active-season="${escapeHtml(season.id)}">
-                <header class="season-dossier-head">
-                    <span class="season-dossier-number">NC</span>
-                    <div>
-                        <p><i></i> PHASE FINALE NCL</p>
-                        <h2>NCL · SAISON ${String(season.number).padStart(2, "0")}</h2>
-                    </div>
-                    <div class="season-dossier-date"><small>PÉRIODE DE COMPÉTITION</small><strong>${dateRange(firstDate, lastDate)}</strong></div>
-                </header>
+                ${dossierHead("NCL", "Phase finale NCL", season.status === "active",
+                    `NCL · Saison ${pad(season.number)}`, "Période de compétition", dateRange(firstDate, lastDate), "PHASE")}
 
                 ${renderCompetitionToggle(season)}
 
-                <div class="ncl-overview">
-                    <div class="ncl-status-card${championInfo ? " has-champion" : ""}"
-                        style="${championInfo ? `--club-accent:${championInfo.color}` : ""}">
-                        ${championInfo ? `<img src="${escapeHtml(championInfo.logo)}" alt="">` : `<span>NCL</span>`}
-                        <div><small>${championInfo ? "CHAMPION NCL" : "ÉTAT DU TABLEAU"}</small>
-                            <strong>${championInfo ? escapeHtml(championInfo.name) : ncl.phase}</strong>
-                            <em>${championInfo ? "TITRE OFFICIEL ATTRIBUÉ" : "Synchronisation depuis la Ligue"}</em>
+                <div class="season-overview ncl-overview">
+                    ${championInfo ? `
+                        <a class="ncl-status-card has-champion nl-feed is-locked" href="${clubLink(ncl.champion)}" style="--club:${championInfo.color}">
+                            <img class="nl-feed-img" src="${escapeHtml(championInfo.logo)}" alt="">
+                            <span class="nl-feed-lock" aria-hidden="true"></span>
+                            <span class="nl-feed-osd"><span><b>CAM 02</b> // CHAMPION NCL</span><span class="rec">DIRECT</span></span>
+                            <span class="nl-feed-caption"><small>Titre officiel attribué</small><b>${escapeHtml(championInfo.name)}</b></span>
+                        </a>
+                    ` : `
+                        <div class="ncl-status-card season-leader-empty season-screen">
+                            <div class="osd"><span><b>CAM 02</b> // ÉTAT DU TABLEAU</span><span class="rec is-off">HORS LIGNE</span></div>
+                            ${noSignal("NCL 00", ncl.phase, "Synchronisation depuis la Ligue : les affiches se rempliront automatiquement.")}
                         </div>
-                    </div>
-                    <div class="season-progress-module" style="--progress:${ncl.progress * 3.6}deg">
-                        <div class="season-progress-ring"><strong>${ncl.progress}</strong><span>%</span></div>
-                        <div><small>PROGRESSION NCL</small><strong>${ncl.completed} / ${ncl.expected} MATCHS</strong><span>${ncl.phase}</span></div>
-                    </div>
-                    <div class="season-metric-grid">
-                        <div><strong>${String(ncl.completed).padStart(2, "0")}</strong><span>MATCHS TERMINÉS</span></div>
-                        <div><strong>${String(ncl.totalGoals).padStart(2, "0")}</strong><span>BUTS MARQUÉS</span></div>
-                        <div><strong>${String(ncl.standings.length).padStart(2, "0")}</strong><span>CLUBS QUALIFIÉS</span></div>
-                        <div><strong>${String(ncl.matches.length ? new Set(ncl.matches.flatMap(match => [match.home, match.away])).size : 0).padStart(2, "0")}</strong><span>CLUBS ACTIFS</span></div>
-                    </div>
+                    `}
+                    ${progressScreen("PROGRESSION NCL", ncl.completed, ncl.expected, ncl.progress, `<b>PHASE</b> ${ncl.phase}`)}
+                    ${metricGrid([
+                        [ncl.completed, "Matchs terminés"],
+                        [ncl.totalGoals, "Buts marqués"],
+                        [activeClubs, "Clubs actifs"],
+                        [ncl.standings.length, "Clubs qualifiés"]
+                    ])}
                 </div>
 
                 ${renderNclBracket(season, ncl)}
@@ -782,14 +960,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     ${renderNclLeadersPreview(ncl)}
                 </div>
 
-                <footer class="season-dossier-actions">
-                    <button class="season-control-button season-details-button ncl-details-button" type="button"
+                ${dossierActions(`
+                    <button class="season-control-button season-details-button ncl-details-button nl-btn" type="button"
                         data-open-ncl-season="${escapeHtml(season.id)}">
-                        OUVRIR LE DOSSIER NCL <span>↗</span>
+                        Ouvrir le dossier NCL <span>↗</span>
                     </button>
-                    <a href="matchs.html">CONSULTER LES MATCHS <span>→</span></a>
-                    <a href="fixtures.html">VOIR LE CALENDRIER <span>→</span></a>
-                </footer>
+                `)}
             </article>
         `;
     }
@@ -797,7 +973,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderDossier() {
         const season = seasons.find(item => item.id === selectedId);
         if (!season) {
-            dossier.innerHTML = `<div class="season-no-data">Aucune saison enregistrée.</div>`;
+            dossier.innerHTML = noSignal("SIGNAL 00", "Aucune saison enregistrée", "Ajoutez un cycle dans les données de la ligue pour ouvrir son dossier.", "season-no-data");
             return;
         }
 
@@ -808,14 +984,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         dossier.innerHTML = `
             <article class="season-dossier" data-active-season="${escapeHtml(season.id)}">
-                <header class="season-dossier-head">
-                    <span class="season-dossier-number">${String(season.number).padStart(2, "0")}</span>
-                    <div>
-                        <p><i></i> ${statusLabel(season)}</p>
-                        <h2>SAISON ${String(season.number).padStart(2, "0")}</h2>
-                    </div>
-                    <div class="season-dossier-date"><small>PÉRIODE OFFICIELLE</small><strong>${dateRange(season.startDate, season.endDate)}</strong></div>
-                </header>
+                ${dossierHead(pad(season.number), statusLabel(season), season.status === "active",
+                    `Saison ${pad(season.number)}`, "Période officielle", dateRange(season.startDate, season.endDate))}
 
                 ${renderCompetitionToggle(season)}
 
@@ -832,29 +1002,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 ${renderRewards(season)}
 
-                <footer class="season-dossier-actions">
-                    <button class="season-control-button season-details-button" type="button" data-open-season="${escapeHtml(season.id)}">
-                        OUVRIR LE DOSSIER COMPLET <span>↗</span>
+                ${dossierActions(`
+                    <button class="season-control-button season-details-button nl-btn" type="button" data-open-season="${escapeHtml(season.id)}">
+                        Ouvrir le dossier complet <span>↗</span>
                     </button>
-                    <a href="matchs.html">CONSULTER LES MATCHS <span>→</span></a>
-                    <a href="fixtures.html">VOIR LE CALENDRIER <span>→</span></a>
-                </footer>
+                `)}
             </article>
         `;
     }
 
+    // Journal : une bande d'archive par cycle (code, numéro géant, relevés, vumètre)
     function renderHistory() {
         history.innerHTML = seasons.map((season, index) => {
             const leader = season.leader ? clubInfo(season.leader.club).name : "Non attribué";
+            const live = season.status === "active";
             return `
-                <button class="season-control-button season-history-row${season.id === selectedId ? " is-current" : ""}"
+                <button class="season-control-button season-history-row${season.id === selectedId ? " is-current" : ""}${live ? " is-live" : ""}"
                     type="button" data-season-history="${escapeHtml(season.id)}">
-                    <span>ARC–${String(index + 1).padStart(2, "0")}</span>
-                    <div><small>${statusLabel(season)}</small><strong>SAISON ${String(season.number).padStart(2, "0")}</strong></div>
-                    <div><small>PÉRIODE</small><strong>${dateRange(season.startDate, season.endDate)}</strong></div>
-                    <div><small>LEADER</small><strong>${escapeHtml(leader)}</strong></div>
-                    <div><small>ACTIVITÉ LIGUE</small><strong>${plural(season.leagueMatches.length, "MATCH")}</strong></div>
-                    <em>${season.progress}%</em>
+                    <span class="season-history-code"><span class="rec${live ? "" : " is-off"}">${live ? "REC" : "ARC"}</span>ARC–${pad(index + 1)}</span>
+                    <span class="season-history-number"><small>Saison</small>${pad(season.number)}</span>
+                    <span class="season-history-cell"><small>Statut</small><strong>${statusLabel(season)}</strong></span>
+                    <span class="season-history-cell"><small>Période</small><strong>${dateRange(season.startDate, season.endDate)}</strong></span>
+                    <span class="season-history-cell"><small>Leader</small><strong>${escapeHtml(leader)}</strong></span>
+                    <span class="season-history-cell"><small>Activité ligue</small><strong>${plural(season.leagueMatches.length, "MATCH")}</strong></span>
+                    <span class="season-history-progress"><em>${season.progress}%</em><span class="nl-vu" style="--v:${season.progress}"></span></span>
                 </button>
             `;
         }).join("");
@@ -862,20 +1033,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function standingsTable(season) {
         return `
-            <div class="season-table-wrap">
-                <table class="season-table">
-                    <thead><tr><th>#</th><th>Club</th><th>MJ</th><th>V</th><th>N</th><th>D</th><th>BP</th><th>BC</th><th>DIFF</th><th>PTS</th></tr></thead>
+            <div class="season-table-wrap nl-table-wrap">
+                <table class="season-table nl-table">
+                    <thead><tr><th>#</th><th>Club</th><th>MJ</th><th>V</th><th>N</th><th>D</th><th>BP</th><th>BC</th><th>Diff</th><th class="is-hl">Pts</th></tr></thead>
                     <tbody>
                         ${season.standings.map((row, index) => {
                             const info = clubInfo(row.club);
                             const played = row.w + row.d + row.l;
                             const difference = goalDifference(row);
                             return `
-                                <tr${index === 0 && season.leagueMatches.length ? ` class="is-leading"` : ""}>
-                                    <td>${String(index + 1).padStart(2, "0")}</td>
-                                    <td><a href="${clubLink(row.club)}"><img src="${escapeHtml(info.logo)}" alt=""><strong>${escapeHtml(info.name)}</strong></a></td>
+                                <tr class="${index === 0 && season.leagueMatches.length ? "is-leading" : ""}" style="--club:${info.color}">
+                                    <td class="nl-num">${pad(index + 1)}</td>
+                                    <td class="nl-strong"><a href="${clubLink(row.club)}"><img src="${escapeHtml(info.logo)}" alt="">${escapeHtml(info.name)}</a></td>
                                     <td>${played}</td><td>${row.w}</td><td>${row.d}</td><td>${row.l}</td>
-                                    <td>${row.gf}</td><td>${row.ga}</td><td>${difference > 0 ? "+" : ""}${difference}</td><td><strong>${row.pts}</strong></td>
+                                    <td>${row.gf}</td><td>${row.ga}</td><td>${difference > 0 ? "+" : ""}${difference}</td><td class="is-hl">${row.pts}</td>
                                 </tr>
                             `;
                         }).join("")}
@@ -886,29 +1057,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function playerRankingTable(title, code, ranking, key, accent) {
+        const maximum = Math.max(...ranking.slice(0, 8).map(player => Number(player[key]) || 0), 1);
         return `
             <section class="season-modal-ranking" style="--ranking-accent:${accent}">
-                <header><span>${code}</span><h3>${title}</h3></header>
-                <div>
+                <div class="season-modal-ranking-head osd"><span><b>${code}</b> // ${title}</span></div>
+                <div class="season-modal-ranking-list">
                     ${ranking.length ? ranking.slice(0, 8).map(player => `
                         <a href="${playerLink(player.name)}">
-                            <span>${String(player.rank).padStart(2, "0")}</span>
-                            <div><strong>${escapeHtml(player.name)}</strong><small>${escapeHtml(clubInfo(player.club).name)} · ${player.matches} MJ</small></div>
+                            <span class="season-modal-rank">${pad(player.rank)}</span>
+                            <span class="season-modal-name"><strong>${escapeHtml(player.name)}</strong><small>${escapeHtml(clubInfo(player.club).name)} · ${player.matches} MJ</small></span>
                             <em>${player[key]}</em>
+                            <span class="nl-vu" style="--v:${Math.round(((Number(player[key]) || 0) / maximum) * 100)}"></span>
                         </a>
-                    `).join("") : `<p>Aucune performance enregistrée pour cette saison.</p>`}
+                    `).join("") : noSignal("SIGNAL 00", "Aucune donnée", "Aucune performance enregistrée pour cette saison.", "season-mini-nosignal")}
                 </div>
             </section>
         `;
     }
 
     function nclStandingsTable(ncl) {
+        if (!ncl.standings.length) {
+            return noSignal("QUALIF. 00", "Qualifications en attente", "Le tableau NCL se remplira à la fin de la Ligue.", "season-mini-nosignal");
+        }
         return `
-            <div class="season-table-wrap">
-                <table class="season-table ncl-season-table">
-                    <thead><tr><th>#</th><th>Club</th><th>MJ</th><th>V</th><th>D</th><th>BP</th><th>BC</th><th>DIFF</th><th>STATUT</th></tr></thead>
+            <div class="season-table-wrap nl-table-wrap">
+                <table class="season-table ncl-season-table nl-table">
+                    <thead><tr><th>#</th><th>Club</th><th>MJ</th><th>V</th><th>D</th><th>BP</th><th>BC</th><th>Diff</th><th class="is-hl">Statut</th></tr></thead>
                     <tbody>
-                        ${ncl.standings.length ? ncl.standings.map((row, index) => {
+                        ${ncl.standings.map((row, index) => {
                             const info = clubInfo(row.club);
                             const difference = row.gf - row.ga;
                             const status = ncl.champion === row.club
@@ -919,19 +1095,23 @@ document.addEventListener("DOMContentLoaded", () => {
                                         ? "ÉLIMINÉ"
                                         : "EN COURSE";
                             return `
-                                <tr${ncl.champion === row.club ? ` class="is-leading"` : ""}>
-                                    <td>${String(index + 1).padStart(2, "0")}</td>
-                                    <td><a href="${clubLink(row.club)}"><img src="${escapeHtml(info.logo)}" alt=""><strong>${escapeHtml(info.name)}</strong></a></td>
+                                <tr class="${ncl.champion === row.club ? "is-leading" : ""}" style="--club:${info.color}">
+                                    <td class="nl-num">${pad(index + 1)}</td>
+                                    <td class="nl-strong"><a href="${clubLink(row.club)}"><img src="${escapeHtml(info.logo)}" alt="">${escapeHtml(info.name)}</a></td>
                                     <td>${row.played}</td><td>${row.wins}</td><td>${row.losses}</td>
                                     <td>${row.gf}</td><td>${row.ga}</td><td>${difference > 0 ? "+" : ""}${difference}</td>
-                                    <td><strong>${status}</strong></td>
+                                    <td class="is-hl">${status}</td>
                                 </tr>
                             `;
-                        }).join("") : `<tr><td colspan="9">QUALIFICATIONS EN ATTENTE</td></tr>`}
+                        }).join("")}
                     </tbody>
                 </table>
             </div>
         `;
+    }
+
+    function modalSectionHead(number, kicker, title) {
+        return `<div class="season-modal-section-head"><span class="season-modal-chno"><small>CH</small>${number}</span><div><small>${kicker}</small><h3>${title}</h3></div></div>`;
     }
 
     function openNclModal(seasonId) {
@@ -941,19 +1121,19 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("seasonModalTitle").textContent = `NCL · SAISON ${String(season.number).padStart(2, "0")}`;
         modalContent.innerHTML = `
             <section class="season-modal-section ncl-modal-bracket">
-                <div class="season-modal-section-head"><span>01</span><div><small>PHASE FINALE</small><h3>ARBRE DE COMPÉTITION</h3></div></div>
+                ${modalSectionHead("01", "Phase finale", "Arbre de compétition")}
                 ${renderNclBracket(season, ncl)}
             </section>
             <section class="season-modal-section">
-                <div class="season-modal-section-head"><span>02</span><div><small>PARCOURS COLLECTIFS</small><h3>TABLEAU NCL</h3></div></div>
+                ${modalSectionHead("02", "Parcours collectifs", "Tableau NCL")}
                 ${nclStandingsTable(ncl)}
             </section>
             <section class="season-modal-section">
-                <div class="season-modal-section-head"><span>03</span><div><small>PERFORMANCES NCL</small><h3>CLASSEMENTS JOUEURS</h3></div></div>
+                ${modalSectionHead("03", "Performances NCL", "Classements joueurs")}
                 <div class="season-modal-rankings">
-                    ${playerRankingTable("MEILLEURS BUTEURS", "GLS", ncl.topScorers, "goals", "#ff536e")}
-                    ${playerRankingTable("MEILLEURS PASSEURS", "AST", ncl.topAssists, "assists", "#58ddff")}
-                    ${playerRankingTable("MEILLEURS DRIBBLEURS", "DRB", ncl.topDribblers, "dribbles", "#b66cff")}
+                    ${playerRankingTable("MEILLEURS BUTEURS", "GLS", ncl.topScorers, "goals", "var(--blue-2)")}
+                    ${playerRankingTable("MEILLEURS PASSEURS", "AST", ncl.topAssists, "assists", "var(--blue-3)")}
+                    ${playerRankingTable("MEILLEURS DRIBBLEURS", "DRB", ncl.topDribblers, "dribbles", "var(--offline)")}
                 </div>
             </section>
         `;
@@ -1062,15 +1242,15 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("seasonModalTitle").textContent = `SAISON ${String(season.number).padStart(2, "0")}`;
         modalContent.innerHTML = `
             <section class="season-modal-section">
-                <div class="season-modal-section-head"><span>01</span><div><small>CLASSEMENT OFFICIEL</small><h3>TABLEAU DE LIGUE</h3></div></div>
+                ${modalSectionHead("01", "Classement officiel", "Tableau de ligue")}
                 ${standingsTable(season)}
             </section>
             <section class="season-modal-section">
-                <div class="season-modal-section-head"><span>02</span><div><small>PERFORMANCES INDIVIDUELLES</small><h3>CLASSEMENTS JOUEURS</h3></div></div>
+                ${modalSectionHead("02", "Performances individuelles", "Classements joueurs")}
                 <div class="season-modal-rankings">
-                    ${playerRankingTable("MEILLEURS BUTEURS", "GLS", season.topScorers, "goals", "#ff536e")}
-                    ${playerRankingTable("MEILLEURS PASSEURS", "AST", season.topAssists, "assists", "#58ddff")}
-                    ${playerRankingTable("CONTRIBUTIONS G+A", "G+A", season.topContributors, "total", "#9bff20")}
+                    ${playerRankingTable("MEILLEURS BUTEURS", "GLS", season.topScorers, "goals", "var(--blue-2)")}
+                    ${playerRankingTable("MEILLEURS PASSEURS", "AST", season.topAssists, "assists", "var(--blue-3)")}
+                    ${playerRankingTable("CONTRIBUTIONS G+A", "G+A", season.topContributors, "total", "var(--white)")}
                 </div>
             </section>
         `;

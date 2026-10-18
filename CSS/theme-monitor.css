@@ -1,0 +1,3612 @@
+/* ==========================================================================
+   NEBULA LEAGUE — DIRECTION « SALLE DE CONTRÔLE BLUE LOCK »
+   Couche commune chargée en DERNIER sur chaque page (après responsive.css).
+   Guide de déploiement : ROLLOUT.md (à la racine du site).
+
+   Concept : la salle de surveillance d'Ego Jinpachi. Le site devient un mur
+   d'écrans qui observe les joueurs : flux caméra, bandeaux OSD, point REC
+   rouge, horodatages, numéros de classement géants (#001), micro-katakana.
+
+   01. Couches + polices (+ alias Orbitron / Inter / Courier New)
+   02. Jetons (couleurs, typo, espacements, textures) + ponts de palettes
+   03. Base : fond, titres, sélection, focus, défilement
+   04. En-tête console : bandeau OSD, marque, navigation par canaux
+   05. Menus déroulants + navigation mobile
+   06. Recherche globale (Ctrl K)
+   07. Primitives : .osd, .rec, .jp, .mon, .nl-aim, .nl-bleed, .nl-band…
+   08. KIT DE COMPOSANTS (classes nl-*) — à réutiliser sur toutes les pages
+       08a héros (maître, mur de flux, mire, bande)   08b en-tête de section
+       08c flux caméra   08d rang + NON CLASSÉ   08e tableau régie
+       08f chiffre clé   08g vumètre   08h canaux (onglets)
+       08i console de filtres + champs   08j étiquettes   08k PAS DE SIGNAL
+       08l boutons   08m modale
+   09. Pied de page .nl-footer
+   10. Filets de compatibilité des pages historiques (désactivés par
+       body.nl-migrated) : héros [class$="-hero"], index de section,
+       surtitres, plancher 11 px des micro-libellés
+   11. Correctifs des contrôles historiques (boutons, champs, tableaux…)
+   12. Transitions de pages + mouvement réduit
+
+   RÈGLE !important : toute déclaration !important de ce fichier vit dans
+   @layer nl-force (un !important en couche bat tous les !important hors
+   couche). Le reste est en CSS normal, hors couche.
+   ========================================================================== */
+
+/* -------------------- 01. Couches + polices -------------------- */
+/* nl-force : uniquement pour reprendre la main sur les !important hérités
+   (global-theme.css, responsive.css, CSS de page). */
+@layer nl-force;
+
+@import url("https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,500;0,600;0,700;1,600;1,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;700&text=%E3%83%96%E3%83%AB%E3%83%BC%E3%83%AD%E3%83%83%E3%82%AF%E7%9B%A3%E8%A6%96%E4%B8%AD%E3%82%A8%E3%82%B4%E3%83%A9%E3%83%B3%E3%82%AD%E3%83%B3%E3%82%B0%E3%82%AB%E3%83%A1%E3%83%A9%E3%83%A9%E3%82%A4%E3%83%96%E8%A8%98%E9%8C%B2%E3%83%BB%E9%81%B8%E6%89%8B%E7%95%AA%E5%8F%B7%E5%AE%A4%E8%A8%BC%E6%8B%A0%E9%8D%B5%E7%AE%A1%E7%90%86%E8%A9%A6%E5%90%88%E5%AF%BE%E6%88%A6&display=swap");
+
+/* Alias : les ~20 feuilles de style historiques écrivent encore
+   font-family: 'Orbitron' / 'Inter' / 'Courier New' en dur. Ces faces
+   redirigent ces noms vers Chakra Petch / IBM Plex Sans / IBM Plex Mono,
+   pour que tout le site parle la même typographie sans réécrire chaque
+   fichier. (Fichiers servis par Google Fonts.) */
+@font-face { font-family: "Orbitron"; font-style: normal; font-weight: 100 500; font-display: swap; src: url(https://fonts.gstatic.com/s/chakrapetch/v13/cIflMapbsEk7TDLdtEz1BwkebIl1SZ_F7AY.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Orbitron"; font-style: normal; font-weight: 100 500; font-display: swap; src: url(https://fonts.gstatic.com/s/chakrapetch/v13/cIflMapbsEk7TDLdtEz1BwkebIl1R5_F.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Orbitron"; font-style: normal; font-weight: 600; font-display: swap; src: url(https://fonts.gstatic.com/s/chakrapetch/v13/cIflMapbsEk7TDLdtEz1BwkeQI51SZ_F7AY.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Orbitron"; font-style: normal; font-weight: 600; font-display: swap; src: url(https://fonts.gstatic.com/s/chakrapetch/v13/cIflMapbsEk7TDLdtEz1BwkeQI51R5_F.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Orbitron"; font-style: normal; font-weight: 700 1000; font-display: swap; src: url(https://fonts.gstatic.com/s/chakrapetch/v13/cIflMapbsEk7TDLdtEz1BwkeJI91SZ_F7AY.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Orbitron"; font-style: normal; font-weight: 700 1000; font-display: swap; src: url(https://fonts.gstatic.com/s/chakrapetch/v13/cIflMapbsEk7TDLdtEz1BwkeJI91R5_F.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 100 400; font-display: swap; src: url(https://fonts.gstatic.com/s/ibmplexsans/v23/zYXzKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1syxQKYbABA.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 100 400; font-display: swap; src: url(https://fonts.gstatic.com/s/ibmplexsans/v23/zYXzKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1syxeKYY.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 500; font-display: swap; src: url(https://fonts.gstatic.com/s/ibmplexsans/v23/zYXzKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1syxQKYbABA.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 500; font-display: swap; src: url(https://fonts.gstatic.com/s/ibmplexsans/v23/zYXzKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1syxeKYY.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 600; font-display: swap; src: url(https://fonts.gstatic.com/s/ibmplexsans/v23/zYXzKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1syxQKYbABA.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 600; font-display: swap; src: url(https://fonts.gstatic.com/s/ibmplexsans/v23/zYXzKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1syxeKYY.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 700 1000; font-display: swap; src: url(https://fonts.gstatic.com/s/ibmplexsans/v23/zYXzKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1syxQKYbABA.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 700 1000; font-display: swap; src: url(https://fonts.gstatic.com/s/ibmplexsans/v23/zYXzKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1syxeKYY.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Courier New"; font-style: normal; font-weight: 100 400; font-display: swap; src: url(https://fonts.gstatic.com/s/ibmplexmono/v20/-F63fjptAgt5VM-kVkqdyU8n1iEq129k.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Courier New"; font-style: normal; font-weight: 100 400; font-display: swap; src: url(https://fonts.gstatic.com/s/ibmplexmono/v20/-F63fjptAgt5VM-kVkqdyU8n1i8q1w.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Courier New"; font-style: normal; font-weight: 500; font-display: swap; src: url(https://fonts.gstatic.com/s/ibmplexmono/v20/-F6qfjptAgt5VM-kVkqdyU8n3twJwl5FgtIU.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Courier New"; font-style: normal; font-weight: 500; font-display: swap; src: url(https://fonts.gstatic.com/s/ibmplexmono/v20/-F6qfjptAgt5VM-kVkqdyU8n3twJwlBFgg.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Courier New"; font-style: normal; font-weight: 600 1000; font-display: swap; src: url(https://fonts.gstatic.com/s/ibmplexmono/v20/-F6qfjptAgt5VM-kVkqdyU8n3vAOwl5FgtIU.woff2) format('woff2'); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Courier New"; font-style: normal; font-weight: 600 1000; font-display: swap; src: url(https://fonts.gstatic.com/s/ibmplexmono/v20/-F6qfjptAgt5VM-kVkqdyU8n3vAOwlBFgg.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+/* -------------------- 02. Jetons -------------------- */
+
+:root {
+  /* Abysses + écrans */
+  --ink: #020611;
+  --ink-2: #030a1a;
+  --screen: #040c20;
+  --surface: #061028;
+  --surface-2: #0a1734;
+  --surface-3: #102247;
+  --bezel: #01040c;
+
+  /* Texte */
+  --paper: #f3f7ff;
+  --white: #ffffff;
+  --muted: #8b9ac0;
+  --dim: #5f6e96;
+
+  /* Bleu Blue Lock (accent dominant) */
+  --blue: #1f5bff;
+  --blue-2: #3d7bff;
+  --blue-3: #8db0ff;
+  --blue-deep: #0b2a8f;
+  --blue-soft: rgba(31, 91, 255, 0.16);
+  --blue-glow: rgba(31, 91, 255, 0.5);
+
+  /* Signal rouge : REC, direct, alertes uniquement */
+  --rec: #ff2b40;
+  --rec-soft: rgba(255, 43, 64, 0.14);
+
+  /* Lignes */
+  --line: rgba(77, 128, 255, 0.2);
+  --line-soft: rgba(77, 128, 255, 0.1);
+  --line-strong: rgba(77, 128, 255, 0.42);
+
+  /* Rétro-compatibilité : l'ancien vert acide et le cyan deviennent du bleu */
+  --acid: var(--blue-2);
+  --acid-soft: var(--blue-soft);
+  --cyan: #8db0ff;
+  --cyan-soft: rgba(141, 176, 255, 0.14);
+  --danger: var(--rec);
+
+  /* Couleur « archives » (retraités, hors ligne) : remplace l'ancien violet */
+  --offline: #7d8bb3;
+
+  /* Typographie */
+  --display: "Chakra Petch", "Arial Narrow", sans-serif;
+  --sans: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+  --mono: "IBM Plex Mono", Consolas, monospace;
+  --jp: "Noto Sans JP", "Hiragino Sans", sans-serif;
+
+  /* Échelle typographique (plancher : 11 px, jamais en dessous) */
+  --fs-micro: 11px;          /* OSD, étiquettes caméra, timecodes */
+  --fs-label: 12px;          /* libellés de champ, onglets, puces */
+  --fs-data: 14px;           /* valeurs de tableau, données */
+  --fs-body: 16px;
+  --fs-lead: clamp(16px, 1.2vw, 18px);
+  --fs-d4: clamp(1.3rem, 1.9vw, 1.9rem);     /* titre de panneau */
+  --fs-d3: clamp(2.1rem, 5vw, 5rem);         /* titre de section */
+  --fs-d2: clamp(2.6rem, 8.4vw, 8.6rem);     /* titre de page (héros) */
+  --fs-d1: clamp(3.3rem, 12.5vw, 12.5rem);   /* écran maître (accueil) */
+  --fs-rank: clamp(3.4rem, 7vw, 7.4rem);     /* #001 */
+  --track-micro: 0.08em;
+  --track-label: 0.06em;
+  --track-display: -0.02em;
+
+  /* Espacements (base 4 px) */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 72px;
+  --sp-9: 112px;
+  --gutter: clamp(16px, 3vw, 48px);
+  --page: min(1440px, calc(100% - 2 * var(--gutter)));
+  --seam: 3px;               /* joint entre deux écrans d'un mur */
+
+  /* Formes */
+  --r-mon: 6px;
+  --r-ctl: 3px;
+  --cut: 12px;
+
+  /* Textures */
+  --fringe: -1px 0 rgba(255, 43, 64, 0.38), 1px 0 rgba(61, 123, 255, 0.7);
+  --scanlines: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.028) 0 1px, transparent 1px 3px);
+  --scanlines-strong: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.32) 0 1px, transparent 1px 3px);
+  --glare: linear-gradient(118deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.015) 24%, transparent 38%);
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.62 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --mire: linear-gradient(90deg, #c9d6ff 0 14.28%, #8db0ff 0 28.56%, #3d7bff 0 42.84%, #1f5bff 0 57.12%, #0b2a8f 0 71.4%, #4b5f9e 0 85.68%, #101a33 0);
+  --mire-low: linear-gradient(90deg, #1f5bff 0 14.28%, #020611 0 28.56%, #4b5f9e 0 42.84%, #020611 0 57.12%, #8db0ff 0 71.4%, #020611 0 85.68%, #0b2a8f 0);
+
+  /* Anciens alias */
+  --nebula-purple: var(--blue-2);
+  --nebula-purple-2: var(--blue-deep);
+  --nebula-glow: var(--blue-glow);
+  --border: var(--line);
+  --text: var(--paper);
+  --text-muted: var(--muted);
+}
+
+/* Ponts vers les palettes propres à chaque page (même spécificité que
+   leurs définitions, fichier chargé après → ces valeurs gagnent). */
+body.nebula-page,
+body.nebula-page:is(.home-page, .players-page, .club-page, .matches-page, .seasons-page, .fixtures-page, .records-page, .rules-page, .value-page, .title-page, .h2h-page, .legacy-page, .dream-page, .progression-page, .admin-page, .player-card-page) {
+  --home-acid: var(--blue-2);
+  --home-cyan: var(--cyan);
+  --home-violet: var(--blue);
+  --home-violet-soft: var(--blue-soft);
+  --home-panel: var(--surface);
+  --home-panel-2: var(--surface-2);
+
+  --match-acid: var(--blue-2);
+  --match-cyan: var(--cyan);
+  --match-purple: var(--blue-3);
+  --match-red: var(--rec);
+  --match-line: var(--line);
+  --match-line-soft: var(--line-soft);
+  --match-surface: var(--screen);
+  --match-surface-2: var(--surface);
+  --match-surface-3: var(--surface-2);
+  --match-display: var(--display);
+  --match-mono: var(--mono);
+
+  --season-acid: var(--blue-2);
+  --season-cyan: var(--cyan);
+  --season-violet: var(--blue-3);
+  --season-red: var(--rec);
+  --season-ink: var(--ink);
+  --season-panel: var(--screen);
+  --season-panel-2: var(--surface);
+  --season-line: var(--line);
+  --season-muted: var(--muted);
+  --season-paper: var(--paper);
+
+  --fixture-acid: var(--blue-2);
+  --fixture-cyan: var(--cyan);
+  --fixture-violet: var(--blue-3);
+  --fixture-red: var(--rec);
+  --fixture-ink: var(--ink);
+  --fixture-panel: var(--screen);
+  --fixture-panel-raised: var(--surface);
+  --fixture-line: var(--line);
+  --fixture-line-bright: var(--line-strong);
+  --fixture-muted: var(--muted);
+  --fixture-paper: var(--paper);
+
+  --record-acid: var(--blue-2);
+  --record-cyan: var(--cyan);
+  --record-line: var(--line);
+  --record-line-soft: var(--line-soft);
+  --record-surface: var(--screen);
+  --record-surface-2: var(--surface);
+  --record-surface-3: var(--surface-2);
+
+  --rules-acid: var(--blue-2);
+  --rules-cyan: var(--cyan);
+  --rules-danger: var(--rec);
+  --rules-line: var(--line);
+  --rules-line-soft: var(--line-soft);
+  --rules-surface: var(--screen);
+  --rules-surface-2: var(--surface);
+  --rules-surface-3: var(--surface-2);
+
+  --market-acid: var(--blue-2);
+  --market-cyan: var(--cyan);
+  --market-line: var(--line);
+  --market-line-soft: var(--line-soft);
+  --market-surface: var(--screen);
+  --market-surface-2: var(--surface);
+  --market-surface-3: var(--surface-2);
+
+  --h2h-acid: var(--blue-2);
+  --h2h-cyan: var(--cyan);
+  --h2h-purple: var(--blue-3);
+  --h2h-red: var(--rec);
+  --h2h-ink: var(--ink);
+  --h2h-panel: var(--screen);
+  --h2h-panel-2: var(--surface);
+  --h2h-line: var(--line);
+  --h2h-muted: var(--muted);
+  --h2h-text: var(--paper);
+
+  --legacy-acid: var(--blue-2);
+  --legacy-cyan: var(--cyan);
+  --legacy-violet: var(--blue-3);
+  --legacy-red: var(--rec);
+  --legacy-paper: var(--paper);
+  --legacy-muted: var(--muted);
+  --legacy-ink: var(--ink);
+  --legacy-panel: var(--screen);
+  --legacy-panel-2: var(--surface);
+  --legacy-line: var(--line);
+
+  --admin-acid: var(--blue-2);
+  --admin-cyan: var(--cyan);
+  --admin-red: var(--rec);
+  --admin-ink: var(--ink);
+  --admin-panel: var(--screen);
+  --admin-panel-2: var(--surface);
+  --admin-line: var(--line);
+  --admin-muted: var(--muted);
+  --admin-paper: var(--paper);
+
+  --club-ink: var(--ink);
+  --club-surface: var(--screen);
+  --club-surface-2: var(--surface);
+  --club-line: var(--line);
+  --club-muted: var(--muted);
+
+  --players-acid: var(--blue-2);
+  --players-cyan: var(--cyan);
+  --players-line: var(--line);
+  --players-line-soft: var(--line-soft);
+  --players-surface: var(--screen);
+  --players-surface-2: var(--surface);
+}
+
+/* -------------------- 03. Base -------------------- */
+
+html {
+  background: var(--ink);
+}
+
+@layer nl-force {
+  body.nebula-page {
+    background:
+      radial-gradient(ellipse 70% 42% at 50% -8%, rgba(31, 91, 255, 0.2), transparent 72%),
+      radial-gradient(ellipse 40% 30% at 100% 102%, rgba(31, 91, 255, 0.09), transparent 70%),
+      radial-gradient(ellipse 40% 30% at 0% 60%, rgba(31, 91, 255, 0.05), transparent 70%),
+      var(--ink) !important;
+    background-size: auto !important;
+    background-attachment: fixed !important;
+  }
+}
+
+body.nebula-page {
+  color: var(--paper);
+  font-family: var(--sans);
+}
+
+/* Le contenu principal suit la même gouttière que les héros et le pied de
+   page (--page), au lieu de 100% - 6vw / 100% - 36px de global-theme.css. */
+@layer nl-force {
+  body.nebula-page.nl-migrated > main:not(.characters-page) {
+    width: var(--page) !important;
+  }
+}
+
+/* responsive.css (<= 680 px) coupe les mots n'importe où (overflow-wrap:
+   anywhere), ce qui écrase aussi la largeur minimale des cellules et des
+   chiffres (« 01 » devient « 0/1 »). Sur les pages redessinées, un mot ne se
+   coupe que s'il ne tient vraiment pas sur sa ligne. Même spécificité que
+   responsive.css, chargé après : une règle de page plus précise garde la main. */
+@media (max-width: 680px) {
+  body.nl-migrated :is(h3, h4, strong, p, span, small, label) {
+    overflow-wrap: break-word;
+  }
+}
+
+/* Lignes de balayage plein écran, derrière le contenu */
+body.nebula-page::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  top: 0;
+  right: 0;
+  width: auto;
+  height: auto;
+  content: "";
+  border: 0;
+  border-radius: 0;
+  background: var(--scanlines);
+  box-shadow: none;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* Les grands titres ne se coupent jamais au milieu d'un mot : la taille est
+   fluide (clamp) et le retour à la ligne se fait entre les mots. */
+body.nebula-page :is(h1, h2) {
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
+}
+
+body.nebula-page h1,
+body.nebula-page h2,
+body.nebula-page h3 {
+  letter-spacing: 0.01em;
+}
+
+body.nebula-page ::selection {
+  color: #fff;
+  background: var(--blue);
+}
+
+body.nebula-page :focus-visible {
+  outline: 2px solid var(--blue-3);
+  outline-offset: 3px;
+}
+
+body.nebula-page::-webkit-scrollbar-track,
+body.nebula-page *::-webkit-scrollbar-track {
+  background: var(--ink);
+}
+
+body.nebula-page::-webkit-scrollbar-thumb,
+body.nebula-page *::-webkit-scrollbar-thumb {
+  background: #1a2b57;
+}
+
+body.nebula-page,
+body.nebula-page button,
+body.nebula-page input,
+body.nebula-page select,
+body.nebula-page textarea {
+  font-family: var(--sans);
+}
+
+/* Texte réservé aux lecteurs d'écran */
+.nl-sr,
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* -------------------- 04. En-tête console -------------------- */
+
+body.nebula-page .site-header {
+  --hdr-pad: clamp(16px, 2.2vw, 36px);
+  position: relative;
+  z-index: 1000;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto 66px;
+  column-gap: 20px;
+  align-items: center;
+  min-height: 0;
+  padding: 0 var(--hdr-pad);
+  border: 0;
+  border-bottom: 1px solid var(--line-strong);
+  background:
+    linear-gradient(180deg, rgba(6, 15, 38, 0.98), rgba(2, 7, 19, 0.98));
+  box-shadow:
+    0 1px 0 rgba(31, 91, 255, 0.28),
+    0 14px 34px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(14px);
+}
+
+body.nebula-page .site-header > .brand,
+body.nebula-page .site-header > .main-nav,
+body.nebula-page .site-header > .header-actions {
+  grid-row: 2;
+}
+
+/* Bandeau OSD injecté par hamburger.js */
+.nl-osd {
+  display: flex;
+  grid-column: 1 / -1;
+  grid-row: 1;
+  align-items: center;
+  gap: clamp(14px, 2vw, 30px);
+  height: 28px;
+  margin: 0 calc(var(--hdr-pad) * -1);
+  padding: 0 var(--hdr-pad);
+  overflow: hidden;
+  border-bottom: 1px solid var(--line-soft);
+  background: rgba(1, 4, 12, 0.7);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-micro);
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.nl-osd .rec {
+  font-size: var(--fs-micro);
+}
+
+.nl-osd .rec::before {
+  width: 6px;
+  height: 6px;
+}
+
+.nl-osd-feed b {
+  color: var(--blue-3);
+  font-weight: 600;
+}
+
+.nl-osd .jp {
+  font-size: var(--fs-micro);
+}
+
+.nl-osd-time {
+  margin-left: auto;
+  color: var(--paper);
+  font-variant-numeric: tabular-nums;
+}
+
+.nl-osd-time em {
+  color: var(--dim);
+  font-style: normal;
+}
+
+/* Marque : un cadenas Blue Lock dont la serrure est un œil de caméra */
+.brand {
+  gap: 12px;
+}
+
+.site-header .brand-mark,
+.footer-brand .brand-mark {
+  position: relative;
+  display: block;
+  width: 28px;
+  height: 34px;
+  flex: none;
+  border: 0;
+  border-radius: 0;
+  transform: none;
+}
+
+.site-header .brand-mark::before,
+.footer-brand .brand-mark::before {
+  position: absolute;
+  top: 0;
+  left: 6px;
+  width: 16px;
+  height: 17px;
+  content: "";
+  border: 3px solid var(--blue-3);
+  border-bottom: 0;
+  border-radius: 9px 9px 0 0;
+  background: none;
+  box-shadow: none;
+  transform: none;
+}
+
+.site-header .brand-mark span,
+.footer-brand .brand-mark span {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: auto;
+  height: 20px;
+  border: 0;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--blue-2), var(--blue));
+  box-shadow: 0 0 18px rgba(31, 91, 255, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  clip-path: polygon(0 0, 100% 0, 100% 75%, 80% 100%, 0 100%);
+}
+
+.site-header .brand-mark::after,
+.footer-brand .brand-mark::after {
+  position: absolute;
+  z-index: 2;
+  bottom: 6px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  content: "";
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--rec);
+  box-shadow: 0 0 8px var(--rec);
+  transform: translateX(-50%);
+}
+
+.brand-copy {
+  gap: 4px;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.brand-copy strong {
+  color: #fff;
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1;
+}
+
+.brand-copy small {
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-micro);
+}
+
+/* Navigation : un sélecteur de canaux numérotés */
+body.nebula-page .site-header .main-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  counter-reset: nl-ch;
+}
+
+body.nebula-page .site-header .main-nav.is-grouped > a,
+body.nebula-page .site-header .main-nav.is-grouped .nav-group-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 40px;
+  margin-left: -1px;
+  padding: 0 17px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: rgba(6, 16, 40, 0.55);
+  color: #b8c5e6;
+  counter-increment: nl-ch;
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  transform: none;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+body.nebula-page .site-header .main-nav.is-grouped > a:first-child {
+  border-radius: var(--r-ctl) 0 0 var(--r-ctl);
+}
+
+body.nebula-page .site-header .main-nav.is-grouped > a:last-child {
+  border-radius: 0 var(--r-ctl) var(--r-ctl) 0;
+}
+
+body.nebula-page .site-header .main-nav.is-grouped > a::before,
+body.nebula-page .site-header .main-nav.is-grouped .nav-group-toggle::before {
+  content: counter(nl-ch, decimal-leading-zero);
+  color: var(--dim);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+body.nebula-page .site-header .main-nav.is-grouped > a::after,
+body.nebula-page .site-header .main-nav.is-grouped .nav-group-toggle::after {
+  display: none;
+}
+
+body.nebula-page .site-header .main-nav.is-grouped > a:hover,
+body.nebula-page .site-header .main-nav.is-grouped > a:focus-visible,
+body.nebula-page .site-header .nav-group:hover .nav-group-toggle,
+body.nebula-page .site-header .nav-group.is-open .nav-group-toggle,
+body.nebula-page .site-header .nav-group-toggle:focus-visible {
+  z-index: 1;
+  border-color: var(--line-strong);
+  background: rgba(31, 91, 255, 0.14);
+  color: #fff;
+}
+
+body.nebula-page .site-header .main-nav.is-grouped > a.nav-active,
+body.nebula-page .site-header .nav-group.has-active .nav-group-toggle {
+  z-index: 2;
+  border-color: var(--blue-2);
+  background: linear-gradient(180deg, var(--blue-2), var(--blue));
+  color: #fff;
+  box-shadow: 0 0 26px rgba(31, 91, 255, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+body.nebula-page .site-header .main-nav.is-grouped > a.nav-active::before,
+body.nebula-page .site-header .nav-group.has-active .nav-group-toggle::before {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+body.nebula-page .site-header .nav-group-toggle i {
+  width: 6px;
+  height: 6px;
+  margin-left: 2px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+}
+
+/* -------------------- 05. Menus déroulants + mobile -------------------- */
+
+@media (min-width: 961px) {
+  body.nebula-page .site-header .nav-group-panel {
+    top: calc(100% - 1px);
+    left: -1px;
+    min-width: 270px;
+    padding: 0 0 6px;
+    border: 1px solid var(--line-strong);
+    border-top: 0;
+    border-radius: 0 0 var(--r-mon) var(--r-mon);
+    background:
+      var(--scanlines),
+      linear-gradient(180deg, #06112b, #030a1c);
+    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.65), 0 0 0 3px rgba(1, 4, 12, 0.7);
+    counter-reset: nl-sub;
+  }
+
+  body.nebula-page .site-header .nav-group-panel::before {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    margin-bottom: 6px;
+    padding: 0 14px;
+    content: "● SÉLECTION DU CANAL";
+    border-top: 2px solid var(--blue);
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(90deg, rgba(31, 91, 255, 0.2), transparent);
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+  }
+
+  body.nebula-page .site-header .main-nav .nav-group-panel a {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+    align-items: center;
+    margin: 0 6px;
+    padding: 11px 10px;
+    border: 0;
+    border-left: 2px solid transparent;
+    border-radius: 2px;
+    color: #c8d3ef;
+    counter-increment: nl-sub;
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  body.nebula-page .site-header .main-nav .nav-group-panel a::before {
+    content: counter(nl-sub, decimal-leading-zero);
+    color: var(--dim);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-weight: 500;
+  }
+
+  body.nebula-page .site-header .main-nav .nav-group-panel a::after {
+    content: "▸";
+    color: var(--blue-2);
+  }
+
+  body.nebula-page .site-header .main-nav .nav-group-panel a:hover,
+  body.nebula-page .site-header .main-nav .nav-group-panel a:focus-visible {
+    background: rgba(31, 91, 255, 0.14);
+    color: #fff;
+  }
+
+  body.nebula-page .site-header .main-nav .nav-group-panel a.nav-active {
+    border-left-color: var(--blue-2);
+    background: linear-gradient(90deg, rgba(31, 91, 255, 0.3), rgba(31, 91, 255, 0.06));
+    color: #fff;
+  }
+
+  body.nebula-page .site-header .main-nav .nav-group-panel a.nav-active::after {
+    content: "● DIRECT";
+    color: var(--rec);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (min-width: 961px) and (max-width: 1180px) {
+  body.nebula-page .site-header .main-nav.is-grouped > a,
+  body.nebula-page .site-header .main-nav.is-grouped .nav-group-toggle {
+    padding: 0 11px;
+    font-size: 12px;
+  }
+
+  body.nebula-page .site-header .main-nav.is-grouped > a::before,
+  body.nebula-page .site-header .main-nav.is-grouped .nav-group-toggle::before {
+    display: none;
+  }
+
+  .brand-copy small {
+    display: none;
+  }
+}
+
+/* Actions : recherche + témoin REC */
+.header-actions {
+  gap: 10px;
+}
+
+body.nebula-page .live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: 38px;
+  padding: 0 13px;
+  border: 1px solid rgba(255, 43, 64, 0.38);
+  border-radius: var(--r-ctl);
+  background: linear-gradient(90deg, rgba(255, 43, 64, 0.14), rgba(255, 43, 64, 0.03));
+  color: #ffe3e6;
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+}
+
+body.nebula-page .live-pill i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--rec);
+  box-shadow: 0 0 10px var(--rec);
+  animation: nl-rec-blink 1.6s steps(1, end) infinite;
+}
+
+body.nebula-page .search-trigger {
+  gap: 10px;
+  height: 38px;
+  padding: 0 8px 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-ctl);
+  background: rgba(6, 16, 40, 0.7);
+  color: #b8c5e6;
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-micro);
+}
+
+body.nebula-page .search-trigger svg {
+  color: var(--blue-3);
+}
+
+body.nebula-page .search-trigger:hover,
+body.nebula-page .search-trigger:focus-visible {
+  border-color: var(--blue-2);
+  background: rgba(31, 91, 255, 0.16);
+  color: #fff;
+}
+
+body.nebula-page .search-trigger kbd,
+body.nebula-page .nl-palette kbd {
+  padding: 3px 6px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: rgba(1, 4, 12, 0.6);
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.02em;
+}
+
+body.nebula-page .menu-button {
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-ctl);
+  background: rgba(6, 16, 40, 0.7);
+}
+
+body.nebula-page .menu-button span {
+  width: 18px;
+  height: 2px;
+  margin: 4px auto;
+  background: #fff;
+}
+
+body.nebula-page .menu-button[aria-expanded="true"] {
+  border-color: var(--blue-2);
+  background: var(--blue);
+}
+
+@media (max-width: 1250px) {
+  body.nebula-page .search-trigger {
+    width: 38px;
+    padding: 0;
+  }
+}
+
+@media (max-width: 960px) {
+  body.nebula-page .site-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 64px;
+    min-height: 64px;
+  }
+
+  body.nebula-page .site-header > .brand,
+  body.nebula-page .site-header > .header-actions {
+    grid-row: 1;
+  }
+
+  .nl-osd {
+    display: none;
+  }
+
+  body.nebula-page .site-header .main-nav {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 6px;
+    max-height: calc(100dvh - 64px);
+    padding: 14px var(--hdr-pad) max(22px, env(safe-area-inset-bottom));
+    overflow-y: auto;
+    border-bottom: 1px solid var(--line-strong);
+    background:
+      var(--scanlines),
+      linear-gradient(180deg, #050f27, #020817);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+  }
+
+  body.nebula-page .site-header .main-nav.is-grouped > a {
+    order: -1;
+  }
+
+  body.nebula-page .site-header .main-nav.is-grouped > a,
+  body.nebula-page .site-header .main-nav .nav-group-panel a {
+    display: flex;
+    justify-content: space-between;
+    height: auto;
+    min-height: 48px;
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-ctl);
+    background: rgba(6, 16, 40, 0.65);
+    color: #d5def5;
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  body.nebula-page .site-header .main-nav.is-grouped > a::before {
+    order: 2;
+  }
+
+  body.nebula-page .site-header .main-nav .nav-group-panel a::after {
+    position: static;
+    display: block;
+    height: auto;
+    content: "▸";
+    background: none;
+    color: var(--blue-2);
+    opacity: 1;
+    transform: none;
+  }
+
+  body.nebula-page .site-header .main-nav .nav-group-panel a.nav-active,
+  body.nebula-page .site-header .main-nav.is-grouped > a.nav-active {
+    border-color: var(--blue-2);
+    background: var(--blue);
+    color: #fff;
+  }
+
+  body.nebula-page .site-header .main-nav .nav-group-panel a.nav-active::after {
+    content: "● DIRECT";
+    color: #fff;
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+  }
+
+  body.nebula-page .site-header .main-nav .nav-group-panel {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  body.nebula-page .site-header .main-nav.is-grouped .nav-group-toggle {
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 16px 2px 8px;
+    border: 0;
+    border-bottom: 1px solid var(--line-soft);
+    background: none;
+    box-shadow: none;
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-weight: 500;
+    letter-spacing: var(--track-micro);
+  }
+
+  body.nebula-page .site-header .main-nav.is-grouped .nav-group-toggle::before {
+    content: "CANAL " counter(nl-ch, decimal-leading-zero) " //";
+    color: var(--dim);
+  }
+
+  body.nebula-page .site-header .nav-group.has-active .nav-group-toggle {
+    background: none;
+    box-shadow: none;
+  }
+
+  body.nebula-page .site-header .main-nav.is-grouped .nav-group {
+    display: grid;
+    gap: 6px;
+  }
+
+  /* Libellé de groupe : toujours bleu clair, même pour le groupe actif */
+  @layer nl-force {
+    body.nebula-page .site-header .main-nav.is-grouped .nav-group-toggle {
+      color: var(--blue-3) !important;
+    }
+  }
+}
+
+@media (max-width: 680px) {
+  body.nebula-page .site-header .main-nav,
+  body.nebula-page .site-header .main-nav .nav-group-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.nebula-page .site-header .main-nav.is-grouped > a,
+  body.nebula-page .site-header .main-nav .nav-group-panel a {
+    font-size: 13px;
+    padding: 12px 10px;
+  }
+
+  .brand-copy small {
+    display: none;
+  }
+
+  /* Témoin compact : seulement « ● REC » ; « SAISON 01 » reste lisible
+     par les lecteurs d'écran (libellé masqué visuellement, pas à 0 px). */
+  body.nebula-page .live-pill {
+    display: inline-flex;
+    gap: 6px;
+    height: 44px;
+    padding: 0 10px;
+  }
+
+  body.nebula-page .live-pill .live-pill-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  body.nebula-page .live-pill::after {
+    content: "REC";
+    color: #ffd6da;
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+  }
+}
+
+/* -------------------- 06. Recherche globale -------------------- */
+
+/* Pas de flou : recalculé à chaque image sur une page animée, il faisait ramer
+   la recherche. Le fond plus opaque suffit, et la page derrière se fige. */
+.nl-palette-backdrop {
+  background:
+    var(--scanlines),
+    rgba(1, 4, 12, 0.9);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.nl-palette-open body :not(.nl-palette, .nl-palette *),
+.nl-palette-open body :not(.nl-palette, .nl-palette *)::before,
+.nl-palette-open body :not(.nl-palette, .nl-palette *)::after,
+.nl-palette-open body::before,
+.nl-palette-open body::after {
+  animation-play-state: paused !important;
+}
+
+.nl-palette-panel {
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-top: 0;
+  border-radius: var(--r-mon);
+  background: linear-gradient(180deg, #06122d, #030a1c);
+  box-shadow:
+    0 0 0 3px var(--bezel),
+    0 0 0 4px rgba(77, 128, 255, 0.18),
+    0 40px 90px rgba(0, 0, 0, 0.7),
+    0 0 80px rgba(31, 91, 255, 0.18);
+}
+
+.nl-palette-panel::before {
+  display: flex;
+  align-items: center;
+  flex: none;
+  height: 32px;
+  padding: 0 16px 0 30px;
+  content: "REC   CAM 00 // RECHERCHE DE SUJET — JOUEURS · CLUBS · ARCHIVES";
+  overflow: hidden;
+  border-top: 2px solid var(--blue);
+  border-bottom: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 19px 50%, var(--rec) 0 3.5px, transparent 4.5px),
+    linear-gradient(90deg, rgba(31, 91, 255, 0.22), transparent 70%);
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  white-space: pre;
+}
+
+.nl-palette-field {
+  border-bottom: 1px solid var(--line);
+}
+
+.nl-palette-prompt {
+  color: var(--blue-2);
+  font-family: var(--mono);
+}
+
+.nl-palette-field input::placeholder {
+  color: var(--dim);
+}
+
+@layer nl-force {
+  body.nebula-page .nl-palette-field input,
+  body.nebula-page .nl-palette-field input:focus {
+    padding-inline: 4px !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    font-family: var(--display) !important;
+    font-size: 19px !important;
+    letter-spacing: 0.03em !important;
+  }
+}
+
+.nl-palette-field:focus-within {
+  background: linear-gradient(90deg, rgba(31, 91, 255, 0.12), transparent 70%);
+  box-shadow: inset 0 -2px 0 var(--blue-2);
+}
+
+.nl-palette-group-label {
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+}
+
+.nl-palette-option {
+  border-radius: 2px;
+}
+
+.nl-palette-option[aria-selected="true"] {
+  border-left-color: var(--blue-2);
+  background: linear-gradient(90deg, rgba(31, 91, 255, 0.24), rgba(31, 91, 255, 0.04));
+}
+
+.nl-palette-thumb {
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--screen);
+}
+
+.nl-palette-text strong {
+  font-family: var(--display);
+  font-size: 15px;
+  letter-spacing: 0.04em;
+}
+
+.nl-palette-text small {
+  font-size: var(--fs-label);
+}
+
+.nl-palette-go {
+  color: var(--blue-2);
+}
+
+.nl-palette-empty strong {
+  font-family: var(--display);
+}
+
+.nl-palette-footer {
+  border-top: 1px solid var(--line);
+  color: var(--dim);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+}
+
+/* -------------------- 07. Primitives -------------------- */
+
+/* Bandeau d'incrustation caméra (On Screen Display) */
+.osd {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 36px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, rgba(31, 91, 255, 0.12), rgba(31, 91, 255, 0.02) 60%);
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-micro);
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.osd > span,
+.osd > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.osd b {
+  color: var(--white);
+  font-weight: 600;
+}
+
+.osd a {
+  color: var(--blue-3);
+  transition: color 160ms ease;
+}
+
+.osd a:hover,
+.osd a:focus-visible {
+  color: #fff;
+}
+
+.osd a i {
+  font-style: normal;
+}
+
+/* Variante pleine : bandeau bleu Blue Lock */
+.osd.osd--solid {
+  border-bottom: 0;
+  background: var(--blue);
+  color: #fff;
+}
+
+.rec {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--rec);
+  font-family: var(--mono);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+}
+
+.rec::before {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  content: "";
+  border-radius: 50%;
+  background: var(--rec);
+  box-shadow: 0 0 10px var(--rec), 0 0 2px #fff inset;
+  animation: nl-rec-blink 1.6s steps(1, end) infinite;
+}
+
+/* Point hors ligne (gris, fixe) */
+.rec.is-off,
+.nl-off {
+  color: var(--offline);
+}
+
+.rec.is-off::before {
+  background: var(--offline);
+  box-shadow: none;
+  animation: none;
+}
+
+@keyframes nl-rec-blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.jp {
+  color: var(--dim);
+  font-family: var(--jp);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+}
+
+.fringe {
+  text-shadow: var(--fringe);
+}
+
+/* Largeur de page standard */
+.nl-wrap {
+  width: var(--page);
+  margin-inline: auto;
+}
+
+/* Sortie pleine largeur (bord à bord) depuis un conteneur centré */
+.nl-bleed {
+  width: 100vw;
+  max-width: none;
+  margin-inline: calc(50% - 50vw);
+}
+
+/* Écran de surveillance : cadre, reflet, lignes de balayage.
+   Les crochets de visée sont optionnels (.nl-aim) : 2 cadres maximum par vue. */
+.mon {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-mon);
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(31, 91, 255, 0.1), transparent 60%),
+    var(--screen);
+  box-shadow:
+    0 0 0 3px var(--bezel),
+    0 0 0 4px rgba(77, 128, 255, 0.12),
+    0 22px 50px rgba(0, 0, 0, 0.5);
+}
+
+.mon::before {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  content: "";
+  background: var(--glare), var(--scanlines);
+  pointer-events: none;
+}
+
+.mon-body {
+  position: relative;
+  z-index: 2;
+  padding: var(--sp-5);
+}
+
+/* Crochets de visée (à réserver à l'écran principal de la vue) */
+.nl-aim::after,
+.brackets::after {
+  position: absolute;
+  z-index: 4;
+  inset: 10px;
+  content: "";
+  background:
+    linear-gradient(var(--blue-3), var(--blue-3)) left top / 16px 2px,
+    linear-gradient(var(--blue-3), var(--blue-3)) left top / 2px 16px,
+    linear-gradient(var(--blue-3), var(--blue-3)) right top / 16px 2px,
+    linear-gradient(var(--blue-3), var(--blue-3)) right top / 2px 16px,
+    linear-gradient(var(--blue-3), var(--blue-3)) left bottom / 16px 2px,
+    linear-gradient(var(--blue-3), var(--blue-3)) left bottom / 2px 16px,
+    linear-gradient(var(--blue-3), var(--blue-3)) right bottom / 16px 2px,
+    linear-gradient(var(--blue-3), var(--blue-3)) right bottom / 2px 16px;
+  background-repeat: no-repeat;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.mon.nl-aim:has(> .osd)::after {
+  top: 46px;
+}
+
+/* Bruit vidéo + lignes de balayage marquées, à poser sur une image */
+.nl-noise {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background: var(--noise), var(--scanlines-strong);
+  background-size: 180px 180px, auto;
+  mix-blend-mode: overlay;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* Bande bleue pleine, bord à bord (ruptures de rythme, appels à l'action) */
+.nl-band {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    var(--scanlines),
+    radial-gradient(60% 120% at 88% 10%, rgba(141, 176, 255, 0.4), transparent 60%),
+    linear-gradient(118deg, #2a66ff 0%, #1f5bff 34%, #0d33b5 72%, #0a2585 100%);
+  color: #fff;
+}
+
+.nl-band :focus-visible {
+  outline-color: #fff;
+}
+
+/* ==========================================================================
+   08. KIT DE COMPOSANTS « SALLE DE CONTRÔLE »
+   Toutes les classes commencent par nl- : global-theme.css les exclut de ses
+   filets !important (boutons, champs, tableaux, héros), elles se stylent donc
+   en CSS normal. Exemples HTML : ROLLOUT.md.
+   ========================================================================== */
+
+/* ---------- 08a. Héros ----------
+   .nl-hero + une variante :
+   --master  écran maître : titre géant + flux image à droite + réticule
+   --wall    mur de flux : grille de caméras en fond, titre sur un voile
+   --mire    mire de test : barres de couleur, titre en cartouche noir
+   --band    bande bleue pleine (titre blanc, mot en accent noir)
+   Le héros sort du conteneur (bord à bord) ; .nl-hero-inner recentre. */
+
+.nl-hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  max-width: none;
+  min-height: clamp(460px, 64vh, 720px);
+  margin-inline: calc(50% - 50vw);
+  overflow: hidden;
+  border-bottom: 1px solid var(--line-strong);
+  background:
+    radial-gradient(80% 90% at 80% 40%, rgba(31, 91, 255, 0.22), transparent 64%),
+    var(--screen);
+  color: #fff;
+}
+
+.nl-hero > .osd {
+  z-index: 6;
+  min-height: 38px;
+  padding-inline: var(--gutter);
+  background: rgba(1, 4, 12, 0.78);
+}
+
+.nl-hero-inner {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: var(--page);
+  margin-inline: auto;
+  padding-block: clamp(48px, 7vw, 110px) clamp(36px, 5vw, 76px);
+}
+
+.nl-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: var(--track-micro);
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+/* Pastille de canal « CH 02 » */
+.nl-ch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  background: var(--blue-soft);
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.nl-headline {
+  margin: 18px 0 0;
+  color: #fff;
+  font-family: var(--display);
+  font-size: var(--fs-d2);
+  font-weight: 700;
+  letter-spacing: var(--track-display);
+  line-height: 0.84;
+  text-shadow: var(--fringe);
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: normal;
+}
+
+.nl-headline em {
+  color: var(--blue-2);
+  font-style: normal;
+  -webkit-text-fill-color: currentColor;
+  -webkit-text-stroke: 0;
+}
+
+.nl-headline--xl {
+  font-size: var(--fs-d1);
+  line-height: 0.8;
+}
+
+.nl-headline--italic {
+  font-style: italic;
+}
+
+.nl-lead {
+  max-width: 560px;
+  margin: 24px 0 0;
+  color: #c4cfec;
+  font-size: var(--fs-lead);
+  line-height: 1.65;
+}
+
+.nl-lead b,
+.nl-lead strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.nl-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+/* Timecode / relevé technique en bas d'écran */
+.nl-timecode {
+  color: var(--dim);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Réticule de visée (cible verrouillée). Placez-le en absolu. */
+.nl-reticle {
+  position: absolute;
+  z-index: 3;
+  width: clamp(150px, 16vw, 250px);
+  aspect-ratio: 1;
+  pointer-events: none;
+}
+
+.nl-reticle::before,
+.nl-reticle::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  border-radius: 50%;
+}
+
+.nl-reticle::before {
+  border: 1px solid rgba(141, 176, 255, 0.55);
+  box-shadow:
+    0 0 0 18px rgba(31, 91, 255, 0.05),
+    0 0 0 19px rgba(141, 176, 255, 0.18),
+    inset 0 0 60px rgba(31, 91, 255, 0.25);
+  background:
+    linear-gradient(var(--blue-3), var(--blue-3)) 50% 0 / 1px 22% no-repeat,
+    linear-gradient(var(--blue-3), var(--blue-3)) 50% 100% / 1px 22% no-repeat,
+    linear-gradient(var(--blue-3), var(--blue-3)) 0 50% / 22% 1px no-repeat,
+    linear-gradient(var(--blue-3), var(--blue-3)) 100% 50% / 22% 1px no-repeat,
+    repeating-conic-gradient(from 0deg, rgba(141, 176, 255, 0.55) 0 0.6deg, transparent 0.6deg 10deg);
+  -webkit-mask: radial-gradient(circle, transparent 0 46%, #000 46.5%);
+  mask: radial-gradient(circle, transparent 0 46%, #000 46.5%);
+}
+
+.nl-reticle::after {
+  inset: 34%;
+  border: 1.5px dashed rgba(141, 176, 255, 0.6);
+  animation: nl-reticle-spin 18s linear infinite;
+}
+
+.nl-reticle > i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--rec);
+  box-shadow: 0 0 0 4px rgba(255, 43, 64, 0.2), 0 0 18px var(--rec);
+  transform: translate(-50%, -50%);
+}
+
+.nl-reticle > span {
+  position: absolute;
+  top: calc(100% + 30px);
+  left: 50%;
+  padding: 5px 9px;
+  border: 1px solid var(--line-strong);
+  background: rgba(2, 6, 17, 0.8);
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+@keyframes nl-reticle-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Variante 1 : écran maître (titre + flux image + réticule) */
+.nl-hero--master .nl-hero-feed {
+  position: absolute;
+  z-index: 1;
+  inset: 0 0 0 auto;
+  width: min(58%, 900px);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 34%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 34%);
+}
+
+.nl-hero--master .nl-hero-feed img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 26%;
+  filter: grayscale(0.3) contrast(1.1) brightness(0.72) saturate(0.9);
+}
+
+.nl-hero--master .nl-hero-feed::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background:
+    var(--noise),
+    var(--scanlines-strong),
+    linear-gradient(180deg, rgba(31, 91, 255, 0.28), rgba(11, 42, 143, 0.36));
+  background-size: 180px 180px, auto, auto;
+  mix-blend-mode: hard-light;
+  opacity: 0.8;
+}
+
+.nl-hero--master .nl-reticle {
+  top: 50%;
+  right: clamp(40px, 16%, 280px);
+  transform: translateY(-50%);
+}
+
+/* Variante 2 : mur de flux en fond (grille de .nl-feed) */
+.nl-hero--wall {
+  background: var(--bezel);
+}
+
+.nl-hero-wall {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--wall-cols, 6), minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  gap: var(--seam);
+}
+
+/* Sous le bandeau OSD du héros, le mur commence après lui.
+   --hero-wall-top : 0 quand une page remet le mur dans le flux. */
+.nl-hero > .osd ~ .nl-hero-wall {
+  top: var(--hero-wall-top, 38px);
+}
+
+.nl-hero-wall > .nl-feed {
+  aspect-ratio: auto;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.nl-hero--wall::after {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(90deg, rgba(2, 6, 17, 0.96) 0%, rgba(2, 6, 17, 0.82) 34%, rgba(2, 6, 17, 0.2) 68%, rgba(2, 6, 17, 0.05) 100%),
+    linear-gradient(0deg, rgba(2, 6, 17, 0.9) 0%, transparent 46%);
+  pointer-events: none;
+}
+
+/* Variante 3 : mire de test */
+.nl-hero--mire {
+  background:
+    var(--mire) top / 100% 74% no-repeat,
+    var(--mire-low) bottom / 100% 26% no-repeat;
+}
+
+.nl-hero--mire::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  content: "";
+  background:
+    var(--noise),
+    var(--scanlines-strong),
+    linear-gradient(90deg, rgba(2, 6, 17, 0.9) 0%, rgba(2, 6, 17, 0.62) 46%, rgba(2, 6, 17, 0.4) 100%);
+  background-size: 180px 180px, auto, auto;
+}
+
+.nl-hero--mire .nl-kicker {
+  align-self: flex-start;
+  padding: 6px 10px;
+  background: var(--ink);
+  color: var(--blue-3);
+}
+
+.nl-hero--mire .nl-headline {
+  display: inline;
+  padding: 0 0.12em;
+  background: var(--ink);
+  line-height: 1.02;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Variante 4 : bande bleue pleine */
+.nl-hero--band {
+  border-bottom: 0;
+  background:
+    var(--scanlines),
+    radial-gradient(60% 120% at 88% 10%, rgba(141, 176, 255, 0.45), transparent 60%),
+    linear-gradient(118deg, #2a66ff 0%, #1f5bff 34%, #0d33b5 72%, #0a2585 100%);
+}
+
+.nl-hero--band > .osd {
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+  background: rgba(2, 6, 17, 0.35);
+  color: #dfe8ff;
+}
+
+.nl-hero--band .nl-headline {
+  text-shadow: 0 10px 40px rgba(2, 10, 50, 0.35);
+}
+
+.nl-hero--band .nl-headline em {
+  color: var(--ink);
+}
+
+.nl-hero--band .nl-kicker,
+.nl-hero--band .nl-lead {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.nl-hero--band .nl-ch {
+  border-color: transparent;
+  background: var(--ink);
+  color: #fff;
+}
+
+/* ---------- 08b. En-tête de section ----------
+   Bloc « CH 02 » plein + titre Chakra + surtitre + note.
+   .nl-section-head--band : toute la ligne devient une bande bleue.
+   À poser sur un <div>, jamais sur <header> : global-theme.css rend tout
+   <header> autre que .site-header collant, opaque et sans marge (!important). */
+
+.nl-section-head {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1.4fr) minmax(0, 0.8fr);
+  align-items: end;
+  gap: var(--sp-5) clamp(20px, 3vw, 48px);
+  margin: 0 0 var(--sp-6);
+  padding-bottom: var(--sp-5);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.nl-section-head::after {
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 180px;
+  height: 3px;
+  content: "";
+  background: repeating-linear-gradient(90deg, var(--blue) 0 14px, transparent 14px 18px);
+}
+
+.nl-chno {
+  display: grid;
+  align-content: space-between;
+  min-width: clamp(78px, 8vw, 124px);
+  aspect-ratio: 1;
+  padding: 10px 12px 12px;
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 0 0 40px rgba(31, 91, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.nl-chno small {
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+}
+
+.nl-chno b {
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 4.6vw, 4.4rem);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.8;
+}
+
+.nl-section-title {
+  margin: 12px 0 0;
+  color: #fff;
+  font-family: var(--display);
+  font-size: var(--fs-d3);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 0.9;
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: normal;
+}
+
+.nl-section-title em {
+  color: var(--blue-2);
+  font-style: normal;
+}
+
+.nl-section-note {
+  max-width: 440px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.nl-section-head--band {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  padding: clamp(28px, 4vw, 52px) max(var(--gutter), calc((100vw - 1440px) / 2));
+  border-bottom: 0;
+  background:
+    var(--scanlines),
+    linear-gradient(118deg, #2a66ff 0%, #1f5bff 40%, #0d33b5 100%);
+}
+
+.nl-section-head--band::after {
+  display: none;
+}
+
+.nl-section-head--band .nl-chno {
+  background: var(--ink);
+  box-shadow: none;
+}
+
+.nl-section-head--band .nl-kicker,
+.nl-section-head--band .nl-section-note {
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.nl-section-head--band .nl-section-title em {
+  color: var(--ink);
+}
+
+/* Dans une .nl-band déjà bleue : mêmes couleurs que --band, sans bord à bord */
+.nl-band .nl-section-head {
+  border-bottom-color: rgba(255, 255, 255, 0.3);
+}
+
+.nl-band .nl-section-head::after {
+  background: repeating-linear-gradient(90deg, #fff 0 14px, transparent 14px 18px);
+}
+
+.nl-band .nl-section-head .nl-chno {
+  background: var(--ink);
+  box-shadow: none;
+}
+
+.nl-band .nl-section-head .nl-kicker,
+.nl-band .nl-section-head .nl-section-note {
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.nl-band .nl-section-head .nl-section-title em {
+  color: var(--ink);
+}
+
+/* ---------- 08c. Flux caméra (image + OSD) ----------
+   <a class="nl-feed"> img.nl-feed-img + .nl-feed-osd + .nl-feed-tc
+   + .nl-feed-caption (bandeau « lower third »). États : .is-offline
+   (image éteinte, + .nl-feed-mire), .is-locked (cadre de verrouillage
+   permanent ; sinon il apparaît au survol d'un a.nl-feed ou button.nl-feed). */
+
+.nl-feed {
+  position: relative;
+  isolation: isolate;
+  display: block;
+  aspect-ratio: 16 / 10;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--bezel);
+  color: #fff;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.nl-feed-img,
+.nl-feed > img {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--feed-pos, 50% 30%);
+  filter: grayscale(0.35) contrast(1.12) brightness(0.74) saturate(0.85);
+  transform: scale(var(--feed-zoom, 1.04));
+  transition: filter 300ms ease, transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Teinte moniteur, vignettage, lignes de balayage et grain */
+.nl-feed::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(180deg, rgba(2, 6, 17, 0.66) 0%, transparent 26%, transparent 54%, rgba(2, 6, 17, 0.9) 100%),
+    radial-gradient(120% 95% at 50% 45%, transparent 50%, rgba(2, 6, 17, 0.6)),
+    linear-gradient(180deg, rgba(31, 91, 255, 0.24), rgba(11, 42, 143, 0.3));
+  pointer-events: none;
+}
+
+.nl-feed::after {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  content: "";
+  background: var(--noise), var(--scanlines-strong);
+  background-size: 180px 180px, auto;
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.nl-feed-osd {
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  color: #e3ebff;
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-micro);
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.nl-feed-osd b {
+  color: #fff;
+  font-weight: 600;
+}
+
+.nl-feed-tc {
+  position: absolute;
+  z-index: 4;
+  top: 30px;
+  right: 12px;
+  color: rgba(227, 235, 255, 0.72);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+}
+
+/* Bandeau titre façon télé : surtitre noir + titre sur bleu plein */
+.nl-feed-caption {
+  position: absolute;
+  z-index: 4;
+  right: auto;
+  bottom: 12px;
+  left: 0;
+  display: grid;
+  justify-items: start;
+  max-width: calc(100% - 12px);
+}
+
+.nl-feed-caption small {
+  padding: 5px 10px;
+  background: var(--ink);
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-micro);
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.nl-feed-caption b {
+  max-width: 100%;
+  padding: 7px 14px 6px 10px;
+  overflow: hidden;
+  background: var(--blue);
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(1.05rem, 1.5vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.4);
+}
+
+.nl-feed-caption em {
+  padding: 5px 10px;
+  background: rgba(2, 6, 17, 0.82);
+  color: #c9d4ef;
+  font-size: 13px;
+  font-style: normal;
+  line-height: 1.3;
+}
+
+/* Grand chiffre incrusté (ex. effectif, compteur) */
+.nl-feed-figure {
+  position: absolute;
+  z-index: 4;
+  right: 14px;
+  bottom: 10px;
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(2rem, 3.4vw, 3.2rem);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.85;
+  text-shadow: var(--fringe), 0 0 24px rgba(31, 91, 255, 0.6);
+}
+
+/* Un flux cliquable peut être un <a> (lien) ou un <button> (sélection) */
+button.nl-feed {
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+:is(a, button).nl-feed:hover,
+:is(a, button).nl-feed:focus-visible {
+  border-color: var(--blue-2);
+  box-shadow: 0 0 0 1px var(--blue-2), 0 0 40px rgba(31, 91, 255, 0.35);
+}
+
+:is(a, button).nl-feed:hover .nl-feed-img,
+:is(a, button).nl-feed:focus-visible .nl-feed-img,
+:is(a, button).nl-feed:hover > img,
+:is(a, button).nl-feed:focus-visible > img {
+  filter: grayscale(0) contrast(1.08) brightness(0.92) saturate(1);
+  transform: scale(calc(var(--feed-zoom, 1.04) + 0.04));
+}
+
+:is(a, button).nl-feed:focus-visible {
+  outline: 2px solid var(--blue-3);
+  outline-offset: 3px;
+}
+
+/* Verrouillage : cadre de visée au centre (au survol ou permanent) */
+.nl-feed.is-locked .nl-feed-lock,
+:is(a, button).nl-feed:hover .nl-feed-lock,
+:is(a, button).nl-feed:focus-visible .nl-feed-lock {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.nl-feed-lock {
+  position: absolute;
+  z-index: 3;
+  top: 46%;
+  left: 50%;
+  width: 34%;
+  aspect-ratio: 1;
+  background:
+    linear-gradient(#fff, #fff) left top / 14px 2px,
+    linear-gradient(#fff, #fff) left top / 2px 14px,
+    linear-gradient(#fff, #fff) right top / 14px 2px,
+    linear-gradient(#fff, #fff) right top / 2px 14px,
+    linear-gradient(#fff, #fff) left bottom / 14px 2px,
+    linear-gradient(#fff, #fff) left bottom / 2px 14px,
+    linear-gradient(#fff, #fff) right bottom / 14px 2px,
+    linear-gradient(#fff, #fff) right bottom / 2px 14px;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(1.25);
+  transition: opacity 200ms ease, transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+/* Hors ligne : image éteinte + mire */
+.nl-feed.is-offline .nl-feed-img,
+.nl-feed.is-offline > img {
+  filter: grayscale(1) contrast(1.15) brightness(0.45);
+}
+
+.nl-feed.is-offline .nl-feed-caption b {
+  background: var(--surface-3);
+  color: #dbe3f8;
+}
+
+.nl-feed-mire {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background:
+    var(--mire) top / 100% 70% no-repeat,
+    var(--mire-low) bottom / 100% 30% no-repeat;
+  opacity: 0.55;
+}
+
+.nl-feed-mire::after {
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  padding: 6px 12px;
+  content: attr(data-label);
+  border: 1px solid var(--line-strong);
+  background: rgba(2, 6, 17, 0.92);
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(0.95rem, 1.3vw, 1.2rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+/* Mur d'écrans jointifs (grille de .nl-feed) */
+.nl-wall {
+  display: grid;
+  grid-template-columns: repeat(var(--wall-cols, 4), minmax(0, 1fr));
+  gap: var(--seam);
+  padding: var(--seam);
+  border: 1px solid var(--line-strong);
+  background: var(--bezel);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+}
+
+.nl-wall > .nl-feed {
+  border: 0;
+  border-radius: 0;
+}
+
+/* ---------- 08d. Rang géant + état NON CLASSÉ ---------- */
+
+.nl-rank {
+  display: inline-flex;
+  align-items: flex-start;
+  color: #fff;
+  font-family: var(--display);
+  font-size: var(--fs-rank);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 0.78;
+  text-shadow: var(--fringe), 0 0 34px rgba(31, 91, 255, 0.55);
+  white-space: nowrap;
+}
+
+.nl-rank small {
+  margin: 0.04em 0.05em 0 0;
+  color: var(--blue-2);
+  font-size: max(11px, 0.42em);
+  font-style: normal;
+  letter-spacing: 0;
+  text-shadow: none;
+}
+
+.nl-rank--md {
+  font-size: clamp(2.4rem, 4vw, 3.6rem);
+}
+
+.nl-rank--sm {
+  font-size: 1.8rem;
+}
+
+/* Podium : #002 et #003 en bleu signal */
+.nl-rank.is-podium {
+  color: var(--blue-3);
+}
+
+/* NON CLASSÉ : un cachet hachuré, jamais un faux numéro */
+.nl-nc {
+  display: inline-grid;
+  justify-items: start;
+  gap: 4px;
+  padding: 8px 12px 9px;
+  border: 1px dashed rgba(141, 176, 255, 0.5);
+  background:
+    repeating-linear-gradient(135deg, rgba(141, 176, 255, 0.1) 0 6px, transparent 6px 12px),
+    rgba(2, 6, 17, 0.78);
+  color: #fff;
+  line-height: 1;
+}
+
+.nl-nc b {
+  font-family: var(--display);
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.nl-nc small {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ---------- 08e. Tableau « régie » ----------
+   table.nl-table dans .nl-table-wrap ; ligne de titre bleue, barre de
+   couleur de club (style="--club:#ff323c" sur tr), colonne en exergue .is-hl */
+
+.nl-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-mon);
+  background: var(--screen);
+  box-shadow: 0 0 0 3px var(--bezel);
+}
+
+.nl-table {
+  width: 100%;
+  min-width: 560px;
+  border: 0;
+  border-collapse: collapse;
+  color: #d6e0fa;
+  font-size: var(--fs-data);
+  font-variant-numeric: tabular-nums;
+}
+
+.nl-table thead th {
+  height: 42px;
+  padding: 0 14px;
+  border: 0;
+  background: var(--blue);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.nl-table thead th.is-hl {
+  background: #fff;
+  color: var(--blue-deep);
+}
+
+.nl-table td {
+  height: 52px;
+  padding: 0 14px;
+  border: 0;
+  border-bottom: 1px solid var(--line-soft);
+  background: transparent;
+  color: #d6e0fa;
+}
+
+.nl-table tbody tr > :first-child {
+  box-shadow: inset 4px 0 0 var(--club, transparent);
+}
+
+.nl-table tbody tr:hover td {
+  background: rgba(31, 91, 255, 0.08);
+}
+
+.nl-table td.is-hl {
+  background: rgba(31, 91, 255, 0.12);
+  color: #fff;
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.nl-table .nl-num {
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  font-weight: 600;
+}
+
+.nl-table .nl-strong {
+  color: #fff;
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.nl-table tbody tr:first-child .nl-num {
+  color: #fff;
+}
+
+/* ---------- 08f. Chiffre clé ---------- */
+
+.nl-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--seam);
+}
+
+.nl-stat {
+  position: relative;
+  display: grid;
+  align-content: space-between;
+  gap: 14px;
+  min-height: 130px;
+  padding: 14px 16px 16px;
+  border-top: 3px solid var(--blue);
+  background:
+    var(--scanlines),
+    linear-gradient(180deg, rgba(31, 91, 255, 0.12), transparent 70%),
+    var(--screen);
+}
+
+.nl-stat-label {
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.nl-stat-value {
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(2.6rem, 4.6vw, 4.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.82;
+  text-shadow: var(--fringe);
+  white-space: nowrap;
+}
+
+.nl-stat-value small {
+  margin-left: 4px;
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-shadow: none;
+}
+
+.nl-stat-note {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.nl-stat--solid {
+  border-top-color: #fff;
+  background: var(--scanlines), var(--blue);
+}
+
+.nl-stat--solid .nl-stat-label,
+.nl-stat--solid .nl-stat-note,
+.nl-stat--solid .nl-stat-value small {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ---------- 08g. Vumètre segmenté ----------
+   <div class="nl-vu" style="--v:84" role="meter" aria-valuenow="84"> */
+
+.nl-vu {
+  position: relative;
+  height: 12px;
+  background: repeating-linear-gradient(90deg, rgba(141, 176, 255, 0.14) 0 9px, transparent 9px 12px);
+}
+
+.nl-vu::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--v, 0) * 1%);
+  content: "";
+  background: linear-gradient(90deg, var(--blue-deep), var(--blue) 55%, var(--blue-3));
+  -webkit-mask-image: repeating-linear-gradient(90deg, #000 0 9px, transparent 9px 12px);
+  mask-image: repeating-linear-gradient(90deg, #000 0 9px, transparent 9px 12px);
+  filter: drop-shadow(0 0 5px rgba(61, 123, 255, 0.6));
+  transition: width 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nl-vu--max::before {
+  background: linear-gradient(90deg, var(--blue), #fff);
+}
+
+.nl-vu-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 8px 12px;
+  padding: 10px 0 12px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.nl-vu-row > span {
+  color: var(--paper);
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.nl-vu-row > b {
+  color: #fff;
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.nl-vu-row > .nl-vu {
+  grid-column: 1 / -1;
+}
+
+/* ---------- 08h. Canaux (onglets) ----------
+   <div class="nl-channels" role="tablist"> > button.nl-channel[role=tab]
+   > span.nl-channel-num « CH 01 » + libellé. Actif : .is-active, .active
+   ou [aria-selected="true"]. */
+
+.nl-channels {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: var(--seam);
+  padding: var(--seam);
+  border: 1px solid var(--line-strong);
+  background: var(--bezel);
+}
+
+.nl-channel {
+  position: relative;
+  display: flex;
+  min-height: 56px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 0;
+  background: var(--scanlines), var(--surface);
+  color: var(--muted);
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.nl-channel-num {
+  flex: none;
+  padding: 4px 6px;
+  white-space: nowrap;
+  border: 1px solid var(--line-strong);
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.nl-channel:hover {
+  background: var(--scanlines), var(--surface-3);
+  color: #fff;
+}
+
+.nl-channel:is(.is-active, .active, [aria-selected="true"]) {
+  background: var(--scanlines), linear-gradient(180deg, var(--blue-2), var(--blue));
+  color: #fff;
+}
+
+.nl-channel:is(.is-active, .active, [aria-selected="true"]) .nl-channel-num {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #fff;
+}
+
+.nl-channel:is(.is-active, .active, [aria-selected="true"])::after {
+  margin-left: auto;
+  padding-left: 13px;
+  flex: none;
+  content: "EN DIRECT";
+  background: radial-gradient(circle at 3.5px 50%, var(--rec) 0 3.5px, transparent 4px);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+  white-space: nowrap;
+}
+
+/* Canaux qui ne sont pas un direct (bascule de méthode, de mode…) */
+.nl-channels--quiet .nl-channel::after {
+  display: none;
+}
+
+/* ---------- 08i. Console de filtres + champs ---------- */
+
+.nl-console {
+  position: relative;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-mon);
+  background: linear-gradient(180deg, rgba(10, 23, 52, 0.85), rgba(4, 12, 32, 0.94));
+  box-shadow: 0 0 0 3px var(--bezel), 0 22px 50px rgba(0, 0, 0, 0.45);
+}
+
+.nl-console-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 48px;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, rgba(31, 91, 255, 0.18), transparent 60%);
+}
+
+.nl-console-head h2,
+.nl-console-head h3 {
+  margin: 0;
+  color: #fff;
+  font-family: var(--display);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.nl-console-head p {
+  margin: 0 0 0 auto;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.nl-console-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  align-items: end;
+  gap: 14px;
+  padding: 16px 18px 18px;
+}
+
+.nl-field {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.nl-field-label {
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.nl-input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-ctl);
+  outline: 0;
+  background: rgba(2, 7, 19, 0.88);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.nl-input::placeholder {
+  color: var(--dim);
+}
+
+.nl-input:focus {
+  border-color: var(--blue-2);
+  box-shadow: 0 0 0 3px rgba(31, 91, 255, 0.25);
+}
+
+select.nl-input {
+  padding-right: 36px;
+  appearance: none;
+  background:
+    linear-gradient(45deg, transparent 50%, var(--blue-3) 50%) calc(100% - 18px) 50% / 6px 6px no-repeat,
+    linear-gradient(-45deg, transparent 50%, var(--blue-3) 50%) calc(100% - 12px) 50% / 6px 6px no-repeat,
+    rgba(2, 7, 19, 0.88);
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+textarea.nl-input {
+  min-height: 120px;
+  padding: 12px 14px;
+  line-height: 1.5;
+}
+
+/* Touches de régie (filtre segmenté) */
+.nl-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-ctl);
+  background: rgba(1, 4, 12, 0.7);
+}
+
+.nl-key {
+  position: relative;
+  min-width: 46px;
+  min-height: 40px;
+  flex: 1 0 auto;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(16, 34, 71, 0.9), rgba(6, 16, 40, 0.9));
+  color: #b8c5e6;
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.nl-key:hover {
+  border-color: var(--line-strong);
+  color: #fff;
+}
+
+.nl-key:is(.is-active, .active, [aria-pressed="true"]) {
+  border-color: var(--blue-2);
+  background: linear-gradient(180deg, var(--blue-2), var(--blue));
+  color: #fff;
+  box-shadow: 0 0 18px rgba(31, 91, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* ---------- 08j. Étiquettes ----------
+   .nl-tag + --rec (REC / DIRECT / alerte, seul usage du rouge), --ligue,
+   --ncl, --amical, --pos (poste), --club (style="--club:#…"), --off */
+
+.nl-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  background: rgba(1, 4, 12, 0.6);
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.nl-tag--rec {
+  border-color: rgba(255, 43, 64, 0.5);
+  background: var(--rec-soft);
+  color: #ffe3e6;
+}
+
+.nl-tag--rec::before {
+  width: 6px;
+  height: 6px;
+  content: "";
+  border-radius: 50%;
+  background: var(--rec);
+  box-shadow: 0 0 8px var(--rec);
+  animation: nl-rec-blink 1.6s steps(1, end) infinite;
+}
+
+.nl-tag--ligue {
+  border-color: var(--blue-2);
+  background: var(--blue);
+  color: #fff;
+}
+
+.nl-tag--ncl {
+  border-color: #fff;
+  background: #fff;
+  color: var(--blue-deep);
+}
+
+.nl-tag--amical {
+  border-style: dashed;
+  color: var(--muted);
+}
+
+.nl-tag--pos {
+  min-width: 34px;
+  justify-content: center;
+  border-color: var(--line-strong);
+  color: #fff;
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  box-shadow: inset 0 -2px 0 var(--club, var(--blue-2));
+}
+
+.nl-tag--club {
+  border-color: var(--line);
+  color: #fff;
+  box-shadow: inset 3px 0 0 var(--club, var(--blue-2));
+}
+
+.nl-tag--off {
+  border-color: var(--line);
+  color: var(--offline);
+}
+
+/* ---------- 08k. PAS DE SIGNAL (état vide) ----------
+   <div class="nl-nosignal"><span class="nl-nosignal-code">SIGNAL 00</span>
+   <strong>Aucun résultat</strong><p>…</p></div> */
+
+.nl-nosignal {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  min-height: 260px;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  padding: 28px 20px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-mon);
+  background:
+    var(--mire) top / 100% 72% no-repeat,
+    var(--mire-low) bottom / 100% 28% no-repeat;
+  text-align: center;
+}
+
+.nl-nosignal::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: "";
+  background: var(--noise), var(--scanlines-strong), rgba(2, 6, 17, 0.72);
+  background-size: 180px 180px, auto, auto;
+}
+
+.nl-nosignal-code {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 9px;
+  border: 1px solid rgba(255, 43, 64, 0.5);
+  background: rgba(2, 6, 17, 0.8);
+  color: #ffd6da;
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+}
+
+.nl-nosignal-code::before {
+  width: 6px;
+  height: 6px;
+  content: "";
+  border-radius: 50%;
+  background: var(--rec);
+}
+
+.nl-nosignal strong {
+  padding: 10px 18px;
+  border: 1px solid var(--line-strong);
+  background: rgba(2, 6, 17, 0.92);
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(1.3rem, 2.4vw, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.nl-nosignal p {
+  max-width: 420px;
+  margin: 0;
+  padding: 6px 10px;
+  background: rgba(2, 6, 17, 0.7);
+  color: #d0daf4;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+/* Variante compacte : mires empilées dans un panneau étroit */
+.nl-nosignal--compact {
+  min-height: 180px;
+  gap: 10px;
+  padding: 20px 16px;
+}
+
+.nl-nosignal--compact strong {
+  padding: 8px 14px;
+  font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+}
+
+/* ---------- 08l. Boutons ----------
+   .nl-btn (bleu plein, coin coupé) · .nl-btn-ghost · .nl-btn-light (sur
+   bande bleue) · .nl-btn-sm. Fonctionne sur <a> et <button>. */
+
+body.nebula-page .nl-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 52px;
+  padding: 0 26px;
+  border: 1px solid var(--blue-2);
+  border-radius: 0;
+  background: var(--blue);
+  color: #fff;
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 0 34px rgba(31, 91, 255, 0.35);
+  cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+body.nebula-page .nl-btn:hover,
+body.nebula-page .nl-btn:focus-visible {
+  background: var(--blue-2);
+  transform: translateY(-1px);
+}
+
+body.nebula-page .nl-btn span {
+  font-family: var(--mono);
+  font-weight: 500;
+}
+
+body.nebula-page .nl-btn-ghost {
+  border-color: var(--line-strong);
+  border-radius: 2px;
+  background: rgba(6, 16, 40, 0.6);
+  color: var(--paper);
+  box-shadow: none;
+  clip-path: none;
+}
+
+body.nebula-page .nl-btn-ghost:hover,
+body.nebula-page .nl-btn-ghost:focus-visible {
+  border-color: var(--blue-2);
+  background: var(--blue-soft);
+}
+
+body.nebula-page .nl-btn-light {
+  border-color: #fff;
+  background: #fff;
+  color: var(--blue-deep);
+  box-shadow: 0 18px 40px rgba(0, 8, 40, 0.35);
+}
+
+body.nebula-page .nl-btn-light:hover,
+body.nebula-page .nl-btn-light:focus-visible {
+  background: #e9efff;
+}
+
+body.nebula-page .nl-btn-sm {
+  --cut: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  font-size: 13px;
+}
+
+/* ---------- 08m. Modale ----------
+   <div class="nl-modal" hidden> > .nl-modal-backdrop + section.nl-modal-panel
+   [role=dialog][aria-modal=true] > .osd (titre + button.nl-modal-close)
+   + .nl-modal-body */
+
+.nl-modal {
+  position: fixed;
+  z-index: 4000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+.nl-modal[hidden] {
+  display: none;
+}
+
+.nl-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--scanlines), rgba(1, 4, 12, 0.86);
+  backdrop-filter: blur(8px);
+}
+
+.nl-modal-panel {
+  position: relative;
+  width: min(760px, 100%);
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  border: 1px solid var(--line-strong);
+  border-top: 2px solid var(--blue);
+  border-radius: var(--r-mon);
+  background: var(--glare), linear-gradient(180deg, #06122d, #030a1c);
+  box-shadow: 0 0 0 3px var(--bezel), 0 40px 90px rgba(0, 0, 0, 0.7), 0 0 80px rgba(31, 91, 255, 0.18);
+}
+
+.nl-modal-panel > .osd {
+  position: sticky;
+  top: 0;
+  background: #06122d;
+}
+
+.nl-modal-body {
+  padding: var(--sp-5);
+}
+
+.nl-modal-close {
+  display: grid;
+  width: 44px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  background: var(--blue-soft);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.nl-modal-close:hover,
+.nl-modal-close:focus-visible {
+  border-color: var(--blue-2);
+  background: var(--blue);
+  color: #fff;
+}
+
+/* ---------- Kit : petits écrans ----------
+   Utilitaires OSD : .osd-hide-md (<= 1180 px, bandeaux de héros à 5
+   éléments sur tablette), .osd-hide-sm (<= 680 px), .osd-hide-xs (<= 420 px). */
+
+@media (max-width: 1180px) {
+  :is(.osd, .nl-feed-osd) .osd-hide-md {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  :is(.osd, .nl-feed-osd) .osd-hide-xs {
+    display: none;
+  }
+
+  /* Très petits écrans (360 px) : un libellé OSD trop long est coupé net
+     plutôt que de chevaucher le témoin voisin. */
+  .osd > span:not(.rec) {
+    overflow: hidden;
+  }
+
+  .osd > :is(.rec, a) {
+    flex: none;
+  }
+
+  /* Titre de section : le mot le plus long (« SURVEILLANCE ») tient à côté
+     du bloc CH */
+  .nl-section-title {
+    font-size: clamp(1.8rem, 8.6vw, 2.1rem);
+  }
+}
+
+@media (max-width: 860px) {
+  /* --hero-feed-opacity : une image chargée peut être plus voilée derrière
+     le texte sur téléphone */
+  .nl-hero--master .nl-hero-feed {
+    width: 100%;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 60%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 60%, transparent 100%);
+    opacity: var(--hero-feed-opacity, 0.55);
+  }
+
+  .nl-hero-wall {
+    --wall-cols: 3;
+  }
+
+  .nl-section-head {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .nl-section-note {
+    grid-column: 1 / -1;
+  }
+
+  .nl-wall {
+    --wall-cols: 2;
+  }
+}
+
+@media (max-width: 680px) {
+  .nl-hero {
+    min-height: 0;
+  }
+
+  .nl-hero > .osd .osd-hide-sm,
+  :is(.osd, .nl-feed-osd) .osd-hide-sm {
+    display: none;
+  }
+
+  .nl-hero-actions .nl-btn {
+    flex: 1 1 100%;
+  }
+
+  .nl-section-head {
+    gap: 16px;
+  }
+
+  .nl-chno {
+    min-width: 68px;
+    padding: 8px 9px 10px;
+  }
+
+  .nl-channels {
+    grid-auto-flow: row;
+  }
+
+  .nl-channel {
+    min-height: 48px;
+  }
+
+  .nl-feed-caption b {
+    font-size: 15px;
+  }
+
+  .nl-console-head p {
+    display: none;
+  }
+
+  /* Un mur reste lisible : 2 colonnes (ajustable avec --wall-cols-sm),
+     même si --wall-cols a été posé en ligne */
+  .nl-wall {
+    grid-template-columns: repeat(var(--wall-cols-sm, 2), minmax(0, 1fr));
+  }
+
+  .nl-wall > .nl-feed {
+    aspect-ratio: var(--feed-ratio-sm, 4 / 5);
+  }
+
+  .nl-wall .nl-feed-tc {
+    display: none;
+  }
+
+  /* Réticule de l'écran maître : plus petit, en haut à droite, sans libellé */
+  .nl-hero--master .nl-reticle {
+    top: 64px;
+    right: 16px;
+    width: 112px;
+    transform: none;
+  }
+
+  .nl-hero--master .nl-reticle > span {
+    display: none;
+  }
+}
+
+/* -------------------- 09. Pied de page -------------------- */
+
+.nl-footer {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 28px 60px;
+  width: var(--page);
+  margin: clamp(60px, 8vw, 110px) auto 0;
+  padding: 38px 0 0;
+  border-top: 1px solid var(--line-strong);
+  color: var(--muted);
+}
+
+.nl-footer::before {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 180px;
+  height: 3px;
+  content: "";
+  background: repeating-linear-gradient(90deg, var(--blue) 0 14px, transparent 14px 18px);
+}
+
+.nl-footer .footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  color: #fff;
+}
+
+.nl-footer .footer-brand strong {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.nl-footer-main p {
+  max-width: 460px;
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.nl-footer-links {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2px 18px;
+  align-content: start;
+}
+
+.nl-footer-links p {
+  grid-column: 1 / -1;
+  margin: 0 0 10px;
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.nl-footer-links a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 36px;
+  border-bottom: 1px solid var(--line-soft);
+  color: #c9d4ef;
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.nl-footer-links a::before {
+  color: var(--dim);
+  content: "▸";
+  font-size: var(--fs-micro);
+}
+
+.nl-footer-links a:hover,
+.nl-footer-links a:focus-visible {
+  border-color: var(--blue-2);
+  color: #fff;
+}
+
+.nl-footer-osd {
+  display: flex;
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 26px;
+  margin: 8px calc(50% - 50vw) 0;
+  padding: 16px calc(50vw - 50%) 20px;
+  border-top: 1px solid var(--line-soft);
+  background: rgba(1, 4, 12, 0.7);
+  color: var(--dim);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+.nl-footer-osd .rec {
+  font-size: var(--fs-micro);
+}
+
+.nl-footer-osd a {
+  margin-left: auto;
+  color: var(--blue-3);
+}
+
+.nl-footer-osd a:hover,
+.nl-footer-osd a:focus-visible {
+  color: #fff;
+}
+
+@media (max-width: 760px) {
+  .nl-footer {
+    grid-template-columns: 1fr;
+    width: calc(100% - 32px);
+  }
+
+  .nl-footer-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nl-footer-links a {
+    min-height: 44px;
+  }
+
+  .nl-footer-osd a {
+    margin-left: 0;
+  }
+}
+
+/* ==========================================================================
+   10. FILETS DE COMPATIBILITÉ DES PAGES HISTORIQUES
+   Donnent l'allure « salle de contrôle » aux pages pas encore redessinées.
+   Une page redessinée ajoute la classe nl-migrated sur <body> : ces filets
+   se coupent et sa propre CSS (ou le kit nl-*) reprend la main.
+   ========================================================================== */
+
+@layer nl-force {
+  /* Héros historiques ([class$="-hero"]) : un écran avec bandeau OSD en
+     haut et une mire de test en fond, au lieu du dégradé + cercle. Le texte
+     du bandeau se règle par page avec --nl-hero-osd (chaîne CSS). */
+  body.nebula-page:not(.nl-migrated) [class$="-hero"]:not(.hero):not(.nl-hero) {
+    position: relative !important;
+    isolation: isolate !important;
+    margin: clamp(18px, 2.4vw, 32px) auto 0 !important;
+    padding: clamp(68px, 7.4vw, 108px) clamp(22px, 4vw, 64px) clamp(40px, 5vw, 70px) !important;
+    border: 1px solid var(--line-strong) !important;
+    border-radius: var(--r-mon) !important;
+    background:
+      var(--scanlines),
+      radial-gradient(90% 80% at 0% 100%, rgba(31, 91, 255, 0.16), transparent 62%),
+      var(--screen) !important;
+    box-shadow:
+      0 0 0 3px var(--bezel),
+      0 0 0 4px rgba(77, 128, 255, 0.12),
+      0 30px 70px rgba(0, 0, 0, 0.45) !important;
+  }
+
+  body.nebula-page:not(.nl-migrated) [class$="-hero"]:not(.hero):not(.nl-hero)::before {
+    top: 38px !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: auto !important;
+    z-index: -1 !important;
+    width: 46% !important;
+    height: auto !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background:
+      var(--mire) top / 100% 74% no-repeat,
+      var(--mire-low) bottom / 100% 26% no-repeat !important;
+    box-shadow: none !important;
+    opacity: 0.2 !important;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 70%) !important;
+    mask-image: linear-gradient(90deg, transparent, #000 70%) !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  body.nebula-page:not(.nl-migrated) [class$="-hero"]:not(.hero):not(.nl-hero)::after {
+    position: absolute !important;
+    z-index: 2 !important;
+    top: 0 !important;
+    right: 0 !important;
+    left: 0 !important;
+    display: flex !important;
+    height: 38px !important;
+    align-items: center !important;
+    padding: 0 18px 0 34px !important;
+    content: var(--nl-hero-osd, "REC   CAM 00 // ÉCRAN PRINCIPAL — SALLE DE CONTRÔLE") !important;
+    border-bottom: 1px solid var(--line) !important;
+    background:
+      radial-gradient(circle at 19px 50%, var(--rec) 0 4px, transparent 5px),
+      linear-gradient(90deg, rgba(31, 91, 255, 0.2), rgba(1, 4, 12, 0.5) 70%) !important;
+    color: var(--blue-3) !important;
+    font-family: var(--mono) !important;
+    font-size: var(--fs-micro) !important;
+    font-weight: 500 !important;
+    letter-spacing: var(--track-micro) !important;
+    line-height: 1 !important;
+    white-space: pre !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+
+  /* Titres de héros : Chakra Petch, plus grand, sans césure */
+  body.nebula-page [class$="-hero-title"] {
+    color: #fff !important;
+    font-size: clamp(2.2rem, 6.6vw, 6.2rem) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.015em !important;
+    line-height: 0.88 !important;
+    text-shadow: var(--fringe) !important;
+    overflow-wrap: normal !important;
+  }
+
+  body.nebula-page [class$="-hero-subtitle"] {
+    color: var(--muted) !important;
+  }
+
+  /* Index de section (« 01 », « 02 »…) : un bloc canal bleu « CH 01 » */
+  body.nebula-page:not(.nl-migrated) :is(.section-index, [class$="-section-index"]) {
+    border-color: var(--blue-2) !important;
+    background: var(--scanlines), var(--blue) !important;
+    color: #fff !important;
+    font-family: var(--display) !important;
+    font-style: italic !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+    box-shadow: 0 0 30px rgba(31, 91, 255, 0.3) !important;
+  }
+
+  /* Surtitres historiques : 11 px minimum, interlettrage resserré */
+  body.nebula-page:not(.nl-migrated) :is([class$="-kicker"], [class$="-eyebrow"], .eyebrow):not(.pc-hero-eyebrow) {
+    font-size: max(var(--fs-micro), 0.75rem) !important;
+    letter-spacing: var(--track-micro) !important;
+  }
+
+  /* Grands titres des héros historiques sur mobile : taille fluide qui tient
+     dans 390 px sans couper un mot (« CHOISISSEZ », « LE TEMPS »). */
+  @media (max-width: 680px) {
+    body.nebula-page:not(.nl-migrated) :is([class$="-hero"], [class$="-intro"], [class$="-hero-copy"], [class$="-intro-copy"], .hero) h1 {
+      font-size: clamp(2.1rem, 10.4vw, 3.3rem) !important;
+      line-height: 0.92 !important;
+      overflow-wrap: normal !important;
+      word-break: normal !important;
+    }
+
+    body.nebula-page [class$="-hero-title"] {
+      font-size: clamp(2.1rem, 10.4vw, 3.3rem) !important;
+    }
+  }
+}
+
+body.nebula-page:not(.nl-migrated) :is(.section-index, [class$="-section-index"])::before {
+  display: block;
+  margin-bottom: 2px;
+  content: "CH";
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+  opacity: 0.85;
+}
+
+/* Barre sous les titres de héros : un vumètre segmenté */
+body.nebula-page [class$="-hero-title"]::after {
+  width: 132px;
+  height: 6px;
+  margin-top: 24px;
+  background: repeating-linear-gradient(90deg, var(--blue-2) 0 9px, transparent 9px 12px);
+  box-shadow: none;
+  filter: drop-shadow(0 0 8px rgba(31, 91, 255, 0.6));
+}
+
+body.nebula-page :is(.eyebrow, .home-eyebrow, [class$="-kicker"], [class$="-eyebrow"]):not(.pc-hero-eyebrow):not(.nl-kicker) span {
+  color: var(--blue-2);
+}
+
+body.nebula-page .ambient {
+  display: none;
+}
+
+/* Les grands mots en contour hérités (em des titres) deviennent bleus pleins */
+body.nebula-page :is(h1, h2) em {
+  color: var(--blue-2);
+  -webkit-text-stroke: 0;
+  -webkit-text-fill-color: currentColor;
+  font-style: normal;
+}
+
+/* -------------------- 11. Contrôles historiques -------------------- */
+/* global-theme.css impose ses boutons, champs, tableaux et surfaces en
+   !important ; on les reprend ici. Les classes du kit (nl-*) sont exclues. */
+
+@layer nl-force {
+  body.nebula-page :is(button,
+    .details-btn,
+    .calc-btn,
+    .home-btn,
+    .record-btn,
+    .category-btn,
+    .reset-filter-btn,
+    .fx-cat-btn,
+    .fx-view-btn,
+    .today-btn,
+    .month-nav-btn,
+    .ve-calc-btn):not(.character-card):not(.prestige-title):not(.condition-list button):not(.menu-button):not(.nav-group-toggle):not(.search-trigger):not(.record-category-tab):not(.position-filter-tab):not(.match-control-button):not(.h2h-control-button):not(.season-control-button):not(.fixture-control-button):not(.dropdown-current):not(.dropdown-option):not(.sort-toggle):not(.reset-filters):not(.pc-tab-btn):not(.pc-action):not(.pc-btn):not(.pc-title-switcher button):not([class^="nl-"]):not([class*=" nl-"]) {
+    border: 1px solid var(--line-strong) !important;
+    border-radius: var(--r-ctl) !important;
+    background: rgba(10, 23, 52, 0.7) !important;
+    color: #d6e0fa !important;
+    font-family: var(--mono) !important;
+  }
+
+  body.nebula-page :is(button,
+    .details-btn,
+    .calc-btn,
+    .home-btn,
+    .record-btn,
+    .category-btn,
+    .reset-filter-btn,
+    .fx-cat-btn,
+    .fx-view-btn,
+    .today-btn,
+    .month-nav-btn,
+    .ve-calc-btn):not(.character-card):not(.prestige-title):not(.condition-list button):not(.menu-button):not(.nav-group-toggle):not(.search-trigger):not(.record-category-tab):not(.position-filter-tab):not(.match-control-button):not(.h2h-control-button):not(.season-control-button):not(.fixture-control-button):not(.dropdown-current):not(.dropdown-option):not(.sort-toggle):not(.reset-filters):not(.pc-tab-btn):not(.pc-action):not(.pc-btn):not(.pc-title-switcher button):not([class^="nl-"]):not([class*=" nl-"]):hover {
+    border-color: var(--blue-2) !important;
+    background: rgba(31, 91, 255, 0.2) !important;
+    color: #fff !important;
+  }
+
+  body.nebula-page :is(input, select, textarea, .dropdown-current):not(.nl-input) {
+    border: 1px solid var(--line-strong) !important;
+    border-radius: var(--r-ctl) !important;
+    background: rgba(2, 7, 19, 0.85) !important;
+    color: var(--paper) !important;
+  }
+
+  body.nebula-page :is(input, select, textarea, .dropdown-current):not(.nl-input):focus {
+    border-color: var(--blue-2) !important;
+    box-shadow: 0 0 0 3px rgba(31, 91, 255, 0.25) !important;
+  }
+
+  body.nebula-page .dropdown-menu,
+  body.nebula-page .dropdown-option {
+    border-color: var(--line) !important;
+    background: #050e24 !important;
+    color: var(--paper) !important;
+  }
+
+  body.nebula-page .dropdown-option:hover {
+    background: rgba(31, 91, 255, 0.18) !important;
+    color: #fff !important;
+  }
+
+  /* Surfaces historiques : seulement sur une page pas encore redessinée
+     (une page nl-migrated garde la main sur ses propres surfaces). */
+  body.nebula-page:not(.nl-migrated) :is(.card-A, .card, .club, .stat-card, .season-card, .match-card, .fx-card, .calendar-card, .table-section, .briefing-card, .offense-card, .roster-card, .clock-card, .ve-intro-card, .ve-terminal, .ve-ledger, .h2h-picker, .h2h-results, .h2h-history, .section-header-box) {
+    border: 1px solid var(--line) !important;
+    border-radius: var(--r-mon) !important;
+    background:
+      var(--glare),
+      var(--screen) !important;
+  }
+
+  body.nebula-page:not(.nl-migrated) :is(.card-A, .card, .club, .stat-card, .season-card, .match-card, .fx-card, .calendar-card, .briefing-card, .offense-card):hover {
+    border-color: var(--blue-2) !important;
+    box-shadow: inset 0 -2px 0 var(--blue-2), 0 0 30px rgba(31, 91, 255, 0.22) !important;
+  }
+
+  body.nebula-page table:not(.nl-table) {
+    border: 1px solid var(--line) !important;
+    background: var(--screen) !important;
+  }
+
+  /* En-têtes de tableau : la ligne de titre « régie » bleue */
+  body.nebula-page table:not(.nl-table) th {
+    border-color: var(--blue-2) !important;
+    background: var(--blue) !important;
+    color: #fff !important;
+    font-family: var(--mono) !important;
+    font-size: max(var(--fs-micro), 0.72rem) !important;
+    letter-spacing: var(--track-micro) !important;
+  }
+
+  body.nebula-page table:not(.nl-table) td {
+    border-color: var(--line-soft) !important;
+    color: #c9d4ef !important;
+  }
+
+  body.nebula-page table:not(.nl-table) tr:hover td {
+    background: rgba(31, 91, 255, 0.07) !important;
+  }
+
+  body.nebula-page :is(.filter-group-container, .fixtures-controls-bar, .match-filter-bar, .players-toolbar, .filter-group, .quickref-section) {
+    border: 1px solid var(--line) !important;
+    border-radius: var(--r-mon) !important;
+    background: rgba(4, 12, 32, 0.92) !important;
+  }
+
+  body.nebula-page :is(.filter-label, .sort-label, .qr-label, .ve-row-label) {
+    color: var(--blue-3) !important;
+    font-family: var(--mono) !important;
+    font-size: max(var(--fs-micro), 0.69rem) !important;
+    letter-spacing: var(--track-micro) !important;
+  }
+
+  body.nebula-page :is(.ve-meter-fill, .h2h-record-fill, .timeline-track::before, .checklist-progress-bar) {
+    background: linear-gradient(90deg, var(--blue), var(--blue-3)) !important;
+    box-shadow: 0 0 14px rgba(31, 91, 255, 0.4) !important;
+  }
+
+  body.nebula-page :is(.popup-bg, .popup-overlay) {
+    background: var(--scanlines), rgba(1, 4, 12, 0.86) !important;
+  }
+
+  body.nebula-page :is(.popup-box, .club-modal-box, .fixture-modal-box, .modal-content) {
+    border: 1px solid var(--line-strong) !important;
+    border-radius: var(--r-mon) !important;
+    background:
+      var(--glare),
+      linear-gradient(180deg, #06122d, #030a1c) !important;
+    box-shadow: 0 0 0 3px var(--bezel), 0 40px 90px rgba(0, 0, 0, 0.65) !important;
+  }
+
+  body.nebula-page :is(.modal-close-x, .close-btn) {
+    border-color: rgba(255, 43, 64, 0.45) !important;
+    background: rgba(255, 43, 64, 0.12) !important;
+    color: #ffd6da !important;
+  }
+
+  body.nebula-page :is(.active-dot, .ve-terminal-dot, .roster-dot) {
+    background: var(--rec) !important;
+    box-shadow: 0 0 10px var(--rec) !important;
+  }
+
+  body.nebula-page :is(.players-count, .tier-chip, .qr-chip, .offense-card-tag) {
+    border-color: var(--line) !important;
+    border-radius: 2px !important;
+    background: rgba(31, 91, 255, 0.1) !important;
+    color: var(--blue-3) !important;
+  }
+}
+
+/* -------------------- 12. Transitions de pages -------------------- */
+/* Changement de chaîne : l'ancienne image s'éteint en flash, la nouvelle
+   s'allume depuis une ligne horizontale, comme un écran cathodique. */
+
+::view-transition-old(root) {
+  animation: nl-channel-out 220ms cubic-bezier(0.6, 0, 0.8, 0.2) both;
+}
+
+::view-transition-new(root) {
+  animation: nl-channel-in 520ms cubic-bezier(0.2, 0.8, 0.2, 1) 80ms both;
+}
+
+@keyframes nl-channel-out {
+  to {
+    opacity: 0;
+    filter: brightness(2.2) saturate(0.4);
+    transform: scaleY(0.985);
+  }
+}
+
+@keyframes nl-channel-in {
+  0% {
+    opacity: 0.4;
+    clip-path: inset(49.6% 0 49.6% 0);
+    filter: brightness(3) saturate(0);
+  }
+
+  35% {
+    opacity: 1;
+    clip-path: inset(49.6% 0 49.6% 0);
+    filter: brightness(2.4) saturate(0.4);
+  }
+
+  100% {
+    clip-path: inset(0 0 0 0);
+    filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Les ancres sautent directement (global-theme.css garde le défilement
+     doux sur html) */
+  html {
+    scroll-behavior: auto;
+  }
+
+  .rec::before,
+  .nl-tag--rec::before,
+  .nl-reticle::after,
+  body.nebula-page .live-pill i {
+    animation: none;
+  }
+
+  .nl-feed-img,
+  .nl-feed > img,
+  .nl-vu::before {
+    transition: none;
+  }
+}

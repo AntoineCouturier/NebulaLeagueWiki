@@ -1,613 +1,1206 @@
-:root {
-    --admin-acid: #a8ff25;
-    --admin-cyan: #52dcff;
-    --admin-red: #ff5368;
-    --admin-ink: #05080b;
-    --admin-panel: #090e13;
-    --admin-panel-2: #0c1218;
-    --admin-line: rgba(168, 197, 216, 0.17);
-    --admin-muted: #7d8e9a;
-    --admin-paper: #f1f5f7;
+/* ==========================================================================
+   NEBULA LEAGUE — ADMINISTRATION // RÉGIE LOCALE
+   Page migrée (body.admin-page.nl-migrated) : composants du kit nl-* de
+   theme-monitor.css. Ce fichier est chargé APRÈS global-theme.css mais AVANT
+   responsive.css et theme-monitor.css : chaque sélecteur commence par
+   body.admin-page pour l'emporter à égalité. responsive.css garde un bloc
+   « .admin-page » (≤ 560 px) : les sélecteurs concernés sont renforcés ici.
+
+   01. Cadre de page
+   02. Héros : mire de test + registre chargé
+   03. Affiche du match : bande bleue, caméras de club, score géant
+   04. Pupitre : console de fiche technique
+   05. Chronologie des buts
+   06. Notes des joueurs
+   07. Barre d'actions
+   08. Écran programme : sortie contrôlée
+   09. Import / export
+   10. Mouvement réduit
+   11. Responsive
+   ========================================================================== */
+
+@layer nl-force;
+
+/* -------------------- 01. Cadre de page -------------------- */
+
+body.admin-page .admin-shell {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(64px, 7vw, 104px);
+  padding: 0 0 clamp(16px, 2vw, 32px);
 }
 
-body.nebula-page.admin-page {
-    min-height: 100vh;
-    color: var(--admin-paper);
-    background:
-        linear-gradient(rgba(82, 220, 255, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(82, 220, 255, 0.035) 1px, transparent 1px),
-        radial-gradient(circle at 85% 12%, rgba(82, 220, 255, 0.07), transparent 28rem),
-        var(--admin-ink);
-    background-size: 64px 64px, 64px 64px, auto, auto;
+body.admin-page .admin-workspace {
+  scroll-margin-top: 16px;
 }
 
-.admin-shell {
-    width: min(1440px, calc(100% - 44px));
-    margin: 0 auto;
-    padding: 48px 0 90px;
+body.admin-page code {
+  font-family: var(--mono);
 }
 
-.admin-hero {
+/* -------------------- 02. Héros -------------------- */
+
+body.admin-page .admin-hero {
+  min-height: clamp(560px, calc(100svh - 120px), 760px);
+}
+
+body.admin-page .admin-hero.nl-hero > .osd {
+  padding: 0 var(--gutter);
+}
+
+body.admin-page .admin-hero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 440px);
+  align-items: end;
+  gap: clamp(32px, 5vw, 72px);
+}
+
+body.admin-page .admin-hero .admin-headline {
+  font-size: clamp(2.6rem, 6.6vw, 6.8rem);
+  line-height: 1.04;
+}
+
+/* Le mot d'accent de la page */
+body.admin-page .admin-headline em {
+  font-style: italic;
+}
+
+body.admin-page .admin-hero .nl-lead {
+  max-width: 540px;
+  padding: 12px 14px;
+  background: rgba(2, 6, 17, 0.82);
+}
+
+body.admin-page .nl-lead code {
+  padding: 1px 6px;
+  background: var(--blue-soft);
+  color: var(--blue-3);
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+
+/* Registre chargé : un écran noir posé sur la mire */
+body.admin-page .admin-registry {
+  display: grid;
+  gap: 14px;
+  padding: 0 0 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-mon);
+  background: var(--scanlines), linear-gradient(180deg, #06122d, var(--ink));
+  box-shadow: 0 0 0 3px var(--bezel), 0 30px 70px rgba(0, 0, 0, 0.6);
+}
+
+body.admin-page .admin-registry-osd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-micro);
+  white-space: nowrap;
+}
+
+body.admin-page .admin-registry-osd b {
+  color: #fff;
+  font-weight: 600;
+}
+
+body.admin-page .admin-registry-stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 0 14px;
+}
+
+body.admin-page .admin-registry-stats .nl-stat {
+  min-height: 118px;
+}
+
+body.admin-page .admin-registry-stats .nl-stat-value {
+  font-style: italic;
+}
+
+body.admin-page .admin-registry-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 0 14px;
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+}
+
+body.admin-page .admin-registry-line span {
+  flex: none;
+  padding: 3px 6px;
+  border: 1px solid var(--line-strong);
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+
+body.admin-page .admin-registry-line strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+body.admin-page .admin-registry > small {
+  padding: 0 14px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* -------------------- 03. Affiche du match -------------------- */
+
+body.admin-page .admin-workspace .nl-section-head {
+  margin-bottom: 0;
+  border-bottom: 0;
+}
+
+body.admin-page .admin-workspace .nl-section-head::after {
+  display: none;
+}
+
+body.admin-page .admin-versus {
+  margin-top: var(--sp-6);
+  padding-bottom: clamp(32px, 4vw, 52px);
+}
+
+body.admin-page .admin-versus-osd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 38px;
+  padding: 0 max(var(--gutter), calc((100vw - 1440px) / 2));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(2, 6, 17, 0.35);
+  color: #dfe8ff;
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-micro);
+  white-space: nowrap;
+}
+
+body.admin-page .admin-versus-osd b {
+  color: #fff;
+  font-weight: 600;
+}
+
+body.admin-page .admin-versus-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(16px, 3vw, 48px);
+  width: var(--page);
+  margin: clamp(28px, 3.4vw, 44px) auto 0;
+}
+
+body.admin-page .admin-team {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* Caméra de club : le blason filmé sur fond noir. La couleur du club reste un
+   accent d'identité (barre basse 4px + barre de légende), jamais un fond. */
+body.admin-page .admin-team-feed {
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background:
+    radial-gradient(46% 62% at 50% 46%, rgba(61, 123, 255, 0.3), transparent 72%),
+    linear-gradient(180deg, #071437, var(--ink));
+  box-shadow: inset 0 -4px 0 var(--club, var(--blue-2)), 0 0 0 3px var(--bezel), 0 24px 60px rgba(0, 8, 40, 0.45);
+}
+
+body.admin-page .admin-team-feed::after {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  content: "";
+  background: var(--noise), var(--scanlines-strong);
+  background-size: 180px 180px, auto;
+  mix-blend-mode: overlay;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+body.admin-page .admin-team-logo {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: auto;
+  max-width: 58%;
+  height: 70%;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.65));
+  transform: translate(-50%, -54%);
+}
+
+body.admin-page .admin-team-osd {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  color: #e3ebff;
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+  white-space: nowrap;
+}
+
+body.admin-page .admin-team-osd b {
+  color: #fff;
+  font-weight: 600;
+}
+
+body.admin-page .admin-team-caption {
+  position: absolute;
+  z-index: 3;
+  bottom: 12px;
+  left: 0;
+  display: grid;
+  justify-items: start;
+  max-width: calc(100% - 12px);
+}
+
+body.admin-page .admin-team-caption small {
+  padding: 4px 9px;
+  background: var(--ink);
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+body.admin-page .admin-team-caption b {
+  max-width: 100%;
+  padding: 7px 14px 6px 12px;
+  overflow: hidden;
+  background: var(--blue);
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(1.05rem, 1.6vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: inset 4px 0 0 var(--club, var(--blue-2)), 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+body.admin-page .admin-versus .nl-field-label {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+body.admin-page .admin-versus select.nl-input {
+  min-height: 50px;
+  border-color: rgba(255, 255, 255, 0.35);
+  background-color: rgba(2, 6, 17, 0.82);
+}
+
+/* Score géant au centre de l'affiche */
+body.admin-page .admin-score {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+body.admin-page .admin-score small {
+  padding: 4px 9px;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+body.admin-page .admin-score strong {
+  display: flex;
+  align-items: center;
+  gap: 0.12em;
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(4rem, 9.4vw, 9.4rem);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 0.8;
+  text-shadow: 0 14px 50px rgba(2, 10, 50, 0.5);
+  font-variant-numeric: tabular-nums;
+}
+
+body.admin-page .admin-score strong i {
+  color: var(--ink);
+  font-size: 0.6em;
+  font-style: normal;
+}
+
+body.admin-page .admin-score-note {
+  color: rgba(255, 255, 255, 0.82);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+/* -------------------- 04. Pupitre -------------------- */
+
+body.admin-page .admin-desk {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 460px);
+  align-items: start;
+  gap: 24px;
+  margin-top: clamp(40px, 5vw, 64px);
+}
+
+body.admin-page .admin-desk-main {
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+}
+
+body.admin-page .admin-module {
+  min-width: 0;
+}
+
+body.admin-page .admin-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px 16px;
+  padding: 16px 18px 18px;
+}
+
+body.admin-page .admin-field-wide {
+  grid-column: 1 / -1;
+}
+
+body.admin-page .admin-fields input.nl-input[type="date"],
+body.admin-page .admin-fields input.nl-input[type="time"] {
+  color-scheme: dark;
+}
+
+body.admin-page .admin-module-head {
+  flex-wrap: wrap;
+  padding-block: 8px;
+}
+
+body.admin-page .admin-inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* -------------------- 05. Chronologie des buts -------------------- */
+
+body.admin-page .goal-events {
+  padding: 16px 18px 18px;
+}
+
+body.admin-page .goal-empty.nl-nosignal {
+  min-height: 230px;
+}
+
+body.admin-page .goal-head,
+body.admin-page .goal-row {
+  display: grid;
+  grid-template-columns: 92px minmax(96px, 0.6fr) minmax(0, 1fr) minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 8px;
+}
+
+body.admin-page .goal-head {
+  padding: 0 0 8px 13px;
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+body.admin-page .goal-row {
+  margin-bottom: 4px;
+  padding: 6px 6px 6px 10px;
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--goal-accent, var(--blue-2));
+  background: rgba(6, 16, 40, 0.7);
+}
+
+body.admin-page .goal-side {
+  color: var(--goal-accent, var(--blue-2));
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+body.admin-page .goal-side b {
+  margin-left: 4px;
+  color: #fff;
+  font-family: var(--display);
+  font-size: 20px;
+  font-style: italic;
+  font-weight: 700;
+}
+
+body.admin-page .goal-row .nl-input {
+  min-height: 44px;
+}
+
+body.admin-page .goal-remove {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  font-family: var(--mono);
+  font-size: 18px;
+  line-height: 1;
+}
+
+body.admin-page .goal-remove:hover,
+body.admin-page .goal-remove:focus-visible {
+  border-color: var(--blue-2);
+  background: var(--blue);
+  color: #fff;
+}
+
+/* -------------------- 06. Notes des joueurs -------------------- */
+
+body.admin-page .admin-notes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--seam);
+  margin: 16px 18px 18px;
+  padding: var(--seam);
+  border: 1px solid var(--line-strong);
+  background: var(--bezel);
+}
+
+body.admin-page .notes-team {
+  min-width: 0;
+  border-top: 3px solid var(--club, var(--blue-2));
+  background: var(--scanlines), var(--screen);
+}
+
+/* En-tête de colonne : nom du club sur toute la largeur, puis les intitulés
+   alignés sur les trois champs de note. */
+body.admin-page .notes-team-title {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px 10px;
+  padding: 12px 12px 8px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, rgba(31, 91, 255, 0.16), transparent 70%);
+}
+
+body.admin-page .notes-side {
+  padding: 4px 6px;
+  border: 1px solid var(--line-strong);
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+body.admin-page .notes-team-title > span[id] {
+  min-width: 0;
+  overflow: hidden;
+  color: #fff;
+  font-family: var(--display);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+body.admin-page .notes-team-title small {
+  display: grid;
+  grid-column: 1 / -1;
+  justify-self: end;
+  grid-template-columns: repeat(3, 60px);
+  gap: 6px;
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+body.admin-page .note-row {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) repeat(3, 60px);
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+body.admin-page .note-row:last-child {
+  border-bottom: 0;
+}
+
+body.admin-page .note-avatar {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border: 1px solid var(--line-strong);
+  filter: grayscale(0.3) contrast(1.08) brightness(0.9);
+}
+
+body.admin-page .note-row strong {
+  min-width: 0;
+  overflow: hidden;
+  color: #fff;
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+body.admin-page .note-row .nl-input {
+  min-height: 42px;
+  padding: 0 4px;
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+}
+
+body.admin-page .notes-empty.nl-nosignal {
+  min-height: 200px;
+  margin: 12px;
+}
+
+/* -------------------- 07. Barre d'actions -------------------- */
+
+body.admin-page .admin-builder-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-mon);
+  background: linear-gradient(90deg, rgba(31, 91, 255, 0.16), rgba(4, 12, 32, 0.94) 60%);
+  box-shadow: 0 0 0 3px var(--bezel);
+}
+
+body.admin-page .admin-builder-actions .admin-danger {
+  margin-left: auto;
+}
+
+/* -------------------- 08. Écran programme -------------------- */
+
+body.admin-page .admin-pgm {
+  position: sticky;
+  top: 16px;
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+}
+
+body.admin-page .admin-output {
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-top: 2px solid var(--blue);
+  border-radius: var(--r-mon);
+  background: var(--glare), linear-gradient(180deg, #06122d, #030a1c);
+  box-shadow: 0 0 0 3px var(--bezel), 0 30px 70px rgba(0, 0, 0, 0.5);
+}
+
+body.admin-page .admin-output-osd {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 12px 0 16px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, rgba(31, 91, 255, 0.2), transparent 70%);
+}
+
+body.admin-page .admin-output-osd h3 {
+  margin: 0;
+  color: #fff;
+  font-family: var(--display);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+body.admin-page .admin-output-osd .nl-btn {
+  margin-left: auto;
+}
+
+body.admin-page .admin-output-osd .nl-btn:disabled {
+  border-color: var(--line-strong);
+  background: rgba(16, 34, 71, 0.8);
+  color: var(--dim);
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Bandeau d'état : EN ATTENTE / MATCH VALIDÉ / ERREUR (seule alerte rouge) */
+body.admin-page .admin-feedback {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+body.admin-page .admin-feedback span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 8px;
+  border: 1px solid var(--line-strong);
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+  white-space: nowrap;
+}
+
+body.admin-page .admin-feedback p {
+  margin: 0;
+  color: #c4cfec;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+body.admin-page .admin-feedback.is-success span {
+  border-color: var(--blue-2);
+  background: var(--blue);
+  color: #fff;
+}
+
+body.admin-page .admin-feedback.is-error {
+  background: var(--rec-soft);
+}
+
+body.admin-page .admin-feedback.is-error span {
+  border-color: rgba(255, 43, 64, 0.6);
+  background: rgba(2, 6, 17, 0.8);
+  color: #ffe3e6;
+}
+
+body.admin-page .admin-feedback.is-error span::before {
+  width: 6px;
+  height: 6px;
+  content: "";
+  border-radius: 50%;
+  background: var(--rec);
+  box-shadow: 0 0 8px var(--rec);
+}
+
+body.admin-page .admin-feedback.is-error p {
+  color: #fff;
+}
+
+body.admin-page .admin-code-screen {
+  position: relative;
+  background:
+    var(--scanlines),
+    radial-gradient(90% 60% at 50% 0%, rgba(31, 91, 255, 0.1), transparent 70%),
+    #01040c;
+}
+
+body.admin-page .admin-code-osd {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 16px 6px;
+  color: var(--dim);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+}
+
+body.admin-page .admin-code-osd b {
+  color: var(--blue-3);
+  font-weight: 600;
+}
+
+body.admin-page .admin-code {
+  min-height: 300px;
+  max-height: min(560px, calc(100vh - 420px));
+  margin: 0;
+  padding: 8px 16px 20px;
+  overflow: auto;
+  border: 0;
+  background: transparent;
+  color: #cfe0ff;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.6;
+  tab-size: 4;
+  white-space: pre;
+  scrollbar-width: thin;
+  scrollbar-color: #1a2b57 transparent;
+}
+
+body.admin-page .admin-code code {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Tant qu'aucun match n'est généré : mire « hors antenne » au lieu d'un écran vide */
+body.admin-page .admin-code-screen:not(.is-live) .admin-code {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  min-height: 260px;
+  place-content: center;
+  justify-items: center;
+  margin: 4px 16px 18px;
+  padding: 24px 16px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background:
+    var(--mire) top / 100% 72% no-repeat,
+    var(--mire-low) bottom / 100% 28% no-repeat;
+  text-align: center;
+  white-space: normal;
+}
+
+body.admin-page .admin-code-screen:not(.is-live) .admin-code::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: "";
+  background: var(--noise), var(--scanlines-strong), rgba(2, 6, 17, 0.72);
+  background-size: 180px 180px, auto, auto;
+}
+
+body.admin-page .admin-code-screen:not(.is-live) .admin-code code {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  color: #d0daf4;
+  font-size: 13px;
+}
+
+body.admin-page .admin-code-screen:not(.is-live) .admin-code code::before {
+  padding: 10px 16px;
+  content: "HORS ANTENNE";
+  border: 1px solid var(--line-strong);
+  background: rgba(2, 6, 17, 0.92);
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.05;
+}
+
+/* -------------------- 09. Import / export -------------------- */
+
+body.admin-page .admin-transfer-note {
+  margin: 0;
+  padding: 14px 18px 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+body.admin-page .admin-transfer-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  margin: 14px 18px 0;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-ctl);
+  background: rgba(1, 4, 12, 0.7);
+}
+
+body.admin-page .admin-key {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 8px 12px;
+  line-height: 1.25;
+  text-align: left;
+}
+
+body.admin-page .admin-key span {
+  color: var(--blue-3);
+  font-family: var(--display);
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 700;
+}
+
+body.admin-page .admin-key:hover span,
+body.admin-page .admin-key:focus-visible span {
+  color: #fff;
+}
+
+body.admin-page .admin-key:disabled {
+  border-style: dashed;
+  background: rgba(6, 16, 40, 0.5);
+  color: var(--dim);
+  cursor: not-allowed;
+}
+
+body.admin-page .admin-key:disabled span {
+  color: var(--dim);
+}
+
+body.admin-page .admin-backup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 14px 18px 18px;
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+}
+
+/* -------------------- 10. Mouvement réduit -------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  body.admin-page .admin-output-osd .nl-btn {
+    transition: none;
+  }
+}
+
+/* -------------------- 11. Responsive -------------------- */
+
+@media (max-width: 1180px) {
+  body.admin-page .admin-desk {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body.admin-page .admin-pgm {
+    position: relative;
+    top: auto;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  body.admin-page .admin-code {
+    max-height: 520px;
+  }
+}
+
+@media (max-width: 960px) {
+  body.admin-page .admin-hero-inner {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+
+  body.admin-page .admin-registry {
+    max-width: 520px;
+  }
+
+  body.admin-page .admin-pgm {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 860px) {
+  body.admin-page .admin-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.admin-page .admin-notes-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body.admin-page .admin-versus-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "score score"
+      "home away";
+  }
+
+  body.admin-page .admin-score {
+    grid-area: score;
+  }
+
+  /* Générer en pleine largeur, puis brouillon | réinitialiser */
+  body.admin-page .admin-builder-actions {
     display: grid;
-    min-height: 430px;
-    grid-template-columns: minmax(0, 1.45fr) minmax(310px, 0.55fr);
-    border: 1px solid var(--admin-line);
-    background: rgba(5, 8, 11, 0.86);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.admin-page .admin-builder-actions .admin-generate {
+    grid-column: 1 / -1;
+  }
+
+  body.admin-page .admin-builder-actions .admin-danger {
+    margin-left: 0;
+  }
+
+  body.admin-page .team-home {
+    grid-area: home;
+  }
+
+  body.admin-page .team-away {
+    grid-area: away;
+  }
 }
 
-.admin-hero>div:first-child {
-    display: flex;
-    justify-content: center;
-    padding: clamp(48px, 7vw, 96px);
-    flex-direction: column;
-}
+@media (max-width: 680px) {
+  body.admin-page .admin-hero-inner {
+    padding-block: 40px 36px;
+  }
 
-.admin-kicker {
-    margin: 0 0 22px;
-    color: var(--admin-muted);
-    font: 700 0.58rem/1 "Orbitron", sans-serif;
-    letter-spacing: 0.15em;
-}
+  body.admin-page .admin-hero .admin-headline {
+    font-size: clamp(2.4rem, 12.4vw, 3.6rem);
+  }
 
-.admin-kicker span {
-    margin-right: 15px;
-    color: var(--admin-acid);
-}
+  body.admin-page .admin-hero .nl-lead {
+    padding: 10px 12px;
+  }
 
-.admin-hero h1 {
-    margin: 0;
-    font: 900 clamp(3.4rem, 7vw, 7rem)/0.82 "Orbitron", sans-serif;
-    letter-spacing: -0.075em;
-}
+  body.admin-page .admin-registry-stats .nl-stat {
+    min-height: 96px;
+    padding: 12px 10px;
+  }
 
-.admin-hero h1 em {
-    color: transparent;
-    font-style: normal;
-    -webkit-text-stroke: 1px #77838c;
-}
+  body.admin-page .admin-registry-stats .nl-stat-value {
+    font-size: clamp(2.2rem, 10vw, 2.8rem);
+  }
 
-.admin-hero>div:first-child>p:last-child {
-    max-width: 720px;
-    margin: 38px 0 0;
-    padding-left: 20px;
-    border-left: 2px solid var(--admin-acid);
-    color: #a4afb7;
-    font: 400 0.92rem/1.8 "Inter", sans-serif;
-}
+  body.admin-page .admin-versus-osd {
+    padding: 0 16px;
+  }
 
-.admin-hero code {
-    color: var(--admin-cyan);
-}
+  body.admin-page .admin-versus-osd .osd-hide-sm {
+    display: none;
+  }
 
-.admin-hero-status {
-    display: flex;
-    justify-content: center;
-    padding: 40px;
-    border-left: 1px solid var(--admin-line);
-    background:
-        radial-gradient(circle, rgba(82, 220, 255, 0.06), transparent 48%),
-        rgba(8, 13, 18, 0.78);
-    flex-direction: column;
-}
+  body.admin-page .admin-versus select.nl-input {
+    padding-inline: 10px 32px;
+    letter-spacing: 0;
+  }
 
-.admin-hero-status span,
-.admin-hero-status small {
-    color: var(--admin-muted);
-    font: 600 0.54rem/1.6 "Orbitron", sans-serif;
-    letter-spacing: 0.12em;
-}
+  body.admin-page .admin-versus-grid {
+    gap: 18px 10px;
+  }
 
-.admin-hero-status strong {
-    margin: 24px 0;
-    color: var(--admin-cyan);
-    font: 800 clamp(1.7rem, 3vw, 3rem)/1.15 "Orbitron", sans-serif;
-}
+  body.admin-page .admin-team-osd {
+    padding: 8px;
+  }
 
-.admin-workspace,
-.admin-transfer,
-.admin-output {
-    margin-top: 28px;
-    border: 1px solid var(--admin-line);
-    background: rgba(7, 11, 15, 0.95);
-}
-
-.admin-section-title {
-    display: grid;
-    min-height: 100px;
-    grid-template-columns: 100px minmax(0, 1fr) minmax(240px, 0.7fr);
-    align-items: center;
-    border-bottom: 1px solid var(--admin-line);
-}
-
-.admin-section-title>span {
-    align-self: stretch;
-    display: grid;
-    place-items: center;
-    border-right: 1px solid var(--admin-line);
-    color: transparent;
-    font: 900 2.3rem/1 "Orbitron", sans-serif;
-    -webkit-text-stroke: 1px #3d4a55;
-}
-
-.admin-section-title>div:nth-child(2) {
-    padding: 22px 28px;
-}
-
-.admin-section-title small,
-.admin-section-title p {
-    color: var(--admin-muted);
-    font: 600 0.52rem/1.6 "Orbitron", sans-serif;
-    letter-spacing: 0.11em;
-}
-
-.admin-section-title small {
-    color: var(--admin-acid);
-}
-
-.admin-section-title h2 {
-    margin: 8px 0 0;
-    font: 800 clamp(1.25rem, 2.5vw, 2rem)/1 "Orbitron", sans-serif;
-}
-
-.admin-section-title>p {
-    margin: 0;
-    padding: 28px;
-    border-left: 1px solid var(--admin-line);
-}
-
-.admin-fields {
-    display: grid;
-    gap: 1px;
-    background: var(--admin-line);
-}
-
-.admin-fields-main {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-}
-
-.admin-fields label,
-.team-select {
-    display: flex;
-    min-width: 0;
-    padding: 20px;
-    background: var(--admin-panel);
-    flex-direction: column;
-    gap: 12px;
-}
-
-.admin-fields label span,
-.team-select span {
-    color: var(--admin-muted);
-    font: 700 0.5rem/1 "Orbitron", sans-serif;
-    letter-spacing: 0.12em;
-}
-
-.admin-field-wide {
-    grid-column: span 6;
-}
-
-.admin-page input,
-.admin-page select {
-    width: 100%;
-    min-width: 0;
-    height: 45px;
-    padding: 0 12px;
-    border: 1px solid #28323b;
-    border-radius: 0;
-    outline: 0;
-    color: var(--admin-paper);
-    background: #0d1319;
-    font: 600 0.7rem/1 "Orbitron", sans-serif;
-}
-
-.admin-page input:focus,
-.admin-page select:focus {
-    border-color: var(--admin-cyan);
-    box-shadow: 0 0 0 1px rgba(82, 220, 255, 0.2);
-}
-
-.admin-versus {
-    display: grid;
-    grid-template-columns: 1fr 270px 1fr;
-    border-top: 1px solid var(--admin-line);
-    border-bottom: 1px solid var(--admin-line);
-}
-
-.team-select {
-    justify-content: center;
-    min-height: 145px;
-    padding-inline: 34px;
-}
-
-.team-home {
-    background: linear-gradient(90deg, rgba(255, 83, 104, 0.06), transparent), var(--admin-panel);
-}
-
-.team-away {
-    background: linear-gradient(270deg, rgba(82, 220, 255, 0.06), transparent), var(--admin-panel);
-}
-
-.admin-score {
-    display: grid;
-    place-content: center;
-    border-inline: 1px solid var(--admin-line);
-    text-align: center;
-}
-
-.admin-score small {
-    color: var(--admin-muted);
-    font: 600 0.48rem/1 "Orbitron", sans-serif;
-}
-
-.admin-score strong {
-    display: flex;
-    align-items: center;
-    margin-top: 14px;
-    gap: 14px;
-    font: 900 2.4rem/1 "Orbitron", sans-serif;
-}
-
-.admin-score strong span:first-child {
-    color: var(--admin-red);
-}
-
-.admin-score strong span:last-child {
-    color: var(--admin-cyan);
-}
-
-.admin-score i {
-    color: #56636e;
-    font-style: normal;
-}
-
-.admin-inner-title {
-    margin-top: 0;
-}
-
-.admin-inline-actions {
-    display: flex;
-    justify-content: flex-end;
-    padding: 20px !important;
-    gap: 10px;
-}
-
-.admin-button {
-    min-height: 44px;
-    padding: 0 17px;
-    border: 1px solid #303b44;
-    border-radius: 0;
-    color: #cbd3d8;
-    background: #0c1217;
-    cursor: pointer;
-    font: 700 0.55rem/1 "Orbitron", sans-serif;
-    letter-spacing: 0.07em;
-}
-
-.admin-button:hover,
-.admin-button:focus-visible {
-    border-color: var(--admin-acid);
-    color: var(--admin-acid);
-}
-
-.admin-button-home {
-    border-color: rgba(255, 83, 104, 0.5);
-    color: var(--admin-red);
-}
-
-.admin-button-away {
-    border-color: rgba(82, 220, 255, 0.5);
-    color: var(--admin-cyan);
-}
-
-.goal-events {
-    min-height: 105px;
-}
-
-.goal-empty {
-    display: grid;
-    min-height: 105px;
-    place-items: center;
-    color: #596874;
-    font: 600 0.56rem/1 "Orbitron", sans-serif;
-    letter-spacing: 0.1em;
-}
-
-.goal-row {
-    display: grid;
-    min-height: 76px;
-    grid-template-columns: 80px 130px 1fr 1fr 60px;
-    align-items: center;
-    border-bottom: 1px solid var(--admin-line);
-    gap: 12px;
-    padding: 14px 20px;
-}
-
-.goal-side {
-    color: var(--goal-accent);
-    font: 800 0.55rem/1 "Orbitron", sans-serif;
-}
-
-.goal-row input,
-.goal-row select {
-    height: 42px;
-}
-
-.goal-remove {
-    width: 42px;
-    height: 42px;
-    border: 1px solid #3b2830;
-    color: var(--admin-red);
-    background: transparent;
-    cursor: pointer;
-}
-
-.admin-notes-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-}
-
-.notes-team+.notes-team {
-    border-left: 1px solid var(--admin-line);
-}
-
-.notes-team-title {
-    display: flex;
-    min-height: 56px;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    border-bottom: 1px solid var(--admin-line);
-    color: var(--admin-paper);
-    background: var(--admin-panel-2);
-    font: 700 0.6rem/1 "Orbitron", sans-serif;
-}
-
-.notes-team-title small {
-    color: var(--admin-muted);
-    font-size: 0.46rem;
-}
-
-.note-row {
-    display: grid;
-    min-height: 63px;
-    grid-template-columns: 1fr 88px 88px 88px;
-    align-items: center;
-    border-bottom: 1px solid var(--admin-line);
-    gap: 8px;
-    padding: 10px 16px;
-}
-
-.note-row strong {
+  body.admin-page .admin-team-osd > span:first-child {
     overflow: hidden;
-    color: #bac4cb;
-    font: 700 0.6rem/1 "Orbitron", sans-serif;
     text-overflow: ellipsis;
+  }
+
+  body.admin-page .admin-team-osd .rec {
+    display: none;
+  }
+
+  body.admin-page .admin-team-caption {
+    bottom: 8px;
+  }
+
+  body.admin-page .admin-team-caption small {
+    display: none;
+  }
+
+  body.admin-page .admin-team-caption b {
+    padding: 6px 10px 5px 9px;
+    font-size: 14px;
+  }
+
+  body.admin-page .admin-score strong {
+    font-size: clamp(4.2rem, 24vw, 6rem);
+  }
+
+  body.admin-page .admin-fields {
+    padding: 14px;
+  }
+
+  body.admin-page .admin-module-head .admin-inline-actions {
+    width: 100%;
+    margin-left: 0;
+    padding-bottom: 4px;
+  }
+
+  body.admin-page .admin-inline-actions .nl-btn {
+    flex: 1 1 0;
+  }
+
+  body.admin-page .goal-events {
+    padding: 14px;
+  }
+
+  body.admin-page .goal-head {
+    display: none;
+  }
+
+  /* Rangée 1 : côté + temps + suppression · rangée 2 : buteur + passeur */
+  body.admin-page .goal-row {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 6px;
+    padding: 8px 6px 8px 10px;
+  }
+
+  body.admin-page .goal-row .goal-side {
+    grid-area: 1 / 1 / 2 / 3;
+  }
+
+  body.admin-page .goal-row [data-goal-field="time"] {
+    grid-area: 1 / 3 / 2 / 6;
+  }
+
+  body.admin-page .goal-row .goal-remove {
+    grid-area: 1 / 6 / 2 / 7;
+  }
+
+  body.admin-page .goal-row [data-goal-field="scorer"] {
+    grid-area: 2 / 1 / 3 / 4;
+  }
+
+  body.admin-page .goal-row [data-goal-field="assist"] {
+    grid-area: 2 / 4 / 3 / 7;
+  }
+
+  body.admin-page .goal-row select.nl-input {
+    padding-inline: 10px 30px;
+    letter-spacing: 0;
+  }
+
+  body.admin-page .admin-notes-grid {
+    margin: 14px;
+  }
+
+  body.admin-page .notes-team-title {
+    padding: 10px 10px 8px;
+  }
+
+  body.admin-page .notes-team-title small,
+  body.admin-page .note-row {
+    grid-template-columns: repeat(3, 52px);
+  }
+
+  body.admin-page .note-row {
+    grid-template-columns: 32px minmax(0, 1fr) repeat(3, 52px);
+    gap: 5px;
+    padding: 8px 10px;
+  }
+
+  body.admin-page .note-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  body.admin-page .note-row .nl-input {
+    padding-inline: 2px;
+  }
+
+  body.admin-page .admin-builder-actions {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 12px;
+  }
+
+  body.admin-page .admin-builder-actions .nl-btn {
+    flex: 1 1 100%;
+  }
+
+  body.admin-page .admin-builder-actions .admin-danger {
+    margin-left: 0;
+  }
+
+  body.admin-page .admin-transfer-actions {
+    margin-inline: 14px;
+  }
+
+  body.admin-page .admin-code {
+    min-height: 220px;
+    padding-inline: 12px;
+    font-size: 12px;
+  }
 }
 
-.note-row input {
-    height: 38px;
-    text-align: center;
+@media (max-width: 520px) {
+  /* Les deux caméras restent côte à côte, les sélecteurs passent en pleine largeur */
+  body.admin-page .admin-versus-grid {
+    grid-template-areas:
+      "score score"
+      "hfeed afeed"
+      "hsel hsel"
+      "asel asel";
+    row-gap: 12px;
+  }
+
+  body.admin-page .admin-versus-grid > .admin-team {
+    display: contents;
+  }
+
+  body.admin-page .team-home > .admin-team-feed {
+    grid-area: hfeed;
+  }
+
+  body.admin-page .team-away > .admin-team-feed {
+    grid-area: afeed;
+  }
+
+  body.admin-page .team-home > .team-select {
+    grid-area: hsel;
+    margin-top: 6px;
+  }
+
+  body.admin-page .team-away > .team-select {
+    grid-area: asel;
+  }
 }
 
-.notes-empty {
-    display: grid;
-    min-height: 126px;
-    place-items: center;
-    color: var(--admin-muted);
-    font: 600 0.52rem/1 "Orbitron", sans-serif;
-}
-
-.admin-builder-actions {
-    display: flex;
-    padding: 20px;
-    border-top: 1px solid var(--admin-line);
-    gap: 10px;
-}
-
-.admin-generate {
-    min-width: 280px;
-    justify-content: space-between;
-    border-color: var(--admin-acid);
-    color: #071005;
-    background: var(--admin-acid);
-}
-
-.admin-generate:hover {
-    color: #071005;
-    background: #c0ff5d;
-}
-
-.admin-danger {
-    margin-left: auto;
-    color: var(--admin-red);
-}
-
-.admin-button:disabled {
-    cursor: not-allowed;
-    opacity: 0.35;
-}
-
-.admin-transfer-actions {
-    display: flex;
-    flex-wrap: wrap;
-    min-height: 76px;
-    align-items: center;
-    gap: 10px;
-    padding: 16px 20px;
-}
-
-.admin-transfer-actions>span {
-    margin-left: auto;
-    color: var(--admin-cyan);
-    font: 700 0.54rem/1.4 "Orbitron", sans-serif;
-    letter-spacing: 0.08em;
-}
-
-.admin-output .admin-section-title {
-    grid-template-columns: 100px 1fr auto;
-}
-
-.admin-output .admin-section-title>.admin-button {
-    margin-right: 24px;
-}
-
-.admin-feedback {
-    display: grid;
-    grid-template-columns: 180px 1fr;
-    align-items: center;
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--admin-line);
-}
-
-.admin-feedback span {
-    color: var(--admin-muted);
-    font: 800 0.55rem/1 "Orbitron", sans-serif;
-}
-
-.admin-feedback p {
-    margin: 0;
-    color: #87949e;
-    font: 400 0.84rem/1.6 "Inter", sans-serif;
-}
-
-.admin-feedback.is-error span {
-    color: var(--admin-red);
-}
-
-.admin-feedback.is-success span {
-    color: var(--admin-acid);
-}
-
-.admin-code {
-    min-height: 240px;
-    max-height: 680px;
-    margin: 0;
-    padding: 28px;
-    overflow: auto;
-    color: #bcecff;
-    background: #030609;
-    font: 500 0.76rem/1.7 Consolas, monospace;
-    white-space: pre;
-}
-
-@media (max-width: 1050px) {
-    .admin-hero {
-        grid-template-columns: 1fr;
-    }
-
-    .admin-hero-status {
-        min-height: 220px;
-        border-top: 1px solid var(--admin-line);
-        border-left: 0;
-    }
-
-    .admin-fields-main {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .admin-field-wide {
-        grid-column: span 3;
-    }
-
-    .admin-section-title {
-        grid-template-columns: 80px 1fr;
-    }
-
-    .admin-section-title>p,
-    .admin-inline-actions {
-        grid-column: 1 / -1;
-        border-top: 1px solid var(--admin-line);
-        border-left: 0;
-    }
-
-    .admin-output .admin-section-title {
-        grid-template-columns: 80px 1fr auto;
-    }
-}
-
-@media (max-width: 720px) {
-    .admin-shell {
-        width: calc(100% - 20px);
-        padding-top: 20px;
-    }
-
-    .admin-hero>div:first-child {
-        padding: 42px 24px;
-    }
-
-    .admin-fields-main,
-    .admin-notes-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .admin-field-wide {
-        grid-column: auto;
-    }
-
-    .admin-versus {
-        grid-template-columns: 1fr;
-    }
-
-    .admin-score {
-        min-height: 125px;
-        border-block: 1px solid var(--admin-line);
-        border-inline: 0;
-    }
-
-    .notes-team+.notes-team {
-        border-top: 1px solid var(--admin-line);
-        border-left: 0;
-    }
-
-    .goal-row {
-        grid-template-columns: 70px 1fr 1fr;
-    }
-
-    .goal-row select {
-        grid-column: span 1;
-    }
-
-    .goal-remove {
-        grid-column: 3;
-    }
-
-    .note-row {
-        grid-template-columns: 1fr repeat(3, 62px);
-    }
-
-    .admin-builder-actions {
-        flex-direction: column;
-    }
-
-    .admin-transfer-actions {
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .admin-transfer-actions>span {
-        margin: 8px 0 0;
-        text-align: center;
-    }
-
-    .admin-generate {
-        min-width: 0;
-    }
-
-    .admin-danger {
-        margin-left: 0;
-    }
-
-    .admin-output .admin-section-title {
-        grid-template-columns: 64px 1fr;
-    }
-
-    .admin-output .admin-section-title>.admin-button {
-        grid-column: 1 / -1;
-        margin: 0 15px 15px;
-    }
-
-    .admin-feedback {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
+/* Tablette : bandeau OSD du héros allégé (le japonais et la dernière mention
+   sortent avant que les libellés ne se touchent) */
+@media (max-width: 960px) {
+  body.admin-page .admin-hero > .osd .jp,
+  body.admin-page .admin-hero > .osd > span:last-child {
+    display: none;
+  }
 }

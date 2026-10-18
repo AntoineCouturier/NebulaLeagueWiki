@@ -25,17 +25,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,500;0,600;0,700;1,600;1,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="CSS/hamburger.css">
     <link rel="stylesheet" href="CSS/global-theme.css">
-    <link rel="stylesheet" href="CSS/legacy-pages.css">
     <link rel="stylesheet" href="CSS/progression.css">
     <link rel="stylesheet" href="CSS/responsive.css">
+    <link rel="stylesheet" href="CSS/theme-monitor.css">
     <script src="JavaScript/reveal.js"></script>
 </head>
 
-<body class="nebula-page legacy-page progression-page">
+<body class="nebula-page progression-page nl-migrated">
     <header class="site-header" id="top">
         <a class="brand" href="index.html"><span class="brand-mark"><span></span></span><span
                 class="brand-copy"><strong>NEBULA</strong><small>LEAGUE // DATABASE</small></span></a>
@@ -52,74 +52,191 @@
         </div>
     </header>
 
-    <main class="legacy-shell">
-        <section class="legacy-hero">
-            <div class="legacy-hero-copy">
-                <p class="legacy-kicker"><span>NL—11</span> TRAJECTOIRES INDIVIDUELLES</p>
-                <h1>CHAQUE MATCH<br><em>LAISSE UNE MARQUE.</em></h1>
-                <p>Observe l’évolution d’un joueur, son impact cumulé, sa valeur et les performances qui ont changé sa
-                    trajectoire.</p>
+    <main class="progress-shell">
+        <!-- CAM 11 : oscilloscope, la courbe ego des sujets classés -->
+        <section class="progress-hero nl-hero" aria-labelledby="progressPageTitle">
+            <div class="osd">
+                <span class="rec">REC</span>
+                <span>CAM 11 <b>//</b> COURBES D’ÉVOLUTION</span>
+                <span class="osd-hide-sm">OSCILLOSCOPE — <b>NOTE GLOBALE</b></span>
+                <span class="jp osd-hide-sm">エゴ // ブルーロック監視中</span>
+                <span class="osd-hide-sm">SUJETS CLASSÉS <b data-progress-stat="ranked">--</b></span>
             </div>
-            <div class="legacy-hero-signal progression-signal" aria-hidden="true">
-                <i></i><i></i><i></i><i></i><i></i><strong>↗</strong>
+
+            <!-- Tracé généré par progression.js (décoratif) -->
+            <div class="progress-scope" data-progress-scope aria-hidden="true"></div>
+
+            <div class="nl-hero-inner progress-hero-inner">
+                <p class="nl-kicker"><span class="nl-ch">CH 11</span> Effectifs // Trajectoires individuelles</p>
+                <h1 class="nl-headline progress-title" id="progressPageTitle">Chaque match<br><em>laisse une marque.</em></h1>
+                <p class="nl-lead">Observe l’évolution d’un joueur, son <b>impact cumulé</b>, sa valeur et les
+                    performances qui ont changé sa trajectoire.</p>
+                <div class="progress-hero-stats" aria-label="Relevés de la salle">
+                    <div class="nl-stat nl-stat--solid">
+                        <span class="nl-stat-label">Sujets suivis</span>
+                        <strong class="nl-stat-value" data-progress-stat="players">--</strong>
+                        <span class="nl-stat-note" data-progress-stat="rankedNote">Classement en cours</span>
+                    </div>
+                    <div class="nl-stat">
+                        <span class="nl-stat-label">Matchs archivés</span>
+                        <strong class="nl-stat-value" data-progress-stat="matches">--</strong>
+                        <span class="nl-stat-note" data-progress-stat="seasonNote">Saison en cours</span>
+                    </div>
+                    <div class="nl-stat">
+                        <span class="nl-stat-label">Note de pointe</span>
+                        <strong class="nl-stat-value" data-progress-stat="peak">--</strong>
+                        <span class="nl-stat-note" data-progress-stat="peakNote">Aucun sujet classé</span>
+                    </div>
+                </div>
             </div>
+            <span class="nl-timecode progress-hero-tc" aria-hidden="true">ÉCHELLE // NOTE GLOBALE 70 → 100</span>
         </section>
 
-        <section class="progress-selector">
-            <div class="progress-selector-head">
-                <span>01</span>
-                <div><small>PROTOCOLE DE SÉLECTION</small>
-                    <h2>CHOISIR UNE TRAJECTOIRE</h2>
-                </div>
-                <label><span>PÉRIODE ANALYSÉE</span><select id="progressSeason"></select></label>
-            </div>
-
-            <div class="progress-selection-slot" id="progressSelectionSlot"></div>
-
-            <div class="progress-entity-head">
-                <p>JOUEURS DISPONIBLES</p>
+        <!-- CH 01 : mélangeur vidéo (sortie programme + multiview) -->
+        <section class="progress-selector" id="progressSelector" aria-labelledby="progressSelectorTitle">
+            <div class="nl-section-head">
+                <div class="nl-chno"><small>CH</small><b>01</b></div>
                 <div>
-                    <small>CLIQUEZ SUR UN PROFIL POUR CHARGER SON DOSSIER</small>
-                    <button type="button" id="progressReset">RÉINITIALISER</button>
+                    <p class="nl-kicker">Protocole de sélection // Mélangeur vidéo</p>
+                    <h2 class="nl-section-title" id="progressSelectorTitle">Choisir une <em>trajectoire</em></h2>
+                </div>
+                <p class="nl-section-note">Passez une source à l’antenne : son relevé, sa courbe de valeur et son
+                    journal de matchs se chargent sur la régie.</p>
+            </div>
+
+            <div class="progress-console nl-console">
+                <div class="nl-console-head">
+                    <span class="nl-ch">CH 01-B</span>
+                    <h3>Console de régie</h3>
+                    <p>Cliquez sur une source pour charger son dossier.</p>
+                </div>
+                <div class="progress-console-body nl-console-body">
+                    <label class="nl-field" for="progressSeason">
+                        <span class="nl-field-label">Période analysée</span>
+                        <select id="progressSeason" class="nl-input"></select>
+                    </label>
+                    <div class="nl-field">
+                        <span class="nl-field-label">Sortie programme</span>
+                        <button type="button" id="progressReset" class="nl-btn nl-btn-ghost nl-btn-sm">Réinitialiser</button>
+                    </div>
                 </div>
             </div>
-            <div class="progress-player-grid" id="progressPlayerGrid"></div>
+
+            <div class="progress-mixer">
+                <div class="progress-pgm">
+                    <div class="osd">
+                        <span><b>PGM</b> // SORTIE PROGRAMME</span>
+                        <span class="osd-hide-sm">CAM 11-A</span>
+                    </div>
+                    <div class="progress-selection-slot" id="progressSelectionSlot"></div>
+                </div>
+                <div class="progress-multiview">
+                    <div class="osd">
+                        <span><b>MULTIVIEW</b> // JOUEURS DISPONIBLES</span>
+                        <span class="osd-hide-sm">PVW // APERÇU</span>
+                    </div>
+                    <div class="progress-player-grid" id="progressPlayerGrid"></div>
+                </div>
+            </div>
         </section>
 
-        <section id="progressProfile" class="progress-profile"></section>
+        <!-- CH 02 : relevé du sujet à l'antenne (bande bleue) -->
+        <section id="progressProfile" class="progress-profile nl-band nl-bleed" aria-live="polite"></section>
 
-        <section class="legacy-panel" id="progressChartPanel" hidden>
-            <div class="legacy-panel-title"><span>02</span>
-                <div><small id="progressChartEyebrow">COURBE CUMULÉE</small>
-                    <h2 id="progressChartTitle">TRAJECTOIRE DE VALEUR</h2>
+        <!-- CH 03 : oscilloscope de valeur / révisions techniques -->
+        <section class="progress-panel progress-chart-panel" id="progressChartPanel" hidden
+            aria-labelledby="progressChartTitle">
+            <div class="nl-section-head">
+                <div class="nl-chno"><small>CH</small><b>03</b></div>
+                <div>
+                    <p class="nl-kicker" id="progressChartEyebrow">COURBE CUMULÉE</p>
+                    <h2 class="nl-section-title" id="progressChartTitle">TRAJECTOIRE DE VALEUR</h2>
                 </div>
-                <p id="progressChartCaption">Valeur générée par les matchs enregistrées.</p>
+                <p class="nl-section-note" id="progressChartCaption">Valeur générée par les matchs enregistrés.</p>
             </div>
-            <div class="progress-mode-tabs" role="tablist" aria-label="Type de progression">
-                <button type="button" id="progressValueMode" class="is-active" role="tab" aria-selected="true">
-                    <span>01</span> VALEUR
+            <div class="progress-mode-tabs nl-channels" role="tablist" aria-label="Type de progression">
+                <button type="button" id="progressValueMode" class="nl-channel is-active" role="tab" aria-selected="true">
+                    <span class="nl-channel-num">CH 01</span> Valeur
                 </button>
-                <button type="button" id="progressTechnicalMode" role="tab" aria-selected="false">
-                    <span>02</span> STATS TECHNIQUES
+                <button type="button" id="progressTechnicalMode" class="nl-channel" role="tab" aria-selected="false">
+                    <span class="nl-channel-num">CH 02</span> Stats techniques
                 </button>
             </div>
-            <div class="progress-chart" id="progressChart"></div>
+            <div class="progress-scope-screen">
+                <div class="osd">
+                    <span><b>CAM 11-C</b> // OSCILLOSCOPE</span>
+                    <span class="osd-hide-sm">RELEVÉ // PÉRIODE SÉLECTIONNÉE</span>
+                </div>
+                <div class="progress-chart" id="progressChart"></div>
+            </div>
         </section>
 
-        <section class="legacy-panel" id="progressTimelinePanel" hidden>
-            <div class="legacy-panel-title"><span>03</span>
-                <div><small id="progressTimelineEyebrow">JOURNAL D’IMPACT</small>
-                    <h2 id="progressTimelineTitle">MATCH PAR MATCH</h2>
+        <!-- CH 04 : journal d'impact -->
+        <section class="progress-panel progress-timeline-panel" id="progressTimelinePanel" hidden
+            aria-labelledby="progressTimelineTitle">
+            <div class="nl-section-head">
+                <div class="nl-chno"><small>CH</small><b>04</b></div>
+                <div>
+                    <p class="nl-kicker" id="progressTimelineEyebrow">JOURNAL D’IMPACT</p>
+                    <h2 class="nl-section-title" id="progressTimelineTitle">MATCH PAR MATCH</h2>
                 </div>
-                <p id="progressTimelineCaption">Les entrées les plus récentes apparaissent en premier.</p>
+                <p class="nl-section-note" id="progressTimelineCaption">Les entrées les plus récentes apparaissent en
+                    premier.</p>
             </div>
             <div class="progress-timeline" id="progressTimeline"></div>
         </section>
 
-        <nav class="legacy-crosslinks" aria-label="Autres archives">
-            <a href="dream-team.html"><span>SÉLECTION AUTOMATIQUE</span><strong>ÉQUIPES IDÉALES</strong><i>↗</i></a>
+        <!-- CH 05 : flux associés -->
+        <nav class="progress-crosslinks" aria-label="Autres archives">
+            <p class="nl-kicker"><span class="nl-ch">CH 05</span> Autres archives // Flux associés</p>
+            <div class="progress-crosslink-wall nl-wall">
+                <a class="nl-feed" href="dream-team.html">
+                    <img class="nl-feed-img" src="images/icons/kaiser2.webp" alt="" loading="lazy">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd"><span>CAM 12 <b>//</b> SÉLECTION</span><span>↗</span></span>
+                    <span class="nl-feed-caption"><small>Sélection automatique</small><b>Équipes idéales</b></span>
+                </a>
+                <a class="nl-feed" href="valeur.html">
+                    <img class="nl-feed-img" src="images/icons/reo.webp" alt="" loading="lazy">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd"><span>CAM 04 <b>//</b> MARCHÉ</span><span>↗</span></span>
+                    <span class="nl-feed-caption"><small>Cotes et simulateur</small><b>Valeurs</b></span>
+                </a>
+                <a class="nl-feed" href="headtohead.html">
+                    <img class="nl-feed-img" src="images/icons/rin2.webp" alt="" loading="lazy">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd"><span>CAM 08 <b>//</b> DUEL</span><span>↗</span></span>
+                    <span class="nl-feed-caption"><small>Joueurs et clubs</small><b>Face à face</b></span>
+                </a>
+            </div>
         </nav>
     </main>
+
+    <footer class="nl-footer">
+        <div class="nl-footer-main">
+            <a class="footer-brand" href="index.html">
+                <span class="brand-mark"><span></span></span>
+                <strong>NEBULA LEAGUE</strong>
+            </a>
+            <p>Ligue privée Azure Latch. Toutes les rencontres sont enregistrées, chaque statistique est archivée.</p>
+        </div>
+        <nav class="nl-footer-links" aria-label="Accès rapides">
+            <p>Accès rapides</p>
+            <a href="players.html">Joueurs</a>
+            <a href="valeur.html">Valeurs</a>
+            <a href="dream-team.html">Équipes idéales</a>
+            <a href="matchs.html">Matchs</a>
+            <a href="stats.html">Records</a>
+            <a href="rules.html">Règles</a>
+        </nav>
+        <div class="nl-footer-osd">
+            <span class="rec">REC</span>
+            <span>NL-CTRL // FIN DU FLUX</span>
+            <span class="jp">ブルーロック</span>
+            <span>© NEBULA LEAGUE</span>
+            <a href="#top">Retour en haut ↑</a>
+        </div>
+    </footer>
 
     <script src="JavaScript/nebula-data.js"></script>
     <script src="JavaScript/progression.js"></script>

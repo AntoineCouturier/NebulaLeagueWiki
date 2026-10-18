@@ -1,6 +1,6 @@
 /* ===================== CLUB CONFIG ===================== */
 function playerCardTint(hex, alpha = 0.15) {
-    const value = String(hex || "#63e7ff").replace("#", "");
+    const value = String(hex || "#3d7bff").replace("#", "");
     const expanded = (value.length === 3
         ? value.split("").map(character => character + character).join("")
         : value).slice(0, 6).padEnd(6, "0");
@@ -107,6 +107,8 @@ const CHARACTER_ULTIMATE_PALETTES = {
 let radarChart = null;
 let inlineRadarChart = null;
 let clubData = CLUBS.bastard;
+// Les graphiques suivent le bleu « salle de contrôle » quel que soit le club.
+const SIGNAL_BLUE = '#3d7bff';
 let playerName = 'Joueur';
 let playerData = null;
 
@@ -635,6 +637,25 @@ function getFIFARating(value) {
     return '—';
 }
 
+// Direction « salle de contrôle » : les accents des titres passent par les
+// jetons du thème (bleus + blanc) quelle que soit leur couleur d'origine
+// (nebula-data.js garde ses couleurs, seul l'affichage est harmonisé).
+function monitorTitleAccents(title) {
+    if (!title) return null;
+    if (title.source === 'ultimate') return { accent: 'var(--blue-3)', secondary: '#ffffff', tertiary: 'var(--blue-2)' };
+    if (title.source === 'season') return { accent: '#ffffff', secondary: 'var(--blue-3)', tertiary: 'var(--blue-2)' };
+    if (title.source === 'manual') return { accent: 'var(--blue-3)', secondary: 'var(--blue-3)', tertiary: 'var(--blue-2)' };
+    const summit = (title.priority || 0) >= 75;
+    return { accent: summit ? '#ffffff' : 'var(--blue-2)', secondary: 'var(--blue-3)', tertiary: 'var(--blue-2)' };
+}
+
+function titleAccentStyle(title) {
+    const accents = monitorTitleAccents(title);
+    return accents
+        ? `--title-accent:${accents.accent};--title-accent-secondary:${accents.secondary};--title-accent-tertiary:${accents.tertiary}`
+        : '';
+}
+
 function calculateGlobalAverage(stats) {
     if (typeof window.NEBULA_DATA?.calculateTechnicalOverall === 'function') {
         return window.NEBULA_DATA.calculateTechnicalOverall(stats);
@@ -685,30 +706,49 @@ function buildHero(club, stats, titles) {
 
     const featuredTitle = titles[0];
     const featuredTitleIllustration = getTechnicalTitleIllustration(featuredTitle);
-    const featuredStyle = featuredTitle
-        ? ` style="--title-accent:${featuredTitle.accent};--title-accent-secondary:${featuredTitle.accentSecondary || featuredTitle.accent};--title-accent-tertiary:${featuredTitle.accentTertiary || featuredTitle.accent}"`
-        : '';
+    const featuredStyle = featuredTitle ? ` style="${titleAccentStyle(featuredTitle)}"` : '';
     const featuredSourceClass = featuredTitle?.source ? ` ${featuredTitle.source}` : '';
     const clubLabel = clubData.name || parseInfoField('Club');
     const profileCode = playerName.replace(/\s+/g, '-').toUpperCase();
 
+    // Classement façon Blue Lock : rang selon la note globale parmi les
+    // joueurs notés et en activité (même calcul que la page Joueurs).
+    // Retraité ou sans note : NON CLASSÉ, jamais de faux numéro.
+    const leaguePlayers = window.NEBULA_DATA?.players || [];
+    const isRetired = playerData?.club === 'retraite';
+    const ranking = leaguePlayers
+        .filter(player => player.club !== 'retraite' && Number.isFinite(player.technical?.global))
+        .sort((a, b) => b.technical.global - a.technical.global);
+    const rank = playerData ? ranking.indexOf(playerData) + 1 : 0;
+    const rankMarkup = rank > 0
+        ? `<span class="pc-portrait-number nl-rank" aria-label="Classement numéro ${rank}"><small>#</small>${String(rank).padStart(3, '0')}</span>`
+        : `<span class="pc-portrait-number nl-nc is-unranked" aria-label="Non classé"><b>NON CLASSÉ</b><small>${isRetired ? 'ARCHIVÉ // RETRAITE' : 'EN ATTENTE DE NOTE'}</small></span>`;
+    const camNumber = String(Math.max(1, leaguePlayers.indexOf(playerData) + 1)).padStart(2, '0');
+    const avatarSrc = playerData?.avatar || avatar?.src || '';
+    const position = parseInfoField('Position');
+
     const hero = document.createElement('div');
-    hero.className = 'pc-hero pc-dossier';
+    hero.className = `pc-hero pc-dossier${isRetired ? ' is-offline' : ''}`;
+    // Fond du héros : le même flux, flouté (URL absolue de nebula-data.js).
+    if (avatarSrc) hero.style.setProperty('--feed-src', `url("${avatarSrc}")`);
     hero.innerHTML = `
         <div class="pc-hero-grid" aria-hidden="true"></div>
         <div class="pc-hero-topline">
-            <span>NL // PLAYER DOSSIER // ${profileCode}</span>
-            <span class="pc-profile-status"><i></i> PROFIL ACTIF</span>
+            <span class="pc-topline-cam"><b>CAM ${camNumber}</b> //<span class="pc-topline-long"> DOSSIER DE SURVEILLANCE //</span> ${profileCode}</span>
+            <span class="pc-topline-jp" aria-hidden="true">ブルーロック監視中</span>
+            <span class="pc-profile-status${isRetired ? ' is-offline' : ''}"><i></i> ${isRetired ? 'HORS LIGNE<span class="pc-topline-long"> // ARCHIVÉ</span>' : 'REC<span class="pc-topline-long"> // PROFIL ACTIF</span>'}</span>
         </div>
-        <div class="pc-hero-portrait">
-            <span class="pc-portrait-number">${String(typeof ovr === 'number' ? ovr : '00').padStart(2, '0')}</span>
-            <img class="pc-hero-avatar" src="${playerData?.avatar || avatar?.src || ''}" alt="${playerName}" style="view-transition-name: player-portrait-${String(playerName).toLowerCase().replace(/[^a-z0-9]/g, '')}">
+        <div class="pc-hero-portrait${isRetired ? ' is-offline' : ''}">
+            <img class="pc-hero-avatar" src="${avatarSrc}" alt="${playerName}" style="view-transition-name: player-portrait-${String(playerName).toLowerCase().replace(/[^a-z0-9]/g, '')}">
             <span class="pc-portrait-scan" aria-hidden="true"></span>
+            <span class="pc-portrait-lock" aria-hidden="true"><b>${isRetired ? 'SUJET ARCHIVÉ' : 'SUJET VERROUILLÉ'}</b></span>
+            <span class="pc-portrait-osd" aria-hidden="true"><span>ZOOM ×2.4</span><span>ISO 3200</span><span>${isRetired ? 'SIGNAL ARCHIVÉ' : 'SIGNAL STABLE'}</span></span>
+            ${rankMarkup}
         </div>
         <div class="pc-hero-identity">
-            <p class="pc-hero-eyebrow"><span>${parseInfoField('Position')}</span> ${clubLabel}</p>
+            <p class="pc-hero-eyebrow"><span>${position}</span> ${clubLabel}</p>
             <h2 class="pc-hero-name">${playerName}</h2>
-            <p class="pc-hero-alias">${parseInfoField('Pseudo')} // ${parseInfoField('Position')}</p>
+            <p class="pc-hero-alias">${parseInfoField('Pseudo')} // ${position}</p>
             <div class="pc-signature-title${featuredTitle ? ' unlocked' : ''}${featuredTitleIllustration ? ' has-technical-illustration' : ''}${featuredSourceClass}"${featuredStyle}>
                 ${featuredTitleIllustration}
                 <small>${featuredTitle ? 'TITRE ACTIF // SYNCHRONISÉ' : 'TITRE ACTIF // NON ATTRIBUÉ'}</small>
@@ -756,10 +796,11 @@ function buildHero(club, stats, titles) {
         signatureTitle.className = `pc-signature-title${title ? ' unlocked' : ''}${illustration ? ' has-technical-illustration' : ''}${titles.length > 1 ? ' has-title-switcher' : ''}${sourceClass}`;
 
         ['--title-accent', '--title-accent-secondary', '--title-accent-tertiary'].forEach(property => signatureTitle.style.removeProperty(property));
-        if (title) {
-            signatureTitle.style.setProperty('--title-accent', title.accent);
-            signatureTitle.style.setProperty('--title-accent-secondary', title.accentSecondary || title.accent);
-            signatureTitle.style.setProperty('--title-accent-tertiary', title.accentTertiary || title.accent);
+        const accents = monitorTitleAccents(title);
+        if (accents) {
+            signatureTitle.style.setProperty('--title-accent', accents.accent);
+            signatureTitle.style.setProperty('--title-accent-secondary', accents.secondary);
+            signatureTitle.style.setProperty('--title-accent-tertiary', accents.tertiary);
         }
 
         signatureTitle.innerHTML = `
@@ -952,12 +993,48 @@ function buildValueHistoryPanel() {
     container.appendChild(panel);
 }
 
+// Infobulle HTML aux couleurs de la salle de contrôle, à la place de la bulle
+// arrondie de Chart.js. `format(points)` renvoie { kicker, value, detail, tone }.
+function createChartTooltip(format) {
+    const escapeText = text => String(text ?? '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[char]);
+
+    return ({ chart, tooltip }) => {
+        const holder = chart.canvas.parentElement;
+        if (!holder) return;
+        let box = holder.querySelector(':scope > .pc-chart-tooltip');
+        if (!box) {
+            if (getComputedStyle(holder).position === 'static') holder.style.position = 'relative';
+            box = document.createElement('div');
+            box.className = 'pc-chart-tooltip';
+            box.setAttribute('role', 'tooltip');
+            holder.appendChild(box);
+        }
+        if (!tooltip.opacity || !tooltip.dataPoints?.length) {
+            box.classList.remove('is-visible');
+            return;
+        }
+
+        const { kicker, value, detail, tone } = format(tooltip.dataPoints);
+        box.innerHTML = `<small>${escapeText(kicker)}</small><strong>${escapeText(value)}</strong>${detail ? `<span${tone ? ` class="is-${tone}"` : ''}>${escapeText(detail)}</span>` : ''}`;
+
+        const x = chart.canvas.offsetLeft + tooltip.caretX;
+        const y = chart.canvas.offsetTop + tooltip.caretY;
+        const half = box.offsetWidth / 2;
+        box.style.left = `${Math.min(Math.max(x, half + 4), holder.clientWidth - half - 4)}px`;
+        box.style.top = `${y}px`;
+        box.classList.toggle('is-below', y - box.offsetHeight - 16 < 0);
+        box.classList.add('is-visible');
+    };
+}
+
 function createValueChart() {
     const canvas = document.getElementById('valueHistoryChart');
     if (!canvas || valueChart || typeof Chart === 'undefined') return;
 
     const history = window.NEBULA_DATA.getPlayerMarketValueHistory(playerData.name);
-    const color = (clubData.borderColor || '#adff2f').slice(0, 7);
+    const color = SIGNAL_BLUE;
     const compact = new Intl.NumberFormat('fr-FR', { notation: 'compact', maximumFractionDigits: 1 });
 
     valueChart = new Chart(canvas, {
@@ -982,25 +1059,24 @@ function createValueChart() {
             plugins: {
                 legend: { display: false },
                 tooltip: {
-                    callbacks: {
-                        title: items => {
-                            const point = history[items[0].dataIndex];
-                            return point.date ? `${point.label} · ${point.date}` : point.label;
-                        },
-                        label: item => {
-                            const point = history[item.dataIndex];
-                            const delta = point.delta ? ` (${point.delta > 0 ? '+' : ''}${formatPlayerValue(point.delta)})` : '';
-                            return `${formatPlayerValue(point.total)}${delta}`;
-                        }
-                    }
+                    enabled: false,
+                    external: createChartTooltip(([item]) => {
+                        const point = history[item.dataIndex];
+                        return {
+                            kicker: point.date ? `${point.label} · ${point.date}` : point.label,
+                            value: formatPlayerValue(point.total),
+                            detail: point.delta ? `${point.delta > 0 ? '+' : ''}${formatPlayerValue(point.delta)}` : '',
+                            tone: point.delta > 0 ? 'up' : point.delta < 0 ? 'down' : ''
+                        };
+                    })
                 }
             },
             scales: {
-                x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#89939e', font: { family: 'Courier New', size: 10 } } },
+                x: { grid: { color: 'rgba(141,176,255,0.08)' }, ticks: { color: '#8b9ac0', font: { family: "'IBM Plex Mono', monospace", size: 10 } } },
                 y: {
                     beginAtZero: true,
-                    grid: { color: 'rgba(255,255,255,0.05)' },
-                    ticks: { color: '#89939e', font: { family: 'Courier New', size: 10 }, callback: value => `${compact.format(value)} ¥` }
+                    grid: { color: 'rgba(141,176,255,0.08)' },
+                    ticks: { color: '#8b9ac0', font: { family: "'IBM Plex Mono', monospace", size: 10 }, callback: value => `${compact.format(value)} ¥` }
                 }
             }
         }
@@ -1121,7 +1197,7 @@ function buildTrophiesPanel(titles) {
                 : title.source === 'ultimate'
                     ? 'ULTIME'
                     : 'ARCHIVE';
-        const titleStyle = `--title-accent:${title.accent};--title-accent-secondary:${title.accentSecondary || title.accent};--title-accent-tertiary:${title.accentTertiary || title.accent}`;
+        const titleStyle = titleAccentStyle(title);
         const proof = title.proof || (title.metric === 'value' && Number.isFinite(title.value) && Number.isFinite(title.threshold)
             ? `${formatPlayerValue(title.value)} / ${formatPlayerValue(title.threshold)}`
             : Number.isFinite(title.value) && Number.isFinite(title.threshold)
@@ -1169,9 +1245,9 @@ function buildTabs() {
     const tabs = document.createElement('div');
     tabs.className = 'pc-tabs';
     tabs.innerHTML = `
-        <button class="pc-tab-btn active" data-tab="technique"><span>01</span> Technique</button>
-        <button class="pc-tab-btn" data-tab="matchs"><span>02</span> Matchs</button>
-        <button class="pc-tab-btn" data-tab="palmares"><span>03</span> Palmarès</button>
+        <button class="pc-tab-btn active" data-tab="technique"><span>CH 01</span> Technique</button>
+        <button class="pc-tab-btn" data-tab="matchs"><span>CH 02</span> Matchs</button>
+        <button class="pc-tab-btn" data-tab="palmares"><span>CH 03</span> Palmarès</button>
     `;
 
     const panels = document.createElement('div');
@@ -1241,11 +1317,11 @@ function getChartOptions(borderColor, playerLabel) {
         maintainAspectRatio: false,
         scales: {
             r: {
-                angleLines: { display: true, color: 'rgba(255, 255, 255, 0.12)' },
-                grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                angleLines: { display: true, color: 'rgba(141, 176, 255, 0.2)' },
+                grid: { color: 'rgba(141, 176, 255, 0.13)' },
                 pointLabels: {
-                    color: '#ffffff',
-                    font: { size: 11, weight: 'bold' },
+                    color: '#c9d4ef',
+                    font: { family: "'IBM Plex Mono', monospace", size: 10, weight: '600' },
                     padding: 12
                 },
                 ticks: {
@@ -1261,25 +1337,82 @@ function getChartOptions(borderColor, playerLabel) {
         plugins: {
             legend: { display: false },
             tooltip: {
-                backgroundColor: 'rgba(14, 14, 18, 0.95)',
-                titleColor: '#fff',
-                bodyColor: '#fff',
-                borderColor: borderColor,
-                borderWidth: 2,
-                padding: 12,
-                callbacks: {
-                    label(ctx) {
-                        return `${playerLabel}: ${ctx.raw} (${getFIFARating(ctx.raw)})`;
-                    }
-                }
+                enabled: false,
+                external: createChartTooltip(([item]) => ({
+                    kicker: item.label,
+                    value: item.raw,
+                    detail: `${playerLabel} · Rang ${getFIFARating(item.raw)}`
+                }))
             }
         },
         animation: { duration: 1000, easing: 'easeOutQuart' }
     };
 }
 
+// Sans Chart.js (CDN bloqué, hors ligne…) : radar dessiné en SVG pour que
+// l'écran « lecture hexagonale » ne reste jamais vide.
+function drawRadarFallback(canvas) {
+    const holder = canvas?.parentElement;
+    if (!holder || holder.querySelector('.pc-radar-fallback')) return;
+
+    const stats = extractStatsFromHTML();
+    const values = STAT_LABELS.map(stat => Number.isFinite(stats[stat.key]) ? stats[stat.key] : null);
+    const center = 150;
+    const radius = 100;
+    const point = (index, ratio) => {
+        const angle = -Math.PI / 2 + index * (Math.PI * 2 / STAT_LABELS.length);
+        return [center + Math.cos(angle) * radius * ratio, center + Math.sin(angle) * radius * ratio];
+    };
+    const toPoints = ratios => ratios.map((ratio, index) => point(index, ratio).map(n => n.toFixed(1)).join(',')).join(' ');
+    const scale = value => Math.max(0.04, Math.min(1, (value - 50) / 50));
+
+    const rings = [1, 0.8, 0.6, 0.4, 0.2]
+        .map(ratio => `<polygon class="pc-radar-ring" points="${toPoints(STAT_LABELS.map(() => ratio))}"/>`).join('');
+    const axes = STAT_LABELS.map((_, index) => {
+        const [x, y] = point(index, 1);
+        return `<line class="pc-radar-axis" x1="${center}" y1="${center}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"/>`;
+    }).join('');
+    const hasData = values.some(value => value !== null);
+    const shape = hasData
+        ? `<polygon class="pc-radar-shape" points="${toPoints(values.map(value => scale(value ?? 50)))}"/>`
+            + values.map((value, index) => {
+                if (value === null) return '';
+                const [x, y] = point(index, scale(value));
+                return `<circle class="pc-radar-dot" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.6"/>`;
+            }).join('')
+        : '';
+    const labels = STAT_LABELS.map((stat, index) => {
+        const [x, y] = point(index, 1.2);
+        const value = values[index];
+        return `<text class="pc-radar-label" x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle" dominant-baseline="middle">${stat.label.toUpperCase()}${value !== null ? `<tspan class="pc-radar-value" x="${x.toFixed(1)}" dy="13">${value}</tspan>` : ''}</text>`;
+    }).join('');
+
+    holder.insertAdjacentHTML('beforeend', `
+        <svg class="pc-radar-fallback" viewBox="-40 -10 380 320" role="img" aria-label="Radar des compétences de ${playerName}">
+            ${rings}${axes}${shape}${labels}
+        </svg>`);
+}
+
+// Le balayage (::before du conteneur) suit le vrai centre du radar : Chart.js
+// décale ce centre pour laisser de la place aux libellés (POSITIONNEMENT, TIR…).
+const radarSweepPlugin = {
+    id: 'nlRadarSweep',
+    afterLayout(chart) {
+        const scale = chart.scales.r;
+        const holder = chart.canvas.parentElement;
+        if (!scale || !holder) return;
+        holder.style.setProperty('--sweep-x', `${chart.canvas.offsetLeft + scale.xCenter}px`);
+        holder.style.setProperty('--sweep-y', `${chart.canvas.offsetTop + scale.yCenter}px`);
+        holder.style.setProperty('--sweep-size', `${scale.drawingArea * 2}px`);
+    }
+};
+
 function createRadarChart(canvasId, chartRef) {
     const canvas = document.getElementById(canvasId);
+    if (canvas && typeof Chart === 'undefined') {
+        if (chartRef === 'inline') drawRadarFallback(canvas);
+        return null;
+    }
     if (!canvas || typeof Chart === 'undefined') return null;
 
     const stats = extractStatsFromHTML();
@@ -1304,9 +1437,9 @@ function createRadarChart(canvasId, chartRef) {
             datasets: [{
                 label: playerName,
                 data,
-                backgroundColor: hasTechnicalData ? clubData.bgColor : 'transparent',
-                borderColor: hasTechnicalData ? clubData.borderColor : 'transparent',
-                pointBackgroundColor: clubData.borderColor,
+                backgroundColor: hasTechnicalData ? playerCardTint(SIGNAL_BLUE, 0.22) : 'transparent',
+                borderColor: hasTechnicalData ? SIGNAL_BLUE : 'transparent',
+                pointBackgroundColor: SIGNAL_BLUE,
                 pointBorderColor: '#fff',
                 pointBorderWidth: hasTechnicalData ? 2 : 0,
                 pointRadius: hasTechnicalData ? 5 : 0,
@@ -1314,7 +1447,8 @@ function createRadarChart(canvasId, chartRef) {
                 borderWidth: hasTechnicalData ? 2.5 : 0
             }]
         },
-        options: getChartOptions(clubData.borderColor, playerName)
+        options: getChartOptions(SIGNAL_BLUE, playerName),
+        plugins: chartRef === 'inline' ? [radarSweepPlugin] : []
     });
 
     if (chartRef === 'inline') inlineRadarChart = chart;

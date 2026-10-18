@@ -14,7 +14,7 @@ for (const entry of await readdir(outputDirectory)) {
   await rm(target, { recursive: true, force: true });
 }
 // Publish the original pages directly, without React or database imports.
-for (const dir of ['CSS', 'JavaScript', 'images', 'Joueurs', 'Autre']) {
+for (const dir of ['CSS', 'JavaScript', 'images', 'Joueurs']) {
   await cp(dir, `dist/${dir}`, { recursive: true, filter: path => !/[/\\](auth|manager)\.css$/.test(path) && (includeDemo || !/Joueurs[/\\]demo/.test(path)) });
 }
 for (const file of await readdir('.')) if (file.endsWith('.html') && file !== 'compte.html') await cp(file, `dist/${file}`);

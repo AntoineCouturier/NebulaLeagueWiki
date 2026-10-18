@@ -26,18 +26,16 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
 
     <link rel="stylesheet" href="CSS/hamburger.css">
     <link rel="stylesheet" href="CSS/global-theme.css">
     <link rel="stylesheet" href="CSS/admin.css">
     <link rel="stylesheet" href="CSS/responsive.css">
+    <link rel="stylesheet" href="CSS/theme-monitor.css">
     <script src="JavaScript/reveal.js"></script>
 </head>
 
-<body class="nebula-page admin-page">
+<body class="nebula-page admin-page nl-migrated">
     <header class="site-header" id="top">
         <a class="brand" href="index.html" aria-label="Retour à l'accueil">
             <span class="brand-mark"><span></span></span>
@@ -66,133 +64,255 @@
     </header>
 
     <main class="admin-shell">
-        <section class="admin-hero">
-            <div>
-                <p class="admin-kicker"><span>NL—CTRL</span> OUTIL DE SAISIE</p>
-                <h1>CENTRE DE<br><em>GESTION LOCAL.</em></h1>
-                <p>Prépare un résultat, vérifie sa cohérence et récupère le bloc exact à ajouter dans
-                    <code>nebula-data.js</code>. Cette page ne modifie jamais tes fichiers toute seule.</p>
+        <!-- 00. Héros : la mire de test de la régie, avant antenne -->
+        <section class="nl-hero nl-hero--mire admin-hero" aria-labelledby="admin-title">
+            <div class="osd">
+                <span class="rec">REC</span>
+                <span>CAM 00 <b>//</b> RÉGIE LOCALE</span>
+                <span class="osd-hide-sm">MIRE — <b>AVANT ANTENNE</b></span>
+                <span class="jp osd-hide-sm">ブルーロック // 管理</span>
+                <span class="osd-hide-sm">FICHIERS // LECTURE SEULE</span>
             </div>
-            <div class="admin-hero-status">
-                <span>REGISTRE CHARGÉ</span>
-                <strong id="adminDataSummary">--</strong>
-                <small>Le brouillon est conservé uniquement dans ce navigateur.</small>
+
+            <div class="nl-hero-inner admin-hero-inner">
+                <div class="admin-hero-copy">
+                    <p class="nl-kicker"><span class="nl-ch">CH 00</span> Régie // Outil de saisie</p>
+                    <h1 id="admin-title" class="nl-headline admin-headline">Centre de gestion <em>local</em></h1>
+                    <p class="nl-lead">Prépare un résultat, vérifie sa cohérence et récupère le bloc exact à ajouter dans
+                        <code>nebula-data.js</code>. Cette page ne modifie <b>jamais</b> tes fichiers toute seule.</p>
+                    <div class="nl-hero-actions">
+                        <a class="nl-btn" href="#admin-sheet">Saisir un match <span>↓</span></a>
+                        <a class="nl-btn nl-btn-ghost" href="#admin-program">Bloc à copier <span>↘</span></a>
+                    </div>
+                </div>
+
+                <aside class="admin-registry" aria-label="Registre chargé">
+                    <div class="admin-registry-osd">
+                        <span><b>CAM 00-A</b> // REGISTRE CHARGÉ</span>
+                        <span class="rec">DIRECT</span>
+                    </div>
+                    <div class="nl-stats admin-registry-stats">
+                        <div class="nl-stat nl-stat--solid">
+                            <span class="nl-stat-label">Clubs</span>
+                            <strong class="nl-stat-value" data-admin-count="clubs">--</strong>
+                        </div>
+                        <div class="nl-stat">
+                            <span class="nl-stat-label">Joueurs</span>
+                            <strong class="nl-stat-value" data-admin-count="players">--</strong>
+                        </div>
+                        <div class="nl-stat">
+                            <span class="nl-stat-label">Matchs</span>
+                            <strong class="nl-stat-value" data-admin-count="matches">--</strong>
+                        </div>
+                    </div>
+                    <p class="admin-registry-line"><span>SYNC</span><strong id="adminDataSummary">--</strong></p>
+                    <small>Le brouillon est conservé uniquement dans ce navigateur.</small>
+                </aside>
             </div>
         </section>
 
-        <section class="admin-workspace">
-            <div class="admin-section-title">
-                <span>01</span>
-                <div><small>IDENTIFICATION</small>
-                    <h2>DOSSIER DU MATCH</h2>
+        <!-- 01. Feuille de match : affiche, fiche, buts, notes + écran programme -->
+        <section class="admin-workspace" id="admin-sheet" aria-labelledby="admin-sheet-title">
+            <div class="nl-section-head">
+                <div class="nl-chno" aria-hidden="true"><small>CH</small><b>01</b></div>
+                <div>
+                    <p class="nl-kicker">Identification // Feuille de match</p>
+                    <h2 id="admin-sheet-title" class="nl-section-title">Dossier <em>du match</em></h2>
                 </div>
-                <p>Les scores sont calculés depuis les événements de buts.</p>
+                <p class="nl-section-note">Les scores sont calculés depuis les événements de buts. Rien n’est écrit tant que
+                    tu n’as pas copié le bloc final.</p>
             </div>
 
             <form id="matchBuilder" novalidate>
-                <div class="admin-fields admin-fields-main">
-                    <label><span>ID UNIQUE</span><input id="matchId" name="id" placeholder="m1" autocomplete="off"></label>
-                    <label><span>SAISON</span><input id="matchSeason" name="season" type="number" min="1" value="1"></label>
-                    <label><span>DATE</span><input id="matchDate" name="date" type="date"></label>
-                    <label><span>HEURE</span><input id="matchTime" name="time" type="time" value="20:00"></label>
-                    <label><span>CATÉGORIE</span>
-                        <select id="matchCategory" name="category">
-                            <option value="ligue">Ligue</option>
-                            <option value="amical">Amical</option>
-                            <option value="ncl">NCL</option>
-                        </select>
-                    </label>
-                    <label><span>PHASE SPÉCIALE</span>
-                        <select id="matchTier" name="valueTier">
-                            <option value="">Aucune</option>
-                            <option value="third">Petite finale</option>
-                            <option value="finale">Finale NCL</option>
-                        </select>
-                    </label>
-                    <label class="admin-field-wide"><span>VIDÉO (FACULTATIF)</span><input id="matchVideo"
-                            name="videoUrl" type="url" placeholder="https://..."></label>
-                </div>
-
-                <div class="admin-versus">
-                    <label class="team-select team-home"><span>DOMICILE</span><select id="homeClub"></select></label>
-                    <div class="admin-score">
-                        <small>SCORE GÉNÉRÉ</small>
-                        <strong><span id="homeScore">00</span><i>—</i><span id="awayScore">00</span></strong>
+                <!-- Affiche : bande bleue pleine, deux caméras de club et le score géant -->
+                <div class="admin-versus nl-band nl-bleed">
+                    <div class="admin-versus-osd" aria-hidden="true">
+                        <span><b>CAM 01</b> // AFFICHE DU MATCH</span>
+                        <span class="osd-hide-sm">PGM // SCORE CALCULÉ</span>
+                        <span class="rec">REC</span>
                     </div>
-                    <label class="team-select team-away"><span>EXTÉRIEUR</span><select id="awayClub"></select></label>
-                </div>
-
-                <div class="admin-section-title admin-inner-title">
-                    <span>02</span>
-                    <div><small>CHRONOLOGIE</small>
-                        <h2>ÉVÉNEMENTS DE BUTS</h2>
-                    </div>
-                    <div class="admin-inline-actions">
-                        <button type="button" class="admin-button admin-button-home" data-add-goal="home">+ BUT DOM.</button>
-                        <button type="button" class="admin-button admin-button-away" data-add-goal="away">+ BUT EXT.</button>
+                    <div class="admin-versus-grid">
+                        <div class="admin-team team-home" data-club-team="home">
+                            <div class="admin-team-feed" aria-hidden="true">
+                                <img class="admin-team-logo" data-club-logo src="images/clubs_icon/placeholder.webp" alt="">
+                                <span class="admin-team-osd"><span><b>CAM DOM.</b> // DOMICILE</span><span class="rec">REC</span></span>
+                                <span class="admin-team-caption"><small>Domicile</small><b data-club-name>À déterminer</b></span>
+                            </div>
+                            <label class="team-select nl-field"><span class="nl-field-label">Club domicile</span>
+                                <select class="nl-input" id="homeClub"></select></label>
+                        </div>
+                        <div class="admin-score">
+                            <small>Score généré</small>
+                            <strong><span id="homeScore">00</span><i>—</i><span id="awayScore">00</span></strong>
+                            <span class="admin-score-note">Calculé depuis les buts</span>
+                        </div>
+                        <div class="admin-team team-away" data-club-team="away">
+                            <div class="admin-team-feed" aria-hidden="true">
+                                <img class="admin-team-logo" data-club-logo src="images/clubs_icon/placeholder.webp" alt="">
+                                <span class="admin-team-osd"><span><b>CAM EXT.</b> // EXTÉRIEUR</span><span class="rec">REC</span></span>
+                                <span class="admin-team-caption"><small>Extérieur</small><b data-club-name>À déterminer</b></span>
+                            </div>
+                            <label class="team-select nl-field"><span class="nl-field-label">Club extérieur</span>
+                                <select class="nl-input" id="awayClub"></select></label>
+                        </div>
                     </div>
                 </div>
-                <div class="goal-events" id="goalEvents"></div>
 
-                <div class="admin-section-title admin-inner-title">
-                    <span>03</span>
-                    <div><small>PERFORMANCES</small>
-                        <h2>NOTES DES JOUEURS</h2>
+                <div class="admin-desk">
+                    <div class="admin-desk-main">
+                        <!-- CH 01-A : fiche technique -->
+                        <section class="nl-console admin-module" aria-labelledby="admin-fields-title">
+                            <div class="nl-console-head">
+                                <span class="nl-ch">CH 01-A</span>
+                                <h3 id="admin-fields-title">Fiche technique</h3>
+                                <p>Identifiant, date et catégorie</p>
+                            </div>
+                            <div class="admin-fields admin-fields-main">
+                                <label class="nl-field"><span class="nl-field-label">ID unique</span><input class="nl-input"
+                                        id="matchId" name="id" placeholder="m1" autocomplete="off"></label>
+                                <label class="nl-field"><span class="nl-field-label">Saison</span><input class="nl-input"
+                                        id="matchSeason" name="season" type="number" min="1" value="1"></label>
+                                <label class="nl-field"><span class="nl-field-label">Date</span><input class="nl-input"
+                                        id="matchDate" name="date" type="date"></label>
+                                <label class="nl-field"><span class="nl-field-label">Heure</span><input class="nl-input"
+                                        id="matchTime" name="time" type="time" value="20:00"></label>
+                                <label class="nl-field"><span class="nl-field-label">Catégorie</span>
+                                    <select class="nl-input" id="matchCategory" name="category">
+                                        <option value="ligue">Ligue</option>
+                                        <option value="amical">Amical</option>
+                                        <option value="ncl">NCL</option>
+                                    </select>
+                                </label>
+                                <label class="nl-field"><span class="nl-field-label">Phase spéciale</span>
+                                    <select class="nl-input" id="matchTier" name="valueTier">
+                                        <option value="">Aucune</option>
+                                        <option value="third">Petite finale</option>
+                                        <option value="finale">Finale NCL</option>
+                                    </select>
+                                </label>
+                                <label class="nl-field admin-field-wide"><span class="nl-field-label">Vidéo
+                                        (facultatif)</span><input class="nl-input" id="matchVideo" name="videoUrl" type="url"
+                                        placeholder="https://..."></label>
+                            </div>
+                        </section>
+
+                        <!-- CH 01-B : chronologie des buts -->
+                        <section class="nl-console admin-module" aria-labelledby="admin-goals-title">
+                            <div class="nl-console-head admin-module-head">
+                                <span class="nl-ch">CH 01-B</span>
+                                <h3 id="admin-goals-title">Événements de buts</h3>
+                                <div class="admin-inline-actions">
+                                    <button type="button" class="nl-btn nl-btn-sm admin-button admin-button-home"
+                                        data-add-goal="home">+ But dom.</button>
+                                    <button type="button" class="nl-btn nl-btn-sm nl-btn-ghost admin-button admin-button-away"
+                                        data-add-goal="away">+ But ext.</button>
+                                </div>
+                            </div>
+                            <div class="goal-events" id="goalEvents"></div>
+                        </section>
+
+                        <!-- CH 01-C : notes des joueurs -->
+                        <section class="nl-console admin-module" aria-labelledby="admin-notes-title">
+                            <div class="nl-console-head">
+                                <span class="nl-ch">CH 01-C</span>
+                                <h3 id="admin-notes-title">Notes des joueurs</h3>
+                                <p>Une ligne vide n’est pas exportée.</p>
+                            </div>
+                            <div class="admin-notes-grid">
+                                <section class="notes-team notes-home" aria-label="Notes de l’équipe à domicile">
+                                    <div class="notes-team-title"><span class="notes-side">DOM.</span><span
+                                            id="homeNotesName">DOMICILE</span><small aria-hidden="true"><span>Note</span><span>Déf.</span><span>Drb.</span></small></div>
+                                    <div id="homeNotes"></div>
+                                </section>
+                                <section class="notes-team notes-away" aria-label="Notes de l’équipe à l’extérieur">
+                                    <div class="notes-team-title"><span class="notes-side">EXT.</span><span
+                                            id="awayNotesName">EXTÉRIEUR</span><small aria-hidden="true"><span>Note</span><span>Déf.</span><span>Drb.</span></small></div>
+                                    <div id="awayNotes"></div>
+                                </section>
+                            </div>
+                        </section>
+
+                        <div class="admin-builder-actions">
+                            <button type="submit" class="nl-btn admin-button admin-generate">Générer le match <span>↘</span></button>
+                            <button type="button" class="nl-btn nl-btn-ghost admin-button" id="saveDraft">Sauvegarder le
+                                brouillon</button>
+                            <button type="button" class="nl-btn nl-btn-ghost admin-button admin-danger"
+                                id="resetBuilder">Réinitialiser</button>
+                        </div>
                     </div>
-                    <p>Une ligne vide n’est pas exportée.</p>
-                </div>
-                <div class="admin-notes-grid">
-                    <section class="notes-team">
-                        <div class="notes-team-title"><span id="homeNotesName">DOMICILE</span><small>NOTE / DEF / DRB</small></div>
-                        <div id="homeNotes"></div>
-                    </section>
-                    <section class="notes-team">
-                        <div class="notes-team-title"><span id="awayNotesName">EXTÉRIEUR</span><small>NOTE / DEF / DRB</small></div>
-                        <div id="awayNotes"></div>
-                    </section>
-                </div>
 
-                <div class="admin-builder-actions">
-                    <button type="submit" class="admin-button admin-generate">GÉNÉRER LE MATCH <span>↘</span></button>
-                    <button type="button" class="admin-button" id="saveDraft">SAUVEGARDER LE BROUILLON</button>
-                    <button type="button" class="admin-button admin-danger" id="resetBuilder">RÉINITIALISER</button>
+                    <!-- Écran programme : sortie contrôlée + sauvegarde locale -->
+                    <aside class="admin-pgm" aria-label="Écran programme">
+                        <section class="admin-output" id="admin-program" aria-labelledby="admin-output-title">
+                            <div class="admin-output-osd">
+                                <span class="nl-ch">CH 02</span>
+                                <h3 id="admin-output-title">Bloc prêt à copier</h3>
+                                <button class="nl-btn nl-btn-sm nl-btn-light admin-button" type="button" id="copyOutput"
+                                    disabled>Copier</button>
+                            </div>
+                            <div class="admin-feedback" id="adminFeedback" aria-live="polite">
+                                <span>EN ATTENTE</span>
+                                <p>Complète le match puis lance la génération.</p>
+                            </div>
+                            <div class="admin-code-screen">
+                                <span class="admin-code-osd" aria-hidden="true"><span><b>PGM</b> // SORTIE
+                                        PROGRAMME</span><span>JSON</span></span>
+                                <pre class="admin-code"><code id="matchOutput">// Le match généré apparaîtra ici.</code></pre>
+                            </div>
+                        </section>
+
+                        <section class="nl-console admin-transfer" aria-labelledby="admin-transfer-title">
+                            <div class="nl-console-head">
+                                <span class="nl-ch">CH 03</span>
+                                <h3 id="admin-transfer-title">Import / export</h3>
+                            </div>
+                            <p class="admin-transfer-note">Le dossier est exporté en JSON et une copie datée est conservée
+                                avant chaque remplacement.</p>
+                            <div class="admin-transfer-actions">
+                                <button type="button" class="nl-key admin-key" id="exportRegistry"><span>01</span>Exporter la
+                                    base</button>
+                                <button type="button" class="nl-key admin-key" id="exportDraft"><span>02</span>Exporter le
+                                    dossier</button>
+                                <button type="button" class="nl-key admin-key" id="importDraft"><span>03</span>Importer un
+                                    dossier</button>
+                                <button type="button" class="nl-key admin-key" id="restoreBackup"><span>04</span>Restaurer la
+                                    dernière</button>
+                                <input type="file" id="importDraftFile" accept="application/json,.json" hidden>
+                            </div>
+                            <p class="admin-backup"><span class="rec is-off" aria-hidden="true"></span><span
+                                    id="adminBackupCount">00 SAUVEGARDE LOCALE</span></p>
+                        </section>
+                    </aside>
                 </div>
             </form>
         </section>
-
-        <section class="admin-transfer">
-            <div class="admin-section-title">
-                <span>04</span>
-                <div><small>SAUVEGARDE LOCALE</small>
-                    <h2>IMPORT / EXPORT</h2>
-                </div>
-                <p>Le dossier est exporté en JSON et une copie datée est conservée avant chaque remplacement.</p>
-            </div>
-            <div class="admin-transfer-actions">
-                <button type="button" class="admin-button" id="exportRegistry">EXPORTER LA BASE</button>
-                <button type="button" class="admin-button" id="exportDraft">EXPORTER LE DOSSIER</button>
-                <button type="button" class="admin-button" id="importDraft">IMPORTER UN DOSSIER</button>
-                <button type="button" class="admin-button" id="restoreBackup">RESTAURER LA DERNIÈRE</button>
-                <input type="file" id="importDraftFile" accept="application/json,.json" hidden>
-                <span id="adminBackupCount">00 SAUVEGARDE LOCALE</span>
-            </div>
-        </section>
-
-        <section class="admin-output">
-            <div class="admin-section-title">
-                <span>05</span>
-                <div><small>EXPORT CONTRÔLÉ</small>
-                    <h2>BLOC PRÊT À COPIER</h2>
-                </div>
-                <button class="admin-button" type="button" id="copyOutput" disabled>COPIER</button>
-            </div>
-            <div class="admin-feedback" id="adminFeedback" aria-live="polite">
-                <span>EN ATTENTE</span>
-                <p>Complète le match puis lance la génération.</p>
-            </div>
-            <pre class="admin-code"><code id="matchOutput">// Le match généré apparaîtra ici.</code></pre>
-        </section>
     </main>
+
+    <footer class="nl-footer">
+        <div class="nl-footer-main">
+            <a class="footer-brand" href="index.html">
+                <span class="brand-mark"><span></span></span>
+                <strong>NEBULA LEAGUE</strong>
+            </a>
+            <p>Régie locale de la ligue privée Azure Latch. Chaque match saisi ici devient une ligne des archives.</p>
+        </div>
+        <nav class="nl-footer-links" aria-label="Accès rapides">
+            <p>Accès rapides</p>
+            <a href="matchs.html">Matchs</a>
+            <a href="saison.html">Saisons</a>
+            <a href="fixtures.html">Calendrier</a>
+            <a href="players.html">Joueurs</a>
+            <a href="club.html">Clubs</a>
+            <a href="rules.html">Règles</a>
+        </nav>
+        <div class="nl-footer-osd">
+            <span class="rec">REC</span>
+            <span>NL-CTRL // FIN DU FLUX</span>
+            <span class="jp">ブルーロック</span>
+            <span>© NEBULA LEAGUE</span>
+            <a href="#top">Retour en haut ↑</a>
+        </div>
+    </footer>
 
     <script src="JavaScript/nebula-data.js"></script>
     <script src="JavaScript/admin.js"></script>

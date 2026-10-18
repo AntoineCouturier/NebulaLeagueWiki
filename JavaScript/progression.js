@@ -20,6 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const timelineEyebrow = document.getElementById("progressTimelineEyebrow");
     const timelineTitle = document.getElementById("progressTimelineTitle");
     const timelineCaption = document.getElementById("progressTimelineCaption");
+    const heroScope = document.querySelector("[data-progress-scope]");
+    const heroStats = document.querySelectorAll("[data-progress-stat]");
     let selectedPlayerName = null;
     let chartMode = "value";
 
@@ -31,15 +33,42 @@ document.addEventListener("DOMContentLoaded", () => {
         notation: "compact",
         maximumFractionDigits: 2
     }).format(Number(value || 0));
-    const playerClub = player => data.getClub?.(player.club) || { name: player.club, color: "#52dcff" };
+    const pad = (value, length = 2) => String(value).padStart(length, "0");
+    const isRetired = player => player.club === "retraite";
+    // Couleurs injectées : jetons du thème uniquement (le violet « retraite » devient --offline).
+    const playerClub = player => {
+        if (isRetired(player)) return { name: "Retraite", color: "var(--offline)" };
+        const club = data.getClub?.(player.club);
+        return club
+            ? { name: club.name, color: club.color || "var(--blue-2)" }
+            : { name: player.club || "Sans club", color: "var(--blue-2)" };
+    };
     const technicalStats = [
-        { key: "defense", label: "DÉFENSE", color: "#a8ff25" },
-        { key: "passe", label: "PASSE", color: "#52dcff" },
-        { key: "dribble", label: "DRIBBLE", color: "#c46cff" },
-        { key: "tir", label: "TIR", color: "#ff5368" },
-        { key: "offense", label: "OFFENSE", color: "#ffd454" },
-        { key: "position", label: "POSITIONNEMENT", color: "#66edf2" }
+        { key: "defense", label: "DÉFENSE", color: "var(--blue-2)" },
+        { key: "passe", label: "PASSE", color: "var(--blue-3)" },
+        { key: "dribble", label: "DRIBBLE", color: "var(--paper)" },
+        { key: "tir", label: "TIR", color: "var(--blue)" },
+        { key: "offense", label: "OFFENSE", color: "var(--blue-3)" },
+        { key: "position", label: "POSITIONNEMENT", color: "var(--blue-2)" }
     ];
+
+    // Classement façon Blue Lock (identique à players.html) : rang selon la
+    // note globale ; retraités et joueurs sans note = NON CLASSÉ.
+    function overallOf(player) {
+        const global = player?.technical?.global;
+        if (Number.isFinite(global)) return global;
+        const computed = data.calculateTechnicalOverall?.(player?.technical);
+        return Number.isFinite(computed) ? computed : null;
+    }
+    const ranking = players
+        .filter(player => !isRetired(player) && Number.isFinite(overallOf(player)))
+        .sort((a, b) => overallOf(b) - overallOf(a));
+    const rankOf = player => {
+        const position = ranking.indexOf(player);
+        return position === -1 ? 0 : position + 1;
+    };
+    const sourceNumber = player => pad(players.indexOf(player) + 1);
+
     function normalizedTechnical(technical = {}) {
         return Object.fromEntries(technicalStats.map(stat => {
             const rawValue = technical?.[stat.key];
@@ -98,6 +127,89 @@ document.addEventListener("DOMContentLoaded", () => {
     const activeSeason = data.getActiveSeason?.();
     if (activeSeason) seasonSelect.value = String(activeSeason.number);
 
+    const periodLabel = () => seasonSelect.value === "all"
+        ? "Toute la carrière"
+        : `Saison ${pad(seasonSelect.value)}`;
+
+    // État vide « mire de test » commun aux panneaux.
+    const noSignal = (code, title, text, extraClass = "") => `
+        <div class="progress-nosignal nl-nosignal${extraClass ? ` ${extraClass}` : ""}">
+            <span class="nl-nosignal-code">${code}</span>
+            <strong>${title}</strong>
+            <p>${text}</p>
+        </div>`;
+
+    /* ---------- Héros : relevés + oscilloscope des notes ---------- */
+    function renderHero() {
+        const peak = ranking[0];
+        const values = {
+            players: pad(players.length),
+            ranked: pad(ranking.length),
+            rankedNote: `${pad(ranking.length)} classés · ${pad(players.length - ranking.length)} hors classement`,
+            matches: pad(matches.length),
+            seasonNote: activeSeason ? `Saison ${pad(activeSeason.number)} en cours` : "Archives complètes",
+            peak: peak ? String(overallOf(peak)) : "--",
+            peakNote: peak ? `#001 // ${peak.name}` : "Aucun sujet classé"
+        };
+        heroStats.forEach(node => {
+            const key = node.dataset.progressStat;
+            if (key in values) node.textContent = values[key];
+        });
+
+        if (!heroScope) return;
+        if (!ranking.length) {
+            heroScope.innerHTML = "";
+            return;
+        }
+
+        const scaleMin = 70;
+        const scaleMax = 100;
+        const yFor = note => 12 + ((scaleMax - Math.max(scaleMin, Math.min(scaleMax, note))) / (scaleMax - scaleMin)) * 76;
+        const ascending = ranking.slice().reverse();
+        const points = ascending.map((player, index) => ({
+            player,
+            note: overallOf(player),
+            rank: rankOf(player),
+            x: ascending.length > 1 ? 9 + (index / (ascending.length - 1)) * 82 : 50,
+            y: yFor(overallOf(player))
+        }));
+        const first = points[0];
+        const last = points.at(-1);
+        const trace = [
+            `0,${Math.min(98, first.y + 7).toFixed(2)}`,
+            ...points.map(point => `${point.x.toFixed(2)},${point.y.toFixed(2)}`),
+            `100,${last.y.toFixed(2)}`
+        ].join(" ");
+        const area = `0,100 ${trace} 100,100`;
+        const ticks = [100, 90, 80, 70].map(note => `
+            <span class="progress-scope-tick" style="--y:${yFor(note).toFixed(2)}%">${note}</span>`).join("");
+
+        heroScope.innerHTML = `
+            <div class="progress-scope-grid"></div>
+            ${ticks}
+            <svg class="progress-scope-svg" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false">
+                <polygon class="progress-scope-area" points="${area}"/>
+                <polyline class="progress-scope-trace" points="${trace}"/>
+            </svg>
+            ${points.map(point => {
+                const club = playerClub(point.player);
+                return `
+                <span class="progress-scope-node${point.rank === 1 ? " is-top" : ""}" style="--x:${point.x.toFixed(2)}%;--y:${point.y.toFixed(2)}%;--club:${club.color}">
+                    <span class="progress-scope-label"><b>#${pad(point.rank, 3)}</b><span>${escapeHtml(point.player.name)}</span><i>${point.note}</i></span>
+                    <img src="${escapeHtml(point.player.avatar)}" alt="" loading="lazy" decoding="async">
+                </span>`;
+            }).join("")}
+            <span class="progress-scope-readout"><b>PIC</b> ${escapeHtml(last.player.name)} · ${last.note} <span>// PLANCHER ${escapeHtml(first.player.name)} · ${first.note}</span></span>`;
+    }
+
+    /* ---------- CH 01 : sortie programme + multiview ---------- */
+    function rankBadge(player, rank, size = "md") {
+        if (rank) {
+            return `<span class="nl-rank nl-rank--${size}${rank > 1 && rank <= 3 ? " is-podium" : ""}"><small>#</small>${pad(rank, 3)}</span>`;
+        }
+        return `<span class="nl-nc"><b>NON CLASSÉ</b><small>${isRetired(player) ? "ARCHIVÉ // RETRAITE" : "EN ATTENTE DE NOTE"}</small></span>`;
+    }
+
     function renderSelector() {
         const selected = players.find(player => player.name === selectedPlayerName);
 
@@ -105,41 +217,87 @@ document.addEventListener("DOMContentLoaded", () => {
             selectionSlot.classList.add("is-empty");
             selectionSlot.style.removeProperty("--player-accent");
             selectionSlot.innerHTML = `
-                <span class="progress-slot-code">PROFIL ANALYSÉ</span>
-                <div class="progress-slot-placeholder" aria-hidden="true"></div>
-                <div><small>EMPLACEMENT LIBRE</small><strong>SÉLECTION REQUISE</strong><span>Choisissez un joueur dans l’index ci-dessous.</span></div>`;
+                <div class="progress-pgm-feed progress-pgm-empty nl-feed is-offline">
+                    <span class="nl-feed-mire" data-label="PAS DE SIGNAL"></span>
+                    <span class="nl-feed-osd"><span><b>PGM</b> // HORS ANTENNE</span><span class="rec is-off">EN ATTENTE</span></span>
+                    <span class="nl-feed-caption"><small>Emplacement libre</small><b>Sélection requise</b><em>Choisissez une source dans le multiview.</em></span>
+                </div>`;
         } else {
             const club = playerClub(selected);
-            const overall = data.calculateTechnicalOverall?.(selected.technical);
+            const overall = overallOf(selected);
+            const rank = rankOf(selected);
+            const retired = isRetired(selected);
             selectionSlot.classList.remove("is-empty");
             selectionSlot.style.setProperty("--player-accent", club.color);
             selectionSlot.innerHTML = `
-                <span class="progress-slot-code">PROFIL ANALYSÉ</span>
-                <img src="${escapeHtml(selected.avatar)}" alt="">
-                <div><small>${escapeHtml(club.name)} · ${escapeHtml(selected.position)}</small><strong>${escapeHtml(selected.name)}</strong><span>NOTE GLOBALE ${overall ?? "—"} · DOSSIER SYNCHRONISÉ</span></div>
-                <a href="${escapeHtml(data.playerPageHref?.(selected) || "players.html")}" aria-label="Ouvrir la fiche de ${escapeHtml(selected.name)}">↗</a>`;
+                <div class="progress-pgm-feed nl-feed is-locked${retired ? " is-offline" : ""}" style="--club:${club.color}">
+                    <img class="nl-feed-img progress-pgm-backdrop" src="${escapeHtml(selected.avatar)}" alt="">
+                    <span class="progress-pgm-portrait">
+                        <img src="${escapeHtml(selected.avatar)}" alt="${escapeHtml(selected.name)}">
+                        <span class="nl-feed-lock" aria-hidden="true"></span>
+                    </span>
+                    <span class="nl-feed-osd"><span><b>SRC ${sourceNumber(selected)}</b> // ${escapeHtml(club.name)}</span>${retired ? '<span class="rec is-off">ARCHIVÉ</span>' : '<span class="rec">DIRECT</span>'}</span>
+                    <span class="progress-pgm-rank">${rankBadge(selected, rank)}</span>
+                    <span class="nl-feed-caption"><small>${escapeHtml(selected.position)} · ${escapeHtml(club.name)}</small><b>${escapeHtml(selected.name)}</b></span>
+                    <span class="nl-feed-figure progress-pgm-ovr">${overall ?? "--"}<small>OVR</small></span>
+                    <a class="progress-pgm-link nl-btn nl-btn-sm" href="${escapeHtml(data.playerPageHref?.(selected) || "players.html")}" aria-label="Ouvrir la fiche de ${escapeHtml(selected.name)}">Ouvrir la fiche <span>↗</span></a>
+                </div>`;
         }
 
-        playerGrid.innerHTML = players.map((player, index) => {
+        const cards = players.map(player => {
             const club = playerClub(player);
             const isSelected = player.name === selectedPlayerName;
+            const rank = rankOf(player);
+            const retired = isRetired(player);
+            const status = isSelected
+                ? `<span class="progress-entity-status is-pgm">PGM</span>`
+                : retired
+                    ? `<span class="rec is-off">HORS LIGNE</span>`
+                    : `<span class="progress-entity-status${rank ? "" : " is-nc"}">${rank ? `#${pad(rank, 3)}` : "N/C"}</span>`;
             return `
-                <button type="button" class="progress-entity-card${isSelected ? " is-selected" : ""}"
-                    data-progress-player="${escapeHtml(player.name)}" style="--entity-color:${club.color}">
-                    <span>${isSelected ? "✓" : String(index + 1).padStart(2, "0")}</span>
-                    <img src="${escapeHtml(player.avatar)}" alt="">
-                    <div><strong>${escapeHtml(player.name)}</strong><small>${escapeHtml(club.name)} · ${escapeHtml(player.position)}</small></div>
-                    <i></i>
+                <button type="button" class="progress-entity-card nl-feed${isSelected ? " is-selected" : ""}${retired ? " is-offline" : ""}"
+                    data-progress-player="${escapeHtml(player.name)}" aria-pressed="${isSelected}"
+                    aria-label="${escapeHtml(player.name)}, ${escapeHtml(club.name)}, ${rank ? `classement numéro ${rank}` : "non classé"}"
+                    style="--entity-color:${club.color};--club:${club.color}">
+                    <img class="nl-feed-img" src="${escapeHtml(player.avatar)}" alt="" loading="lazy" decoding="async">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd"><span><b>SRC ${sourceNumber(player)}</b></span>${status}</span>
+                    <span class="nl-feed-caption"><small>${escapeHtml(player.position)} · ${escapeHtml(club.name)}</small><b>${escapeHtml(player.name)}</b></span>
+                    <i aria-hidden="true"></i>
                 </button>`;
-        }).join("");
+        });
+        const fillers = Array.from({ length: (4 - (players.length % 4)) % 4 }, (_, index) => `
+                <span class="progress-entity-filler nl-feed is-offline" aria-hidden="true">
+                    <span class="nl-feed-mire" data-label="LIBRE"></span>
+                    <span class="nl-feed-osd"><span><b>SRC ${pad(players.length + index + 1)}</b></span><span class="rec is-off">VIDE</span></span>
+                </span>`);
+        playerGrid.innerHTML = cards.concat(fillers).join("");
+    }
+
+    /* ---------- CH 02 : relevé du sujet (bande bleue) ---------- */
+    function metricsGrid(cells) {
+        return `<div class="progress-metrics">${cells.map(([label, value, key]) => `
+            <div class="nl-stat progress-metric${key ? " is-key" : ""}"><span class="nl-stat-label">${label}</span><strong class="nl-stat-value">${value}</strong></div>`).join("")}
+        </div>`;
     }
 
     function renderEmptyState() {
         profile.style.removeProperty("--player-accent");
         profile.innerHTML = `
-            <div class="progress-analysis-empty">
-                <span>02</span>
-                <div><small>ANALYSE EN ATTENTE</small><h2>AUCUN JOUEUR SÉLECTIONNÉ</h2><p>Choisissez un profil pour afficher sa progression, sa valeur et son journal de matchs.</p></div>
+            <div class="progress-band is-standby">
+                <div class="progress-band-feed nl-feed is-offline">
+                    <span class="nl-feed-mire" data-label="EN VEILLE"></span>
+                    <span class="nl-feed-osd"><span><b>CAM 11-B</b> // RELEVÉ</span><span class="rec is-off">VEILLE</span></span>
+                </div>
+                <div class="progress-band-id">
+                    <p class="nl-kicker"><span class="progress-band-ch">CH 02</span> Analyse en attente</p>
+                    <h2 class="progress-band-name">Aucun joueur <em>sélectionné</em></h2>
+                    <p class="progress-band-text">Choisissez un profil pour afficher sa progression, sa valeur et son journal de matchs.</p>
+                </div>
+                ${metricsGrid([
+                    ["Valeur actuelle", "--", true], ["Matchs", "--"], ["Buts", "--"], ["Passes D.", "--"],
+                    ["Défenses", "--"], ["Dribbles", "--"], ["Note moy.", "--"], ["MVP", "--"]
+                ])}
             </div>`;
         chartPanel.hidden = true;
         timelinePanel.hidden = true;
@@ -185,38 +343,50 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderProfile(player, entries) {
         const totals = totalsOf(entries);
         const club = playerClub(player);
-        const overall = data.calculateTechnicalOverall?.(player.technical);
+        const overall = overallOf(player);
+        const rank = rankOf(player);
+        const retired = isRetired(player);
         const currentValue = data.getPlayerMarketValue?.(player.name) || 0;
         const averageNote = totals.matches ? totals.note / totals.matches : 0;
         profile.style.setProperty("--player-accent", club.color);
         profile.innerHTML = `
-            <div class="progress-identity">
-                <div class="progress-avatar">
-                    <img src="${escapeHtml(player.avatar)}" alt="${escapeHtml(player.name)}">
-                    <span>${overall ?? "—"}</span>
+            <div class="progress-band" style="--club:${club.color}">
+                <div class="progress-band-feed nl-feed${retired ? " is-offline" : ""}">
+                    <img class="nl-feed-img" src="${escapeHtml(player.avatar)}" alt="${escapeHtml(player.name)}">
+                    <span class="nl-feed-osd"><span><b>CAM 11-B</b> // SRC ${sourceNumber(player)}</span>${retired ? '<span class="rec is-off">ARCHIVÉ</span>' : '<span class="rec">REC</span>'}</span>
+                    <span class="nl-feed-figure">${overall ?? "--"}<small>OVR</small></span>
                 </div>
-                <div class="progress-summary">
-                    <div class="progress-summary-head">
-                        <div><small>01 // ${escapeHtml(club.name)} · ${escapeHtml(player.position)}</small><h2>${escapeHtml(player.name)}</h2></div>
-                        <a href="${escapeHtml(data.playerPageHref?.(player) || "players.html")}">OUVRIR LA FICHE ↗</a>
+                <div class="progress-band-id">
+                    <p class="nl-kicker"><span class="progress-band-ch">CH 02</span> Relevé du sujet // ${escapeHtml(periodLabel())}</p>
+                    <h2 class="progress-band-name">${escapeHtml(player.name)}</h2>
+                    <div class="progress-band-tags">
+                        <span class="nl-tag nl-tag--pos" style="--club:${club.color}">${escapeHtml(player.position)}</span>
+                        <span class="nl-tag nl-tag--club" style="--club:${club.color}">${escapeHtml(club.name)}</span>
+                        <span class="nl-tag${rank ? "" : " nl-tag--off"}">${rank ? `Classement #${pad(rank, 3)}` : "Non classé"}</span>
                     </div>
-                    <div class="progress-metrics">
-                        <div style="--metric-accent:${club.color}"><span>VALEUR ACTUELLE</span><strong>${compact(currentValue)} ¥</strong></div>
-                        <div><span>MATCHS</span><strong>${String(totals.matches).padStart(2, "0")}</strong></div>
-                        <div style="--metric-accent:#ff5368"><span>BUTS</span><strong>${totals.goals}</strong></div>
-                        <div style="--metric-accent:#52dcff"><span>PASSES D.</span><strong>${totals.assists}</strong></div>
-                        <div style="--metric-accent:#a8ff25"><span>DÉFENSES</span><strong>${totals.defenses}</strong></div>
-                        <div style="--metric-accent:#c46cff"><span>DRIBBLES</span><strong>${totals.dribbles}</strong></div>
-                        <div style="--metric-accent:#ffd454"><span>NOTE MOY.</span><strong>${averageNote ? averageNote.toFixed(1) : "—"}</strong></div>
-                        <div><span>MVP</span><strong>${totals.mvp}</strong></div>
-                    </div>
+                    <a class="nl-btn nl-btn-light nl-btn-sm" href="${escapeHtml(data.playerPageHref?.(player) || "players.html")}">Ouvrir la fiche <span>↗</span></a>
                 </div>
+                ${metricsGrid([
+                    ["Valeur actuelle", `${compact(currentValue)}<small>¥</small>`, true],
+                    ["Matchs", pad(totals.matches)],
+                    ["Buts", totals.goals],
+                    ["Passes D.", totals.assists],
+                    ["Défenses", totals.defenses],
+                    ["Dribbles", totals.dribbles],
+                    ["Note moy.", averageNote ? averageNote.toFixed(1) : "--"],
+                    ["MVP", totals.mvp]
+                ])}
             </div>`;
     }
 
+    /* ---------- CH 03 : oscilloscope de valeur ---------- */
     function renderChart(player, entries) {
         if (!entries.length) {
-            chart.innerHTML = `<div class="legacy-empty">AUCUNE TRAJECTOIRE DISPONIBLE POUR CETTE PÉRIODE.<br>ELLE APPARAÎTRA APRÈS LE PREMIER MATCH DU JOUEUR.</div>`;
+            chart.innerHTML = noSignal(
+                "SIGNAL 00",
+                "Aucune trajectoire",
+                "Aucune trajectoire disponible pour cette période. Elle apparaîtra après le premier match du joueur."
+            );
             return;
         }
 
@@ -255,7 +425,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="progress-chart-scroll" tabindex="0" aria-label="Courbe défilable horizontalement">
                 <div class="progress-chart-track" style="width:${width}px">
                     <svg class="progress-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Progression cumulée de valeur">
-                        <defs><linearGradient id="progressGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#52dcff" stop-opacity=".25"/><stop offset="1" stop-color="#52dcff" stop-opacity="0"/></linearGradient></defs>
+                        <defs><linearGradient id="progressGradient" x1="0" y1="0" x2="0" y2="1"><stop class="progress-stop" offset="0" stop-opacity=".32"/><stop class="progress-stop" offset="1" stop-opacity="0"/></linearGradient></defs>
                         ${horizontalGrid}
                         ${zeroLine}
                         <polygon class="area" points="${area}"/>
@@ -358,7 +528,11 @@ document.addEventListener("DOMContentLoaded", () => {
         ));
 
         if (!snapshots.length || !hasTechnicalData) {
-            chart.innerHTML = `<div class="legacy-empty">AUCUN RELEVÉ TECHNIQUE OFFICIEL POUR CETTE PÉRIODE.<br>UN DOSSIER APPARAÎTRA APRÈS LA CLÔTURE D’UNE SAISON.</div>`;
+            chart.innerHTML = noSignal(
+                "DOSSIER 00",
+                "Aucun relevé technique",
+                "Aucun relevé technique officiel pour cette période. Un dossier apparaîtra après la clôture d’une saison."
+            );
             return;
         }
 
@@ -373,7 +547,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             return `
                 <article class="progress-revision-card${index === snapshots.length - 1 ? " is-current" : ""}">
-                    <header class="progress-revision-head">
+                    <div class="progress-revision-head">
                         <div>
                             <small>DOSSIER TECHNIQUE // ${String(index + 1).padStart(2, "0")}</small>
                             <h3>${escapeHtml(technicalSnapshotLabel(snapshot, index))}</h3>
@@ -386,7 +560,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 ${overallDelta === null ? "BASE" : `${overallDelta > 0 ? "+" : ""}${overallDelta}`}
                             </em>
                         </div>
-                    </header>
+                    </div>
                     <div class="progress-revision-stats">
                         ${technicalStats.map(stat => {
                             const currentValue = snapshot.technical?.[stat.key];
@@ -403,7 +577,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                         <b>→</b>
                                         ${hasCurrent ? currentValue : "N/A"}
                                     </strong>
-                                    <span class="progress-revision-meter"><i style="width:${hasCurrent ? currentValue : 0}%"></i></span>
+                                    <span class="progress-revision-meter nl-vu" style="--v:${hasCurrent ? currentValue : 0}" aria-hidden="true"></span>
                                 </div>`;
                         }).join("")}
                     </div>
@@ -412,62 +586,88 @@ document.addEventListener("DOMContentLoaded", () => {
 
         chart.innerHTML = `
             <div class="progress-revision-summary">
-                <span>${snapshots.length} DOSSIER${snapshots.length > 1 ? "S" : ""} ARCHIVÉ${snapshots.length > 1 ? "S" : ""}</span>
+                <span class="nl-tag nl-tag--ligue">${snapshots.length} DOSSIER${snapshots.length > 1 ? "S" : ""} ARCHIVÉ${snapshots.length > 1 ? "S" : ""}</span>
                 <strong>Chaque carte compare ses notes au relevé précédent.</strong>
             </div>
             <div class="progress-revision-scroll" tabindex="0" aria-label="Dossiers techniques défilables horizontalement">
-                <div class="progress-revision-track" style="width:${trackWidth}px;grid-template-columns:repeat(${snapshots.length}, minmax(0, 1fr))">
+                <div class="progress-revision-track" style="--revision-count:${snapshots.length};--revision-width:${trackWidth}px">
                     ${cards}
                 </div>
             </div>
             ${snapshots.length > 2 ? `<div class="progress-scroll-hint" aria-hidden="true"><span>↔</span> FAITES DÉFILER LES DOSSIERS</div>` : ""}`;
     }
 
+    /* ---------- CH 04 : journal (tableau régie) ---------- */
     function renderTimeline(player, entries) {
         if (!entries.length) {
-            timeline.innerHTML = `<div class="legacy-empty">LE JOURNAL D’IMPACT EST EN ATTENTE DE DONNÉES.</div>`;
+            timeline.innerHTML = noSignal(
+                "JOURNAL 00",
+                "Journal en attente",
+                "Le journal d’impact est en attente de données : chaque match joué y ajoutera une ligne.",
+                "is-compact"
+            );
             return;
         }
-        timeline.innerHTML = entries.slice().reverse().map(({ match, perf }, index) => {
+        const club = playerClub(player);
+        const rows = entries.slice().reverse().map(({ match, perf }, index) => {
             const home = data.getClub?.(match.home);
             const away = data.getClub?.(match.away);
             const valueImpact = matchValue({ match, perf });
+            const result = perf.won
+                ? `<span class="nl-tag nl-tag--ligue">Victoire</span>`
+                : perf.draw
+                    ? `<span class="nl-tag">Nul</span>`
+                    : `<span class="nl-tag nl-tag--off">Défaite</span>`;
             return `
-                <article class="progress-entry">
-                    <span class="progress-entry-index">${String(entries.length - index).padStart(2, "0")}</span>
-                    <div class="progress-entry-match"><small>SAISON ${String(match.season).padStart(2, "0")} · ${escapeHtml(match.date)}</small><strong>${escapeHtml(home?.name || match.home)} ${match.scoreHome}–${match.scoreAway} ${escapeHtml(away?.name || match.away)}</strong></div>
-                    <div class="progress-entry-stat"><span>NOTE</span><strong>${perf.note ? perf.note.toFixed(1) : "—"}</strong></div>
-                    <div class="progress-entry-stat"><span>BUTS</span><strong>${perf.goals}</strong></div>
-                    <div class="progress-entry-stat"><span>PASSES</span><strong>${perf.assists}</strong></div>
-                    <div class="progress-entry-stat"><span>DEF / DRB</span><strong>${perf.defenses} / ${perf.dribbles}</strong></div>
-                    <div class="progress-entry-stat"><span>VALEUR</span><strong>${valueImpact > 0 ? "+" : ""}${compact(valueImpact)}</strong></div>
-                </article>`;
+                <tr class="progress-entry" style="--club:${club.color}">
+                    <td class="nl-num progress-entry-index">${String(entries.length - index).padStart(2, "0")}</td>
+                    <td class="progress-entry-match"><small>SAISON ${String(match.season).padStart(2, "0")} · ${escapeHtml(match.date)}</small><strong class="nl-strong">${escapeHtml(home?.name || match.home)} <b>${match.scoreHome}–${match.scoreAway}</b> ${escapeHtml(away?.name || match.away)}</strong></td>
+                    <td class="progress-entry-result">${result}</td>
+                    <td class="is-hl" data-label="Note">${perf.note ? perf.note.toFixed(1) : "—"}</td>
+                    <td data-label="Buts">${perf.goals}</td>
+                    <td data-label="Passes">${perf.assists}</td>
+                    <td data-label="Déf/Drb">${perf.defenses} / ${perf.dribbles}</td>
+                    <td class="progress-entry-value${valueImpact < 0 ? " is-down" : ""}" data-label="Valeur">${valueImpact > 0 ? "+" : ""}${compact(valueImpact)} <small>¥</small></td>
+                </tr>`;
         }).join("");
+        timeline.innerHTML = `
+            <div class="nl-table-wrap progress-table-wrap" tabindex="0" aria-label="Journal d’impact, défilable horizontalement">
+                <table class="nl-table progress-table">
+                    <thead><tr><th scope="col">N°</th><th scope="col">Rencontre</th><th scope="col">Résultat</th><th scope="col" class="is-hl">Note</th><th scope="col">Buts</th><th scope="col">Passes</th><th scope="col">Déf / Drb</th><th scope="col">Valeur</th></tr></thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>`;
     }
 
     function renderTechnicalTimeline(snapshots) {
         if (!snapshots.length) {
-            timeline.innerHTML = `<div class="legacy-empty">AUCUN RELEVÉ DE FIN DE SAISON POUR CETTE PÉRIODE.</div>`;
+            timeline.innerHTML = noSignal(
+                "RELEVÉ 00",
+                "Aucun relevé",
+                "Aucun relevé de fin de saison pour cette période.",
+                "is-compact"
+            );
             return;
         }
 
-        timeline.innerHTML = snapshots.slice().reverse().map((snapshot, reverseIndex) => {
+        const rows = snapshots.slice().reverse().map((snapshot, reverseIndex) => {
             const index = snapshots.length - reverseIndex - 1;
             const overall = data.calculateTechnicalOverall?.(snapshot.technical);
             return `
-                <article class="progress-technical-entry">
-                    <span class="progress-technical-entry-index">${String(index + 1).padStart(2, "0")}</span>
-                    <div class="progress-technical-entry-head">
-                        <small>${escapeHtml(snapshot.date || "DATE NON RENSEIGNÉE")}</small>
-                        <strong>${escapeHtml(technicalSnapshotLabel(snapshot, index))}</strong>
-                    </div>
-                    <div class="progress-technical-entry-stat" style="--stat-color:#f2f5f7"><span>GLOBAL</span><strong>${overall ?? "N/A"}</strong></div>
-                    ${technicalStats.map(stat => `
-                        <div class="progress-technical-entry-stat" style="--stat-color:${stat.color}">
-                            <span>${stat.label}</span><strong>${snapshot.technical?.[stat.key] ?? "N/A"}</strong>
-                        </div>`).join("")}
-                </article>`;
+                <tr class="progress-technical-entry">
+                    <td class="nl-num progress-technical-entry-index">${String(index + 1).padStart(2, "0")}</td>
+                    <td class="progress-technical-entry-head"><small>${escapeHtml(snapshot.date || "DATE NON RENSEIGNÉE")}</small><strong class="nl-strong">${escapeHtml(technicalSnapshotLabel(snapshot, index))}</strong></td>
+                    <td class="is-hl" data-label="Global">${overall ?? "N/A"}</td>
+                    ${technicalStats.map(stat => `<td data-label="${stat.key === "position" ? "Position" : stat.label}">${snapshot.technical?.[stat.key] ?? "N/A"}</td>`).join("")}
+                </tr>`;
         }).join("");
+        timeline.innerHTML = `
+            <div class="nl-table-wrap progress-table-wrap" tabindex="0" aria-label="Journal des révisions, défilable horizontalement">
+                <table class="nl-table progress-table is-technical">
+                    <thead><tr><th scope="col">N°</th><th scope="col">Relevé</th><th scope="col" class="is-hl">Global</th>${technicalStats.map(stat => `<th scope="col">${stat.key === "position" ? "Position" : stat.label}</th>`).join("")}</tr></thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>`;
     }
 
     function updateModeInterface() {
@@ -477,13 +677,13 @@ document.addEventListener("DOMContentLoaded", () => {
         technicalModeButton?.classList.toggle("is-active", technicalMode);
         technicalModeButton?.setAttribute("aria-selected", String(technicalMode));
 
-        chartEyebrow.textContent = technicalMode ? "ÉVOLUTION DES NOTES" : "COURBE CUMULÉE";
-        chartTitle.textContent = technicalMode ? "PROGRESSION TECHNIQUE" : "TRAJECTOIRE DE VALEUR";
+        chartEyebrow.textContent = technicalMode ? "Évolution des notes // Dossiers officiels" : "Courbe cumulée // Valeur marchande";
+        chartTitle.innerHTML = technicalMode ? "Progression <em>technique</em>" : "Trajectoire <em>de valeur</em>";
         chartCaption.textContent = technicalMode
             ? "Un dossier officiel est ajouté uniquement après la clôture d’une saison."
             : "Valeur générée par les matchs enregistrés.";
-        timelineEyebrow.textContent = technicalMode ? "JOURNAL DES RÉVISIONS" : "JOURNAL D’IMPACT";
-        timelineTitle.textContent = technicalMode ? "RELEVÉ PAR RELEVÉ" : "MATCH PAR MATCH";
+        timelineEyebrow.textContent = technicalMode ? "Journal des révisions // Fin de saison" : "Journal d’impact // Rencontres";
+        timelineTitle.innerHTML = technicalMode ? "Relevé <em>par relevé</em>" : "Match <em>par match</em>";
         timelineCaption.textContent = technicalMode
             ? "Les dernières évolutions techniques apparaissent en premier."
             : "Les entrées les plus récentes apparaissent en premier.";
@@ -533,6 +733,10 @@ document.addEventListener("DOMContentLoaded", () => {
         chartMode = "technical";
         render();
     });
+    renderHero();
     render();
-    data.discordAvatarReady?.then(render).catch(() => {});
+    data.discordAvatarReady?.then(() => {
+        renderHero();
+        render();
+    }).catch(() => {});
 });

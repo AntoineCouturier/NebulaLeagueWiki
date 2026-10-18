@@ -162,30 +162,44 @@
         });
     }
 
-    // Le bloc "se scanne" de haut en bas : il monte, sort du flou avec un
-    // flash lumineux qui s'éteint. Une fois fini, l'élément retrouve tous
-    // ses styles normaux (survol, glow...).
+    // Le bloc "s'allume" comme un écran de la salle de contrôle : une ligne
+    // lumineuse au centre s'ouvre verticalement, avec un léger décalage de
+    // synchro horizontal, puis l'image se stabilise. Une fois fini, l'élément
+    // retrouve tous ses styles normaux (survol, glow...).
     function reveal(el, delay) {
         el.animate([
             {
                 opacity: 0,
-                transform: "translateY(26px) scale(0.985)",
-                filter: "blur(8px) brightness(1.8)",
-                clipPath: "inset(-40px -40px 100% -40px)"
+                transform: "translateX(0)",
+                filter: "brightness(3) saturate(0)",
+                clipPath: "inset(50% -40px 50% -40px)"
             },
             {
-                offset: 0.55,
+                offset: 0.18,
                 opacity: 1,
-                filter: "blur(0px) brightness(1.3)",
+                transform: "translateX(0)",
+                filter: "brightness(2.6) saturate(0.2)",
+                clipPath: "inset(49.4% -40px 49.4% -40px)"
+            },
+            {
+                offset: 0.62,
+                transform: "translateX(-4px)",
+                filter: "brightness(1.35) saturate(0.85)",
+                clipPath: "inset(-40px -40px -40px -40px)"
+            },
+            {
+                offset: 0.74,
+                transform: "translateX(2px)",
+                filter: "brightness(1.1)",
                 clipPath: "inset(-40px -40px -40px -40px)"
             },
             {
                 opacity: 1,
                 transform: "none",
-                filter: "blur(0px) brightness(1)",
+                filter: "brightness(1) saturate(1)",
                 clipPath: "inset(-40px -40px -40px -40px)"
             }
-        ], { duration: 720, delay, easing: EASE, fill: "backwards" });
+        ], { duration: 640, delay, easing: EASE, fill: "backwards" });
     }
 
     /* ============================================================

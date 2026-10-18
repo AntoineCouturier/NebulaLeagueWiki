@@ -15,7 +15,50 @@ document.addEventListener('DOMContentLoaded', function () {
     const activeSeason = window.NEBULA_DATA?.getActiveSeason?.();
     const seasonPill = document.querySelector('.live-pill');
     if (seasonPill && Number.isFinite(Number(activeSeason?.number))) {
-        seasonPill.innerHTML = `<i></i> SAISON ${String(activeSeason.number).padStart(2, '0')}`;
+        seasonPill.innerHTML = `<i></i> <span class="live-pill-label">SAISON ${String(activeSeason.number).padStart(2, '0')}</span>`;
+    }
+
+    // ========== BANDEAU DE SURVEILLANCE (OSD) ==========
+    // Ligne d'incrustation caméra au-dessus de l'en-tête : REC, canal,
+    // nombre de sujets suivis et horodatage en direct (décoratif).
+    const siteHeader = document.querySelector('.site-header');
+    if (siteHeader && !siteHeader.querySelector('.nl-osd')) {
+        const osd = document.createElement('div');
+        osd.className = 'nl-osd';
+        osd.setAttribute('aria-hidden', 'true');
+        const subjects = window.NEBULA_DATA?.players?.length;
+        const seasonNumber = Number(activeSeason?.number);
+        osd.innerHTML = `
+            <span class="rec">REC</span>
+            <span>NL-CTRL // SALLE DE CONTRÔLE</span>
+            <span class="nl-osd-feed">${Number.isFinite(subjects) ? `<b>${String(subjects).padStart(2, '0')}</b> SUJETS SOUS SURVEILLANCE` : 'SURVEILLANCE ACTIVE'}</span>
+            ${Number.isFinite(seasonNumber) ? `<span class="nl-osd-feed">SAISON <b>${String(seasonNumber).padStart(2, '0')}</b> EN COURS</span>` : ''}
+            <span class="jp">ブルーロック監視中</span>
+            <span class="nl-osd-time"></span>`;
+        siteHeader.prepend(osd);
+        const clock = osd.querySelector('.nl-osd-time');
+        const pad = value => String(value).padStart(2, '0');
+        const tick = () => {
+            const now = new Date();
+            clock.innerHTML = `${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())} <em>//</em> ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+        };
+        // L'horloge s'arrête quand l'onglet est masqué et repart à son retour.
+        let clockTimer = null;
+        const startClock = () => {
+            if (clockTimer !== null) return;
+            tick();
+            clockTimer = setInterval(tick, 1000);
+        };
+        const stopClock = () => {
+            clearInterval(clockTimer);
+            clockTimer = null;
+        };
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) stopClock();
+            else startClock();
+        });
+        tick();
+        if (!document.hidden) startClock();
     }
 
     const menuButton = document.querySelector('.menu-button');

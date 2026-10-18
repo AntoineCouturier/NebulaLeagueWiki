@@ -25,17 +25,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,500;0,600;0,700;1,600;1,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="CSS/hamburger.css">
     <link rel="stylesheet" href="CSS/global-theme.css">
-    <link rel="stylesheet" href="CSS/legacy-pages.css">
     <link rel="stylesheet" href="CSS/dream-team.css">
     <link rel="stylesheet" href="CSS/responsive.css">
+    <link rel="stylesheet" href="CSS/theme-monitor.css">
     <script src="JavaScript/reveal.js"></script>
 </head>
 
-<body class="nebula-page legacy-page dream-page">
+<body class="nebula-page dream-page nl-migrated">
     <header class="site-header" id="top">
         <a class="brand" href="index.html"><span class="brand-mark"><span></span></span><span
                 class="brand-copy"><strong>NEBULA</strong><small>LEAGUE // DATABASE</small></span></a>
@@ -52,52 +52,197 @@
         </div>
     </header>
 
-    <main class="legacy-shell">
-        <section class="legacy-hero">
-            <div class="legacy-hero-copy">
-                <p class="legacy-kicker"><span>NL—13</span> SÉLECTION ÉLITE</p>
-                <h1>L'EQUIPE QUI<br><em>DOMINE LE TERRAIN.</em></h1>
-                <p>Une formation 3–2 recalculée selon la période et la méthode choisies. Chaque poste revient au joueur
-                    le plus performant disponible.</p>
+    <main class="dream-shell">
+        <!-- CAM 12 : écran maître -->
+        <section class="dream-hero nl-hero nl-hero--master" aria-labelledby="dreamTitle">
+            <div class="osd">
+                <span class="rec">REC</span>
+                <span>CAM 12 <b>//</b> SÉLECTION ÉLITE</span>
+                <span class="osd-hide-sm">FORMATION <b>3—2</b> // CINQ POSTES</span>
+                <span class="jp osd-hide-sm">ランキング // ブルーロック</span>
+                <span class="osd-hide-sm" data-dream-osd-mode>MÉTHODE <b>IMPACT EN MATCH</b></span>
             </div>
-            <div class="dream-formation-mark" aria-hidden="true"><span>3</span><i>—</i><span>2</span></div>
-        </section>
-
-        <section class="dream-controls">
-            <div class="dream-mode-tabs" id="dreamModes">
-                <button type="button" data-dream-mode="day">DERNIÈRE JOURNÉE</button>
-                <button type="button" data-dream-mode="season" class="is-active">SAISON ACTIVE</button>
-                <button type="button" data-dream-mode="all">HISTORIQUE</button>
-                <button type="button" data-dream-mode="technical">TECHNIQUE</button>
+            <div class="nl-hero-feed dream-hero-feed" aria-hidden="true">
+                <img src="images/icons/kaiser2.webp" alt="" width="607" height="540">
             </div>
-            <label><span>SAISON</span><select id="dreamSeason"></select></label>
-            <div class="dream-method"><small>MÉTHODE</small><strong id="dreamMethodLabel">IMPACT EN MATCH</strong></div>
-        </section>
-
-        <section class="dream-stage">
-            <div class="dream-pitch" id="dreamPitch"></div>
-            <aside class="dream-dossier" id="dreamDossier"></aside>
-        </section>
-
-        <section class="legacy-panel">
-            <div class="legacy-panel-title"><span>02</span>
-                <div><small>PROFONDEUR D’EFFECTIF</small>
-                    <h2>BANC D’ÉLITE</h2>
+            <span class="nl-reticle dream-hero-reticle" aria-hidden="true"><i></i><span>CIBLE VERROUILLÉE // N°1</span></span>
+            <div class="nl-hero-inner dream-hero-inner">
+                <p class="nl-kicker"><span class="nl-ch">CH 12</span> Équipe idéale // Recalcul automatique</p>
+                <h1 class="nl-headline dream-title" id="dreamTitle">L’équipe qui <em>domine le terrain.</em></h1>
+                <p class="nl-lead">Une formation 3–2 recalculée selon la période et la méthode choisies. Chaque poste
+                    revient au joueur <b>le plus performant</b> disponible.</p>
+                <div class="dream-readouts">
+                    <div class="dream-readout">
+                        <span>Formation</span>
+                        <strong>3<i>—</i>2</strong>
+                    </div>
+                    <div class="dream-readout">
+                        <span>Indice collectif</span>
+                        <strong data-dream-hero-index>—</strong>
+                    </div>
+                    <div class="dream-readout">
+                        <span>Postes pourvus</span>
+                        <strong data-dream-hero-filled>—</strong>
+                    </div>
                 </div>
-                <p>Les trois meilleures alternatives hors du cinq titulaire.</p>
             </div>
-            <div class="dream-bench" id="dreamBench"></div>
+            <span class="dream-hero-tc nl-timecode" aria-hidden="true">TC 13:05:03:02 // BEST FIVE</span>
         </section>
 
-        <section class="dream-formula">
-            <span>FORMULE DE SÉLECTION</span>
-            <p id="dreamFormula">Notes, buts, passes, défenses, dribbles et distinctions de joueur du match.</p>
+        <!-- CH 01 : régie + vue tactique -->
+        <section class="dream-board" aria-labelledby="dreamBoardTitle">
+            <div class="nl-section-head">
+                <div class="nl-chno" aria-hidden="true"><small>CH</small><b>01</b></div>
+                <div>
+                    <p class="nl-kicker">Régie de sélection // Vue tactique</p>
+                    <h2 id="dreamBoardTitle" class="nl-section-title">Le cinq <em>sous surveillance</em></h2>
+                </div>
+                <p class="nl-section-note">Choisissez une période : le terrain, la fiche de sélection et le banc se
+                    recalculent instantanément.</p>
+            </div>
+
+            <div class="dream-controls nl-console">
+                <div class="dream-console-head nl-console-head">
+                    <span class="rec">REC</span>
+                    <h3>Régie</h3>
+                    <p>Période de calcul // Saison // Méthode</p>
+                </div>
+                <div class="dream-console-body">
+                    <div class="dream-mode-tabs nl-channels" id="dreamModes" role="group" aria-label="Période de calcul">
+                        <button type="button" class="nl-channel dream-mode" data-dream-mode="day" aria-pressed="false"><span
+                                class="nl-channel-num">CH 01</span><span class="dream-mode-label"><small>1 journée</small>Dernière
+                                journée</span></button>
+                        <button type="button" class="nl-channel dream-mode is-active" data-dream-mode="season"
+                            aria-pressed="true"><span class="nl-channel-num">CH 02</span><span
+                                class="dream-mode-label"><small>Saison choisie</small>Saison active</span></button>
+                        <button type="button" class="nl-channel dream-mode" data-dream-mode="all" aria-pressed="false"><span
+                                class="nl-channel-num">CH 03</span><span class="dream-mode-label"><small>Toutes les
+                                    saisons</small>Historique</span></button>
+                        <button type="button" class="nl-channel dream-mode" data-dream-mode="technical"
+                            aria-pressed="false"><span class="nl-channel-num">CH 04</span><span
+                                class="dream-mode-label"><small>Fiches joueurs</small>Technique</span></button>
+                    </div>
+                    <div class="dream-console-row">
+                        <label class="nl-field dream-season-field"><span class="nl-field-label">Saison</span><select
+                                id="dreamSeason" class="nl-input"></select></label>
+                        <div class="dream-method"><small>Méthode active</small><strong id="dreamMethodLabel">IMPACT EN
+                                MATCH</strong></div>
+                        <div class="dream-method dream-captain"><small>Capitaine verrouillé</small><strong
+                                data-dream-captain>—</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dream-stage">
+                <div class="dream-field-screen mon nl-aim">
+                    <div class="osd">
+                        <span><span class="rec">REC</span> CAM 12-A <b>//</b> VUE TACTIQUE</span>
+                        <span class="osd-hide-sm">DEMI-TERRAIN OFFENSIF</span>
+                        <span data-dream-pitch-mode>SAISON 01</span>
+                    </div>
+                    <div class="dream-field">
+                        <div class="dream-field-lines" aria-hidden="true">
+                            <span class="dream-line dream-line-box"></span>
+                            <span class="dream-line dream-line-six"></span>
+                            <span class="dream-line dream-line-goal"></span>
+                            <span class="dream-line dream-line-spot"></span>
+                            <span class="dream-line dream-line-arc"></span>
+                            <span class="dream-line dream-line-circle"></span>
+                            <span class="dream-zone dream-zone--1">Z1 // Finition</span>
+                            <span class="dream-zone dream-zone--2">Z2 // Couloirs</span>
+                            <span class="dream-zone dream-zone--3">Z3 // Relais</span>
+                        </div>
+                        <div class="dream-pitch" id="dreamPitch"></div>
+                    </div>
+                    <div class="dream-field-foot osd">
+                        <span>FORMATION <b>3—2</b></span>
+                        <span class="osd-hide-sm">CAPITAINE <b>//</b> MEILLEUR INDICE</span>
+                        <span class="nl-timecode">TC 00:14:03:02</span>
+                    </div>
+                </div>
+                <aside class="dream-dossier" id="dreamDossier" aria-live="polite"></aside>
+            </div>
         </section>
 
-        <nav class="legacy-crosslinks" aria-label="Autres archives">
-            <a href="progression.html"><span>TRAJECTOIRES</span><strong>PROGRESSION</strong><i>↗</i></a>
+        <!-- CH 02 : banc -->
+        <section class="dream-reserve" aria-labelledby="dreamBenchTitle">
+            <div class="nl-section-head">
+                <div class="nl-chno" aria-hidden="true"><small>CH</small><b>02</b></div>
+                <div>
+                    <p class="nl-kicker">Profondeur d’effectif // Caméras de réserve</p>
+                    <h2 id="dreamBenchTitle" class="nl-section-title">Banc <em>d’élite</em></h2>
+                </div>
+                <p class="nl-section-note">Les trois meilleures alternatives hors du cinq titulaire.</p>
+            </div>
+            <div class="dream-bench nl-wall" id="dreamBench"></div>
+        </section>
+
+        <!-- CH 03 : formule -->
+        <section class="dream-formula nl-band nl-bleed" aria-labelledby="dreamFormulaTitle">
+            <div class="dream-formula-inner">
+                <div class="dream-formula-head">
+                    <p class="nl-kicker"><span class="nl-ch">CH 03</span> Algorithme // Formule de sélection</p>
+                    <h2 id="dreamFormulaTitle">Formule <em>de sélection</em></h2>
+                </div>
+                <div class="dream-formula-body">
+                    <p class="dream-formula-text" id="dreamFormula">Notes, buts, passes, défenses, dribbles et distinctions
+                        de joueur du match.</p>
+                    <ul class="dream-formula-terms" data-dream-formula-terms aria-label="Coefficients de la formule"></ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- CH 04 : autres archives -->
+        <nav class="dream-crosslinks" aria-label="Autres archives">
+            <p class="nl-kicker"><span class="nl-ch">CH 04</span> Autres archives // Flux associés</p>
+            <div class="dream-crosslink-wall nl-wall">
+                <a class="nl-feed dream-crosslink" href="progression.html">
+                    <img class="nl-feed-img" src="images/icons/nel-isagi.webp" alt="" loading="lazy">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd"><span>CAM 11 <b>//</b> ÉVOLUTION</span><span>↗</span></span>
+                    <span class="nl-feed-caption"><small>Trajectoires</small><b>Progression</b></span>
+                </a>
+                <a class="nl-feed dream-crosslink" href="players.html">
+                    <img class="nl-feed-img" src="images/icons/lorenzo2.webp" alt="" loading="lazy">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd"><span>CAM 02 <b>//</b> EFFECTIFS</span><span>↗</span></span>
+                    <span class="nl-feed-caption"><small>Fiches individuelles</small><b>Joueurs</b></span>
+                </a>
+                <a class="nl-feed dream-crosslink" href="stats.html">
+                    <img class="nl-feed-img" src="images/icons/charles.webp" alt="" loading="lazy">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd"><span>CAM 06 <b>//</b> PALMARÈS</span><span>↗</span></span>
+                    <span class="nl-feed-caption"><small>Meilleures marques</small><b>Records</b></span>
+                </a>
+            </div>
         </nav>
     </main>
+
+    <footer class="nl-footer">
+        <div class="nl-footer-main">
+            <a class="footer-brand" href="index.html">
+                <span class="brand-mark"><span></span></span>
+                <strong>NEBULA LEAGUE</strong>
+            </a>
+            <p>Ligue privée Azure Latch. Toutes les rencontres sont enregistrées, chaque statistique est archivée.</p>
+        </div>
+        <nav class="nl-footer-links" aria-label="Accès rapides">
+            <p>Accès rapides</p>
+            <a href="matchs.html">Matchs</a>
+            <a href="fixtures.html">Calendrier</a>
+            <a href="stats.html">Records</a>
+            <a href="club.html">Clubs</a>
+            <a href="players.html">Joueurs</a>
+            <a href="rules.html">Règles</a>
+        </nav>
+        <div class="nl-footer-osd">
+            <span class="rec">REC</span>
+            <span>NL-CTRL // FIN DU FLUX</span>
+            <span class="jp">ブルーロック</span>
+            <span>© NEBULA LEAGUE</span>
+            <a href="#top">Retour en haut ↑</a>
+        </div>
+    </footer>
 
     <script src="JavaScript/nebula-data.js"></script>
     <script src="JavaScript/dream-team.js"></script>

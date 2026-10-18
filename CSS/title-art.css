@@ -17,7 +17,7 @@
 }
 
 .pc-technical-title-art .glyph-ball {
-    fill: #090c10;
+    fill: #040c20;
     stroke-width: 1.8;
 }
 
@@ -643,7 +643,7 @@
 
     12%,
     85% {
-        fill: #090c10;
+        fill: #040c20;
     }
 }
 
@@ -652,7 +652,7 @@
     22%,
     40%,
     100% {
-        fill: #090c10;
+        fill: #040c20;
         transform: scale(1);
     }
 
@@ -667,7 +667,7 @@
     55%,
     74%,
     100% {
-        fill: #090c10;
+        fill: #040c20;
         transform: scale(1);
     }
 
@@ -998,7 +998,7 @@
 @keyframes assist-node {
     0%,
     100% {
-        fill: #090c10;
+        fill: #040c20;
         transform: scale(1);
     }
 
@@ -1008,7 +1008,7 @@
     }
 
     25% {
-        fill: #090c10;
+        fill: #040c20;
         transform: scale(1);
     }
 }

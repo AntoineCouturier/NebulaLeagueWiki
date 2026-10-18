@@ -21,9 +21,7 @@
         { label: "Règles", path: "rules.html", hint: "Protocole de compétition", keywords: "règlement" },
         { label: "Records", path: "stats.html", hint: "Records par saison et par match", keywords: "stats statistiques" },
         { label: "Progression", path: "progression.html", hint: "Évolution des joueurs", keywords: "évolution" },
-        { label: "Équipes idéales", path: "dream-team.html", hint: "Meilleurs onze automatiques", keywords: "dream team" },
-        { label: "Plus beau but", path: "Autre/greatest_goal.html", hint: "Le but de l’histoire", keywords: "goal" },
-        { label: "Pire raté", path: "Autre/worst_goal.html", hint: "Le raté de l’histoire", keywords: "miss" }
+        { label: "Équipes idéales", path: "dream-team.html", hint: "Meilleurs onze automatiques", keywords: "dream team" }
     ];
 
     const GROUP_LABELS = { page: "Pages", player: "Joueurs", club: "Clubs", character: "Personnages", match: "Matchs" };

@@ -35,9 +35,68 @@ document.addEventListener("DOMContentLoaded", () => {
         </span>`;
     }
 
+    // État vide « PAS DE SIGNAL » (kit .nl-nosignal de theme-monitor.css).
     function emptyState(code, title, text) {
-        return `<div class="feed-empty"><span>${code}</span><strong>${title}</strong><p>${text}</p></div>`;
+        return `<div class="feed-empty nl-nosignal"><span class="nl-nosignal-code">${code}</span><strong>${title}</strong><p>${text}</p></div>`;
     }
+
+    const playedCount = (data.matches || []).filter(match =>
+        Number.isFinite(Number(match.scoreHome)) && Number.isFinite(Number(match.scoreAway))).length;
+
+    // ---------- 00. Mur de surveillance du héros (décoratif) ----------
+    // Un flux caméra par joueur, la cible n°1 verrouillée au centre du mur,
+    // complété par des personnages pour remplir la grille.
+    const wall = document.querySelector('[data-feed="wall"]');
+    if (wall) {
+        const rated = player => Number(player.technical?.global) || 0;
+        const roster = [...(data.players || [])].sort((a, b) => rated(b) - rated(a));
+        const fillers = ["isagi", "rin", "kaiser", "nagi", "bachira", "chigiri", "reo"]
+            .map(name => ({ name, avatar: data.assetUrl(`images/icons/${name}.webp`), filler: true }));
+        const timecode = index => {
+            const seed = (index * 7919 + 1301) % 86400;
+            const pad = value => String(value).padStart(2, "0");
+            return `${pad(Math.floor(seed / 3600) % 24)}:${pad(Math.floor(seed / 60) % 60)}:${pad(seed % 60)}:${pad((index * 13) % 25)}`;
+        };
+        const tiles = [...roster, ...fillers].slice(0, 15).map((entry, index) => {
+            const isTarget = index === 0 && !entry.filler;
+            const retired = entry.club === "retraite";
+            const club = entry.filler ? null : data.getClub?.(entry.club);
+            const cam = String(index + 1).padStart(2, "0");
+            const caption = isTarget
+                ? `CIBLE #001 // ${club?.shortName || "LIBRE"} // ${entry.position || "--"}`
+                : entry.filler
+                ? "ARCHIVE // PERSONNAGE"
+                : retired ? "RETRAITE // ARCHIVÉ" : `${club?.shortName || "LIBRE"} // ${entry.position || "--"}`;
+            const status = retired || entry.filler
+                ? `<span class="rec is-off">${retired ? "HORS LIGNE" : "ARCHIVE"}</span>`
+                : `<span class="rec">REC</span>`;
+            const classes = ["nl-feed", "wall-feed"];
+            if (retired) classes.push("is-offline");
+            if (entry.filler) classes.push("wall-filler");
+            if (isTarget) classes.push("wall-target");
+            return `<span class="${classes.join(" ")}">
+                <img class="nl-feed-img" src="${escapeHtml(entry.avatar)}" alt="" loading="lazy" decoding="async">
+                ${isTarget ? `<span class="nl-feed-lock"></span><span class="nl-reticle home-orbit"><i></i></span>` : ""}
+                <span class="nl-feed-osd"><span><b>CAM ${cam}</b></span>${status}</span>
+                <span class="nl-feed-tc">TC ${timecode(index + 1)}</span>
+                ${isTarget && rated(entry) ? `<strong class="nl-feed-figure">${rated(entry)}<small>OVR</small></strong>` : ""}
+                <span class="nl-feed-caption"><small>${escapeHtml(caption)}</small><b>${escapeHtml(entry.name)}</b></span>
+            </span>`;
+        });
+        wall.innerHTML = tiles.join("");
+    }
+
+    // Écran « Matchs » du mur des canaux : hors ligne tant qu'aucun score n'existe.
+    document.querySelectorAll('[data-feed-status="matches"]').forEach(tile => {
+        if (playedCount) return;
+        tile.classList.add("is-offline");
+        tile.querySelector(".nl-feed-mire")?.removeAttribute("hidden");
+        const rec = tile.querySelector("[data-feed-rec]");
+        if (rec) {
+            rec.classList.add("is-off");
+            rec.textContent = "HORS LIGNE";
+        }
+    });
 
     // ---------- 01. Derniers résultats ----------
     const playedMatches = [...(data.matches || [])]
@@ -56,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <span class="${awayWon ? "is-winner" : ""}">${clubBadge(match.away)}</span>
             </a></li>`;
         }).join("")}</ol>`
-        : emptyState("00", "Aucun résultat", `Aucun match n’a encore été enregistré pour la ${seasonLabel}.`);
+        : emptyState("SIGNAL 00", "Pas de signal", `Aucun match n’a encore été enregistré pour la ${seasonLabel}. Le premier score s’affichera ici.`);
 
     // ---------- 02. Prochaine rencontre ----------
     const pendingFixtures = (data.fixtures || []).filter(fixture =>
@@ -82,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
             ${overdue ? `<p class="feed-note">${overdue} rencontre${overdue > 1 ? "s" : ""} passée${overdue > 1 ? "s" : ""} en attente de résultat.</p>` : ""}`;
     } else {
-        slots.next.innerHTML = emptyState("--", "Calendrier terminé", "Aucune rencontre programmée pour le moment.");
+        slots.next.innerHTML = emptyState("SIGNAL --", "Calendrier terminé", "Aucune rencontre programmée pour le moment.");
     }
 
     // ---------- 03. En tête de la ligue ----------
@@ -91,12 +150,12 @@ document.addEventListener("DOMContentLoaded", () => {
         .map(player => ({ player, value: score(player) }))
         .filter(entry => Number.isFinite(entry.value) && entry.value > 0)
         .sort((a, b) => b.value - a.value);
-    const formatRating = value => `${value} OVR`;
+    const formatRating = value => `${value}<small>OVR</small>`;
     const ratings = ranking(player => player.technical?.global);
 
     const leaders = [
-        { label: "Meilleur buteur", entry: ranking(player => data.getPlayerMatchStats?.(player.name, activeSeason?.number)?.goals)[0], format: value => `${value} but${value > 1 ? "s" : ""}` },
-        { label: "Plus forte cote", entry: ranking(player => player.value)[0], format: value => `${yen.format(value)} ¥` },
+        { label: "Meilleur buteur", entry: ranking(player => data.getPlayerMatchStats?.(player.name, activeSeason?.number)?.goals)[0], format: value => `${value}<small>but${value > 1 ? "s" : ""}</small>` },
+        { label: "Plus forte cote", entry: ranking(player => player.value)[0], format: value => `${yen.format(value)}<small>¥</small>` },
         { label: "Meilleure note", entry: ratings[0], format: formatRating }
     ].filter(leader => leader.entry);
 
@@ -106,12 +165,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     slots.leaders.innerHTML = leaders.length
-        ? `<ul class="feed-leaders">${leaders.map(({ label, entry, format }) => `
+        ? `<ul class="feed-leaders">${leaders.map(({ label, entry, format }, index) => `
             <li><a href="${escapeHtml(data.playerPageHref(entry.player))}">
                 <img src="${escapeHtml(entry.player.avatar)}" alt="" loading="lazy">
+                <i class="feed-leader-cam" aria-hidden="true">CAM ${String(index + 1).padStart(2, "0")}</i>
                 <span><small>${label}</small><b>${escapeHtml(entry.player.name)}</b></span>
                 <strong>${format(entry.value)}</strong>
             </a></li>`).join("")}</ul>
             ${playedMatches.length ? "" : `<p class="feed-note">Buteurs et cotes apparaîtront après le premier match.</p>`}`
-        : emptyState("--", "Pas encore de leader", "Les classements se rempliront avec les premiers matchs.");
+        : emptyState("SIGNAL --", "Pas encore de leader", "Les classements se rempliront avec les premiers matchs.");
 });

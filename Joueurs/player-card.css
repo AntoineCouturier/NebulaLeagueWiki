@@ -1,754 +1,93 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,500;0,600;0,700;1,600;1,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
 
-/* ===================== VARIABLES & BASE ===================== */
+/* ==========================================================================
+   NEBULA LEAGUE — FICHE JOUEUR // DOSSIER DE SURVEILLANCE
+   Rendu par Joueurs/player-card.js. Ce fichier est chargé AVANT
+   global-theme.css et theme-monitor.css : les propriétés imposées en
+   !important par ceux-ci sont reprises dans la couche nl-force.
+
+   A. Mécanique (ne pas supprimer) : couleurs de club, masquage du gabarit
+      brut, onglets, popup radar, toast, couleurs des rangs et des titres.
+   B. Dossier de surveillance : flux caméra pleine largeur (héros), canaux,
+      panneaux technique / matchs / palmarès.
+   C. Illustrations animées des titres (générées par player-card.js).
+
+   Plancher typographique : 11 px pour toute incrustation (OSD, libellés,
+   codes). Les annotations dessinées dans les illustrations SVG (aria-hidden)
+   font partie du dessin et n'y sont pas soumises.
+   ========================================================================== */
+
+@layer nl-force;
+
+/* ===================== A. MÉCANIQUE ===================== */
+
 :root {
-    --nebula-purple: #b41cff;
-    --nebula-glow: rgba(180, 28, 255, 0.35);
-    --surface: rgba(14, 14, 18, 0.92);
-    --surface-2: rgba(22, 22, 28, 0.95);
-    --border: rgba(255, 255, 255, 0.08);
-    --text: #e8e8ec;
-    --text-muted: #9a9aad;
-    --club-primary: #b41cff;
-    --club-secondary: #6f00ff;
-    --club-glow: rgba(180, 28, 255, 0.4);
+    --club-primary: #3d7bff;
+    --club-secondary: #1f5bff;
+    --club-glow: rgba(31, 91, 255, 0.4);
 }
 
-body.player-card-page {
-    margin: 0;
-    padding: 0;
-    font-family: 'Inter', sans-serif;
-    background: #050508;
-    color: var(--text);
-    min-height: 100vh;
-}
-
-body.player-card-page::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-        radial-gradient(2px 2px at 20px 30px, #eee, transparent),
-        radial-gradient(2px 2px at 40px 70px, #fff, transparent),
-        radial-gradient(1px 1px at 90px 40px, #ddd, transparent),
-        radial-gradient(3px 3px at 240px 200px, var(--club-glow), transparent);
-    background-repeat: repeat;
-    background-size: 300px 300px;
-    z-index: -2;
-    opacity: 0.35;
-}
-
-body.player-card-page::after {
-    content: '';
-    position: fixed;
-    top: -20%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 900px;
-    height: 900px;
-    background: radial-gradient(circle, var(--club-glow) 0%, transparent 65%);
-    z-index: -1;
-    pointer-events: none;
-    animation: ambientPulse 6s ease-in-out infinite;
-}
-
-@keyframes ambientPulse {
-    0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
-    50% { opacity: 0.85; transform: translateX(-50%) scale(1.08); }
-}
-
-/* Club themes */
 [data-club="bastard"] { --club-primary: #ff1a1a; --club-secondary: #990000; --club-glow: rgba(255, 0, 0, 0.35); }
 [data-club="pxg"] { --club-primary: #1a2bff; --club-secondary: #01049e; --club-glow: rgba(26, 43, 255, 0.35); }
 [data-club="ubers"] { --club-primary: #1eff00; --club-secondary: #0ba700; --club-glow: rgba(30, 255, 0, 0.25); }
 [data-club="barcha"] { --club-primary: #ffd700; --club-secondary: #e4c200; --club-glow: rgba(255, 215, 0, 0.3); }
 [data-club="manshine"] { --club-primary: #00d5ff; --club-secondary: #0099cc; --club-glow: rgba(0, 213, 255, 0.35); }
-[data-club="retraite"] { --club-primary: #c840ff; --club-secondary: #8a00ad; --club-glow: rgba(200, 64, 255, 0.35); }
+/* Retraités : couleur « archives » du thème (plus de violet) */
+[data-club="retraite"] { --club-primary: #7d8bb3; --club-secondary: #4b5a82; --club-glow: rgba(125, 139, 179, 0.3); }
 
-/* ===================== HEADER ===================== */
-body.player-card-page header {
-    background: rgba(8, 8, 12, 0.85);
-    padding: 14px 20px;
-    border-bottom: 2px solid var(--club-primary);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5), 0 0 20px var(--club-glow);
-}
-
-body.player-card-page header h1 {
-    margin: 0;
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(1rem, 3vw, 1.5rem);
-    text-align: center;
-    color: #fff;
-    text-shadow: 0 0 12px var(--club-glow);
-}
-
-body.player-card-page nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 10px 0 0;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-body.player-card-page nav ul li a {
-    text-decoration: none;
-    color: var(--text);
-    font-weight: 600;
-    font-size: 0.85rem;
-    padding: 6px 14px;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border);
-    transition: 0.25s;
-}
-
-body.player-card-page nav ul li a:hover {
-    background: linear-gradient(135deg, var(--club-primary), var(--club-secondary));
-    border-color: var(--club-primary);
-    color: #fff;
-    box-shadow: 0 0 16px var(--club-glow);
-}
-
-/* ===================== LAYOUT ===================== */
-.player-card-wrapper {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 24px 16px 60px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-/* ===================== HERO CARD ===================== */
-.pc-hero {
-    position: relative;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
-    gap: 0 24px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 28px;
-    overflow: hidden;
-    animation: cardEnter 0.7s ease-out;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-}
-
-.pc-hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, var(--club-primary), transparent);
-}
-
-.pc-hero-rating {
-    grid-row: 1 / 3;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    z-index: 1;
-}
-
-.pc-ovr-value {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2rem;
-    font-weight: 900;
-    color: #fff;
-    line-height: 1;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-}
-
-.pc-ovr-label {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.55rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    color: rgba(255, 255, 255, 0.85);
-    margin-top: 2px;
-}
-
-.pc-ovr-rank {
-    margin-top: 10px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--club-primary);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
-
-.pc-hero-avatar {
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid var(--club-primary);
-    box-shadow: 0 0 24px var(--club-glow);
-    transition: transform 0.4s;
-}
-
-.pc-hero-avatar:hover {
-    transform: scale(1.05);
-}
-
-.pc-hero-club-logo {
-    width: 64px;
-    height: 64px;
-    object-fit: contain;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 6px;
-    border: 1px solid var(--border);
-}
-
-.pc-hero-name {
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(1.6rem, 4vw, 2.2rem);
-    font-weight: 900;
-    margin: 0 0 6px;
-    background: linear-gradient(135deg, #fff 30%, var(--club-primary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.pc-hero-meta {
-    grid-column: 2;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 10px;
-    margin-top: 16px;
-    position: relative;
-    z-index: 1;
-}
-
-.pc-meta-chip {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 10px 14px;
-    transition: border-color 0.25s, background 0.25s;
-}
-
-.pc-meta-chip:hover {
-    border-color: var(--club-primary);
-    background: rgba(255, 255, 255, 0.07);
-}
-
-.pc-meta-label {
-    display: block;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-}
-
-.pc-meta-value {
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: #fff;
-}
-
-.pc-meta-value.club-accent {
-    color: var(--club-primary);
-}
-
-/* Hide original main card once enhanced */
+/* Carte d'origine : remplacée par le dossier une fois le script exécuté */
 .player-card-main.pc-enhanced {
     display: none;
 }
 
-/* ===================== TABS ===================== */
-.pc-tabs {
-    display: flex;
-    gap: 6px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 6px;
-    animation: cardEnter 0.7s ease-out 0.1s both;
-}
-
-.pc-tab-btn {
-    flex: 1;
-    padding: 12px 16px;
-    border: none;
-    border-radius: 12px;
-    background: transparent;
-    color: var(--text-muted);
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: 0.25s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.pc-tab-btn:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.pc-tab-btn.active {
-    background: linear-gradient(135deg, var(--club-primary), var(--club-secondary));
-    color: #fff;
-    box-shadow: 0 4px 16px var(--club-glow);
-}
-
 .pc-tab-panel {
     display: none;
-    animation: tabFade 0.35s ease-out;
 }
 
 .pc-tab-panel.active {
     display: block;
 }
 
-@keyframes tabFade {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes cardEnter {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ===================== STAT BARS ===================== */
-.pc-stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-.pc-stat-bars {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 24px;
-    animation: cardEnter 0.7s ease-out 0.15s both;
-}
-
-.pc-stat-bars h3,
-.pc-radar-inline h3,
-.pc-kpi-grid + h3,
-.player-card-match-stats h3,
-.player-card-trophies h3 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.85rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--club-primary);
-    margin: 0 0 18px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
-}
-
-.pc-stat-row {
-    margin-bottom: 14px;
-}
-
-.pc-stat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
-}
-
-.pc-stat-name {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text);
-}
-
-.pc-stat-value {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: #fff;
-}
-
-.pc-stat-bar-track {
-    height: 8px;
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: 99px;
-    overflow: hidden;
-}
-
-.pc-stat-bar-fill {
-    height: 100%;
-    border-radius: 99px;
-    background: linear-gradient(90deg, var(--club-secondary), var(--club-primary));
-    width: 0;
-    transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
-    box-shadow: 0 0 10px var(--club-glow);
-}
-
-.pc-stat-grade {
-    font-size: 0.8rem;
-    margin-left: 6px;
-}
-
-/* Inline radar */
-.pc-radar-inline {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 20px;
-    animation: cardEnter 0.7s ease-out 0.2s both;
-}
-
-.pc-radar-inline-canvas {
-    height: 260px;
-    position: relative;
-}
-
-.pc-radar-inline-canvas canvas {
-    width: 100% !important;
-    height: 100% !important;
-}
-
-/* Hide raw FIFA stats paragraphs after enhancement */
 .player-card-fifa-stats.pc-enhanced > p,
 .player-card-fifa-stats.pc-enhanced > br,
-.player-card-fifa-stats.pc-enhanced > h3 {
-    display: none;
-}
-
-.player-card-fifa-stats.pc-enhanced .radar-btn {
-    display: none;
-}
-
-/* ===================== KPI CARDS ===================== */
-.pc-kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-.pc-kpi {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 16px;
-    text-align: center;
-    transition: transform 0.25s, border-color 0.25s;
-    animation: cardEnter 0.5s ease-out both;
-}
-
-.pc-kpi:nth-child(1) { animation-delay: 0.05s; }
-.pc-kpi:nth-child(2) { animation-delay: 0.1s; }
-.pc-kpi:nth-child(3) { animation-delay: 0.15s; }
-.pc-kpi:nth-child(4) { animation-delay: 0.2s; }
-
-.pc-kpi:hover {
-    transform: translateY(-3px);
-    border-color: var(--club-primary);
-}
-
-.pc-kpi-icon {
-    font-size: 1.4rem;
-    margin-bottom: 6px;
-}
-
-.pc-kpi-value {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: #fff;
-}
-
-.pc-kpi-label {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-top: 4px;
-}
-
-/* Match stats panel */
-.pc-match-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 24px;
-    animation: cardEnter 0.7s ease-out 0.15s both;
-}
-
-.pc-match-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px;
-}
-
-.pc-match-stat {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 14px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 10px;
-    border: 1px solid var(--border);
-}
-
-.pc-match-stat-label {
-    font-size: 0.82rem;
-    color: var(--text-muted);
-}
-
-.pc-match-stat-value {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 700;
-    color: #fff;
-}
-
+.player-card-fifa-stats.pc-enhanced > h3,
+.player-card-fifa-stats.pc-enhanced .radar-btn,
 .player-card-match-stats.pc-enhanced > p,
 .player-card-match-stats.pc-enhanced > h3,
-.player-card-match-stats.pc-enhanced > br {
-    display: none;
-}
-
-.pc-match-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    flex-wrap: wrap;
-}
-
-/* ===================== TROPHIES PANEL ===================== */
-.pc-trophies-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 24px;
-    animation: cardEnter 0.7s ease-out 0.15s both;
-}
-
-.pc-trophy-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    margin-bottom: 24px;
-}
-
-.pc-trophy-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    transition: border-color 0.25s;
-}
-
-.pc-trophy-item:hover {
-    border-color: rgba(255, 215, 0, 0.4);
-}
-
-.pc-trophy-icon {
-    font-size: 1.6rem;
-}
-
-.pc-trophy-info strong {
-    display: block;
-    font-size: 0.85rem;
-}
-
-.pc-trophy-count {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 900;
-    color: #ffd700;
-}
-
-.pc-titles-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.pc-titles-list li {
-    padding: 8px 16px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border);
-    border-radius: 99px;
-    font-size: 0.88rem;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.pc-titles-list li:hover {
-    transform: scale(1.04);
-    box-shadow: 0 0 16px var(--club-glow);
-}
-
-.pc-titles-empty {
-    color: var(--text-muted);
-    font-style: italic;
-    font-size: 0.9rem;
-}
-
+.player-card-match-stats.pc-enhanced > br,
 .player-card-trophies.pc-enhanced > h3,
 .player-card-trophies.pc-enhanced > ul {
     display: none;
 }
 
-/* Hide old panel wrappers when tabbed */
-.player-card-fifa-stats.pc-enhanced,
-.player-card-match-stats.pc-enhanced,
-.player-card-trophies.pc-enhanced {
-    background: none;
-    border: none;
-    padding: 0;
-    box-shadow: none;
-    animation: none;
-    opacity: 1;
-}
-
-/* ===================== BUTTONS ===================== */
-.pc-btn {
-    padding: 11px 20px;
-    border: none;
-    border-radius: 10px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 0.88rem;
-    cursor: pointer;
-    transition: 0.25s;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.pc-btn-ghost {
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--text);
-    border: 1px solid var(--border);
-}
-
-.pc-btn-ghost:hover {
-    border-color: var(--club-primary);
-    color: #fff;
-}
-
-/* Legacy radar button classes mapped */
-.radar-btn,
-[class$="-season"] {
-    padding: 11px 20px;
-    border: none;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.88rem;
-    cursor: pointer;
-    color: #fff;
-    background: linear-gradient(135deg, var(--club-primary), var(--club-secondary));
-    box-shadow: 0 4px 14px var(--club-glow);
-    transition: 0.25s;
-    width: auto;
-    margin-top: 0;
-}
-
-.radar-btn:hover,
-[class$="-season"]:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 22px var(--club-glow);
-}
-
-/* ===================== POPUPS ===================== */
+/* Popup radar historique (son bouton d'ouverture est masqué) */
 .popup-overlay {
     position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(6px);
-    display: none;
-    justify-content: center;
-    align-items: center;
     z-index: 2000;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
     padding: 20px;
 }
 
 .popup-box {
-    width: min(500px, 92vw) !important;
-    max-width: 92vw;
-    padding: 32px !important;
-    border-radius: 20px !important;
-    background: var(--surface-2) !important;
+    width: min(500px, 92vw);
+    padding: 28px;
     text-align: center;
-    animation: popupFade 0.3s ease-out;
-    border: 1px solid var(--border);
-}
-
-.bastard-box { box-shadow: 0 0 40px rgba(255, 0, 0, 0.5) !important; border-color: rgba(255, 0, 0, 0.3) !important; }
-.pxg-box { box-shadow: 0 0 40px rgba(26, 43, 255, 0.5) !important; border-color: rgba(26, 43, 255, 0.3) !important; }
-.ubers-box { box-shadow: 0 0 40px rgba(30, 255, 0, 0.35) !important; border-color: rgba(30, 255, 0, 0.3) !important; }
-.barcha-box { box-shadow: 0 0 40px rgba(255, 215, 0, 0.4) !important; border-color: rgba(255, 215, 0, 0.3) !important; }
-.manshine-box { box-shadow: 0 0 40px rgba(0, 213, 255, 0.5) !important; border-color: rgba(0, 213, 255, 0.3) !important; }
-.retraite-box { box-shadow: 0 0 40px rgba(200, 64, 255, 0.5) !important; border-color: rgba(200, 64, 255, 0.3) !important; }
-
-@keyframes popupFade {
-    from { transform: scale(0.92) translateY(16px); opacity: 0; }
-    to { transform: scale(1) translateY(0); opacity: 1; }
 }
 
 .popup-box h2 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.4rem !important;
-    margin-bottom: 16px !important;
-}
-
-.popup-box select {
-    width: 85%;
-    padding: 10px;
-    margin: 12px 0;
-    border-radius: 8px;
-    border: 2px solid var(--club-primary);
-    background: #0a0a0f;
-    color: #fff;
-    font-size: 0.9rem;
-}
-
-.close-btn {
-    margin-top: 16px;
-    padding: 10px 24px !important;
-    background: rgba(255, 50, 80, 0.9);
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    color: white;
-    font-weight: 600;
-    transition: 0.2s;
-    width: 100%;
-}
-
-.close-btn:hover {
-    background: #ff335f;
+    margin: 0 0 16px;
+    font-size: 1.3rem;
+    text-transform: uppercase;
 }
 
 .radar-container {
-    width: 100%;
-    height: 320px !important;
-    margin: 16px 0;
     position: relative;
+    width: 100%;
+    height: 320px;
+    margin: 16px 0;
 }
 
 #skillsRadarChart {
@@ -756,368 +95,840 @@ body.player-card-page nav ul li a:hover {
     height: 100% !important;
 }
 
-.radar-info p {
-    margin: 5px 0;
+.close-btn {
+    width: 100%;
+    min-height: 44px;
+    margin-top: 16px;
+    cursor: pointer;
 }
 
-/* Toast notification */
+/* Notification « lien copié » */
 .pc-toast {
     position: fixed;
+    z-index: 3000;
     bottom: 24px;
     left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--surface-2);
-    border: 1px solid var(--club-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border: 1px solid var(--line-strong, rgba(77, 128, 255, 0.42));
+    border-radius: 3px;
+    background: #040c22;
     color: #fff;
-    padding: 12px 24px;
-    border-radius: 12px;
-    font-size: 0.88rem;
-    font-weight: 600;
-    z-index: 3000;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px var(--club-glow);
-    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    font-family: var(--mono, monospace);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    box-shadow: 0 0 0 3px #01040c, 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(31, 91, 255, 0.3);
     pointer-events: none;
+    transform: translateX(-50%) translateY(90px);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pc-toast::before {
+    width: 7px;
+    height: 7px;
+    content: "";
+    border-radius: 50%;
+    background: var(--rec, #ff2b40);
+    box-shadow: 0 0 8px var(--rec, #ff2b40);
 }
 
 .pc-toast.show {
     transform: translateX(-50%) translateY(0);
 }
 
-/* ===================== RATING TIERS ===================== */
+/* Rangs (Z > SSS > SS > S > A … G) : une échelle bleue, du blanc au gris.
+   Z est le plus visible : cartouche blanc plein, lettre noire, halo. */
 .z, .sss, .ss, .s, .a, .b, .c, .d, .e, .f, .g, .h { font-weight: 700; }
 
 .z {
-    position: relative;
     display: inline-block;
-    background: linear-gradient(90deg, #ffffff, #000000, #ffffff, #000000);
+    padding: 0 0.32em;
+    background: #fff;
+    color: var(--ink, #020611);
+    -webkit-text-fill-color: currentColor;
+    box-shadow: 0 0 0 1px #fff, 0 0 14px rgba(255, 255, 255, 0.75), 0 0 30px rgba(61, 123, 255, 0.75);
+    animation: pc-z-pulse 2.4s ease-in-out infinite;
+}
+
+.sss {
+    display: inline-block;
+    background: linear-gradient(90deg, #ffffff, #8db0ff, #ffffff, #3d7bff, #ffffff);
     background-size: 300%;
-    animation: shine 3s linear infinite;
+    animation: shine 4s linear infinite;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
-    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.48));
+    filter: drop-shadow(0 0 6px rgba(141, 176, 255, 0.65));
 }
 
-.sss {
-    position: relative;
-    display: inline-block;
-    background: linear-gradient(90deg, #ff0000, #ffff00, #2fff00, #00ffee, #0037ff, #9d00ff, #ff00a2);
-    background-size: 300%;
-    animation: shine 3s linear infinite;
-    -webkit-background-clip: text;
-    color: transparent;
-}
-
-.ss { color: #7A00FF; text-shadow: 0 0 8px #7A00FF; }
-.s { color: #0063FF; text-shadow: 0 0 6px #0063FF; }
-.a { color: #009BFF; }
-.b { color: #00D68F; }
-.c { color: #73FF00; }
-.d { color: #efff00; }
-.e { color: #ffa000; }
-.f { color: #ff6800; }
-.g { color: #ff0e00; }
-.h { color: #FF4500; }
+.ss { color: #d5e1ff; text-shadow: 0 0 8px rgba(61, 123, 255, 0.85); }
+.s { color: #8db0ff; }
+.a { color: #5b8cff; }
+.b { color: #7d8fc4; }
+.c { color: #8b9ac0; }
+.d, .e, .f, .g, .h { color: #5f6e96; }
 
 @keyframes shine {
     0% { background-position: 0%; }
     100% { background-position: 300%; }
 }
 
-/* Animated role titles */
+@keyframes pc-z-pulse {
+    50% { box-shadow: 0 0 0 1px #fff, 0 0 22px rgba(255, 255, 255, 0.95), 0 0 44px rgba(61, 123, 255, 0.95); }
+}
+
+/* Titres de rôle animés (gabarit brut) : même échelle blanc / bleu */
 .striker, .passer, .goat {
     position: relative;
     display: inline-block;
     background-size: 300%;
     animation: shine 3s linear infinite;
     -webkit-background-clip: text;
+    background-clip: text;
     color: transparent;
 }
 
-.striker { background: linear-gradient(90deg, rgb(255, 96, 96), rgb(255, 0, 0), rgb(197, 0, 0), rgb(135, 0, 0), rgb(91, 0, 0)); }
-.passer { background: linear-gradient(90deg, rgb(96, 117, 255), rgb(0, 8, 255), rgb(0, 39, 197), rgb(0, 18, 135), rgb(0, 12, 91)); }
-.goat { background: linear-gradient(90deg, #ff0000, #ffff00, #2fff00, #00ffee, #0037ff, #9d00ff, #ff00a2); }
+.striker { background-image: linear-gradient(90deg, #ffffff, #8db0ff, #3d7bff, #8db0ff, #ffffff); }
+.passer { background-image: linear-gradient(90deg, #8db0ff, #3d7bff, #1f5bff, #3d7bff, #8db0ff); }
+.goat { background-image: linear-gradient(90deg, #ffffff, #8db0ff, #ffffff, #3d7bff, #ffffff); }
+.ncl { color: #5f6e96; }
 
-/* Trophy & title colors */
-.ncl { color: #5C6166; }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #0a0a0f; }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-* { scrollbar-width: thin; scrollbar-color: #333 #0a0a0f; }
+/* ===================== B. DOSSIER DE SURVEILLANCE ===================== */
 
-/* ===================== RESPONSIVE ===================== */
-@media (max-width: 768px) {
-    .pc-hero {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-
-    .pc-hero-rating {
-        grid-row: auto;
-        margin-bottom: 8px;
-    }
-
-    .pc-hero-meta {
-        grid-column: 1;
-    }
-
-    .pc-stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .pc-tabs {
-        flex-direction: column;
-    }
-
-    .pc-tab-btn {
-        justify-content: flex-start;
-    }
-}
-
-@media (max-width: 420px) {
-    .player-card-wrapper {
-        padding: 16px 12px 40px;
-    }
-
-    .pc-hero {
-        padding: 20px 16px;
-    }
-
-    .pc-ovr-value {
-        font-size: 1.6rem;
-    }
-}
-
-/* ===================== PLAYER DOSSIER REDESIGN ===================== */
 body.nebula-page.player-card-page {
-    --pc-ink: #05070a;
-    --pc-surface: #090d12;
-    --pc-surface-2: #0d131a;
-    --pc-line: rgba(255, 255, 255, 0.12);
-    --pc-muted: #87919c;
+    --pc-ink: var(--ink, #020611);
+    --pc-surface: #040c20;
+    --pc-surface-2: #061028;
+    --pc-line: var(--line, rgba(77, 128, 255, 0.2));
+    --pc-line-strong: var(--line-strong, rgba(77, 128, 255, 0.42));
+    --pc-muted: var(--muted, #8b9ac0);
+    --pc-monitor:
+        var(--glare),
+        var(--scanlines),
+        linear-gradient(180deg, rgba(10, 23, 52, 0.92), rgba(4, 12, 32, 0.96));
+    --pc-bracket: var(--blue-3, #8db0ff);
+    /* Marge latérale du héros pleine largeur = marge du conteneur */
+    --pc-pad: max(24px, calc((100vw - 1280px) / 2));
 }
 
-body.nebula-page.player-card-page .player-card-wrapper {
-    width: min(1240px, calc(100% - 6vw)) !important;
-    max-width: none;
-    padding: clamp(36px, 6vw, 86px) 0 100px !important;
-    gap: 18px;
+/* Le thème global impose ces valeurs en !important : on les reprend dans la
+   couche nl-force pour qu'elles gagnent sans surenchère de sélecteurs. */
+@layer nl-force {
+    body.nebula-page.player-card-page .player-card-wrapper {
+        display: flex;
+        width: min(1280px, calc(100% - 48px)) !important;
+        max-width: none !important;
+        flex-direction: column;
+        gap: 16px;
+        margin: 0 auto !important;
+        padding: 0 !important;
+    }
+
+    body.nebula-page.player-card-page .pc-hero {
+        border-top: 0 !important;
+    }
+
+    body.nebula-page.player-card-page .pc-tabs {
+        border: 1px solid var(--pc-line-strong) !important;
+        border-radius: 0 !important;
+        background: var(--bezel, #01040c) !important;
+    }
+
+    body.nebula-page.player-card-page .pc-tab-btn {
+        border-radius: 0 !important;
+        font-size: 15px !important;
+    }
+
+    body.nebula-page.player-card-page .pc-tab-btn.active {
+        border-color: transparent !important;
+        background:
+            var(--scanlines),
+            linear-gradient(180deg, var(--blue-2) 0%, var(--blue) 100%) !important;
+        color: #fff !important;
+    }
+
+    @media (max-width: 760px) {
+        body.nebula-page.player-card-page {
+            --pc-pad: 16px;
+        }
+
+        body.nebula-page.player-card-page .player-card-wrapper {
+            width: calc(100% - 32px) !important;
+            padding-top: 0 !important;
+        }
+
+        body.nebula-page.player-card-page .pc-tab-btn {
+            font-size: 12px !important;
+        }
+    }
+
+    @media (max-width: 430px) {
+        body.nebula-page.player-card-page .pc-hero-meta {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
+    }
 }
+
+/* -------------------- Écran principal : flux caméra pleine largeur -------------------- */
 
 body.nebula-page.player-card-page .pc-hero.pc-dossier {
     position: relative;
+    isolation: isolate;
     display: grid;
-    min-height: 470px;
-    grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1.5fr) minmax(180px, 0.48fr);
-    grid-template-rows: 46px 1fr auto;
-    gap: 0;
-    padding: 0;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+    grid-template-rows: 38px minmax(clamp(480px, 60vh, 600px), auto) auto;
+    grid-template-areas:
+        "top top"
+        "identity feed"
+        "meta meta";
+    width: 100vw;
+    max-width: none;
+    min-height: 0;
+    margin: 0 calc(50% - 50vw);
+    padding: 0 var(--pc-pad);
     overflow: hidden;
-    border: 1px solid var(--pc-line) !important;
-    border-top: 2px solid var(--club-primary) !important;
+    border: 0;
+    border-bottom: 1px solid var(--pc-line-strong);
     border-radius: 0;
-    background:
-        linear-gradient(125deg, color-mix(in srgb, var(--club-primary), transparent 94%), transparent 42%),
-        var(--pc-surface);
-    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.42);
+    background: var(--bezel, #01040c);
+    box-shadow: none;
 }
 
+/* Voile : encre à gauche (texte), flux visible à droite */
 body.nebula-page.player-card-page .pc-hero.pc-dossier::before {
-    top: auto;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 1px;
-    background: linear-gradient(90deg, var(--club-primary), transparent 48%);
-}
-
-.pc-hero-grid {
     position: absolute;
-    z-index: 0;
+    z-index: -1;
     inset: 0;
-    opacity: 0.22;
-    background-image:
-        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-    background-size: 48px 48px;
-    mask-image: linear-gradient(90deg, transparent 12%, black 68%, transparent);
+    content: "";
+    background:
+        var(--scanlines),
+        linear-gradient(90deg, rgba(2, 6, 17, 0.95) 0%, rgba(2, 6, 17, 0.82) 36%, rgba(2, 6, 17, 0.35) 64%, rgba(2, 6, 17, 0.55) 100%),
+        linear-gradient(0deg, rgba(2, 6, 17, 0.92) 0%, transparent 34%);
     pointer-events: none;
 }
 
+/* Fond : le même flux, flouté et assombri, sur toute la largeur */
+body.nebula-page.player-card-page .pc-hero-grid {
+    position: absolute;
+    z-index: -2;
+    inset: -60px;
+    background: var(--feed-src, none) 50% 28% / cover no-repeat;
+    filter: blur(40px) saturate(0.7) brightness(0.42);
+    opacity: 1;
+    -webkit-mask-image: none;
+    mask-image: none;
+    pointer-events: none;
+}
+
+/* Bandeau caméra (pleine largeur) */
 .pc-hero-topline {
     position: relative;
     z-index: 5;
     display: flex;
-    grid-column: 1 / -1;
+    grid-area: top;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 17px;
+    gap: 18px;
+    min-width: 0;
+    margin: 0 calc(-1 * var(--pc-pad));
+    padding: 0 var(--pc-pad);
     border-bottom: 1px solid var(--pc-line);
-    color: #68727c;
-    font-family: 'Courier New', monospace;
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.11em;
+    background: rgba(1, 4, 12, 0.74);
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro, 11px);
+    font-weight: 500;
+    letter-spacing: var(--track-micro, 0.08em);
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.pc-topline-cam {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pc-topline-cam b {
+    color: #fff;
+    font-weight: 600;
+}
+
+.pc-topline-jp {
+    margin-left: auto;
+    color: var(--dim, #5f6e96);
+    font-family: var(--jp);
+    font-size: 11px;
+    letter-spacing: 0.2em;
 }
 
 .pc-profile-status {
     display: inline-flex;
+    flex: 0 0 auto;
     align-items: center;
     gap: 8px;
-    color: var(--club-primary);
+    padding: 4px 10px;
+    border: 1px solid rgba(255, 43, 64, 0.45);
+    border-radius: 2px;
+    background: rgba(255, 43, 64, 0.1);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
 }
 
 .pc-profile-status i {
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
-    background: var(--club-primary);
-    box-shadow: 0 0 12px var(--club-primary);
+    background: var(--rec);
+    box-shadow: 0 0 10px var(--rec);
+    animation: pc-rec-blink 1.4s steps(2, jump-none) infinite;
 }
 
+.pc-profile-status.is-offline {
+    border-color: var(--pc-line);
+    background: rgba(125, 139, 179, 0.1);
+    color: var(--offline, #7d8bb3);
+}
+
+.pc-profile-status.is-offline i {
+    background: var(--offline, #7d8bb3);
+    box-shadow: none;
+    animation: none;
+}
+
+@keyframes pc-rec-blink {
+    0%, 55% { opacity: 1; }
+    56%, 100% { opacity: 0.25; }
+}
+
+/* Flux caméra : déborde jusqu'au bord droit de l'écran et glisse sous le
+   texte à gauche (fondu) */
 .pc-hero-portrait {
     position: relative;
-    z-index: 1;
-    display: flex;
-    grid-column: 1;
-    grid-row: 2 / 4;
-    min-height: 420px;
-    align-items: flex-end;
-    justify-content: center;
+    z-index: 0;
+    display: block;
+    grid-area: feed;
+    min-height: 0;
+    margin-right: calc(-1 * var(--pc-pad));
+    margin-left: -22%;
     overflow: hidden;
-    border-right: 1px solid var(--pc-line);
+    border: 0;
+    background: transparent;
+    isolation: isolate;
+}
+
+body.nebula-page.player-card-page .pc-dossier .pc-hero-avatar {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    object-fit: cover;
+    object-position: 50% 26%;
+    filter: grayscale(0.15) contrast(1.12) brightness(0.88) saturate(0.95);
+    box-shadow: none;
+    transform: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.55) 14%, #000 34%);
+    mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.55) 14%, #000 34%);
+    transition: filter 0.4s ease;
+}
+
+/* Teinte moniteur + grain + lignes de balayage + bas assombri */
+.pc-hero-portrait::before {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    content: "";
     background:
-        radial-gradient(circle at 50% 67%, color-mix(in srgb, var(--club-primary), transparent 74%), transparent 43%),
-        rgba(255, 255, 255, 0.012);
+        linear-gradient(180deg, rgba(2, 6, 17, 0.3) 0%, transparent 20%, transparent 58%, rgba(2, 6, 17, 0.88) 100%),
+        linear-gradient(180deg, rgba(31, 91, 255, 0.18), rgba(11, 42, 143, 0.26));
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 34%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 34%);
+    pointer-events: none;
 }
 
 .pc-hero-portrait::after {
     position: absolute;
-    z-index: 3;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 45%;
+    z-index: 2;
+    inset: 0;
     content: "";
-    background: linear-gradient(transparent, var(--pc-surface) 88%);
+    background: var(--noise), var(--scanlines-strong);
+    background-size: 180px 180px, auto;
+    mix-blend-mode: overlay;
+    opacity: 0.6;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 34%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 34%);
     pointer-events: none;
 }
 
-.pc-portrait-number {
+.pc-portrait-osd {
     position: absolute;
-    z-index: 0;
-    top: 24px;
-    left: -9px;
-    color: color-mix(in srgb, var(--club-primary), transparent 92%);
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(6rem, 10vw, 10rem);
-    font-weight: 900;
-    letter-spacing: -0.1em;
-    line-height: 0.8;
+    z-index: 5;
+    top: 14px;
+    right: var(--pc-pad);
+    display: flex;
+    justify-content: flex-end;
+    gap: 18px;
+    color: rgba(243, 247, 255, 0.82);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    white-space: nowrap;
 }
 
-body.nebula-page.player-card-page .pc-dossier .pc-hero-avatar {
-    position: relative;
-    z-index: 2;
-    width: 94%;
-    height: 92%;
-    border: 0;
-    border-radius: 0;
-    object-fit: contain;
-    object-position: center bottom;
-    filter: saturate(0.92) contrast(1.07) drop-shadow(0 0 22px var(--club-glow));
-    box-shadow: none;
-    transform: translateY(6px);
+/* Cadre de verrouillage sur le visage (seul cadre de visée de la vue) */
+.pc-portrait-lock {
+    position: absolute;
+    z-index: 3;
+    top: 16%;
+    left: 44%;
+    width: 30%;
+    height: 46%;
+    background:
+        linear-gradient(#fff, #fff) left top / 20px 2px no-repeat,
+        linear-gradient(#fff, #fff) left top / 2px 20px no-repeat,
+        linear-gradient(#fff, #fff) right top / 20px 2px no-repeat,
+        linear-gradient(#fff, #fff) right top / 2px 20px no-repeat,
+        linear-gradient(#fff, #fff) left bottom / 20px 2px no-repeat,
+        linear-gradient(#fff, #fff) left bottom / 2px 20px no-repeat,
+        linear-gradient(#fff, #fff) right bottom / 20px 2px no-repeat,
+        linear-gradient(#fff, #fff) right bottom / 2px 20px no-repeat;
+    pointer-events: none;
 }
 
-body.nebula-page.player-card-page .pc-dossier .pc-hero-avatar:hover {
-    transform: translateY(1px) scale(1.02);
+.pc-portrait-lock::before,
+.pc-portrait-lock::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    content: "";
+    background: rgba(243, 247, 255, 0.75);
+    transform: translate(-50%, -50%);
 }
 
+.pc-portrait-lock::before {
+    width: 18px;
+    height: 1px;
+}
+
+.pc-portrait-lock::after {
+    width: 1px;
+    height: 18px;
+}
+
+.pc-portrait-lock b {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    padding: 4px 8px 4px 20px;
+    background:
+        radial-gradient(circle at 9px 50%, var(--rec) 0 3px, transparent 3.5px),
+        var(--blue);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+}
+
+/* Ligne de balayage verticale */
 .pc-portrait-scan {
     position: absolute;
-    z-index: 4;
-    top: 22%;
-    right: 10%;
-    left: 10%;
-    height: 1px;
-    opacity: 0.38;
-    background: var(--club-primary);
-    box-shadow: 0 0 13px var(--club-primary);
+    z-index: 2;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(141, 176, 255, 0.85), transparent);
+    box-shadow: 0 0 18px rgba(61, 123, 255, 0.9);
+    opacity: 0.55;
+    animation: pc-portrait-scan 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 
+@keyframes pc-portrait-scan {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(600px); }
+}
+
+/* Rang géant #001 (kit .nl-rank) ou cachet NON CLASSÉ (kit .nl-nc) */
+body.nebula-page.player-card-page .pc-portrait-number {
+    position: absolute;
+    z-index: 5;
+    bottom: 26px;
+    left: 19%;
+    pointer-events: none;
+}
+
+body.nebula-page.player-card-page .pc-portrait-number.nl-rank {
+    font-size: clamp(5rem, 10.5vw, 10rem);
+    text-shadow: var(--fringe), 0 0 50px rgba(31, 91, 255, 0.7);
+}
+
+body.nebula-page.player-card-page .pc-portrait-number.nl-nc {
+    bottom: 30px;
+    padding: 12px 16px 13px;
+}
+
+body.nebula-page.player-card-page .pc-portrait-number.nl-nc b {
+    font-size: clamp(1.4rem, 2.4vw, 2.1rem);
+}
+
+/* Joueur retiré : flux archivé, noir et blanc */
+body.nebula-page.player-card-page .pc-dossier .pc-hero-portrait.is-offline .pc-hero-avatar {
+    filter: grayscale(1) contrast(1.15) brightness(0.6);
+}
+
+body.nebula-page.player-card-page .pc-hero.is-offline .pc-hero-grid {
+    filter: blur(40px) grayscale(1) brightness(0.35);
+}
+
+.pc-hero-portrait.is-offline .pc-hero-portrait::before,
+.pc-hero-portrait.is-offline::before {
+    background: linear-gradient(180deg, rgba(2, 6, 17, 0.3) 0%, transparent 20%, transparent 58%, rgba(2, 6, 17, 0.88) 100%);
+}
+
+.pc-hero-portrait.is-offline .pc-portrait-lock {
+    opacity: 0.5;
+}
+
+.pc-hero-portrait.is-offline .pc-portrait-lock b {
+    background:
+        radial-gradient(circle at 9px 50%, var(--offline, #7d8bb3) 0 3px, transparent 3.5px),
+        var(--surface-3, #102247);
+    color: #dbe3f8;
+}
+
+.pc-hero-portrait.is-offline .pc-portrait-scan {
+    display: none;
+}
+
+body.nebula-page.player-card-page .pc-hero.is-offline .pc-hero-rating {
+    border-top-color: var(--offline, #7d8bb3);
+}
+
+body.nebula-page.player-card-page .pc-hero.is-offline .pc-hero-eyebrow span {
+    background: var(--surface-3, #102247);
+}
+
+/* Identité */
 .pc-hero-identity {
     position: relative;
-    z-index: 2;
+    z-index: 3;
     display: flex;
-    grid-column: 2;
-    grid-row: 2;
+    grid-area: identity;
     min-width: 0;
     flex-direction: column;
     justify-content: center;
-    padding: 42px clamp(27px, 4vw, 58px);
+    padding: 44px 32px 40px 0;
+}
+
+.pc-hero-identity::after {
+    position: absolute;
+    z-index: -1;
+    top: 26px;
+    right: 18px;
+    content: "エゴ";
+    color: rgba(61, 123, 255, 0.08);
+    font-family: var(--jp);
+    font-size: clamp(4rem, 7vw, 7rem);
+    font-weight: 700;
+    line-height: 1;
+    pointer-events: none;
 }
 
 .pc-hero-eyebrow {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 11px;
-    margin: 0 0 14px;
-    color: #78828d;
-    font-family: 'Courier New', monospace;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.13em;
+    gap: 0;
+    margin: 0;
+    color: var(--paper, #f3f7ff);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
 }
 
 .pc-hero-eyebrow span {
-    padding: 5px 7px;
-    border: 1px solid var(--club-primary);
-    color: var(--club-primary);
+    position: relative;
+    margin-right: 26px;
+    padding: 5px 10px;
+    background: var(--blue);
+    color: #fff;
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.pc-hero-eyebrow span::after {
+    position: absolute;
+    top: 50%;
+    right: -16px;
+    width: 7px;
+    height: 7px;
+    content: "";
+    background: var(--club-primary);
+    box-shadow: 0 0 10px var(--club-glow);
+    transform: translateY(-50%) rotate(45deg);
 }
 
 body.nebula-page.player-card-page .pc-dossier .pc-hero-name {
-    margin: 0;
-    color: #f4f7f9;
-    background: none;
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(3.1rem, 6vw, 6.8rem);
-    font-weight: 900;
-    letter-spacing: -0.075em;
-    line-height: 0.82;
+    margin: 22px 0 12px;
+    color: #fff;
+    font-family: var(--display) !important;
+    font-size: clamp(3.6rem, 8.4vw, 8.8rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 0.84;
+    overflow-wrap: normal;
+    text-shadow: var(--fringe);
     text-transform: uppercase;
-    -webkit-text-fill-color: currentColor;
 }
 
 .pc-hero-alias {
-    margin: 18px 0 0;
-    color: #818b95;
-    font-family: 'Courier New', monospace;
-    font-size: 0.76rem;
-    letter-spacing: 0.09em;
+    margin: 0;
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
 }
 
-.pc-signature-title {
-    --title-accent: #59626c;
+/* Note globale : incrustation en haut à droite du flux */
+body.nebula-page.player-card-page .pc-dossier .pc-hero-rating {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    grid-area: feed;
+    align-self: start;
+    justify-self: end;
+    align-items: flex-start;
+    gap: 16px;
+    margin-top: 44px;
+    padding: 14px 16px 16px 18px;
+    border: 1px solid var(--pc-line-strong);
+    border-top: 3px solid var(--blue);
+    background: var(--scanlines), rgba(2, 6, 17, 0.84);
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45);
+}
+
+.pc-ovr-readout {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: end;
+    justify-content: start;
+    gap: 8px 12px;
+}
+
+body.nebula-page.player-card-page .pc-dossier .pc-ovr-label {
+    grid-column: 1 / -1;
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+}
+
+body.nebula-page.player-card-page .pc-dossier .pc-ovr-value {
+    margin: 0;
+    color: #fff;
+    font-family: var(--display);
+    font-size: clamp(4.2rem, 6vw, 5.8rem);
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.8;
+    text-shadow: var(--fringe), 0 0 30px rgba(61, 123, 255, 0.5);
+}
+
+body.nebula-page.player-card-page .pc-dossier .pc-ovr-rank {
+    display: inline-grid;
+    min-width: 44px;
+    height: 36px;
+    place-items: center;
+    margin: 0 0 4px;
+    padding: 0 9px;
+    border: 1px solid var(--pc-line-strong);
+    border-radius: 2px;
+    background: rgba(1, 4, 12, 0.7);
+    font-family: var(--display);
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
+/* Z : cartouche blanc plein, le plus visible de toute l'échelle */
+body.nebula-page.player-card-page .pc-dossier .pc-ovr-rank.z {
+    min-width: 52px;
+    height: 44px;
+    border-color: #fff;
+    background: #fff;
+    color: var(--ink, #020611);
+    font-size: 1.8rem;
+}
+
+body.nebula-page.player-card-page .pc-dossier .pc-hero-club-logo {
+    width: 58px;
+    height: 58px;
+    margin: 0;
+    padding: 8px;
+    border: 1px solid var(--pc-line);
+    border-radius: 2px;
+    background: rgba(1, 4, 12, 0.5);
+    object-fit: contain;
+}
+
+/* Retraite : l'écusson est un disque noir ; un liseré gris le détache du
+   fond pour qu'il se lise comme un objectif éteint, pas comme un trou. */
+body.nebula-page.player-card-page .player-card-wrapper[data-club="retraite"] .pc-hero-club-logo {
+    filter: drop-shadow(0 0 1px rgba(141, 176, 255, 0.85)) drop-shadow(0 0 7px rgba(125, 139, 179, 0.45));
+}
+
+/* Fiche signalétique : bande de relevés en bas du flux */
+body.nebula-page.player-card-page .pc-dossier .pc-hero-meta {
+    position: relative;
+    z-index: 4;
+    display: grid;
+    grid-area: meta;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0 calc(-1 * var(--pc-pad));
+    /* place réservée aux commandes, posées sur la même bande à droite */
+    padding: 0 calc(var(--pc-pad) + var(--pc-actions-w, 400px)) 0 var(--pc-pad);
+    border-top: 1px solid var(--pc-line-strong);
+    background: rgba(2, 6, 17, 0.9);
+}
+
+body.nebula-page.player-card-page .pc-dossier .pc-meta-chip {
+    display: grid;
+    min-width: 0;
+    align-content: center;
+    gap: 6px;
+    padding: 14px 18px;
+    border: 0;
+    border-right: 1px solid var(--pc-line);
+    border-radius: 0;
+    background: transparent;
+    transition: background 0.2s ease;
+}
+
+body.nebula-page.player-card-page .pc-dossier .pc-meta-chip:first-child {
+    padding-left: 0;
+}
+
+body.nebula-page.player-card-page .pc-dossier .pc-meta-chip:hover {
+    background: rgba(31, 91, 255, 0.08);
+}
+
+.pc-meta-label {
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+}
+
+.pc-meta-value {
+    min-width: 0;
+    overflow: hidden;
+    color: #fff;
+    font-family: var(--display);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pc-meta-value.club-accent {
+    color: color-mix(in srgb, var(--club-primary), #fff 45%);
+}
+
+/* Commandes */
+body.nebula-page.player-card-page .pc-hero-actions {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    grid-area: meta;
+    align-self: center;
+    justify-self: end;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px 0;
+}
+
+body.nebula-page.player-card-page .pc-action {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    gap: 9px;
+    padding: 0 16px;
+    border: 1px solid var(--pc-line-strong);
+    border-radius: 2px;
+    background: rgba(31, 91, 255, 0.08);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+body.nebula-page.player-card-page .pc-action span {
+    color: var(--blue-3);
+    font-size: 13px;
+}
+
+body.nebula-page.player-card-page .pc-action:hover {
+    border-color: var(--blue-2);
+    background: var(--blue);
+}
+
+body.nebula-page.player-card-page .pc-action:hover span {
+    color: #fff;
+}
+
+body.nebula-page.player-card-page .pc-action:focus-visible {
+    outline: 2px solid var(--blue-3);
+    outline-offset: 2px;
+}
+
+/* -------------------- Titre actif (carte signature) -------------------- */
+
+body.nebula-page.player-card-page .pc-signature-title {
+    --title-accent: #5f6e96;
     position: relative;
     display: flex;
-    max-width: 580px;
-    min-height: 84px;
+    max-width: 600px;
+    min-height: 96px;
     flex-direction: column;
     justify-content: center;
     gap: 5px;
-    margin-top: 27px;
-    padding: 15px 18px 15px 28px;
+    margin-top: 28px;
+    padding: 16px 20px 16px 24px;
     overflow: hidden;
-    border: 1px solid color-mix(in srgb, var(--title-accent), transparent 58%);
+    border: 1px solid color-mix(in srgb, var(--title-accent), transparent 55%);
+    border-radius: 2px;
     background:
-        linear-gradient(90deg, color-mix(in srgb, var(--title-accent), transparent 90%), transparent),
-        rgba(255, 255, 255, 0.018);
+        var(--scanlines),
+        linear-gradient(90deg, color-mix(in srgb, var(--title-accent), transparent 86%), transparent 70%),
+        rgba(1, 4, 12, 0.55);
 }
 
 .pc-signature-title::before {
@@ -1131,15 +942,15 @@ body.nebula-page.player-card-page .pc-dossier .pc-hero-name {
     box-shadow: 0 0 16px var(--title-accent);
 }
 
-.pc-signature-title.has-technical-illustration {
-    padding-right: 190px;
+body.nebula-page.player-card-page .pc-signature-title.has-technical-illustration {
+    padding-right: 196px;
 }
 
 .pc-technical-title-art {
     position: absolute;
     z-index: 0;
     top: 50%;
-    right: 12px;
+    right: 14px;
     width: 168px;
     height: 86px;
     overflow: visible;
@@ -1152,766 +963,1010 @@ body.nebula-page.player-card-page .pc-dossier .pc-hero-name {
 
 .pc-signature-title.has-technical-illustration small,
 .pc-signature-title.has-technical-illustration strong,
-.pc-signature-title.has-technical-illustration>span {
+.pc-signature-title.has-technical-illustration > span {
     position: relative;
     z-index: 1;
 }
+
+.pc-technical-title-art.bp-engine-illustration { width: 215px; }
 
 .pc-technical-title-art.ballon-dor-illustration {
     width: 176px;
     opacity: 0.5;
 }
 
-.pc-technical-title-art.bp-engine-illustration {
-    width: 215px;
-}
-
 .pc-signature-title small {
     color: var(--title-accent);
-    font-family: 'Courier New', monospace;
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
 }
 
 .pc-signature-title strong {
-    overflow: hidden;
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(1rem, 1.8vw, 1.35rem);
-    letter-spacing: -0.025em;
-    text-overflow: ellipsis;
+    color: #fff;
+    font-family: var(--display);
+    font-size: clamp(1.15rem, 1.9vw, 1.5rem);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 1.05;
     text-transform: uppercase;
-    white-space: nowrap;
+    text-wrap: balance;
+    overflow-wrap: normal;
 }
 
-.pc-signature-title>span {
-    color: #76808a;
-    font-family: 'Courier New', monospace;
-    font-size: 0.68rem;
+.pc-signature-title > span {
+    color: var(--pc-muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
 }
 
-.pc-signature-title.has-title-switcher {
+/* Sélecteur de titre : posé au-dessus de la carte, à droite */
+body.nebula-page.player-card-page .pc-signature-title.has-title-switcher {
+    margin-top: 62px;
     overflow: visible;
 }
 
-.pc-title-switcher {
+body.nebula-page.player-card-page .pc-signature-title .pc-title-switcher {
     position: absolute;
     z-index: 4;
-    inset: 0;
-    pointer-events: none;
-}
-
-.pc-title-switcher button {
-    position: absolute;
-    top: 50%;
-    width: 34px;
-    height: 38px;
-    padding: 0;
-    border: 1px solid color-mix(in srgb, var(--title-accent), transparent 48%);
-    background:
-        linear-gradient(135deg, color-mix(in srgb, var(--title-accent), transparent 88%), transparent 62%),
-        rgba(5, 8, 12, 0.94);
-    color: var(--title-accent);
-    font-size: 0;
-    box-shadow:
-        inset 0 0 12px color-mix(in srgb, var(--title-accent), transparent 91%),
-        0 0 10px color-mix(in srgb, var(--title-accent), transparent 88%);
-    cursor: pointer;
+    inset: -40px -1px auto auto;
+    display: flex;
+    align-items: stretch;
+    gap: 4px;
     pointer-events: auto;
-    transform: translateY(-50%);
-    transition: color 0.16s ease, background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
 }
 
-.pc-title-switcher button::before {
+body.nebula-page.player-card-page .pc-signature-title .pc-title-switcher button,
+body.nebula-page.player-card-page .pc-signature-title .pc-title-switcher button:hover,
+body.nebula-page.player-card-page .pc-signature-title .pc-title-switcher button:focus-visible,
+body.nebula-page.player-card-page .pc-signature-title .pc-title-switcher button:active {
+    position: relative;
+    inset: auto;
+    width: 38px;
+    min-width: 0;
+    height: 30px;
+    min-height: 30px;
+    padding: 0;
+    transform: none !important;
+}
+
+.pc-signature-title .pc-title-switcher button {
+    border: 1px solid var(--pc-line-strong);
+    border-radius: 2px;
+    background: rgba(4, 12, 32, 0.92);
+    color: var(--blue-3);
+    font-size: 0;
+    box-shadow: none;
+    cursor: pointer;
+    transition: color 0.16s ease, background 0.16s ease, border-color 0.16s ease;
+}
+
+.pc-signature-title .pc-title-switcher button::before {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 18px;
-    height: 11px;
+    width: 16px;
+    height: 10px;
     content: "";
-    border: 0;
     background: currentColor;
     clip-path: polygon(0 44%, 62% 44%, 62% 8%, 100% 50%, 62% 92%, 62% 56%, 0 56%);
-    filter: none;
     transform: translate(-50%, -50%);
 }
 
-.pc-title-switcher button::after {
+.pc-signature-title .pc-title-switcher button::after {
     display: none;
 }
 
-.pc-title-switcher button:first-child {
-    left: -44px;
-}
-
-.pc-title-switcher button:first-child::after {
-    display: none;
-}
-
-.pc-title-switcher button:first-child::before {
+.pc-signature-title .pc-title-switcher button:first-child::before {
     transform: translate(-50%, -50%) scaleX(-1);
 }
 
-.pc-title-switcher button:last-child {
-    right: -44px;
-}
-
-.pc-title-switcher button:last-child::after {
-    display: none;
-}
-
-.pc-title-switcher button:hover,
-.pc-title-switcher button:focus-visible {
-    outline: 0;
-    background: color-mix(in srgb, var(--title-accent), transparent 82%);
-    border-color: var(--title-accent);
+.pc-signature-title .pc-title-switcher button:hover,
+.pc-signature-title .pc-title-switcher button:focus-visible {
+    border-color: var(--blue-2);
+    background: var(--blue);
     color: #fff;
-    box-shadow: 0 0 16px color-mix(in srgb, var(--title-accent), transparent 65%);
-    transform: translateY(-50%) !important;
 }
 
-.pc-title-switcher button:active {
-    transform: translateY(-50%) !important;
+.pc-signature-title .pc-title-switcher button:focus-visible {
+    outline: 2px solid var(--blue-3);
+    outline-offset: 2px;
 }
 
-.pc-title-switcher span {
-    position: absolute;
-    top: -22px;
-    right: 0;
-    min-width: 58px;
-    padding: 3px 7px;
-    border: 1px solid color-mix(in srgb, var(--title-accent), transparent 68%);
-    background: rgba(5, 8, 12, 0.88);
-    color: #9ba5ae;
-    font-family: 'Courier New', monospace;
-    font-size: 0.55rem;
-    font-weight: 700;
+body.nebula-page.player-card-page .pc-signature-title .pc-title-switcher span {
+    position: static;
+    display: flex;
+    min-width: 72px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    border: 1px solid var(--pc-line);
+    border-radius: 2px;
+    background: rgba(1, 4, 12, 0.8);
+    color: var(--paper, #f3f7ff);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
     letter-spacing: 0.08em;
-    line-height: 1;
-    text-align: center;
     white-space: nowrap;
 }
 
-.pc-signature-title.ultimate {
+.pc-signature-title .pc-title-switcher span::before {
+    margin-right: 8px;
+    content: "TITRE";
+    color: var(--pc-muted);
+    font-weight: 500;
+}
+
+body.nebula-page.player-card-page .pc-signature-title.ultimate {
     border-color: color-mix(in srgb, var(--title-accent), transparent 38%);
     background:
+        var(--scanlines),
         radial-gradient(circle at 88% 50%, color-mix(in srgb, var(--title-accent-tertiary), transparent 82%), transparent 42%),
         linear-gradient(110deg,
-            color-mix(in srgb, var(--title-accent-secondary), transparent 88%),
-            color-mix(in srgb, var(--title-accent), transparent 91%) 52%,
-            color-mix(in srgb, var(--title-accent-tertiary), transparent 90%)),
-        rgba(255, 255, 255, 0.018);
+            color-mix(in srgb, var(--title-accent-secondary), transparent 86%),
+            color-mix(in srgb, var(--title-accent), transparent 90%) 52%,
+            color-mix(in srgb, var(--title-accent-tertiary), transparent 88%)),
+        rgba(1, 4, 12, 0.6);
     box-shadow: inset 0 0 30px color-mix(in srgb, var(--title-accent), transparent 92%);
 }
 
 .pc-signature-title.ultimate::before {
-    background: linear-gradient(180deg,
-        var(--title-accent-secondary),
-        var(--title-accent),
-        var(--title-accent-tertiary));
+    background: linear-gradient(180deg, var(--title-accent-secondary), var(--title-accent), var(--title-accent-tertiary));
     box-shadow: 0 0 18px var(--title-accent);
 }
 
 .pc-signature-title.ultimate small,
 .pc-signature-title.ultimate strong {
     color: transparent;
-    background: linear-gradient(90deg,
-        var(--title-accent-secondary),
-        #f5f2ff 46%,
-        var(--title-accent-tertiary));
-    background-clip: text;
+    background: linear-gradient(90deg, var(--title-accent-secondary), #ffffff 46%, var(--title-accent-tertiary));
     -webkit-background-clip: text;
+    background-clip: text;
 }
 
-@media (max-width: 720px) {
-    .pc-signature-title.has-technical-illustration {
-        padding-right: 92px;
-    }
+/* -------------------- Canaux (onglets) -------------------- */
 
-    .pc-technical-title-art {
-        right: 6px;
-        width: 92px;
-        opacity: 0.24;
-    }
-
-    .pc-technical-title-art.ballon-dor-illustration {
-        right: 4px;
-        width: 104px;
-        height: 76px;
-    }
-}
-
-body.nebula-page.player-card-page .pc-dossier .pc-hero-rating {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    grid-column: 3;
-    grid-row: 2;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 30px 22px;
-    border-left: 1px solid var(--pc-line);
-}
-
-.pc-ovr-readout {
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-    padding: 27px 10px;
-    border-top: 1px solid var(--club-primary);
-    border-bottom: 1px solid var(--pc-line);
-    background: color-mix(in srgb, var(--club-primary), transparent 94%);
-}
-
-body.nebula-page.player-card-page .pc-dossier .pc-ovr-label {
-    color: #77818b;
-    font-family: 'Courier New', monospace;
-    font-size: 0.62rem;
-}
-
-body.nebula-page.player-card-page .pc-dossier .pc-ovr-value {
-    margin-top: 8px;
-    color: #fff;
-    font-family: 'Orbitron', sans-serif;
-    font-size: clamp(3.4rem, 5vw, 5.5rem);
-    letter-spacing: -0.09em;
-    line-height: 0.82;
-    text-shadow: none;
-}
-
-body.nebula-page.player-card-page .pc-dossier .pc-ovr-rank {
-    margin-top: 12px;
-    color: var(--club-primary);
-    font-family: 'Courier New', monospace;
-    font-size: 0.72rem;
-}
-
-body.nebula-page.player-card-page .pc-dossier .pc-ovr-rank.z {
-    color: transparent;
-}
-
-body.nebula-page.player-card-page .pc-dossier .pc-hero-club-logo {
-    width: 76px;
-    height: 76px;
-    margin-top: 25px;
-    padding: 10px;
-    border: 1px solid var(--pc-line);
-    border-radius: 0;
-    background: rgba(255, 255, 255, 0.025);
-    filter: grayscale(0.25);
-}
-
-body.nebula-page.player-card-page .pc-dossier .pc-hero-meta {
-    position: relative;
-    z-index: 3;
-    display: grid;
-    grid-column: 2 / 4;
-    grid-row: 3;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1px;
-    margin: 0;
-    border-top: 1px solid var(--pc-line);
-    background: var(--pc-line);
-}
-
-body.nebula-page.player-card-page .pc-meta-chip {
-    min-width: 0;
-    padding: 17px 18px;
-    border: 0;
-    border-radius: 0;
-    background: var(--pc-surface);
-}
-
-body.nebula-page.player-card-page .pc-meta-chip:hover {
-    border: 0;
-    background: color-mix(in srgb, var(--club-primary), transparent 94%);
-}
-
-.pc-meta-label {
-    color: #5f6872;
-    font-family: 'Courier New', monospace;
-    font-size: 0.62rem;
-    font-weight: 700;
-}
-
-.pc-meta-value {
-    overflow: hidden;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.78rem;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    white-space: nowrap;
-}
-
+/* Pupitre de régie : trois canaux collés dans un même cadre */
 body.nebula-page.player-card-page .pc-tabs {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1px;
-    padding: 0;
-    overflow: hidden;
-    border: 1px solid var(--pc-line) !important;
-    border-radius: 0 !important;
-    background: var(--pc-line) !important;
+    align-items: stretch;
+    gap: 3px;
+    margin-top: 28px;
+    padding: 3px;
 }
 
 body.nebula-page.player-card-page .pc-tab-btn {
     position: relative;
     display: flex;
-    min-height: 62px;
-    justify-content: flex-start;
-    gap: 13px;
-    padding: 0 20px;
-    border: 0 !important;
-    border-radius: 0;
-    background: var(--pc-surface) !important;
-    color: #7c8690 !important;
-    font-family: 'Courier New', monospace !important;
-    font-size: 0.72rem !important;
+    min-height: 58px;
+    align-items: center;
+    gap: 14px;
+    padding: 0 18px;
+    border: 1px solid var(--pc-line-strong);
+    background:
+        var(--scanlines),
+        linear-gradient(180deg, rgba(10, 23, 52, 0.95), rgba(4, 12, 32, 0.95));
+    color: var(--pc-muted);
+    font-family: var(--display);
+    font-size: 15px;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
+    box-shadow: none;
+    cursor: pointer;
+    transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
 }
 
-body.nebula-page.player-card-page .pc-tab-btn>span {
-    color: #414952;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1rem;
+body.nebula-page.player-card-page .pc-tab-btn > span {
+    padding: 4px 7px;
+    border: 1px solid var(--pc-line);
+    border-radius: 2px;
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
 }
 
 body.nebula-page.player-card-page .pc-tab-btn::after {
-    position: absolute;
-    right: 20px;
-    bottom: 0;
-    left: 20px;
-    height: 2px;
+    margin-left: auto;
     content: "";
-    background: var(--club-primary);
-    opacity: 0;
-    box-shadow: 0 0 11px var(--club-primary);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
 }
 
-body.nebula-page.player-card-page .pc-tab-btn:hover,
+body.nebula-page.player-card-page .pc-tab-btn:hover {
+    border-color: var(--blue-2);
+    color: #fff;
+}
+
+body.nebula-page.player-card-page .pc-tab-btn:focus-visible {
+    outline: 2px solid var(--blue-3);
+    outline-offset: 3px;
+}
+
 body.nebula-page.player-card-page .pc-tab-btn.active {
-    background: var(--pc-surface-2) !important;
-    color: #fff !important;
-    transform: none !important;
+    box-shadow: 0 0 26px rgba(31, 91, 255, 0.45);
+}
+
+body.nebula-page.player-card-page .pc-tab-btn.active > span {
+    border-color: rgba(255, 255, 255, 0.45);
+    color: #fff;
 }
 
 body.nebula-page.player-card-page .pc-tab-btn.active::after {
-    opacity: 1;
-}
-
-body.nebula-page.player-card-page .pc-tab-btn.active>span {
-    color: var(--club-primary);
+    padding-left: 13px;
+    content: "EN DIRECT";
+    background: radial-gradient(circle at 3.5px 50%, var(--rec) 0 3.5px, transparent 4px);
 }
 
 .pc-tab-panels {
+    margin-top: 4px;
+}
+
+/* -------------------- Panneaux « moniteur » -------------------- */
+
+body.nebula-page.player-card-page :is(.player-card-fifa-stats.pc-enhanced, .pc-radar-inline, .pc-dossier-panel) {
+    position: relative;
     min-width: 0;
+    padding: 22px 24px 24px;
+    border: 1px solid var(--pc-line-strong);
+    border-radius: var(--r-mon, 6px);
+    background: var(--pc-monitor);
+    box-shadow: 0 0 0 3px var(--bezel, #01040c), 0 24px 60px rgba(0, 0, 0, 0.35);
 }
 
-body.nebula-page.player-card-page .pc-stats-grid {
-    gap: 1px;
-    border: 1px solid var(--pc-line);
-    background: var(--pc-line);
+/* Liseré bleu en tête de chaque moniteur (pas de coins de visée ici) */
+body.nebula-page.player-card-page :is(.player-card-fifa-stats.pc-enhanced, .pc-radar-inline, .pc-dossier-panel)::after {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 96px;
+    height: 3px;
+    content: "";
+    background: var(--blue);
+    pointer-events: none;
 }
 
-body.nebula-page.player-card-page .pc-stat-bars,
-body.nebula-page.player-card-page .pc-radar-inline,
-body.nebula-page.player-card-page .pc-match-panel.pc-dossier-panel,
-body.nebula-page.player-card-page .pc-value-panel.pc-dossier-panel,
-body.nebula-page.player-card-page .pc-trophies-panel.pc-dossier-panel {
+body.nebula-page.player-card-page :is(.player-card-match-stats.pc-enhanced, .player-card-trophies.pc-enhanced) {
     padding: 0;
     border: 0;
-    border-radius: 0;
-    background: var(--pc-surface);
+    background: none;
     box-shadow: none;
 }
 
 .pc-panel-heading {
-    display: grid;
-    min-height: 82px;
-    grid-template-columns: 70px 1fr;
+    display: flex;
     align-items: center;
-    border-bottom: 1px solid var(--pc-line);
+    gap: 14px;
+    margin: 0 0 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed var(--pc-line);
 }
 
-.pc-panel-heading>span {
+.pc-panel-heading > span {
     display: grid;
-    height: 100%;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 auto;
     place-items: center;
-    border-right: 1px solid var(--pc-line);
-    color: #343c45;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.45rem;
-    font-weight: 900;
+    border: 1px solid var(--pc-line-strong);
+    border-radius: 2px;
+    background: rgba(31, 91, 255, 0.1);
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
 }
 
-.pc-panel-heading>div {
-    padding: 0 20px;
-}
-
-.pc-radar-inline .pc-panel-heading {
-    grid-template-columns: 1fr;
+.pc-panel-heading > div {
+    min-width: 0;
 }
 
 .pc-panel-heading small,
 .pc-title-system-heading small {
-    color: var(--club-primary);
-    font-family: 'Courier New', monospace;
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
+    display: block;
+    color: var(--pc-muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
 }
 
-body.nebula-page.player-card-page .pc-panel-heading h3,
-body.nebula-page.player-card-page .pc-title-system-heading h3 {
-    margin: 5px 0 0;
-    padding: 0;
-    border: 0;
-    color: #f1f4f6;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1rem;
-    letter-spacing: -0.025em;
+body.nebula-page.player-card-page :is(.pc-panel-heading, .pc-title-system-heading) h3 {
+    margin: 3px 0 0;
+    color: #fff;
+    font-size: clamp(1.15rem, 1.6vw, 1.4rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+    text-transform: uppercase;
+}
+
+.pc-panel-heading::after {
+    margin-left: auto;
+    padding-left: 13px;
+    content: "REC";
+    color: var(--pc-muted);
+    background: radial-gradient(circle at 3.5px 50%, var(--rec) 0 3.5px, transparent 4px);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+}
+
+/* -------------------- Canal 01 : technique -------------------- */
+
+body.nebula-page.player-card-page .pc-stats-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+    gap: 18px;
+}
+
+.pc-stat-bars {
+    display: grid;
+    gap: 6px;
+}
+
+.pc-stat-bars > .pc-panel-heading {
+    margin-bottom: 12px;
 }
 
 body.nebula-page.player-card-page .pc-stat-row {
-    margin: 0 20px;
-    padding: 16px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    display: grid;
+    gap: 9px;
+    padding: 10px 0 12px;
+    border-bottom: 1px solid var(--line-soft, rgba(77, 128, 255, 0.1));
+}
+
+body.nebula-page.player-card-page .pc-stat-row:last-child {
+    border-bottom: 0;
+}
+
+.pc-stat-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
 }
 
 .pc-stat-name {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    color: #d6dce1;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.76rem;
+    color: var(--paper, #f3f7ff);
+    font-family: var(--display);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
 }
 
 .pc-stat-name small {
-    color: #4d5660;
-    font-family: 'Courier New', monospace;
-    font-size: 0.62rem;
+    margin-right: 12px;
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
 }
 
 .pc-stat-value {
-    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    color: #fff;
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 700;
 }
 
+.pc-stat-grade {
+    min-width: 30px;
+    padding: 1px 5px;
+    border: 1px solid var(--pc-line);
+    border-radius: 2px;
+    background: rgba(1, 4, 12, 0.6);
+    font-size: 12px;
+    text-align: center;
+}
+
+/* Rang Z : la cellule devient le cartouche blanc (pas de double cadre) */
+body.nebula-page.player-card-page .pc-stat-grade:has(.z) {
+    border-color: #fff;
+    background: #fff;
+    box-shadow: 0 0 14px rgba(255, 255, 255, 0.6), 0 0 26px rgba(61, 123, 255, 0.7);
+}
+
+body.nebula-page.player-card-page .pc-stat-grade .z {
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    animation: none;
+}
+
+/* Vu-mètre segmenté : les segments du fond et du remplissage sont alignés */
 body.nebula-page.player-card-page .pc-stat-bar-track {
-    height: 3px;
+    position: relative;
+    height: 12px;
+    overflow: visible;
     border-radius: 0;
-    background: rgba(255, 255, 255, 0.07);
+    background: repeating-linear-gradient(90deg, rgba(141, 176, 255, 0.12) 0 9px, transparent 9px 12px);
+    filter: drop-shadow(0 0 5px rgba(61, 123, 255, 0.55));
 }
 
 body.nebula-page.player-card-page .pc-stat-bar-fill {
+    height: 100%;
     border-radius: 0;
-    background: var(--club-primary);
+    background: linear-gradient(90deg, var(--blue-deep) 0%, var(--blue) 55%, var(--blue-3) 100%);
+    box-shadow: none;
+    -webkit-mask-image: repeating-linear-gradient(90deg, #000 0 9px, transparent 9px 12px);
+    mask-image: repeating-linear-gradient(90deg, #000 0 9px, transparent 9px 12px);
+    transition: width 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Radar */
+.pc-radar-inline {
+    display: flex;
+    flex-direction: column;
+}
+
+.pc-radar-inline .pc-panel-heading {
+    margin-bottom: 8px;
+}
+
+.pc-radar-inline .pc-panel-heading::after {
+    content: "BALAYAGE";
 }
 
 .pc-radar-inline-canvas {
-    height: 355px;
-    padding: 18px;
+    position: relative;
+    flex: 1;
+    min-height: 360px;
 }
 
-.pc-match-actions {
-    margin: 0;
-    padding: 17px 20px 20px;
-    border-top: 1px solid var(--pc-line);
+.pc-radar-inline-canvas canvas {
+    position: relative;
+    z-index: 1;
+    width: 100% !important;
+    height: 100% !important;
 }
 
-body.nebula-page.player-card-page .pc-btn {
-    min-height: 44px;
-    justify-content: space-between;
-    padding: 0 15px;
-    border: 1px solid var(--pc-line) !important;
-    border-radius: 0;
-    background: transparent !important;
-    color: #c5ccd2 !important;
-    font-family: 'Courier New', monospace !important;
-    font-size: 0.68rem !important;
+.pc-radar-inline-canvas::before {
+    position: absolute;
+    z-index: 0;
+    /* --sweep-* : centre et rayon réels du radar, posés par player-card.js */
+    top: var(--sweep-y, 50%);
+    left: var(--sweep-x, 50%);
+    width: var(--sweep-size, min(64%, 270px));
+    aspect-ratio: 1;
+    content: "";
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, rgba(61, 123, 255, 0.32), rgba(61, 123, 255, 0.02) 70deg, transparent 72deg);
+    -webkit-mask-image: radial-gradient(circle, #000 60%, transparent 71%);
+    mask-image: radial-gradient(circle, #000 60%, transparent 71%);
+    transform: translate(-50%, -50%);
+    animation: pc-radar-sweep 5s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes pc-radar-sweep {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.pc-radar-fallback {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.pc-radar-ring {
+    fill: none;
+    stroke: rgba(141, 176, 255, 0.14);
+    stroke-width: 1;
+}
+
+.pc-radar-ring:first-child {
+    fill: rgba(31, 91, 255, 0.04);
+    stroke: rgba(141, 176, 255, 0.32);
+}
+
+.pc-radar-axis {
+    stroke: rgba(141, 176, 255, 0.16);
+    stroke-dasharray: 2 3;
+}
+
+.pc-radar-shape {
+    fill: rgba(61, 123, 255, 0.24);
+    stroke: #3d7bff;
+    stroke-width: 2;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 8px rgba(61, 123, 255, 0.7));
+}
+
+.pc-radar-dot {
+    fill: #fff;
+    stroke: #3d7bff;
+    stroke-width: 2;
+}
+
+.pc-radar-label {
+    fill: #c9d4ef;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
+.pc-radar-value {
+    fill: #fff;
+    font-family: var(--display);
+    font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.08em;
-    box-shadow: none !important;
+    letter-spacing: 0.02em;
 }
 
-body.nebula-page.player-card-page .pc-btn:hover {
-    border-color: var(--club-primary) !important;
-    background: color-mix(in srgb, var(--club-primary), transparent 92%) !important;
-    color: #fff !important;
-    transform: translateY(-1px) !important;
-}
+/* -------------------- Canal 02 : matchs -------------------- */
 
-body.nebula-page.player-card-page .pc-match-panel.pc-dossier-panel,
-body.nebula-page.player-card-page .pc-value-panel.pc-dossier-panel,
-body.nebula-page.player-card-page .pc-trophies-panel.pc-dossier-panel {
-    border: 1px solid var(--pc-line);
+body.nebula-page.player-card-page .player-card-match-stats.pc-enhanced {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+    align-items: start;
+    gap: 18px;
 }
 
 body.nebula-page.player-card-page .pc-kpi-grid {
+    display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1px;
-    margin: 0;
-    border-bottom: 1px solid var(--pc-line);
-    background: var(--pc-line);
+    gap: 8px;
+    margin-bottom: 20px;
 }
 
 body.nebula-page.player-card-page .pc-kpi {
-    min-height: 148px;
-    padding: 23px;
-    border: 0;
-    border-radius: 0;
-    background:
-        linear-gradient(145deg, color-mix(in srgb, var(--club-primary), transparent 95%), transparent),
-        var(--pc-surface);
-    text-align: left;
+    display: grid;
+    gap: 6px;
+    padding: 14px 14px 12px;
+    border: 1px solid var(--pc-line);
+    border-radius: 2px;
+    background: rgba(1, 4, 12, 0.55);
+    transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 body.nebula-page.player-card-page .pc-kpi:hover {
-    border: 0;
-    transform: none;
+    border-color: var(--blue-2);
+    background: rgba(31, 91, 255, 0.1);
 }
 
 .pc-kpi-icon {
-    display: inline-grid;
-    min-width: 40px;
-    height: 26px;
-    padding: 0 7px;
-    place-items: center;
-    border: 1px solid color-mix(in srgb, var(--club-primary), transparent 45%);
-    color: var(--club-primary);
-    font-family: 'Courier New', monospace;
-    font-size: 0.62rem;
-    font-weight: 700;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--pc-line);
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
 }
 
 .pc-kpi-value {
-    margin-top: 20px;
-    font-size: clamp(1.8rem, 4vw, 3.1rem);
-    letter-spacing: -0.07em;
-    line-height: 0.85;
+    color: #fff;
+    font-family: var(--display);
+    font-size: clamp(1.8rem, 2.6vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    text-shadow: var(--fringe);
 }
 
 .pc-kpi-label {
-    margin-top: 9px;
-    font-family: 'Courier New', monospace;
-    font-size: 0.68rem;
-    font-weight: 700;
-}
-
-body.nebula-page.player-card-page .pc-match-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1px;
-    padding: 1px 0 0;
-    background: var(--pc-line);
-}
-
-body.nebula-page.player-card-page .pc-match-stat {
-    min-height: 68px;
-    padding: 14px 17px;
-    border: 0;
-    border-radius: 0;
-    background: var(--pc-surface);
-}
-
-.pc-match-stat-label {
-    color: #75808a;
-    font-family: 'Courier New', monospace;
-    font-size: 0.65rem;
+    color: var(--pc-muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
 }
 
-.pc-match-stat-value {
-    color: var(--club-primary);
-    font-size: 0.9rem;
+body.nebula-page.player-card-page .pc-match-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 24px;
 }
 
-body.nebula-page.player-card-page .pc-trophy-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1px;
+body.nebula-page.player-card-page .pc-match-stat {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 0;
+    border: 0;
+    border-bottom: 1px dashed var(--pc-line);
+    background: none;
+}
+
+.pc-match-stat-label {
+    color: var(--pc-muted);
+    font-size: 13px;
+}
+
+.pc-match-stat-value {
+    color: #fff;
+    font-family: var(--display);
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.pc-match-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 18px;
+}
+
+body.nebula-page.player-card-page .pc-btn {
+    display: inline-flex;
+    min-height: 40px;
+    align-items: center;
+    gap: 10px;
+    padding: 0 16px;
+    border: 1px solid var(--pc-line-strong);
+    border-radius: 2px;
+    background: rgba(31, 91, 255, 0.08);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+body.nebula-page.player-card-page .pc-btn span {
+    color: var(--blue-3);
+}
+
+body.nebula-page.player-card-page .pc-btn:hover {
+    border-color: var(--blue-2);
+    background: var(--blue);
+}
+
+body.nebula-page.player-card-page .pc-btn:hover span {
+    color: #fff;
+}
+
+.pc-value-panel .pc-panel-heading::after {
+    content: "MARCHÉ";
+}
+
+.pc-value-chart {
+    position: relative;
+    height: 330px;
+    padding: 8px 4px 0;
+    background:
+        linear-gradient(rgba(141, 176, 255, 0.04) 1px, transparent 1px) 0 0 / 100% 33px;
+}
+
+.pc-value-chart canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Infobulle des graphiques (radar et valeur), posée par createChartTooltip() */
+.pc-chart-tooltip {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    left: 0;
+    display: grid;
+    min-width: 136px;
+    gap: 5px;
+    padding: 9px 12px 10px;
+    border: 1px solid rgba(77, 128, 255, 0.42);
+    border-top: 2px solid #3d7bff;
+    background:
+        repeating-linear-gradient(0deg, rgba(141, 176, 255, 0.035) 0 1px, transparent 1px 3px),
+        rgba(2, 6, 17, 0.96);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), 0 0 22px rgba(31, 91, 255, 0.16);
+    color: #f3f7ff;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, calc(-100% - 10px));
+    transition: opacity 120ms ease, transform 120ms ease;
+    white-space: nowrap;
+}
+
+.pc-chart-tooltip.is-visible {
+    opacity: 1;
+    transform: translate(-50%, calc(-100% - 14px));
+}
+
+.pc-chart-tooltip.is-below {
+    transform: translate(-50%, 10px);
+}
+
+.pc-chart-tooltip.is-below.is-visible {
+    transform: translate(-50%, 14px);
+}
+
+.pc-chart-tooltip small {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #8db0ff;
+    font: 600 10px/1 "IBM Plex Mono", monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.pc-chart-tooltip small::before {
+    width: 6px;
+    height: 6px;
+    flex: none;
+    border-radius: 50%;
+    background: #ff2b40;
+    box-shadow: 0 0 6px rgba(255, 43, 64, 0.8);
+    content: "";
+}
+
+.pc-chart-tooltip strong {
+    color: #fff;
+    font: 700 22px/1 "Chakra Petch", sans-serif;
+    letter-spacing: 0.02em;
+}
+
+.pc-chart-tooltip span {
+    color: #8b9ac0;
+    font: 500 10px/1.2 "IBM Plex Mono", monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.pc-chart-tooltip span.is-up {
+    color: #2ee66f;
+}
+
+.pc-chart-tooltip span.is-down {
+    color: #ff3b4e;
+}
+
+.pc-value-empty {
+    display: grid;
+    min-height: 220px;
+    place-content: center;
+    gap: 8px;
+    border: 1px dashed var(--pc-line);
+    background:
+        repeating-linear-gradient(90deg, rgba(141, 176, 255, 0.05) 0 1px, transparent 1px 28px);
+    text-align: center;
+}
+
+.pc-value-empty strong {
+    color: #fff;
+    font-family: var(--display);
+    font-size: 2.6rem;
+    font-weight: 700;
+    text-shadow: var(--fringe);
+}
+
+.pc-value-empty p {
     margin: 0;
-    border-bottom: 1px solid var(--pc-line);
-    background: var(--pc-line);
+    color: var(--pc-muted);
+    font-size: 13px;
+}
+
+/* -------------------- Canal 03 : palmarès -------------------- */
+
+body.nebula-page.player-card-page .pc-trophy-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
 }
 
 body.nebula-page.player-card-page .pc-trophy-item {
-    min-height: 112px;
-    padding: 18px;
-    border: 0;
-    border-radius: 0;
-    background: var(--pc-surface);
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    border: 1px solid var(--pc-line);
+    border-radius: 2px;
+    background: rgba(1, 4, 12, 0.55);
+    transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 body.nebula-page.player-card-page .pc-trophy-item:hover {
-    border: 0;
-    background: var(--pc-surface-2);
+    border-color: var(--blue-2);
+    background: rgba(31, 91, 255, 0.1);
 }
 
 .pc-trophy-icon {
     display: grid;
-    min-width: 46px;
-    height: 46px;
+    width: 50px;
+    height: 50px;
+    flex: 0 0 auto;
     place-items: center;
-    border: 1px solid rgba(255, 216, 77, 0.42);
-    color: #ffd84d;
-    font-family: 'Courier New', monospace;
-    font-size: 0.62rem;
-    font-weight: 700;
+    border: 1px solid var(--pc-line-strong);
+    border-radius: 2px;
+    background:
+        var(--scanlines),
+        linear-gradient(180deg, rgba(31, 91, 255, 0.24), rgba(11, 42, 143, 0.18));
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
 }
 
 .pc-trophy-info {
+    display: grid;
     min-width: 0;
+    gap: 4px;
 }
 
 .pc-trophy-info strong {
     overflow: hidden;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.74rem;
+    color: #fff;
+    font-family: var(--display);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
     text-overflow: ellipsis;
     text-transform: uppercase;
     white-space: nowrap;
 }
 
-.pc-trophy-info>span {
-    display: block;
-    margin-top: 8px;
-    color: #6e7781;
-    font-family: 'Courier New', monospace;
-    font-size: 0.6rem;
+.pc-trophy-info > span {
+    color: var(--pc-muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
 }
 
 .pc-trophy-count {
     margin-right: 4px;
-    color: #ffd84d;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.15rem;
+    color: var(--blue-3);
+    font-family: var(--display);
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0;
 }
 
 .pc-title-system {
-    padding: 28px;
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px dashed var(--pc-line);
 }
 
 .pc-title-system-heading {
     display: flex;
-    align-items: end;
+    align-items: flex-end;
     justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 16px;
+    margin-bottom: 16px;
 }
 
-.pc-title-system-heading>strong {
-    color: color-mix(in srgb, var(--club-primary), transparent 35%);
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2.3rem;
-    letter-spacing: -0.08em;
-    line-height: 0.8;
+.pc-title-system-heading > strong {
+    color: var(--blue-2);
+    font-family: var(--display);
+    font-size: 2.8rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 0.85;
+    text-shadow: 0 0 24px rgba(31, 91, 255, 0.5);
 }
 
 body.nebula-page.player-card-page .pc-titles-list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1px;
-    background: var(--pc-line);
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 body.nebula-page.player-card-page .pc-title-card {
-    --title-accent: var(--club-primary);
+    --title-accent: #3d7bff;
     position: relative;
     display: grid;
-    min-width: 0;
-    min-height: 114px;
-    grid-template-columns: 31px 45px minmax(0, 1fr) auto;
+    grid-template-columns: 26px 50px minmax(0, 1fr) auto;
     align-items: center;
     gap: 12px;
-    padding: 16px;
+    min-height: 74px;
+    padding: 12px 16px 12px 14px;
     overflow: hidden;
-    border: 0;
-    border-radius: 0;
+    border: 1px solid var(--pc-line);
+    border-radius: 2px;
     background:
-        linear-gradient(120deg, color-mix(in srgb, var(--title-accent), transparent 92%), transparent 52%),
+        linear-gradient(90deg, color-mix(in srgb, var(--title-accent), transparent 88%), transparent 60%),
         var(--pc-surface);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 body.nebula-page.player-card-page .pc-title-card:hover {
-    box-shadow: inset 0 -2px 0 var(--title-accent);
-    transform: none;
+    border-color: color-mix(in srgb, var(--title-accent), transparent 40%);
+    box-shadow: 0 0 22px color-mix(in srgb, var(--title-accent), transparent 82%);
 }
 
 .pc-title-card::after {
     position: absolute;
     top: 0;
-    right: 0;
     bottom: 0;
+    left: 0;
     width: 2px;
     content: "";
     background: var(--title-accent);
-    opacity: 0.72;
+    opacity: 0.9;
 }
 
 .pc-title-index {
-    color: #404851;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.84rem;
+    color: var(--dim, #5f6e96);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
 }
 
 .pc-title-code {
     display: grid;
-    height: 37px;
+    height: 34px;
     place-items: center;
     border: 1px solid color-mix(in srgb, var(--title-accent), transparent 45%);
-    color: var(--title-accent);
-    font-family: 'Courier New', monospace;
-    font-size: 0.62rem;
-    font-weight: 700;
+    border-radius: 2px;
+    background: rgba(1, 4, 12, 0.6);
+    color: color-mix(in srgb, var(--title-accent), #fff 30%);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
 }
 
-.pc-title-card>div {
-    display: flex;
+.pc-title-card > div {
+    display: grid;
     min-width: 0;
-    flex-direction: column;
-    gap: 4px;
+    gap: 3px;
 }
 
-.pc-title-card>div small {
-    color: var(--title-accent);
-    font-family: 'Courier New', monospace;
-    font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 0.09em;
+.pc-title-card > div small {
+    color: var(--pc-muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 
-.pc-title-card>div strong {
+.pc-title-card > div strong {
     overflow: hidden;
-    color: #f1f4f6;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.78rem;
+    color: #fff;
+    font-family: var(--display);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
     text-overflow: ellipsis;
     text-transform: uppercase;
     white-space: nowrap;
 }
 
-.pc-title-card>div>span {
-    color: #747e88;
-    font-family: 'Courier New', monospace;
-    font-size: 0.62rem;
-    text-transform: uppercase;
+.pc-title-card > div > span {
+    color: var(--pc-muted);
+    font-size: 12px;
+    line-height: 1.35;
 }
 
-.pc-title-card>b {
-    color: #8a949e;
-    font-family: 'Courier New', monospace;
-    font-size: 0.62rem;
+.pc-title-card > b {
+    color: color-mix(in srgb, var(--title-accent), #fff 35%);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
     white-space: nowrap;
 }
 
 body.nebula-page.player-card-page .pc-title-card.ultimate {
-    --title-accent-secondary: #63e7ff;
-    --title-accent-tertiary: #ff5c8a;
+    --title-accent-secondary: var(--blue-3);
+    --title-accent-tertiary: var(--blue-2);
     background:
         radial-gradient(circle at 90% 50%, color-mix(in srgb, var(--title-accent-tertiary), transparent 82%), transparent 38%),
         linear-gradient(112deg,
@@ -1932,10 +1987,7 @@ body.nebula-page.player-card-page .pc-title-card.ultimate {
     left: 0;
     height: 2px;
     content: "";
-    background: linear-gradient(90deg,
-        var(--title-accent-secondary),
-        var(--title-accent),
-        var(--title-accent-tertiary));
+    background: linear-gradient(90deg, var(--title-accent-secondary), var(--title-accent), var(--title-accent-tertiary));
     box-shadow: 0 0 16px color-mix(in srgb, var(--title-accent), transparent 35%);
 }
 
@@ -1947,10 +1999,7 @@ body.nebula-page.player-card-page .pc-title-card.ultimate:hover {
 
 .pc-title-card.ultimate::after {
     width: 3px;
-    background: linear-gradient(180deg,
-        var(--title-accent-secondary),
-        var(--title-accent),
-        var(--title-accent-tertiary));
+    background: linear-gradient(180deg, var(--title-accent-secondary), var(--title-accent), var(--title-accent-tertiary));
     opacity: 1;
 }
 
@@ -1963,295 +2012,411 @@ body.nebula-page.player-card-page .pc-title-card.ultimate:hover {
     color: #fff;
     background:
         linear-gradient(var(--pc-surface), var(--pc-surface)) padding-box,
-        linear-gradient(135deg,
-            var(--title-accent-secondary),
-            var(--title-accent),
-            var(--title-accent-tertiary)) border-box;
-    text-shadow:
-        0 0 8px var(--title-accent-secondary),
-        0 0 12px var(--title-accent-tertiary);
+        linear-gradient(135deg, var(--title-accent-secondary), var(--title-accent), var(--title-accent-tertiary)) border-box;
+    text-shadow: 0 0 8px var(--title-accent-secondary), 0 0 12px var(--title-accent-tertiary);
 }
 
-.pc-title-card.ultimate>div small,
-.pc-title-card.ultimate>div strong {
+.pc-title-card.ultimate > div small,
+.pc-title-card.ultimate > div strong {
     color: transparent;
-    background: linear-gradient(90deg,
-        var(--title-accent-secondary),
-        #f5f2ff 48%,
-        var(--title-accent-tertiary));
-    background-clip: text;
+    background: linear-gradient(90deg, var(--title-accent-secondary), #ffffff 48%, var(--title-accent-tertiary));
     -webkit-background-clip: text;
+    background-clip: text;
 }
 
 body.nebula-page.player-card-page .pc-titles-empty {
     display: flex;
-    min-height: 120px;
     grid-column: 1 / -1;
+    min-height: 120px;
     align-items: center;
     gap: 18px;
-    padding: 22px;
-    border: 0;
-    border-radius: 0;
-    background: var(--pc-surface);
-    color: #78828c;
+    padding: 20px;
+    border: 1px dashed var(--pc-line);
+    background: repeating-linear-gradient(135deg, rgba(141, 176, 255, 0.04) 0 8px, transparent 8px 16px);
 }
 
-.pc-titles-empty>span {
-    color: #353d46;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2rem;
+.pc-titles-empty > span {
+    color: var(--dim, #5f6e96);
+    font-family: var(--display);
+    font-size: 2.6rem;
+    font-weight: 700;
 }
 
-.pc-titles-empty>div {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+.pc-titles-empty > div {
+    display: grid;
+    gap: 4px;
 }
 
 .pc-titles-empty strong {
-    color: #bec5cc;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.8rem;
-    font-style: normal;
+    color: #fff;
+    font-family: var(--display);
+    font-size: 15px;
+    letter-spacing: 0.06em;
 }
 
 .pc-titles-empty small {
-    font-family: 'Courier New', monospace;
-    font-size: 0.68rem;
+    color: var(--pc-muted);
+    font-size: 13px;
 }
 
-@media (max-width: 980px) {
-    body.nebula-page.player-card-page .pc-hero.pc-dossier {
-        grid-template-columns: minmax(230px, 0.8fr) minmax(0, 1.2fr);
-        grid-template-rows: 46px 1fr auto auto;
+/* -------------------- Mouvement réduit -------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .pc-portrait-scan,
+    .pc-radar-inline-canvas::before,
+    .pc-profile-status i,
+    .z,
+    .sss,
+    .striker,
+    .passer,
+    .goat {
+        animation: none;
     }
 
-    .pc-hero-portrait {
-        grid-column: 1;
-        grid-row: 2 / 4;
+    .pc-portrait-scan {
+        transform: translateY(150px);
     }
 
-    .pc-hero-identity {
-        grid-column: 2;
-        grid-row: 2;
+    .pc-radar-inline-canvas::before {
+        transform: translate(-50%, -50%) rotate(35deg);
     }
 
-    body.nebula-page.player-card-page .pc-dossier .pc-hero-rating {
-        grid-column: 2;
-        grid-row: 3;
-        flex-direction: row;
-        gap: 20px;
-        padding: 18px 24px;
-        border-top: 1px solid var(--pc-line);
-        border-left: 0;
-    }
-
-    .pc-ovr-readout {
-        flex: 1;
-        flex-direction: row;
-        justify-content: space-between;
-        gap: 14px;
-        padding: 18px;
-    }
-
-    body.nebula-page.player-card-page .pc-dossier .pc-ovr-value {
-        margin: 0;
-        font-size: 3rem;
-    }
-
-    body.nebula-page.player-card-page .pc-dossier .pc-ovr-rank {
-        margin: 0;
-    }
-
-    body.nebula-page.player-card-page .pc-dossier .pc-hero-club-logo {
-        width: 60px;
-        height: 60px;
-        margin: 0;
-    }
-
-    body.nebula-page.player-card-page .pc-dossier .pc-hero-meta {
-        grid-column: 1 / -1;
-        grid-row: 4;
-    }
-
-    body.nebula-page.player-card-page .pc-kpi-grid,
-    body.nebula-page.player-card-page .pc-match-grid,
-    body.nebula-page.player-card-page .pc-trophy-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    body.nebula-page.player-card-page .pc-stat-bar-fill,
+    body.nebula-page.player-card-page .pc-dossier .pc-hero-avatar {
+        transition: none;
     }
 }
 
-@media (max-width: 720px) {
-    body.nebula-page.player-card-page .player-card-wrapper {
-        width: calc(100% - 36px) !important;
-        padding-top: 32px !important;
-    }
+/* -------------------- Responsive -------------------- */
 
+@media (max-width: 1120px) {
     body.nebula-page.player-card-page .pc-hero.pc-dossier {
-        display: block;
-    }
-
-    .pc-hero-topline {
-        min-height: 46px;
-    }
-
-    .pc-hero-portrait {
-        min-height: 340px;
-        border-right: 0;
-        border-bottom: 1px solid var(--pc-line);
-    }
-
-    .pc-hero-identity {
-        padding: 35px 22px;
-        text-align: left;
-    }
-
-    body.nebula-page.player-card-page .pc-dossier .pc-hero-rating {
-        border-top: 1px solid var(--pc-line);
+        grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+        grid-template-areas:
+            "top top"
+            "identity feed"
+            "meta meta"
+            "actions actions";
     }
 
     body.nebula-page.player-card-page .pc-dossier .pc-hero-meta {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding-right: var(--pc-pad);
     }
 
-    body.nebula-page.player-card-page .pc-tabs {
-        display: grid;
+    body.nebula-page.player-card-page .pc-hero-actions {
+        grid-area: actions;
+        justify-self: stretch;
+        justify-content: flex-start;
+        margin: 0 calc(-1 * var(--pc-pad));
+        padding: 12px var(--pc-pad);
+        border-top: 1px solid var(--pc-line);
+        background: rgba(2, 6, 17, 0.9);
     }
 
-    body.nebula-page.player-card-page .pc-tab-btn {
-        min-height: 56px;
-        justify-content: center;
-        padding: 0 10px;
+    .pc-hero-portrait {
+        margin-left: -30%;
+    }
+
+    .pc-portrait-lock {
+        left: 40%;
+        width: 40%;
+    }
+
+    body.nebula-page.player-card-page .pc-portrait-number {
+        left: 30%;
     }
 
     body.nebula-page.player-card-page .pc-stats-grid,
+    body.nebula-page.player-card-page .player-card-match-stats.pc-enhanced {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 860px) {
+    body.nebula-page.player-card-page .pc-trophy-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     body.nebula-page.player-card-page .pc-titles-list {
         grid-template-columns: 1fr;
     }
+}
 
-    .pc-title-system {
-        padding: 20px;
+/* Mobile : le flux passe en tête, l'identité en dessous */
+@media (max-width: 760px) {
+    body.nebula-page.player-card-page .pc-hero.pc-dossier {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: 38px auto auto auto auto;
+        grid-template-areas:
+            "top"
+            "feed"
+            "identity"
+            "meta"
+            "actions";
+    }
+
+    body.nebula-page.player-card-page .pc-hero.pc-dossier::before {
+        background:
+            var(--scanlines),
+            linear-gradient(180deg, transparent 0%, transparent 38%, rgba(2, 6, 17, 0.9) 58%, rgba(2, 6, 17, 0.96) 100%);
+    }
+
+    .pc-hero-topline {
+        gap: 10px;
+    }
+
+    .pc-topline-long,
+    .pc-topline-jp {
+        display: none;
+    }
+
+    .pc-profile-status {
+        margin-left: auto;
+        padding: 3px 8px;
+    }
+
+    .pc-hero-portrait {
+        height: clamp(360px, 100vw, 470px);
+        margin: 0 calc(-1 * var(--pc-pad));
+    }
+
+    body.nebula-page.player-card-page .pc-dossier .pc-hero-avatar,
+    .pc-hero-portrait::before {
+        -webkit-mask-image: none;
+        mask-image: none;
+    }
+
+    body.nebula-page.player-card-page .pc-dossier .pc-hero-avatar {
+        object-position: 50% 22%;
+    }
+
+    .pc-portrait-osd {
+        top: 12px;
+        right: 16px;
+        left: 16px;
+        justify-content: space-between;
+    }
+
+    .pc-portrait-osd span:nth-child(2) {
+        display: none;
+    }
+
+    .pc-portrait-lock {
+        top: 20%;
+        left: 12%;
+        width: 44%;
+        height: 44%;
+    }
+
+    @keyframes pc-portrait-scan {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(460px); }
+    }
+
+    body.nebula-page.player-card-page .pc-portrait-number {
+        bottom: 16px;
+        left: 16px;
+    }
+
+    body.nebula-page.player-card-page .pc-portrait-number.nl-rank {
+        font-size: clamp(4.4rem, 22vw, 6.4rem);
+    }
+
+    body.nebula-page.player-card-page .pc-portrait-number.nl-nc {
+        bottom: 18px;
+        padding: 10px 12px 11px;
+    }
+
+    body.nebula-page.player-card-page .pc-portrait-number.nl-nc b {
+        font-size: 1.35rem;
+    }
+
+    /* Note globale : incrustée en bas à droite du flux, face au rang */
+    body.nebula-page.player-card-page .pc-dossier .pc-hero-rating {
+        align-self: end;
+        gap: 10px;
+        margin: 0 0 16px;
+        padding: 10px 12px 12px;
+    }
+
+    body.nebula-page.player-card-page .pc-dossier .pc-ovr-value {
+        font-size: 3.2rem;
+    }
+
+    body.nebula-page.player-card-page .pc-dossier .pc-ovr-rank {
+        min-width: 38px;
+        height: 32px;
+        font-size: 1.1rem;
+    }
+
+    body.nebula-page.player-card-page .pc-dossier .pc-ovr-rank.z {
+        min-width: 44px;
+        height: 38px;
+        font-size: 1.5rem;
+    }
+
+    body.nebula-page.player-card-page .pc-dossier .pc-hero-club-logo {
+        display: none;
+    }
+
+    body.nebula-page.player-card-page .pc-dossier .pc-hero-identity {
+        padding: 22px 0 26px;
+    }
+
+    .pc-hero-identity::after {
+        top: 8px;
+        right: 0;
+        font-size: 4rem;
+    }
+
+    body.nebula-page.player-card-page .pc-dossier .pc-hero-name {
+        margin-top: 16px;
+        font-size: clamp(3rem, 15vw, 4.6rem);
+    }
+
+    body.nebula-page.player-card-page .pc-signature-title,
+    body.nebula-page.player-card-page .pc-signature-title.has-technical-illustration {
+        max-width: none;
+        min-height: 100px;
+        padding: 16px 92px 16px 18px;
+    }
+
+    body.nebula-page.player-card-page .pc-signature-title.has-title-switcher {
+        margin-top: 58px;
+    }
+
+    .pc-technical-title-art {
+        right: 6px;
+        width: 92px;
+        opacity: 0.3;
+    }
+
+    .pc-technical-title-art.ballon-dor-illustration {
+        right: 4px;
+        width: 104px;
+        height: 76px;
+    }
+
+    .pc-signature-title strong {
+        white-space: normal;
+    }
+
+    body.nebula-page.player-card-page .pc-dossier .pc-hero-meta {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin: 0 calc(-1 * var(--pc-pad));
+        padding: 0 var(--pc-pad);
+    }
+
+    body.nebula-page.player-card-page .pc-dossier .pc-meta-chip {
+        padding: 12px 12px;
+    }
+
+    body.nebula-page.player-card-page .pc-dossier .pc-meta-chip:nth-child(odd) {
+        padding-left: 0;
+    }
+
+    .pc-meta-value {
+        white-space: normal;
+    }
+
+    body.nebula-page.player-card-page .pc-dossier .pc-meta-chip:nth-child(2n) {
+        border-right: 0;
+    }
+
+    body.nebula-page.player-card-page .pc-dossier .pc-meta-chip:nth-child(-n + 2) {
+        border-bottom: 1px solid var(--pc-line);
+    }
+
+    body.nebula-page.player-card-page .pc-hero-actions {
+        margin: 0 calc(-1 * var(--pc-pad));
+        padding: 12px var(--pc-pad);
+    }
+
+    body.nebula-page.player-card-page .pc-action {
+        min-height: 44px;
+        flex: 1;
+        justify-content: center;
+        padding: 0 8px;
+        letter-spacing: 0.04em;
+    }
+
+    body.nebula-page.player-card-page .pc-tab-btn {
+        min-height: 64px;
+        flex-direction: column;
+        justify-content: center;
+        gap: 6px;
+        padding: 6px 4px;
+        letter-spacing: 0.04em;
+    }
+
+    body.nebula-page.player-card-page .pc-tab-btn > span {
+        padding: 2px 6px;
+    }
+
+    body.nebula-page.player-card-page .pc-tab-btn::after,
+    body.nebula-page.player-card-page .pc-tab-btn.active::after {
+        display: none;
+    }
+
+    body.nebula-page.player-card-page :is(.player-card-fifa-stats.pc-enhanced, .pc-radar-inline, .pc-dossier-panel) {
+        padding: 18px 16px 20px;
+    }
+
+    .pc-panel-heading {
+        gap: 12px;
+    }
+
+    .pc-panel-heading > span {
+        width: 38px;
+        height: 38px;
+    }
+
+    .pc-radar-inline-canvas {
+        min-height: 300px;
+    }
+
+    body.nebula-page.player-card-page .pc-kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    body.nebula-page.player-card-page .pc-match-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pc-value-chart {
+        height: 240px;
+    }
+
+    .pc-title-system-heading > strong {
+        font-size: 2.2rem;
     }
 }
 
 @media (max-width: 480px) {
-    .pc-hero-topline>span:first-child {
-        max-width: 62%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    body.nebula-page.player-card-page .pc-hero-meta,
-    body.nebula-page.player-card-page .pc-kpi-grid,
-    body.nebula-page.player-card-page .pc-match-grid,
     body.nebula-page.player-card-page .pc-trophy-grid {
         grid-template-columns: 1fr;
     }
 
-    .pc-ovr-readout {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    body.nebula-page.player-card-page .pc-tab-btn {
-        font-size: 0.62rem !important;
-    }
-
     body.nebula-page.player-card-page .pc-title-card {
-        grid-template-columns: 28px 40px minmax(0, 1fr);
+        grid-template-columns: 22px 44px minmax(0, 1fr);
+        padding-inline: 10px 12px;
     }
 
-    .pc-title-card>b {
+    .pc-title-card > b {
         display: none;
     }
-}
 
-/* ===================== ACTIONS DU DOSSIER ===================== */
-body.nebula-page.player-card-page .pc-hero-actions {
-    position: relative;
-    z-index: 3;
-    display: flex;
-    flex-wrap: wrap;
-    grid-column: 1 / -1;
-    gap: 8px;
-    padding: 12px 16px;
-    border-top: 1px solid var(--pc-line);
-    background: rgba(0, 0, 0, 0.18);
-}
-
-body.nebula-page.player-card-page .pc-action {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 38px;
-    padding: 0 14px;
-    border: 1px solid var(--pc-line) !important;
-    background: rgba(255, 255, 255, 0.03) !important;
-    color: #d4dae0 !important;
-    font-family: 'Courier New', monospace !important;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
-}
-
-body.nebula-page.player-card-page .pc-action span {
-    color: var(--club-primary);
-}
-
-body.nebula-page.player-card-page .pc-action:hover,
-body.nebula-page.player-card-page .pc-action:focus-visible {
-    border-color: var(--club-primary) !important;
-    background: color-mix(in srgb, var(--club-primary), transparent 88%) !important;
-    color: #fff !important;
-    transform: none;
-}
-
-/* ===================== COURBE DE VALEUR ===================== */
-.pc-value-panel {
-    margin-top: 16px;
-}
-
-.pc-value-chart {
-    position: relative;
-    height: 260px;
-    padding: 18px 20px 14px;
-}
-
-.pc-value-empty {
-    display: grid;
-    gap: 6px;
-    padding: 28px 22px;
-}
-
-.pc-value-empty strong {
-    color: #fff;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.6rem;
-}
-
-.pc-value-empty p {
-    margin: 0;
-    color: #89939e;
-    font-size: 0.85rem;
-}
-
-@media (max-width: 720px) {
-    body.nebula-page.player-card-page .pc-hero-actions {
-        padding: 12px;
+    /* responsive.css empile les canaux ≤ 430 px : on garde une rangée de 3 */
+    html body.nebula-page.player-card-page .pc-tabs {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    body.nebula-page.player-card-page .pc-action {
-        flex: 1;
+    html body.nebula-page.player-card-page .pc-tab-btn {
         justify-content: center;
-        padding: 0 8px;
+        padding-inline: 4px;
     }
 
-    .pc-value-chart {
-        height: 220px;
-        padding: 14px 10px 10px;
+    .pc-stat-name small {
+        margin-right: 8px;
     }
 }

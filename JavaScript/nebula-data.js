@@ -319,7 +319,7 @@
     /* ----------------------------------------------------------------------
        04B. AVATARS DISCORD
 
-       Si `discordId` est renseigné, Netlify récupère la PFP actuelle sans
+       Si `discordId` est renseigné, le Worker Cloudflare récupère la PFP actuelle sans
        exposer le token Discord. `avatarPath` reste toujours l'image de secours.
        Les résultats sont conservés dix minutes dans le navigateur pour limiter
        les appels à Discord tout en répercutant rapidement une nouvelle PFP.

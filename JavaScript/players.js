@@ -86,6 +86,18 @@ document.addEventListener("DOMContentLoaded", () => {
         return String(value);
     }
 
+    // Classement façon Blue Lock : rang selon la note globale (OVR),
+    // à égalité l'ordre du registre est conservé. Sans note ou retraité :
+    // NON CLASSÉ (jamais de faux numéro).
+    const RANKING = PLAYERS
+        .filter(player => player.club !== "retraite" && Number.isFinite(player.technical?.global))
+        .sort((a, b) => b.technical.global - a.technical.global);
+
+    function rankOf(player) {
+        const position = RANKING.indexOf(player);
+        return position === -1 ? 0 : position + 1;
+    }
+
     function normalize(value) {
         return value
             .normalize("NFD")
@@ -109,27 +121,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 key: "unrated",
                 label: "NON ÉVALUÉ",
                 detail: "Aucun match",
-                accent: "#71808d"
+                accent: "var(--dim)"
             };
         }
 
         const average = performances.reduce((sum, performance) => sum + performance.note, 0) / performances.length;
         if (average >= 9) {
-            return { key: "fire", label: "EN FEU", detail: `${average.toFixed(1)} / 10`, accent: "#b32fffff" };
+            return { key: "fire", label: "EN FEU", detail: `${average.toFixed(1)} / 10`, accent: "var(--white)" };
         }
         if (average >= 8) {
-            return { key: "good", label: "EN FORME", detail: `${average.toFixed(1)} / 10`, accent: "#52ff2fff" };
+            return { key: "good", label: "EN FORME", detail: `${average.toFixed(1)} / 10`, accent: "var(--blue-2)" };
         }
         if (average >= 7) {
-            return { key: "stable", label: "STABLE", detail: `${average.toFixed(1)} / 10`, accent: "#63e7ff" };
+            return { key: "stable", label: "STABLE", detail: `${average.toFixed(1)} / 10`, accent: "var(--blue-3)" };
         }
         if (average >= 6) {
-            return { key: "struggle", label: "EN DIFFICULTÉ", detail: `${average.toFixed(1)} / 10`, accent: "#ffd84d" };
+            return { key: "struggle", label: "EN DIFFICULTÉ", detail: `${average.toFixed(1)} / 10`, accent: "var(--offline)" };
         }
         if (average >= 5) {
-            return { key: "bench", label: "BON POUR LE BANC", detail: `${average.toFixed(1)} / 10`, accent: "#ff4d4dff" };
+            return { key: "bench", label: "BON POUR LE BANC", detail: `${average.toFixed(1)} / 10`, accent: "var(--rec)" };
         }
-        return { key: "pmu", label: "RETOURNE AU PMU", detail: `${average.toFixed(1)} / 10`, accent: "#000000ff" };
+        return { key: "pmu", label: "RETOURNE AU PMU", detail: `${average.toFixed(1)} / 10`, accent: "var(--rec)" };
     }
 
     function setClubFilter(option) {
@@ -163,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
             container.innerHTML = `
                 <div class="empty-state">
                     <div class="empty-state-inner">
-                        <span class="empty-state-code">SCAN // 00 RESULT</span>
+                        <span class="empty-state-code">SCAN // 00 RÉSULTAT</span>
                         <p class="empty-state-title">AUCUN PROFIL DÉTECTÉ</p>
                         <p class="empty-state-sub">Aucun joueur ne correspond à cette combinaison. Modifiez les filtres
                             ou réinitialisez la console de sélection.</p>
@@ -175,40 +187,52 @@ document.addEventListener("DOMContentLoaded", () => {
 
         container.innerHTML = list.map((player, index) => {
             const logo = CLUB_LOGOS[player.club];
-            const accent = CLUB_ACCENTS[player.club] || "#63e7ff";
+            const retired = player.club === "retraite";
+            // Couleurs injectées : jetons du thème (le violet « retraite » devient --offline).
+            const accent = retired ? "var(--offline)" : (CLUB_ACCENTS[player.club] || "var(--blue-2)");
             const playerNumber = String(PLAYERS.indexOf(player) + 1).padStart(2, "0");
-            const status = player.club === "retraite" ? "RETRAITE" : "ACTIF";
+            const status = retired ? "HORS LIGNE" : "REC";
+            const zone = retired ? "ARCHIVES" : `ZONE ${player.club.charAt(0).toUpperCase()}`;
             const value = player.value === 0 ? "NON COTÉ" : `${formatValue(player.value)} ¥`;
             const role = POSITION_LABELS[player.position] || player.position;
             const form = getRecentForm(player);
+            const rank = rankOf(player);
+            const rated = Number.isFinite(player.technical?.global);
+            const overall = rated ? player.technical.global : "--";
+            const rankHTML = rank
+                ? `<span class="player-rank nl-rank${rank <= 3 ? " is-podium" : ""}${rank === 1 ? " is-first" : ""}" aria-hidden="true"><small>#</small>${String(rank).padStart(3, "0")}</span>`
+                : `<span class="player-rank nl-nc" aria-hidden="true"><b>NON CLASSÉ</b><small>${retired ? "ARCHIVÉ // RETRAITE" : "EN ATTENTE DE NOTE"}</small></span>`;
 
             return `
-                <a class="player-card ${player.club}" href="${window.NEBULA_DATA.playerPageHref(player)}"
+                <a class="player-card ${player.club}${retired ? " is-offline" : ""}${rank ? "" : " is-unranked"}" href="${window.NEBULA_DATA.playerPageHref(player)}"
                     style="--club-accent:${accent}; --form-accent:${form.accent}; animation-delay:${Math.min(index, 8) * 0.055}s"
-                    aria-label="Ouvrir le profil de ${player.name}">
-                    <div class="player-file-topline">
-                        <span>PLAYER FILE // ${playerNumber}</span>
-                        <span class="player-file-status"><i></i>${status}</span>
-                    </div>
+                    aria-label="Ouvrir le dossier de ${player.name}, ${rank ? `classement numéro ${rank}` : "non classé"}">
                     <div class="player-card-visual">
                         <img class="player-avatar" src="${player.avatar}" alt="${player.name}" style="view-transition-name: player-portrait-${player.name.toLowerCase().replace(/[^a-z0-9]/g, "")}" loading="lazy" decoding="async">
-                        ${logo ? `<img src="${logo}" class="card-club-badge" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">` : ""}
+                        <span class="player-feed-fx" aria-hidden="true"></span>
+                        <div class="player-file-topline">
+                            <span><b>CAM ${playerNumber}</b> // ${zone}</span>
+                            <span class="player-file-status rec${retired ? " is-off" : ""}">${status}</span>
+                        </div>
+                        ${rankHTML}
                         <span class="position-pill">${player.position}</span>
-                        <span class="player-index" aria-hidden="true">${playerNumber}</span>
                     </div>
                     <div class="player-card-body">
-                        <span class="player-card-club">${player.clubName}</span>
-                        <h3>${player.name}</h3>
-                        <div class="player-form player-form-${form.key}">
-                            <span><i></i> FORME RÉCENTE</span>
-                            <strong>${form.label}</strong>
-                            <small>${form.detail}</small>
+                        <div class="player-card-id">
+                            <span class="player-card-club">${logo ? `<img src="${logo}" class="card-club-badge" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">` : ""}${player.clubName}</span>
+                            <h3>${player.name}</h3>
                         </div>
+                        <div class="player-ovr${rated ? "" : " is-empty"}"><strong>${overall}</strong><small>OVR</small></div>
                         <div class="player-card-data">
-                            <div><small>POSTE</small><strong>${role}</strong></div>
-                            <div><small>VALEUR DE MARCHÉ</small><strong class="market-value">${value}</strong></div>
+                            <div><small>Poste</small><strong>${role}</strong></div>
+                            <div><small>Valeur</small><strong class="market-value">${value}</strong></div>
+                            <div class="player-form player-form-${form.key}">
+                                <span><i></i> Forme</span>
+                                <strong>${form.label}</strong>
+                                <small>${form.detail}</small>
+                            </div>
                         </div>
-                        <span class="player-card-cta">OUVRIR LE DOSSIER <i>↗</i></span>
+                        <span class="player-card-cta">Ouvrir le dossier <i>↗</i></span>
                     </div>
                 </a>
             `;
@@ -224,7 +248,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!normalizedSearch) return true;
                 return normalize(`${player.name} ${player.clubName} ${player.position}`).includes(normalizedSearch);
             })
-            .sort((a, b) => sortOrder === "asc" ? a.value - b.value : b.value - a.value);
+            .sort((a, b) => (sortOrder === "asc" ? a.value - b.value : b.value - a.value)
+                || (rankOf(a) || 999) - (rankOf(b) || 999));
 
         countEl.textContent = `${String(result.length).padStart(2, "0")} PROFIL${result.length > 1 ? "S" : ""} AFFICHÉ${result.length > 1 ? "S" : ""}`;
         displayPlayers(result);
@@ -248,6 +273,18 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         updatePlayers();
+    }
+
+    // Line-up du héros : les cinq premiers du classement ego (décoratif).
+    const lineup = document.querySelector("[data-lineup]");
+    if (lineup) {
+        lineup.innerHTML = RANKING.slice(0, 5).map((player, index) => `
+            <span class="lineup-feed${index === 0 ? " is-first" : ""}">
+                <img src="${player.avatar}" alt="" loading="lazy" decoding="async">
+                <span class="lineup-cam">CAM ${String(PLAYERS.indexOf(player) + 1).padStart(2, "0")}</span>
+                <b class="lineup-rank"><small>#</small>${String(index + 1).padStart(3, "0")}</b>
+                <span class="lineup-name">${player.name}</span>
+            </span>`).join("");
     }
 
     // Données de synthèse de l'en-tête.

@@ -21,14 +21,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const POSITION_LABELS = window.NEBULA_DATA?.positions || {};
 
+    // Palette « salle de contrôle » : uniquement des jetons bleus
     const METRIC_COLORS = {
-        neutral: "#a8b1bc",
-        value: "#ffd84d",
-        goals: "#ff536e",
-        assists: "#58ddff",
-        defenses: "#45f595",
-        dribbles: "#b26cff",
-        rating: "#9bff20"
+        neutral: "var(--offline)",
+        value: "var(--blue-3)",
+        goals: "var(--blue-2)",
+        assists: "var(--blue-3)",
+        defenses: "var(--blue)",
+        dribbles: "var(--blue-2)",
+        rating: "var(--white)"
     };
 
     const selections = {
@@ -62,6 +63,14 @@ document.addEventListener("DOMContentLoaded", () => {
         return `${day}/${month}/${year}`;
     }
 
+    function pad(value) {
+        return String(value).padStart(2, "0");
+    }
+
+    function plural(count, noun) {
+        return `${count} ${noun}${count > 1 ? "s" : ""}`;
+    }
+
     function formatNumber(value, digits = 0) {
         return Number(value || 0).toLocaleString("fr-FR", {
             minimumFractionDigits: digits,
@@ -89,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
             key,
             name: item.name,
             logo: item.logo,
-            color: CLUB_COLORS[key] || "#9bff20"
+            color: CLUB_COLORS[key] || "var(--blue-2)"
         };
     }
 
@@ -104,7 +113,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function getPlayerAccent(player) {
-        return CLUB_COLORS[player?.club] || "#b26cff";
+        if (!player || player.club === "retraite") return "var(--offline)";
+        return CLUB_COLORS[player.club] || "var(--blue-2)";
     }
 
     function matchPlayerSide(match, playerName) {
@@ -259,7 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return {
                     id: key,
                     name: clubData.name,
-                    subtitle: `${clubAggregates.get(key)?.players.length || 0} joueurs`,
+                    subtitle: plural(clubAggregates.get(key)?.players.length || 0, "joueur"),
                     image: clubData.logo,
                     color: clubData.color
                 };
@@ -271,7 +281,8 @@ document.addEventListener("DOMContentLoaded", () => {
             name: player.name,
             subtitle: `${player.position} · ${player.clubName}`,
             image: player.avatar,
-            color: getPlayerAccent(player)
+            color: getPlayerAccent(player),
+            offline: player.club === "retraite"
         }));
     }
 
@@ -288,7 +299,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return {
                 id,
                 name: clubData.name,
-                subtitle: `${clubAggregates.get(id)?.players.length || 0} joueurs enregistrés`,
+                subtitle: `${plural(clubAggregates.get(id)?.players.length || 0, "joueur")} enregistré${(clubAggregates.get(id)?.players.length || 0) > 1 ? "s" : ""}`,
                 meta: `${clubAggregates.get(id)?.matches || 0} match(s) archivé(s)`,
                 image: clubData.logo,
                 color: clubData.color,
@@ -311,13 +322,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderHeroStats() {
+        const retired = PLAYERS.filter(player => player.club === "retraite").length;
         const stats = [
-            [Object.keys(CLUB_META).length, "CLUBS INDEXÉS"],
-            [PLAYERS.length, "JOUEURS INDEXÉS"],
-            [MATCHES.length, "MATCHS ANALYSÉS"]
+            [Object.keys(CLUB_META).length, "Clubs indexés", "Écussons sous surveillance"],
+            [PLAYERS.length, "Joueurs indexés", retired ? `Dont ${retired} hors ligne` : "Tous en activité"],
+            [MATCHES.length, "Matchs analysés", MATCHES.length ? "Archive synchronisée" : "Archive vierge"]
         ];
-        document.getElementById("h2hHeroStats").innerHTML = stats.map(([value, label]) => `
-            <div><strong>${String(value).padStart(2, "0")}</strong><span>${label}</span></div>
+        document.getElementById("h2hHeroStats").innerHTML = stats.map(([value, label, note], index) => `
+            <div class="nl-stat${index === 0 ? " nl-stat--solid" : ""}">
+                <span class="nl-stat-label">${label}</span>
+                <strong class="nl-stat-value">${pad(value)}</strong>
+                <span class="nl-stat-note">${note}</span>
+            </div>
         `).join("");
     }
 
@@ -349,30 +365,40 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Emplacement A / B : un écran de régie. Vide = mire + réticule de recherche,
+    // rempli = flux verrouillé (portrait ou écusson) avec bandeau titre.
     function renderSlot(target, id, side) {
         const identity = participantIdentity(id);
+        target.dataset.kind = mode;
         if (!identity) {
             target.style.removeProperty("--entity-color");
             target.classList.add("is-empty");
+            target.classList.remove("is-locked");
             target.innerHTML = `
-            <span class="h2h-slot-code">PARTICIPANT ${side}</span>
-                <div class="h2h-slot-placeholder" data-side="${side}" aria-hidden="true"></div>
-                <div><small>EMPLACEMENT LIBRE</small><strong>SÉLECTION REQUISE</strong></div>
+                <span class="h2h-slot-mire" aria-hidden="true"></span>
+                <span class="nl-feed-osd h2h-slot-osd"><span><b>CAM ${side}</b><span class="h2h-osd-extra"> // PARTICIPANT ${side}</span></span><span class="rec is-off">EN ATTENTE</span></span>
+                <span class="nl-reticle h2h-slot-reticle" aria-hidden="true"><i></i><span>RECHERCHE DE SUJET</span></span>
+                <span class="h2h-slot-letter" aria-hidden="true">${side}</span>
+                <span class="nl-feed-caption h2h-slot-caption"><small>Emplacement libre</small><b>Sélection requise</b></span>
             `;
             return;
         }
 
         target.classList.remove("is-empty");
+        target.classList.add("is-locked");
         target.style.setProperty("--entity-color", identity.color);
         target.innerHTML = `
-            <span class="h2h-slot-code">PARTICIPANT ${side}</span>
-            <img src="${escapeHtml(identity.image)}" alt="" onerror="this.style.opacity='.15'">
-            <div>
+            <img class="h2h-slot-backdrop" src="${escapeHtml(identity.image)}" alt="" aria-hidden="true">
+            <img class="h2h-slot-img" src="${escapeHtml(identity.image)}" alt="" onerror="this.style.opacity='.15'">
+            <span class="nl-feed-lock" aria-hidden="true"></span>
+            <span class="nl-feed-osd h2h-slot-osd"><span><b>CAM ${side}</b><span class="h2h-osd-extra"> // PARTICIPANT ${side}</span></span><span class="rec">VERROUILLÉ</span></span>
+            <span class="h2h-slot-letter" aria-hidden="true">${side}</span>
+            <span class="nl-feed-caption h2h-slot-caption">
                 <small>${escapeHtml(identity.subtitle)}</small>
-                <strong>${escapeHtml(identity.name)}</strong>
-                <span>${escapeHtml(identity.meta)}</span>
-            </div>
-            <a href="${escapeHtml(identity.href)}" aria-label="Ouvrir le profil de ${escapeHtml(identity.name)}">↗</a>
+                <b>${escapeHtml(identity.name)}</b>
+                <em>${escapeHtml(identity.meta)}</em>
+            </span>
+            <a class="h2h-slot-link" href="${escapeHtml(identity.href)}" aria-label="Ouvrir le profil de ${escapeHtml(identity.name)}">${mode === "clubs" ? "Fiche club" : "Profil"} <span aria-hidden="true">↗</span></a>
         `;
     }
 
@@ -380,25 +406,44 @@ document.addEventListener("DOMContentLoaded", () => {
         const selection = selections[mode];
         renderSlot(slotA, selection[0], "A");
         renderSlot(slotB, selection[1], "B");
+        const status = document.getElementById("h2hDeckStatus");
+        if (status) status.textContent = `${selection.length}/2 VERROUILLÉ${selection.length > 1 ? "S" : ""}`;
     }
 
+    // Mur des sujets : chaque club / joueur est un écran. Le mur est complété
+    // par des écrans hors antenne pour tomber juste sur 2, 3 ou 6 colonnes.
     function renderEntities() {
         const selection = selections[mode];
-        entityGrid.innerHTML = getEntities().map(entity => {
+        const entities = getEntities();
+        const fillers = (6 - (entities.length % 6)) % 6;
+        entityGrid.dataset.mode = mode;
+        entityGrid.innerHTML = entities.map((entity, position) => {
             const index = selection.indexOf(entity.id);
+            const side = index === 0 ? "a" : index === 1 ? "b" : "";
+            const status = side
+                ? `<span class="h2h-entity-index">${side.toUpperCase()}</span>`
+                : entity.offline
+                    ? `<span class="rec is-off">HORS LIGNE</span>`
+                    : `<span class="h2h-entity-index is-free">—</span>`;
             return `
-                <button class="h2h-control-button h2h-entity-card${index >= 0 ? ` is-selected side-${index === 0 ? "a" : "b"}` : ""}"
-                    type="button" data-entity="${escapeHtml(entity.id)}" style="--entity-color:${entity.color}">
-                    <span class="h2h-entity-index">${index >= 0 ? (index === 0 ? "A" : "B") : "—"}</span>
-                    <img src="${escapeHtml(entity.image)}" alt="" onerror="this.style.opacity='.15'">
-                    <span class="h2h-entity-copy">
-                        <strong>${escapeHtml(entity.name)}</strong>
+                <button class="h2h-control-button h2h-entity-card nl-feed${side ? ` is-selected is-locked side-${side}` : ""}${entity.offline ? " is-offline" : ""}"
+                    type="button" data-entity="${escapeHtml(entity.id)}" aria-pressed="${side ? "true" : "false"}"
+                    style="--entity-color:${entity.color}">
+                    <img class="nl-feed-img" src="${escapeHtml(entity.image)}" alt="" onerror="this.style.opacity='.15'">
+                    <span class="nl-feed-lock" aria-hidden="true"></span>
+                    <span class="nl-feed-osd"><span><b>CAM ${pad(position + 1)}</b></span>${status}</span>
+                    <span class="nl-feed-caption h2h-entity-copy">
                         <small>${escapeHtml(entity.subtitle)}</small>
+                        <b>${escapeHtml(entity.name)}</b>
                     </span>
-                    <i></i>
                 </button>
             `;
-        }).join("");
+        }).join("") + Array.from({ length: fillers }, (_, offset) => `
+                <div class="nl-feed is-offline h2h-entity-filler" aria-hidden="true">
+                    <span class="nl-feed-mire" data-label="HORS ANTENNE"></span>
+                    <span class="nl-feed-osd"><span><b>CAM ${pad(entities.length + offset + 1)}</b></span><span class="rec is-off">HORS LIGNE</span></span>
+                </div>
+        `).join("");
     }
 
     function makeMetric(label, aValue, bValue, options = {}) {
@@ -500,22 +545,36 @@ document.addEventListener("DOMContentLoaded", () => {
         }, { a: 0, b: 0, ties: 0 });
     }
 
-    function renderDuelHeader(aId, bId) {
+    // Tableau d'affichage du duel : critères remportés par chaque participant
+    function renderDuelHeader(aId, bId, score) {
         const a = participantIdentity(aId);
         const b = participantIdentity(bId);
+        const total = score.a + score.b + score.ties;
+        const lead = score.a > score.b ? "a" : score.b > score.a ? "b" : "";
+        const duelist = (identity, side) => `
+            <a class="h2h-duelist duelist-${side}${lead === side ? " is-lead" : ""}" href="${escapeHtml(identity.href)}" style="--entity-color:${identity.color}">
+                <span class="h2h-duelist-media"><img src="${escapeHtml(identity.image)}" alt="" onerror="this.style.opacity='.15'"></span>
+                <span class="h2h-duelist-copy">
+                    <small>CAM ${side.toUpperCase()} // ${escapeHtml(identity.subtitle)}</small>
+                    <strong>${escapeHtml(identity.name)}</strong>
+                    <em>${escapeHtml(identity.meta)}</em>
+                </span>
+            </a>
+        `;
         document.getElementById("h2hDuelHeader").innerHTML = `
-            <a class="h2h-duelist duelist-a" href="${escapeHtml(a.href)}" style="--entity-color:${a.color}">
-                <img src="${escapeHtml(a.image)}" alt="" onerror="this.style.opacity='.15'">
-                <span><small>${escapeHtml(a.subtitle)}</small><strong>${escapeHtml(a.name)}</strong><em>${escapeHtml(a.meta)}</em></span>
-            </a>
-            <div class="h2h-duel-core"><span>DATA LINK</span><strong>VS</strong><small>SYNCHRONISÉ</small></div>
-            <a class="h2h-duelist duelist-b" href="${escapeHtml(b.href)}" style="--entity-color:${b.color}">
-                <img src="${escapeHtml(b.image)}" alt="" onerror="this.style.opacity='.15'">
-                <span><small>${escapeHtml(b.subtitle)}</small><strong>${escapeHtml(b.name)}</strong><em>${escapeHtml(b.meta)}</em></span>
-            </a>
+            ${duelist(a, "a")}
+            <div class="h2h-duel-core">
+                <span class="h2h-duel-label">Critères remportés</span>
+                <div class="h2h-duel-score">
+                    <b class="${lead === "a" ? "is-lead" : ""}">${pad(score.a)}</b><i aria-hidden="true">:</i><b class="${lead === "b" ? "is-lead" : ""}">${pad(score.b)}</b>
+                </div>
+                <small>${pad(total)} critères${score.ties ? ` · ${score.ties} égalité${score.ties > 1 ? "s" : ""}` : ""}</small>
+            </div>
+            ${duelist(b, "b")}
         `;
     }
 
+    // Une ligne par critère : vumètres en miroir, le meilleur côté s'allume
     function renderMetrics(metrics) {
         document.getElementById("h2hMetricGrid").innerHTML = metrics.map((metric, index) => {
             const magnitude = metric.scaleMax
@@ -524,15 +583,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const bWidth = Math.min(100, Math.max(metric.bValue === 0 ? 0 : 4, (Math.abs(metric.bValue) / magnitude) * 100));
             const winner = metricWinner(metric);
             return `
-                <div class="h2h-metric-row" style="--metric-color:${metric.color}">
-                    <span class="h2h-metric-rank">${String(index + 1).padStart(2, "0")}</span>
+                <div class="h2h-metric-row is-${winner === "tie" ? "tie" : `win-${winner}`}" style="--metric-color:${metric.color}">
                     <strong class="h2h-metric-value value-a${winner === "a" ? " is-best" : ""}">${escapeHtml(metric.format(metric.aValue))}</strong>
-                    <div class="h2h-metric-track track-a"><i style="width:${aWidth}%"></i></div>
+                    <div class="h2h-metric-track track-a" aria-hidden="true"><i style="width:${aWidth.toFixed(1)}%"></i></div>
                     <div class="h2h-metric-label">
-                        <span>${escapeHtml(metric.label)}</span>
+                        <span class="h2h-metric-rank">${pad(index + 1)}</span>
+                        <span class="h2h-metric-name">${escapeHtml(metric.label)}</span>
                         ${metric.context ? `<small>${escapeHtml(metric.context)}</small>` : ""}
                     </div>
-                    <div class="h2h-metric-track track-b"><i style="width:${bWidth}%"></i></div>
+                    <div class="h2h-metric-track track-b" aria-hidden="true"><i style="width:${bWidth.toFixed(1)}%"></i></div>
                     <strong class="h2h-metric-value value-b${winner === "b" ? " is-best" : ""}">${escapeHtml(metric.format(metric.bValue))}</strong>
                 </div>
             `;
@@ -559,6 +618,16 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
     }
 
+    function noHistory(title, text) {
+        return `
+            <div class="h2h-no-history nl-nosignal">
+                <span class="nl-nosignal-code">ARCHIVE 00</span>
+                <strong>${escapeHtml(title)}</strong>
+                <p>${escapeHtml(text)}</p>
+            </div>
+        `;
+    }
+
     function renderClubHistory(aId, bId) {
         const direct = computeClubDirect(aId, bId);
         const a = participantIdentity(aId);
@@ -569,9 +638,10 @@ document.addEventListener("DOMContentLoaded", () => {
             `${String(direct.matches.length).padStart(2, "0")} MATCH${direct.matches.length > 1 ? "S" : ""}`;
 
         if (!direct.matches.length) {
-            document.getElementById("h2hHistoryList").innerHTML = `
-                <div class="h2h-no-history">Aucune confrontation enregistrée entre ces deux clubs.</div>
-            `;
+            document.getElementById("h2hHistoryList").innerHTML = noHistory(
+                "Aucune confrontation",
+                "Aucune confrontation enregistrée entre ces deux clubs."
+            );
             return;
         }
 
@@ -585,7 +655,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return `
                 <article class="h2h-history-row">
                     <span class="h2h-history-id">DUEL–${String(index + 1).padStart(2, "0")}</span>
-                    <div><small>${formatDate(match.date)} · ${escapeHtml(match.category || "MATCH")}</small><strong>${isDraw ? "MATCH NUL" : "MATCH TERMINÉ"}</strong></div>
+                    <div><small>${formatDate(match.date)} · ${escapeHtml(String(match.category || "match").toUpperCase())}</small><strong>${isDraw ? "MATCH NUL" : "MATCH TERMINÉ"}</strong></div>
                     <div class="h2h-history-score">
                         <span class="${winnerSide === "a" ? "is-winner" : ""}">${escapeHtml(a.name)}</span>
                         <strong>${scoreA} : ${scoreB}</strong>
@@ -610,9 +680,10 @@ document.addEventListener("DOMContentLoaded", () => {
             `${String(shared.length).padStart(2, "0")} MATCH${shared.length > 1 ? "S" : ""}`;
 
         if (!shared.length) {
-            document.getElementById("h2hHistoryList").innerHTML = `
-                <div class="h2h-no-history">Ces deux joueurs n'apparaissent encore dans aucun match commun.</div>
-            `;
+            document.getElementById("h2hHistoryList").innerHTML = noHistory(
+                "Aucun match commun",
+                "Ces deux joueurs n'apparaissent encore dans aucun match commun."
+            );
             return;
         }
 
@@ -652,10 +723,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const complete = Boolean(aId && bId);
         empty.hidden = complete;
         results.hidden = !complete;
+        results.dataset.kind = mode;
         if (!complete) return;
 
         const metrics = buildMetrics(aId, bId);
-        renderDuelHeader(aId, bId);
+        renderDuelHeader(aId, bId, metricResult(metrics));
         renderMetrics(metrics);
         renderVerdict(aId, bId, metrics);
         if (mode === "clubs") renderClubHistory(aId, bId);
