@@ -22,15 +22,15 @@
   <meta name="twitter:card" content="summary_large_image">
   <!-- meta:end -->
   <title>Nebula League – Joueurs</title>
-  <link rel="stylesheet" href="CSS/style.css">
   <link rel="stylesheet" href="CSS/players.css">
   <link rel="stylesheet" href="CSS/hamburger.css">
   <link rel="stylesheet" href="CSS/global-theme.css">
     <link rel="stylesheet" href="CSS/responsive.css">
+    <link rel="stylesheet" href="CSS/theme-monitor.css">
     <script src="JavaScript/reveal.js"></script>
 </head>
 
-<body class="nebula-page players-page">
+<body class="nebula-page players-page nl-migrated">
 
   <header class="site-header" id="top">
     <a class="brand" href="#top" aria-label="Nebula League, retour en haut">
@@ -59,122 +59,132 @@
     </div>
   </header>
 
-  <section class="players-intro">
-    <div class="players-hero-copy">
-      <p class="players-kicker"><span>NL–03</span> REGISTRE DES PROFILS</p>
-      <h1>LES JOUEURS<br></h1>
-      <p class="players-hero-text">Explorez les profils enregistrés dans la Nebula League, comparez leur valeur et
-        isolez instantanément une équipe ou un poste.</p>
-
-      <div class="players-hero-stats" aria-label="Statistiques des joueurs">
-        <div><strong id="playersTotal">00</strong><span>Profils indexés</span></div>
-        <div><strong id="playersValue">0</strong><span>Valeur cumulée</span></div>
-      </div>
+  <section class="players-intro nl-hero nl-hero--band" aria-labelledby="players-title">
+    <div class="osd">
+      <span class="rec">REC</span>
+      <span>CAM 02 <b>//</b> REGISTRE DES SUJETS</span>
+      <span class="osd-hide-sm">LINE-UP — <b>CLASSEMENT EGO</b></span>
+      <span class="jp osd-hide-sm">選手番号 // ブルーロック</span>
     </div>
 
-    <aside class="players-scan" aria-label="Profil ayant la valeur la plus élevée">
-      <div class="scan-orbit" aria-hidden="true"><i></i><i></i><i></i></div>
-      <div class="scan-readout">
-        <span>TOP MARKET PROFILE</span>
-        <strong id="featuredPlayerName">—</strong>
-        <small id="featuredPlayerValue">0 ¥</small>
+    <!-- Line-up des mieux notés : flux générés par players.js (décoratif) -->
+    <div class="players-lineup" data-lineup aria-hidden="true"></div>
+
+    <div class="nl-hero-inner players-hero-inner">
+      <p class="nl-kicker"><span class="nl-ch">CH 02</span> Effectifs // Chaque joueur est filmé, noté et classé</p>
+      <h1 id="players-title" class="nl-headline players-title">Les <em>joueurs</em></h1>
+      <p class="nl-lead">Explorez les profils enregistrés dans la Nebula League, comparez leur valeur et isolez
+        instantanément une équipe ou un poste.</p>
+
+      <div class="players-readouts" aria-label="Statistiques des joueurs">
+        <div class="players-readout">
+          <span>Sujets indexés</span>
+          <strong id="playersTotal">00</strong>
+        </div>
+        <div class="players-readout">
+          <span>Valeur cumulée</span>
+          <strong id="playersValue">0</strong>
+        </div>
+        <div class="players-readout players-readout--wide" aria-label="Profil ayant la valeur la plus élevée">
+          <span>Cote maximale</span>
+          <strong id="featuredPlayerName">—</strong>
+          <small id="featuredPlayerValue">0 ¥</small>
+        </div>
       </div>
-      <p><span></span> DATABASE ONLINE</p>
-    </aside>
+    </div>
   </section>
 
   <main class="players-registry">
-    <section class="registry-console">
-      <div class="players-section-heading">
-        <span class="section-index">01</span>
-        <div><small>RECHERCHE MULTI-CRITÈRES</small>
-          <h2>CONSOLE DE SÉLECTION</h2>
-        </div>
-        <p>Filtrez les profils par identité, club ou rôle sur le terrain.</p>
+    <section class="registry-console nl-console" aria-labelledby="console-title">
+      <div class="nl-console-head">
+        <span class="nl-ch">CH 02-B</span>
+        <h2 id="console-title">Console de sélection</h2>
+        <p>Filtrez les sujets par identité, club ou rôle sur le terrain.</p>
       </div>
 
-      <div class="players-toolbar">
-        <label class="player-search" for="playerSearch">
-          <span>RECHERCHER UN JOUEUR</span>
+      <div class="players-console-body nl-console-body">
+        <label class="player-search nl-field" for="playerSearch">
+          <span class="nl-field-label">Rechercher un joueur</span>
           <span class="search-input-wrap"><i aria-hidden="true"></i>
-            <input id="playerSearch" type="search" placeholder="Nom ou club…" autocomplete="off">
+            <input id="playerSearch" class="nl-input" type="search" placeholder="Nom ou club…" autocomplete="off">
           </span>
         </label>
 
-        <div class="club-filter-block">
-          <span>FILTRER PAR CLUB</span>
+        <div class="club-filter-block nl-field">
+          <span class="nl-field-label">Filtrer par club</span>
           <div class="club-dropdown" id="clubDropdown">
-            <button class="dropdown-current" id="dropdownCurrent" type="button" aria-expanded="false"
+            <button class="dropdown-current nl-input" id="dropdownCurrent" type="button" aria-expanded="false"
               aria-controls="dropdownMenu">
               <span class="dropdown-current-content">
                 <span class="dropdown-current-label">Tous les clubs</span>
               </span>
-              <span class="dropdown-caret">＋</span>
+              <span class="dropdown-caret" aria-hidden="true"></span>
             </button>
             <div class="dropdown-menu" id="dropdownMenu" role="listbox">
               <button type="button" class="dropdown-option active" data-club="all" data-label="Tous les clubs"
                 role="option" aria-selected="true">Tous les clubs</button>
-              <button type="button" class="dropdown-option" data-club="bastard" data-label="Bastard Munchen"
-                role="option" aria-selected="false">
-                <img loading="lazy" src="images/clubs_icon/Bastard_Munchen.webp" class="filter-icon" alt=""
-                  onerror="this.style.display='none'">Bastard Munchen
-              </button>
-              <button type="button" class="dropdown-option" data-club="pxg" data-label="PXG" role="option"
-                aria-selected="false">
-                <img loading="lazy" src="images/clubs_icon/PXG.webp" class="filter-icon" alt=""
-                  onerror="this.style.display='none'">PXG
-              </button>
-              <button type="button" class="dropdown-option" data-club="ubers" data-label="Ubers" role="option"
-                aria-selected="false">
-                <img loading="lazy" src="images/clubs_icon/Ubers.webp" class="filter-icon" alt=""
-                  onerror="this.style.display='none'">Ubers
-              </button>
-              <button type="button" class="dropdown-option" data-club="barcha" data-label="Barcha" role="option"
-                aria-selected="false">
-                <img loading="lazy" src="images/clubs_icon/Barcha.webp" class="filter-icon" alt=""
-                  onerror="this.style.display='none'">Barcha
-              </button>
-              <button type="button" class="dropdown-option" data-club="manshine" data-label="Manshine City"
-                role="option" aria-selected="false">
-                <img loading="lazy" src="images/clubs_icon/Manshine_City.webp" class="filter-icon" alt=""
-                  onerror="this.style.display='none'">Manshine City
-              </button>
-              <button type="button" class="dropdown-option" data-club="retraite" data-label="Retraite" role="option"
-                aria-selected="false">Retraite</button>
             </div>
           </div>
         </div>
 
-        <div class="position-filter-block">
-          <span>FILTRER PAR POSTE</span>
-          <div class="position-filters" id="positionFilters">
-            <button type="button" class="position-filter-tab active" data-position="all"
-              aria-pressed="true">TOUS</button>
-            <button type="button" class="position-filter-tab" data-position="CF" aria-pressed="false">CF</button>
-            <button type="button" class="position-filter-tab" data-position="LW" aria-pressed="false">LW</button>
-            <button type="button" class="position-filter-tab" data-position="RW" aria-pressed="false">RW</button>
-            <button type="button" class="position-filter-tab" data-position="LM" aria-pressed="false">LM</button>
-            <button type="button" class="position-filter-tab" data-position="RM" aria-pressed="false">RM</button>
+        <div class="position-filter-block nl-field">
+          <span class="nl-field-label">Filtrer par poste</span>
+          <div class="position-filters nl-keys" id="positionFilters">
+            <button type="button" class="position-filter-tab nl-key active" data-position="all"
+              aria-pressed="true">Tous</button>
+            <button type="button" class="position-filter-tab nl-key" data-position="CF" aria-pressed="false">CF</button>
+            <button type="button" class="position-filter-tab nl-key" data-position="LW" aria-pressed="false">LW</button>
+            <button type="button" class="position-filter-tab nl-key" data-position="RW" aria-pressed="false">RW</button>
+            <button type="button" class="position-filter-tab nl-key" data-position="LM" aria-pressed="false">LM</button>
+            <button type="button" class="position-filter-tab nl-key" data-position="RM" aria-pressed="false">RM</button>
           </div>
         </div>
 
-        <button class="sort-toggle" id="sortToggle" data-order="desc" aria-label="Trier par valeur décroissante">
-          <span><small>TRI ACTIF</small><strong>VALEUR</strong></span>
-          <span class="sort-arrow">↓</span>
-        </button>
+        <div class="sort-block nl-field">
+          <span class="nl-field-label">Tri actif</span>
+          <button class="sort-toggle" id="sortToggle" type="button" data-order="desc" aria-label="Trier par valeur décroissante">
+            <span>Valeur</span>
+            <span class="sort-arrow">↓</span>
+          </button>
+        </div>
       </div>
     </section>
 
-    <section class="players-results">
+    <section class="players-results" aria-label="Mur des joueurs">
       <div class="results-topline">
-        <div><span class="results-live"><i></i> REGISTRE ACTIF</span>
-          <p class="players-count" id="playersCount"></p>
-        </div>
-        <button type="button" class="reset-filters" id="resetFilters">RÉINITIALISER LES FILTRES</button>
+        <p class="results-live"><span class="rec">DIRECT</span> Mur des sujets</p>
+        <p class="players-count" id="playersCount"></p>
+        <button type="button" class="reset-filters nl-btn nl-btn-ghost nl-btn-sm" id="resetFilters">Réinitialiser les filtres</button>
       </div>
       <div class="cards-container" id="playersContainer"></div>
     </section>
   </main>
+
+  <footer class="nl-footer">
+    <div class="nl-footer-main">
+      <a class="footer-brand" href="index.html">
+        <span class="brand-mark"><span></span></span>
+        <strong>NEBULA LEAGUE</strong>
+      </a>
+      <p>Ligue privée Azure Latch. Toutes les rencontres sont enregistrées, chaque statistique est archivée.</p>
+    </div>
+    <nav class="nl-footer-links" aria-label="Accès rapides">
+      <p>Accès rapides</p>
+      <a href="club.html">Clubs</a>
+      <a href="valeur.html">Valeurs</a>
+      <a href="headtohead.html">Face à face</a>
+      <a href="progression.html">Progression</a>
+      <a href="stats.html">Records</a>
+      <a href="rules.html">Règles</a>
+    </nav>
+    <div class="nl-footer-osd">
+      <span class="rec">REC</span>
+      <span>NL-CTRL // FIN DU FLUX</span>
+      <span class="jp">ブルーロック</span>
+      <span>© NEBULA LEAGUE</span>
+      <a href="#top">Retour en haut ↑</a>
+    </div>
+  </footer>
 
 
 

@@ -74,7 +74,7 @@ body.nebula-page.legacy-page {
 .legacy-hero h1 {
     margin: 0;
     font: 900 clamp(3.2rem, 6.6vw, 6.8rem)/0.84 "Orbitron", sans-serif;
-    letter-spacing: -0.075em;
+    letter-spacing: -0.015em;
 }
 
 .legacy-hero h1 em {
@@ -403,7 +403,7 @@ body.nebula-page.legacy-page {
     overflow: hidden;
     color: var(--legacy-paper);
     font: 900 clamp(2.1rem, 5vw, 4.2rem)/0.9 "Orbitron", sans-serif;
-    letter-spacing: -0.055em;
+    letter-spacing: -0.015em;
     text-overflow: ellipsis;
     text-transform: uppercase;
     white-space: nowrap;
@@ -709,7 +709,7 @@ body.nebula-page.legacy-page {
 .progress-summary-head h2 {
     margin: 10px 0 0;
     font: 900 clamp(2.2rem, 5vw, 4.8rem)/0.9 "Orbitron", sans-serif;
-    letter-spacing: -0.06em;
+    letter-spacing: -0.015em;
 }
 
 .progress-summary-head a {
@@ -1221,7 +1221,7 @@ body.nebula-page.legacy-page {
 
 /* Dream team */
 .dream-page {
-    --legacy-acid: #63e7ff;
+    --legacy-acid: #8db0ff;
 }
 
 .dream-formation-mark {

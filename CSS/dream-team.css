@@ -1,442 +1,1426 @@
-/* Équipes idéales — page-specific hierarchy and compact states. */
+/* ==========================================================================
+   NEBULA LEAGUE — ÉQUIPES IDÉALES // VUE TACTIQUE
+   Page migrée (body.dream-page.nl-migrated) : kit nl-* de theme-monitor.css.
+   Ce fichier est chargé AVANT responsive.css et theme-monitor.css : chaque
+   sélecteur commence par body.dream-page pour l'emporter sur le kit.
+   01. Page
+   02. Héros : écran maître (flux + réticule + relevés)
+   03. Régie : canaux de période, saison, méthode
+   04. Vue tactique : terrain, marquages, liaisons
+   05. Vue tactique : joueurs filmés sur le terrain
+   06. Fiche de sélection (régie) + indice collectif
+   07. Banc d'élite (mur de caméras)
+   08. Formule (bande bleue)
+   09. Autres archives
+   10. Responsive
+   11. Mouvement réduit
+   ========================================================================== */
 
-body.nebula-page.dream-page .legacy-shell {
-    padding-top: 30px;
+/* -------------------- 01. Page -------------------- */
+
+body.dream-page main.dream-shell {
+  display: block;
+  padding: 0 0 clamp(24px, 4vw, 48px);
+  overflow: visible;
 }
 
-body.nebula-page.dream-page .legacy-hero {
-    min-height: 370px;
-    grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.5fr);
+body.dream-page .dream-board,
+body.dream-page .dream-reserve,
+body.dream-page .dream-formula,
+body.dream-page .dream-crosslinks {
+  margin-top: clamp(72px, 8vw, 112px);
 }
 
-body.nebula-page.dream-page .legacy-hero-copy {
-    padding: 48px clamp(38px, 6vw, 76px);
+/* -------------------- 02. Héros -------------------- */
+
+body.dream-page .dream-hero {
+  min-height: clamp(580px, 76vh, 740px);
+  background:
+    radial-gradient(60% 70% at 0% 100%, rgba(31, 91, 255, 0.2), transparent 64%),
+    var(--scanlines),
+    var(--screen);
 }
 
-body.nebula-page.dream-page .legacy-hero h1 {
-    font-size: clamp(3rem, 5.25vw, 5.5rem);
+body.dream-page .dream-hero-feed {
+  width: min(60%, 940px);
 }
 
-body.nebula-page.dream-page .legacy-hero-copy > p:last-child {
-    margin-top: 26px;
+body.dream-page .dream-hero-feed img {
+  object-position: 50% 18%;
+  filter: grayscale(0.85) contrast(1.15) brightness(0.7);
 }
 
-body.nebula-page.dream-page .dream-controls {
-    min-height: 78px;
-    grid-template-columns: minmax(460px, 1.35fr) minmax(220px, 0.55fr) minmax(220px, 0.55fr);
+body.dream-page .dream-hero .nl-reticle {
+  top: 40%;
+  right: clamp(60px, 20%, 330px);
+  width: clamp(150px, 15vw, 230px);
 }
 
-body.nebula-page.dream-page .dream-mode-tabs button {
-    min-height: 76px;
+/* Règle graduée façon timecode au pied de l'écran */
+body.dream-page .dream-hero::after {
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 14px;
+  content: "";
+  background:
+    repeating-linear-gradient(90deg, rgba(141, 176, 255, 0.45) 0 1px, transparent 1px 60px) bottom / 100% 14px no-repeat,
+    repeating-linear-gradient(90deg, rgba(141, 176, 255, 0.22) 0 1px, transparent 1px 12px) bottom / 100% 7px no-repeat;
+  pointer-events: none;
 }
 
-body.nebula-page.dream-page .dream-controls label,
-body.nebula-page.dream-page .dream-method {
-    padding-block: 14px;
+body.dream-page .dream-hero-tc {
+  position: absolute;
+  z-index: 5;
+  right: var(--gutter);
+  bottom: 26px;
+  padding: 5px 9px;
+  border: 1px solid var(--line-strong);
+  background: rgba(2, 6, 17, 0.82);
+  color: var(--blue-3);
 }
 
-.dream-status {
+body.dream-page .dream-hero-inner {
+  justify-content: center;
+  padding-block: clamp(48px, 6vw, 96px) clamp(56px, 5vw, 84px);
+}
+
+body.dream-page .dream-hero-inner > * {
+  max-width: min(640px, 46%);
+}
+
+body.dream-page .dream-title {
+  font-size: clamp(2.7rem, 5vw, 5.6rem);
+  line-height: 0.88;
+}
+
+body.dream-page .dream-title em {
+  display: block;
+  font-style: italic;
+  letter-spacing: -0.03em;
+}
+
+/* Relevés : trois cartouches sous le texte */
+body.dream-page .dream-readouts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--seam);
+  width: 100%;
+  margin-top: clamp(28px, 3.2vw, 44px);
+}
+
+body.dream-page .dream-readout {
+  display: grid;
+  align-content: space-between;
+  gap: 12px;
+  min-height: 108px;
+  padding: 12px 14px 14px;
+  border-top: 3px solid var(--blue);
+  background: var(--scanlines), rgba(1, 4, 12, 0.82);
+}
+
+body.dream-page .dream-readout:first-child {
+  border-top-color: #fff;
+  background: var(--scanlines), var(--blue);
+}
+
+body.dream-page .dream-readout span {
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-micro);
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+body.dream-page .dream-readout:first-child span {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+body.dream-page .dream-readout strong {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 3.6vw, 3.6rem);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.8;
+  text-shadow: var(--fringe);
+  white-space: nowrap;
+}
+
+body.dream-page .dream-readout strong i {
+  color: var(--blue-3);
+  font-style: normal;
+}
+
+body.dream-page .dream-readout:first-child strong i {
+  color: var(--ink);
+}
+
+body.dream-page .dream-readout strong small {
+  margin-left: 6px;
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-shadow: none;
+}
+
+/* -------------------- 03. Régie -------------------- */
+
+body.dream-page .dream-controls {
+  overflow: hidden;
+}
+
+body.dream-page .dream-console-head {
+  gap: 12px;
+}
+
+body.dream-page .dream-console-head .rec {
+  font-size: var(--fs-micro);
+}
+
+body.dream-page .dream-console-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: end;
+  gap: 14px 18px;
+  padding: 14px;
+}
+
+body.dream-page .dream-mode-tabs {
+  grid-auto-columns: minmax(0, 1fr);
+}
+
+body.dream-page .dream-mode {
+  min-height: 66px;
+  gap: 12px;
+  padding: 0 16px;
+}
+
+body.dream-page .dream-mode .nl-channel-num {
+  flex: none;
+  white-space: nowrap;
+}
+
+/* Un canal actif est déjà rempli de bleu : pas de pastille « EN DIRECT » */
+body.dream-page .dream-mode.nl-channel::after {
+  display: none;
+}
+
+body.dream-page .dream-mode-label {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  line-height: 1.05;
+}
+
+body.dream-page .dream-mode-label small {
+  color: var(--dim);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+body.dream-page .dream-mode:is(.is-active, [aria-pressed="true"]) .dream-mode-label small {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+body.dream-page .dream-mode:focus-visible {
+  outline: 2px solid var(--blue-3);
+  outline-offset: -4px;
+}
+
+body.dream-page .dream-console-row {
+  display: grid;
+  grid-template-columns: minmax(200px, 0.8fr) minmax(0, 1fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 12px;
+}
+
+body.dream-page .dream-season-field .nl-field-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+body.dream-page .dream-season-field:has(select:disabled) .nl-field-label::after {
+  color: var(--offline);
+  content: "Verrouillé";
+}
+
+body.dream-page select.nl-input:disabled {
+  border-style: dashed;
+  background:
+    repeating-linear-gradient(135deg, rgba(141, 176, 255, 0.08) 0 6px, transparent 6px 12px),
+    rgba(2, 7, 19, 0.88);
+  color: var(--offline);
+  cursor: not-allowed;
+}
+
+body.dream-page .dream-method {
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 46px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--blue-2);
+  background: rgba(2, 7, 19, 0.88);
+}
+
+body.dream-page .dream-method small {
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+body.dream-page .dream-captain {
+  border-left-color: #fff;
+}
+
+body.dream-page .dream-method strong {
+  color: #fff;
+  font-family: var(--display);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+/* -------------------- 04. Vue tactique : terrain -------------------- */
+
+body.dream-page .dream-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.62fr) minmax(330px, 1fr);
+  align-items: stretch;
+  gap: var(--sp-5);
+  margin-top: var(--sp-5);
+}
+
+body.dream-page .dream-field-screen {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+body.dream-page .dream-field-screen > .osd {
+  flex: none;
+}
+
+body.dream-page .dream-field-screen.nl-aim::after {
+  top: 46px;
+  bottom: 46px;
+}
+
+/* Terrain : demi-terrain offensif, but en haut. Les unités cqw / cqh
+   gardent les arcs ronds quel que soit le format de l'écran. */
+body.dream-page .dream-field {
+  position: relative;
+  z-index: 1;
+  flex: 1 0 auto;
+  aspect-ratio: 68 / 54;
+  overflow: hidden;
+  container-type: size;
+  background:
+    radial-gradient(70% 50% at 50% 0%, rgba(31, 91, 255, 0.22), transparent 70%),
+    repeating-linear-gradient(180deg, rgba(141, 176, 255, 0.04) 0 8%, transparent 8% 16%),
+    var(--screen);
+}
+
+/* Quadrillage de visée */
+body.dream-page .dream-field::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(rgba(77, 128, 255, 0.07) 1px, transparent 1px) 0 0 / 100% 40px,
+    linear-gradient(90deg, rgba(77, 128, 255, 0.07) 1px, transparent 1px) 0 0 / 40px 100%;
+  pointer-events: none;
+}
+
+body.dream-page .dream-field-lines {
+  --stroke: rgba(141, 176, 255, 0.5);
+  position: absolute;
+  z-index: 0;
+  inset: 18px;
+  border: 1.5px solid var(--stroke);
+  pointer-events: none;
+}
+
+body.dream-page .dream-line {
+  position: absolute;
+  border: 1.5px solid var(--stroke);
+}
+
+body.dream-page .dream-line-box {
+  top: -1.5px;
+  left: 20.35%;
+  width: 59.3%;
+  height: 31.4%;
+  border-top: 0;
+}
+
+body.dream-page .dream-line-six {
+  top: -1.5px;
+  left: 36.55%;
+  width: 26.9%;
+  height: 10.5%;
+  border-top: 0;
+}
+
+body.dream-page .dream-line-goal {
+  top: -12px;
+  left: 44.6%;
+  width: 10.8%;
+  height: 11px;
+  border-bottom: 0;
+  background: repeating-linear-gradient(90deg, rgba(141, 176, 255, 0.28) 0 1px, transparent 1px 5px);
+}
+
+body.dream-page .dream-line-spot {
+  top: 21%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--stroke);
+  transform: translate(-50%, -50%);
+}
+
+/* Arc de réparation : seule la partie hors de la surface reste visible */
+body.dream-page .dream-line-arc {
+  top: calc(21% - 13.45cqw + 4.84px);
+  left: 36.55%;
+  width: 26.9%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  clip-path: inset(calc(10.4cqh - 3.74px + 13.45cqw - 4.84px) 0 0 0);
+}
+
+/* Rond central coupé par la ligne médiane */
+body.dream-page .dream-line-circle {
+  bottom: 0;
+  left: 50%;
+  width: 26.9%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  clip-path: inset(0 0 50% 0);
+  transform: translate(-50%, 50%);
+}
+
+/* Zones horizontales + libellés verticaux le long de la ligne de touche */
+body.dream-page .dream-zone {
+  position: absolute;
+  left: 6px;
+  color: var(--dim);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+  transform: translateY(-50%) rotate(180deg);
+}
+
+body.dream-page .dream-zone--1 {
+  top: 18%;
+}
+
+body.dream-page .dream-zone--2 {
+  top: 47%;
+}
+
+body.dream-page .dream-zone--3 {
+  top: 78%;
+}
+
+body.dream-page .dream-field-lines::before,
+body.dream-page .dream-field-lines::after {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 0;
+  content: "";
+  border-top: 1px dashed rgba(141, 176, 255, 0.16);
+}
+
+body.dream-page .dream-field-lines::before {
+  top: 34%;
+}
+
+body.dream-page .dream-field-lines::after {
+  top: 62%;
+}
+
+body.dream-page .dream-field-foot {
+  flex: none;
+  border-top: 1px solid var(--line);
+  border-bottom: 0;
+}
+
+/* -------------------- 05. Vue tactique : joueurs -------------------- */
+
+body.dream-page .dream-pitch {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+}
+
+body.dream-page .dream-links {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+body.dream-page .dream-links line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-width: 1.5;
+}
+
+body.dream-page .dream-links line.is-live {
+  stroke: var(--blue-2);
+  stroke-dasharray: 2 7;
+  opacity: 0.75;
+  animation: dream-link-flow 2.4s linear infinite;
+}
+
+body.dream-page .dream-links line.is-cut {
+  stroke: var(--offline);
+  stroke-dasharray: 1 9;
+  opacity: 0.4;
+}
+
+@keyframes dream-link-flow {
+  to {
+    stroke-dashoffset: -18;
+  }
+}
+
+body.dream-page .dream-player {
+  position: absolute;
+  z-index: 2;
+  width: clamp(104px, 19cqw, 172px);
+  aspect-ratio: 4 / 5;
+  border-color: var(--line-strong);
+  box-shadow: 0 0 0 3px var(--bezel), 0 18px 36px rgba(0, 0, 0, 0.55);
+  transform: translate(-50%, -50%);
+}
+
+body.dream-page .dream-player .nl-feed-img {
+  --feed-pos: 50% 24%;
+}
+
+body.dream-page .dream-player .nl-feed-osd {
+  padding: 8px 9px;
+}
+
+body.dream-page .dream-player-role {
+  gap: 6px;
+}
+
+body.dream-page .dream-player-role img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
+}
+
+body.dream-page .dream-player-role b {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+body.dream-page .dream-player-cam {
+  color: rgba(227, 235, 255, 0.72);
+}
+
+body.dream-page .dream-player-cap {
+  padding: 3px 6px;
+  background: #fff;
+  color: var(--blue-deep);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-shadow: none;
+}
+
+body.dream-page .dream-player-score {
+  top: 36px;
+  right: 10px;
+  bottom: auto;
+  font-size: clamp(1.6rem, 3.6cqw, 2.5rem);
+}
+
+body.dream-page .dream-player .nl-feed-caption {
+  bottom: 10px;
+  max-width: calc(100% - 8px);
+}
+
+body.dream-page .dream-player .nl-feed-caption small {
+  padding: 4px 8px;
+}
+
+body.dream-page .dream-player .nl-feed-caption b {
+  padding: 6px 10px 5px 8px;
+  font-size: clamp(0.95rem, 2.1cqw, 1.2rem);
+}
+
+body.dream-page .dream-club-bar {
+  position: absolute;
+  z-index: 5;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: var(--club, var(--blue-2));
+}
+
+/* Capitaine : meilleur indice des cinq, cible verrouillée */
+body.dream-page .dream-player.is-captain {
+  z-index: 3;
+  border-color: var(--blue-2);
+  box-shadow:
+    0 0 0 3px var(--bezel),
+    0 0 0 4px var(--blue-2),
+    0 0 46px rgba(31, 91, 255, 0.55),
+    0 18px 36px rgba(0, 0, 0, 0.55);
+}
+
+body.dream-page .dream-player.is-captain .nl-feed-lock {
+  top: 55%;
+  width: 46%;
+}
+
+body.dream-page .dream-player.is-vacant {
+  border-style: dashed;
+  box-shadow: 0 0 0 3px var(--bezel);
+}
+
+body.dream-page .dream-player.is-vacant .nl-feed-mire::after {
+  font-size: 13px;
+}
+
+body.dream-page .dream-player.is-vacant .nl-feed-caption b {
+  font-size: 14px;
+  white-space: normal;
+}
+
+/* Aucun joueur sur la période : terrain voilé + cartouche PAS DE SIGNAL */
+body.dream-page .dream-pitch.is-empty::before {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  content: "";
+  background: var(--scanlines-strong), rgba(2, 6, 17, 0.55);
+}
+
+body.dream-page .dream-pitch-alert {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  width: min(440px, calc(100% - 32px));
+  padding: 18px 18px 20px;
+  border: 1px solid var(--line-strong);
+  background: rgba(2, 6, 17, 0.94);
+  box-shadow: 0 0 0 3px var(--bezel), 0 24px 60px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+body.dream-page .dream-pitch-alert strong {
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+body.dream-page .dream-pitch-alert p {
+  margin: 0;
+  color: #c9d4ef;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+/* -------------------- 06. Fiche de sélection -------------------- */
+
+body.dream-page .dream-dossier {
+  display: flex;
+  min-width: 0;
+}
+
+body.dream-page .dream-dossier-screen {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-mon);
+  background:
+    radial-gradient(120% 60% at 100% 0%, rgba(31, 91, 255, 0.12), transparent 60%),
+    var(--screen);
+  box-shadow: 0 0 0 3px var(--bezel), 0 22px 50px rgba(0, 0, 0, 0.45);
+}
+
+body.dream-page .dream-dossier-osd .rec {
+  font-size: var(--fs-micro);
+}
+
+body.dream-page .dream-dossier-title {
+  display: grid;
+  gap: 8px;
+  padding: 20px 20px 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+body.dream-page .dream-dossier-title small {
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+body.dream-page .dream-dossier-title h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(2.2rem, 3.2vw, 3rem);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  text-shadow: var(--fringe);
+  text-transform: uppercase;
+}
+
+body.dream-page .dream-dossier-title p {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+body.dream-page .dream-dossier-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body.dream-page .dream-dossier-list > li + li {
+  border-top: 1px solid var(--line-soft);
+}
+
+body.dream-page .dream-dossier-row {
+  display: grid;
+  grid-template-columns: 40px 30px minmax(0, 1fr) 84px;
+  align-items: center;
+  gap: 12px;
+  min-height: 70px;
+  padding: 10px 18px 10px 16px;
+  box-shadow: inset 3px 0 0 var(--club, transparent);
+  color: inherit;
+  transition: background 160ms ease;
+}
+
+body.dream-page a.dream-dossier-row:hover,
+body.dream-page a.dream-dossier-row:focus-visible {
+  background: rgba(31, 91, 255, 0.1);
+}
+
+body.dream-page a.dream-dossier-row:focus-visible {
+  outline: 2px solid var(--blue-3);
+  outline-offset: -2px;
+}
+
+body.dream-page .dream-dossier-row.is-captain {
+  background: linear-gradient(90deg, rgba(31, 91, 255, 0.2), transparent 80%);
+}
+
+body.dream-page .dream-dossier-pos {
+  display: grid;
+  height: 30px;
+  place-items: center;
+  border: 1px solid var(--line-strong);
+  color: #fff;
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  box-shadow: inset 0 -2px 0 var(--club, var(--line-strong));
+}
+
+body.dream-page .dream-dossier-crest {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+body.dream-page span.dream-dossier-crest {
+  border: 1px dashed var(--line);
+  border-radius: 50%;
+}
+
+body.dream-page .dream-dossier-id {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+body.dream-page .dream-dossier-id strong {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  color: #fff;
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+body.dream-page .dream-dossier-id em {
+  flex: none;
+  padding: 3px 5px;
+  background: #fff;
+  color: var(--blue-deep);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+body.dream-page .dream-dossier-id small {
+  overflow: hidden;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.04em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+body.dream-page .dream-dossier-score {
+  display: grid;
+  justify-items: end;
+  gap: 7px;
+}
+
+body.dream-page .dream-dossier-score b {
+  color: #fff;
+  font-family: var(--display);
+  font-size: 28px;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.85;
+}
+
+body.dream-page .dream-dossier-score .nl-vu {
+  width: 100%;
+  height: 8px;
+}
+
+body.dream-page .dream-dossier-row.is-vacant {
+  background: repeating-linear-gradient(135deg, rgba(141, 176, 255, 0.05) 0 6px, transparent 6px 12px);
+}
+
+body.dream-page .dream-dossier-row.is-vacant .dream-dossier-pos {
+  border-style: dashed;
+  color: var(--offline);
+}
+
+body.dream-page .dream-dossier-row.is-vacant :is(.dream-dossier-id strong, .dream-dossier-score b) {
+  color: var(--offline);
+}
+
+/* Indice collectif : chiffre géant sur bleu plein */
+body.dream-page .dream-dossier-index {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 16px 18px;
+  margin-top: auto;
+  padding: 20px 20px 22px;
+  border-top: 3px solid #fff;
+  background:
+    var(--scanlines),
+    radial-gradient(70% 120% at 100% 0%, rgba(141, 176, 255, 0.4), transparent 60%),
+    linear-gradient(118deg, #2a66ff 0%, #1f5bff 40%, #0d33b5 100%);
+}
+
+body.dream-page .dream-dossier-index-copy {
+  display: grid;
+  gap: 8px;
+  align-self: start;
+}
+
+body.dream-page .dream-dossier-index-copy small {
+  color: rgba(255, 255, 255, 0.88);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+body.dream-page .dream-dossier-index-copy p {
+  margin: 0;
+  color: #fff;
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+body.dream-page .dream-dossier-index > strong {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(4.4rem, 7vw, 7rem);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 0.78;
+  text-shadow: 0 10px 40px rgba(2, 10, 50, 0.35);
+}
+
+body.dream-page .dream-dossier-index > strong small {
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-shadow: none;
+}
+
+body.dream-page .dream-dossier-index .nl-vu {
+  grid-column: 1 / -1;
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0 9px, transparent 9px 12px);
+}
+
+body.dream-page .dream-dossier-index .nl-vu::before {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.65), #fff);
+  filter: none;
+}
+
+body.dream-page .dream-dossier-index.is-empty {
+  border-top-color: var(--line-strong);
+  background:
+    repeating-linear-gradient(135deg, rgba(141, 176, 255, 0.07) 0 6px, transparent 6px 12px),
+    var(--surface);
+}
+
+body.dream-page .dream-dossier-index.is-empty > strong {
+  color: var(--offline);
+}
+
+body.dream-page .dream-dossier-index.is-empty .dream-dossier-index-copy small {
+  color: var(--blue-3);
+}
+
+body.dream-page .dream-dossier-index.is-empty > strong small {
+  display: none;
+}
+
+/* -------------------- 07. Banc d'élite -------------------- */
+
+body.dream-page .dream-bench {
+  --wall-cols: 3;
+}
+
+body.dream-page .dream-bench-player {
+  aspect-ratio: 16 / 11;
+}
+
+body.dream-page .dream-bench-player .nl-feed-img {
+  --feed-pos: 50% 28%;
+}
+
+body.dream-page .dream-bench-pos {
+  padding: 3px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  box-shadow: inset 0 -2px 0 var(--club, var(--blue-2));
+}
+
+body.dream-page .dream-bench-player .nl-feed-figure {
+  top: 42px;
+  bottom: auto;
+}
+
+body.dream-page .dream-bench-player .nl-feed-figure small {
+  margin-left: 4px;
+  color: #dfe8ff;
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-style: normal;
+  letter-spacing: 0.06em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+}
+
+body.dream-page .dream-bench-empty {
+  grid-column: 1 / -1;
+  min-height: 300px;
+  border: 0;
+  border-radius: 0;
+}
+
+/* -------------------- 08. Formule -------------------- */
+
+body.dream-page .dream-formula-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr);
+  align-items: end;
+  gap: 32px clamp(32px, 5vw, 80px);
+  width: var(--page);
+  margin-inline: auto;
+  padding-block: clamp(52px, 6vw, 92px);
+}
+
+body.dream-page .dream-formula .nl-kicker {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+body.dream-page .dream-formula .nl-ch {
+  border-color: transparent;
+  background: var(--ink);
+  color: #fff;
+}
+
+body.dream-page .dream-formula-head h2 {
+  margin: 16px 0 0;
+  color: #fff;
+  font-size: clamp(2.4rem, 4.6vw, 4.8rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 0.88;
+  text-shadow: 0 10px 40px rgba(2, 10, 50, 0.35);
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+body.dream-page .dream-formula-head h2 em {
+  display: block;
+  color: var(--ink);
+  font-style: italic;
+}
+
+body.dream-page .dream-formula-body {
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+}
+
+body.dream-page .dream-formula-text {
+  margin: 0;
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(1.2rem, 1.7vw, 1.6rem);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+}
+
+body.dream-page .dream-formula-terms {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+  gap: var(--seam);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body.dream-page .dream-formula-terms li {
+  display: grid;
+  align-content: space-between;
+  gap: 10px;
+  min-height: 92px;
+  padding: 12px 12px 12px;
+  border-top: 2px solid rgba(255, 255, 255, 0.7);
+  background: var(--scanlines), rgba(2, 6, 17, 0.82);
+}
+
+body.dream-page .dream-formula-terms b {
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(1.5rem, 2.2vw, 2.1rem);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+  white-space: nowrap;
+}
+
+body.dream-page .dream-formula-terms span {
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* -------------------- 09. Autres archives -------------------- */
+
+body.dream-page .dream-crosslinks {
+  display: grid;
+  gap: 18px;
+}
+
+body.dream-page .dream-crosslink-wall {
+  --wall-cols: 3;
+}
+
+body.dream-page .dream-crosslink {
+  aspect-ratio: 16 / 8;
+}
+
+body.dream-page .dream-crosslink .nl-feed-img {
+  --feed-pos: 50% 30%;
+  filter: grayscale(0.8) contrast(1.12) brightness(0.72);
+}
+
+/* -------------------- 10. Responsive -------------------- */
+
+@media (max-width: 1240px) {
+  body.dream-page .dream-stage {
+    grid-template-columns: minmax(0, 1.4fr) minmax(310px, 1fr);
+  }
+
+}
+
+@media (max-width: 1080px) {
+  body.dream-page .dream-stage {
+    grid-template-columns: 1fr;
+  }
+
+  body.dream-page .dream-dossier-screen {
     display: grid;
-    min-height: 62px;
-    grid-template-columns: 210px minmax(240px, 0.55fr) minmax(0, 1fr);
-    align-items: stretch;
-    margin-top: 10px;
-    border: 1px solid var(--legacy-line);
-    background: rgba(255, 255, 255, 0.012);
-}
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr;
+  }
 
-.dream-status > span,
-.dream-status > strong,
-.dream-status > p {
-    display: flex;
-    align-items: center;
-    margin: 0;
-    padding: 14px 20px;
-}
-
-.dream-status > span {
-    gap: 9px;
-    border-right: 1px solid var(--legacy-line);
-}
-
-.dream-status > span i {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--legacy-acid);
-    box-shadow: 0 0 10px rgba(168, 255, 37, 0.65);
-}
-
-.dream-status small {
-    color: var(--legacy-acid);
-    font: 700 0.45rem/1.3 "Orbitron", sans-serif;
-    letter-spacing: 0.1em;
-}
-
-.dream-status > strong {
-    border-right: 1px solid var(--legacy-line);
-    color: var(--legacy-paper);
-    font: 800 0.66rem/1.35 "Orbitron", sans-serif;
-}
-
-.dream-status > p {
-    color: #778892;
-    font: 400 0.72rem/1.5 "Inter", sans-serif;
-}
-
-.dream-status.is-warning {
-    background: linear-gradient(90deg, rgba(255, 212, 84, 0.055), transparent 45%);
-}
-
-.dream-status.is-warning > span i {
-    background: var(--legacy-gold);
-    box-shadow: 0 0 10px rgba(255, 212, 84, 0.6);
-}
-
-.dream-status.is-warning small {
-    color: var(--legacy-gold);
-}
-
-body.nebula-page.dream-page .dream-stage {
-    min-height: 610px;
-    grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.55fr);
-}
-
-body.nebula-page.dream-page .dream-pitch {
-    min-height: 610px;
-}
-
-body.nebula-page.dream-page .dream-player {
-    width: 170px;
-    min-height: 76px;
-    padding: 8px;
-    gap: 9px;
-}
-
-body.nebula-page.dream-page .dream-player img {
-    width: 50px;
-    height: 54px;
-}
-
-body.nebula-page.dream-page .dream-player strong {
-    margin-top: 6px;
-    font-size: 0.61rem;
-}
-
-body.nebula-page.dream-page .dream-player span {
-    margin-top: 6px;
-}
-
-body.nebula-page.dream-page .dream-player.is-vacant {
-    border-style: dashed;
-    box-shadow: none;
-    opacity: 0.72;
-}
-
-body.nebula-page.dream-page .dream-dossier-title {
-    padding: 20px 22px;
-}
-
-body.nebula-page.dream-page .dream-dossier-title h2 {
-    margin-top: 8px;
-    font-size: 1.4rem;
-}
-
-body.nebula-page.dream-page .dream-dossier-row {
-    min-height: 70px;
-    grid-template-columns: 48px 1fr auto;
-    padding: 9px 16px;
-    gap: 11px;
-}
-
-body.nebula-page.dream-page .dream-dossier-row img {
-    width: 40px;
-    height: 40px;
-}
-
-body.nebula-page.dream-page .dream-dossier-row strong {
-    margin-top: 6px;
-}
-
-.dream-empty-state {
-    position: absolute;
-    z-index: 3;
-    inset: 50% auto auto 50%;
-    display: grid;
-    width: min(520px, calc(100% - 80px));
-    padding: 28px;
-    border: 1px solid rgba(255, 212, 84, 0.32);
-    background: rgba(5, 10, 13, 0.94);
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
-    transform: translate(-50%, -50%);
-}
-
-.dream-empty-state span,
-.dream-dossier-empty small,
-.dream-bench-empty > span {
-    color: var(--legacy-gold);
-    font: 700 0.48rem/1 "Orbitron", sans-serif;
-    letter-spacing: 0.1em;
-}
-
-.dream-empty-state strong,
-.dream-dossier-empty strong,
-.dream-bench-empty strong {
-    margin-top: 11px;
-    color: var(--legacy-paper);
-    font: 800 clamp(0.9rem, 1.7vw, 1.35rem)/1.3 "Orbitron", sans-serif;
-}
-
-.dream-empty-state p,
-.dream-dossier-empty p,
-.dream-bench-empty p {
-    margin: 11px 0 0;
-    color: #778892;
-    font: 400 0.74rem/1.6 "Inter", sans-serif;
-}
-
-.dream-dossier-empty {
-    display: flex;
-    min-height: 100%;
+  body.dream-page .dream-dossier-osd {
     grid-column: 1 / -1;
-    justify-content: center;
-    padding: 28px;
-    flex-direction: column;
-}
+  }
 
-body.nebula-page.dream-page .legacy-panel-title {
-    min-height: 84px;
-    grid-template-columns: 82px minmax(0, 1fr) minmax(250px, 0.55fr);
-}
+  body.dream-page .dream-dossier-title {
+    grid-column: 1;
+  }
 
-body.nebula-page.dream-page .legacy-panel-title > div,
-body.nebula-page.dream-page .legacy-panel-title > p {
-    padding-block: 17px;
-}
+  body.dream-page .dream-dossier-list {
+    grid-column: 1;
+  }
 
-body.nebula-page.dream-page .dream-bench-player {
-    min-height: 118px;
-    grid-template-columns: 66px 1fr;
-    padding: 16px 18px;
-    gap: 13px;
-}
-
-body.nebula-page.dream-page .dream-bench-player img {
-    width: 60px;
-    height: 66px;
-}
-
-.dream-bench-empty {
-    grid-column: 1 / -1;
-    display: grid;
-    min-height: 104px;
-    grid-template-columns: 140px minmax(0, 1fr);
-    align-items: stretch;
-}
-
-.dream-bench-empty > span {
-    display: grid;
-    place-items: center;
-    padding: 20px;
-    border-right: 1px solid var(--legacy-line);
-}
-
-.dream-bench-empty > div {
-    display: flex;
-    justify-content: center;
-    padding: 20px 24px;
-    flex-direction: column;
-}
-
-.dream-bench-empty strong {
+  body.dream-page .dream-dossier-index {
+    grid-column: 2;
+    grid-row: 2 / 4;
+    grid-template-columns: 1fr;
+    align-content: space-between;
     margin-top: 0;
-    font-size: 0.72rem;
+    border-top: 0;
+    border-left: 3px solid #fff;
+  }
+
+  body.dream-page .dream-dossier-index.is-empty {
+    border-left-color: var(--line-strong);
+  }
+
+  body.dream-page .dream-formula-inner {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
 }
 
-.dream-bench-empty p {
-    margin-top: 7px;
+@media (max-width: 980px) {
+  body.dream-page .dream-mode-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: row;
+  }
 }
 
-body.nebula-page.dream-page .dream-formula {
-    min-height: 72px;
-    grid-template-columns: 220px 1fr;
-}
+@media (max-width: 860px) {
+  body.dream-page .dream-hero-feed {
+    width: 100%;
+    opacity: 0.42;
+  }
 
-body.nebula-page.dream-page .dream-formula span,
-body.nebula-page.dream-page .dream-formula p {
-    padding: 20px 24px;
-}
+  body.dream-page .dream-hero-feed img {
+    object-position: 50% 12%;
+  }
 
-@media (max-width: 1050px) {
-    body.nebula-page.dream-page .dream-stage {
-        grid-template-columns: 1fr;
-    }
+  body.dream-page .dream-hero-inner > * {
+    max-width: 640px;
+  }
 
-    body.nebula-page.dream-page .dream-pitch {
-        min-height: 570px;
-        border-right: 0;
-        border-bottom: 1px solid var(--legacy-line);
-    }
+  body.dream-page .dream-hero .nl-reticle {
+    top: 64px;
+    right: 24px;
+    width: 130px;
+    transform: none;
+  }
 
-    body.nebula-page.dream-page .dream-dossier {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+  body.dream-page .dream-hero .nl-reticle > span {
+    display: none;
+  }
 
-    body.nebula-page.dream-page .dream-dossier-title {
-        grid-column: 1 / -1;
-    }
-
-    body.nebula-page.dream-page .dream-dossier-row {
-        border-right: 1px solid var(--legacy-line);
-    }
-
-    .dream-dossier-empty {
-        min-height: 180px;
-    }
+  body.dream-page .dream-bench,
+  body.dream-page .dream-crosslink-wall {
+    --wall-cols: 3;
+  }
 }
 
 @media (max-width: 760px) {
-    body.nebula-page.dream-page .legacy-hero {
-        width: 100% !important;
-        min-height: 0;
-        grid-template-columns: minmax(0, 1fr) !important;
-    }
+  body.dream-page .dream-dossier-screen {
+    display: flex;
+  }
 
-    body.nebula-page.dream-page .legacy-hero-copy {
-        min-width: 0;
-        padding: 38px 22px 34px;
-    }
+  body.dream-page .dream-dossier-index {
+    grid-template-columns: minmax(0, 1fr) auto;
+    margin-top: 0;
+    border-top: 3px solid #fff;
+    border-left: 0;
+  }
 
-    body.nebula-page.dream-page .legacy-kicker,
-    body.nebula-page.dream-page .legacy-hero h1,
-    body.nebula-page.dream-page .legacy-hero h1 em {
-        word-break: normal;
-        overflow-wrap: normal;
-        hyphens: none;
-    }
-
-    body.nebula-page.dream-page .dream-controls {
-        grid-template-columns: 1fr;
-    }
-
-    body.nebula-page.dream-page .dream-mode-tabs,
-    body.nebula-page.dream-page .dream-controls label,
-    body.nebula-page.dream-page .dream-method,
-    body.nebula-page.dream-page .dream-controls select {
-        width: 100%;
-        min-width: 0;
-        box-sizing: border-box;
-    }
-
-    body.nebula-page.dream-page .dream-mode-tabs {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    body.nebula-page.dream-page .dream-mode-tabs button {
-        min-width: 0;
-        padding-inline: 4px;
-        overflow-wrap: anywhere;
-    }
-
-    .dream-status {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .dream-status > p {
-        grid-column: 1 / -1;
-        border-top: 1px solid var(--legacy-line);
-    }
-
-    body.nebula-page.dream-page .dream-pitch {
-        min-height: 520px;
-    }
-
-    body.nebula-page.dream-page .dream-player {
-        width: 112px;
-        min-height: 68px;
-        gap: 7px;
-    }
-
-    body.nebula-page.dream-page .dream-player img {
-        width: 36px;
-        height: 42px;
-    }
-
-    body.nebula-page.dream-page .dream-player strong {
-        max-width: 58px;
-        font-size: 0.52rem;
-    }
-
-    body.nebula-page.dream-page .dream-player span {
-        font-size: 0.36rem;
-    }
-
-    body.nebula-page.dream-page .legacy-panel-title {
-        grid-template-columns: 64px minmax(0, 1fr);
-    }
-
-    body.nebula-page.dream-page .dream-formula {
-        grid-template-columns: 1fr;
-    }
+  body.dream-page .dream-dossier-index.is-empty {
+    border-top-color: var(--line-strong);
+  }
 }
 
-@media (max-width: 560px) {
-    body.nebula-page.dream-page .legacy-hero h1 {
-        font-size: clamp(2.1rem, 10.5vw, 3.25rem) !important;
-        line-height: 0.96;
-    }
+/* Téléphone */
+@media (max-width: 680px) {
+  body.dream-page .dream-hero-inner {
+    padding-block: 120px 48px;
+  }
 
-    body.nebula-page.dream-page .dream-pitch {
-        min-height: 520px;
-    }
+  body.dream-page .dream-title {
+    font-size: clamp(2.5rem, 11vw, 3.5rem);
+  }
 
-    .dream-status {
-        grid-template-columns: 1fr;
-    }
+  body.dream-page .dream-hero-tc,
+  body.dream-page .dream-hero > .osd .jp,
+  body.dream-page .dream-field-screen > .osd [data-dream-pitch-mode],
+  body.dream-page .dream-player.is-captain .nl-feed-lock {
+    display: none;
+  }
 
-    .dream-status > span,
-    .dream-status > strong {
-        border-right: 0;
-        border-bottom: 1px solid var(--legacy-line);
-    }
+  body.dream-page .dream-readout {
+    min-height: 92px;
+    padding: 10px 10px 12px;
+  }
 
-    .dream-status > p {
-        grid-column: auto;
-        border-top: 0;
-    }
+  body.dream-page .dream-readout strong {
+    font-size: 2.2rem;
+  }
 
-    .dream-empty-state {
-        width: calc(100% - 42px);
-        padding: 21px;
-    }
+  body.dream-page .dream-console-head p {
+    display: none;
+  }
 
-    body.nebula-page.dream-page .dream-dossier {
-        grid-template-columns: 1fr;
-    }
+  body.dream-page .dream-console-body {
+    padding: 10px;
+  }
 
-    body.nebula-page.dream-page .dream-dossier-row {
-        border-right: 0;
-    }
+  body.dream-page .dream-mode-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: row;
+  }
 
-    .dream-bench-empty {
-        grid-template-columns: 1fr;
-    }
+  body.dream-page .dream-mode {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 8px;
+    min-height: 92px;
+    padding: 12px;
+  }
 
-    .dream-bench-empty > span {
-        min-height: 42px;
-        place-items: center start;
-        border-right: 0;
-        border-bottom: 1px solid var(--legacy-line);
-    }
+  body.dream-page .dream-console-row {
+    grid-template-columns: 1fr;
+  }
+
+  /* Terrain plus haut : les cinq vignettes restent lisibles */
+  body.dream-page .dream-field {
+    aspect-ratio: 3 / 4.2;
+  }
+
+  body.dream-page .dream-field-lines {
+    inset: 12px;
+  }
+
+  body.dream-page .dream-line-arc {
+    top: calc(21% - 13.45cqw + 3.23px);
+    clip-path: inset(calc(10.4cqh - 2.5px + 13.45cqw - 3.23px) 0 0 0);
+  }
+
+  body.dream-page .dream-zone,
+  body.dream-page .dream-field-screen.nl-aim::after {
+    display: none;
+  }
+
+  body.dream-page .dream-player {
+    width: 29cqw;
+  }
+
+  body.dream-page .dream-player .nl-feed-osd {
+    padding: 7px;
+  }
+
+  body.dream-page .dream-player-cam,
+  body.dream-page .dream-player .rec.is-off {
+    display: none;
+  }
+
+  body.dream-page .dream-player-score {
+    top: 30px;
+    right: 7px;
+    font-size: 1.6rem;
+  }
+
+  body.dream-page .dream-player .nl-feed-caption {
+    bottom: 8px;
+  }
+
+  body.dream-page .dream-player .nl-feed-caption small {
+    display: none;
+  }
+
+  body.dream-page .dream-player .nl-feed-caption b {
+    padding: 5px 7px 4px 6px;
+    font-size: 13px;
+  }
+
+  body.dream-page .dream-player.is-vacant .nl-feed-mire::after {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  body.dream-page .dream-pitch-alert {
+    padding: 14px 12px 16px;
+  }
+
+  body.dream-page .dream-dossier-title {
+    padding: 16px;
+  }
+
+  body.dream-page .dream-dossier-row {
+    grid-template-columns: 36px 26px minmax(0, 1fr) 64px;
+    gap: 10px;
+    padding: 10px 12px;
+  }
+
+  body.dream-page .dream-dossier-crest {
+    width: 26px;
+    height: 26px;
+  }
+
+  body.dream-page .dream-dossier-id strong {
+    font-size: 16px;
+  }
+
+  body.dream-page .dream-dossier-id small {
+    overflow: visible;
+    line-height: 1.35;
+    white-space: normal;
+  }
+
+  body.dream-page .dream-dossier-score b {
+    font-size: 24px;
+  }
+
+  body.dream-page .dream-dossier-index {
+    padding: 16px;
+  }
+
+  body.dream-page .dream-dossier-index > strong {
+    font-size: 4.6rem;
+  }
+
+  body.dream-page .dream-bench {
+    --wall-cols-sm: 1;
+    --feed-ratio-sm: 16 / 10;
+  }
+
+  body.dream-page .dream-crosslink-wall {
+    --wall-cols-sm: 1;
+    --feed-ratio-sm: 16 / 7;
+  }
+
+  body.dream-page .dream-formula-terms {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.dream-page .dream-formula-terms li {
+    min-height: 80px;
+  }
 }
 
-@media (max-width: 360px) {
-    body.nebula-page.dream-page .dream-mode-tabs {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+@media (max-width: 420px) {
+  body.dream-page .dream-readout span {
+    letter-spacing: 0.04em;
+  }
 
-    body.nebula-page.dream-page .dream-mode-tabs button {
-        min-height: 66px;
-    }
+  body.dream-page .dream-readout strong {
+    font-size: 1.9rem;
+  }
+}
+
+/* -------------------- 11. Mouvement réduit -------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  body.dream-page .dream-links line.is-live {
+    animation: none;
+  }
+
+  body.dream-page .dream-dossier-row {
+    transition: none;
+  }
 }

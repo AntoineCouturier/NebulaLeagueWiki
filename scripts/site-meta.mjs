@@ -22,9 +22,7 @@ const PAGE_DESCRIPTIONS = {
   'saison.html': 'Les saisons de la Nebula League : classements, leaders et distinctions.',
   'stats.html': 'Les records de la Nebula League, par saison et par match.',
   'valeur.html': 'Le marché des valeurs de la Nebula League : cotes des joueurs et évolutions.',
-  'admin.html': 'Centre de gestion local de la Nebula League.',
-  'Autre/greatest_goal.html': 'Le plus beau but de l’histoire de la Nebula League.',
-  'Autre/worst_goal.html': 'Le pire raté de l’histoire de la Nebula League.'
+  'admin.html': 'Centre de gestion local de la Nebula League.'
 };
 const DEFAULT_DESCRIPTION = 'Le hub officiel de la Nebula League : joueurs, clubs, titres, matchs, valeurs et archives.';
 
@@ -55,8 +53,8 @@ const cleanPath = file => '/' + file.replace(/\\/g, '/').replace(/(^|\/)index\.h
 // Toutes les pages HTML publiées, avec le joueur associé pour les fiches.
 export async function listPages(data) {
   const pages = (await readdir('.')).filter(file => file.endsWith('.html') && file !== 'compte.html');
-  for (const dir of ['Autre', ...(await readdir('Joueurs', { withFileTypes: true }))
-    .filter(entry => entry.isDirectory() && entry.name !== 'demo').map(entry => join('Joueurs', entry.name))]) {
+  for (const dir of (await readdir('Joueurs', { withFileTypes: true }))
+    .filter(entry => entry.isDirectory() && entry.name !== 'demo').map(entry => join('Joueurs', entry.name))) {
     for (const file of await readdir(dir)) if (file.endsWith('.html')) pages.push(join(dir, file).replace(/\\/g, '/'));
   }
   return pages.map(file => ({

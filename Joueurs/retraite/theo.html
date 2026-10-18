@@ -29,14 +29,15 @@
     <link rel="stylesheet" href="../../CSS/global-theme.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="../../CSS/responsive.css">
+    <link rel="stylesheet" href="../../CSS/theme-monitor.css">
     <script src="../../JavaScript/reveal.js"></script>
 </head>
 
 <!-- Fiche générée par `pnpm joueurs` depuis scripts/templates/joueur.html et
      JavaScript/nebula-data.js : ne pas modifier ce fichier directement. -->
-<body class="nebula-page">
+<body class="nebula-page nl-migrated">
 
-    <header class="site-header">
+    <header class="site-header" id="top">
         <a class="brand" href="../../index.html" aria-label="Nebula League, accueil">
             <span class="brand-mark"><span></span></span>
             <span class="brand-copy"><strong>NEBULA</strong><small>LEAGUE // DATABASE</small></span>
@@ -138,6 +139,31 @@
         </div>
     </div>
 
+    <footer class="nl-footer">
+        <div class="nl-footer-main">
+            <a class="footer-brand" href="../../index.html">
+                <span class="brand-mark"><span></span></span>
+                <strong>NEBULA LEAGUE</strong>
+            </a>
+            <p>Ligue privée Azure Latch. Toutes les rencontres sont enregistrées, chaque statistique est archivée.</p>
+        </div>
+        <nav class="nl-footer-links" aria-label="Accès rapides">
+            <p>Accès rapides</p>
+            <a href="../../players.html">Tous les joueurs</a>
+            <a href="../../club.html">Clubs</a>
+            <a href="../../valeur.html">Valeurs</a>
+            <a href="../../headtohead.html">Face à face</a>
+            <a href="../../stats.html">Records</a>
+            <a href="../../rules.html">Règles</a>
+        </nav>
+        <div class="nl-footer-osd">
+            <span class="rec">REC</span>
+            <span>NL-CTRL // FIN DU DOSSIER</span>
+            <span class="jp">ブルーロック</span>
+            <span>© NEBULA LEAGUE</span>
+            <a href="#top">Retour en haut ↑</a>
+        </div>
+    </footer>
     <script src="../../JavaScript/nebula-data.js"></script>
     <script src="../../JavaScript/title-art.js"></script>
     <script src="../player-card.js"></script>

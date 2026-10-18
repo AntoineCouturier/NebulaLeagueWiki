@@ -1,9 +1,12 @@
+// Couleurs injectées : uniquement les jetons bleus de theme-monitor.css.
+// `standby` = image de veille affichée tant qu'aucun détenteur n'existe.
 const RECORD_CATEGORY_META = {
-    buts: { code: "GLS", label: "Buts", accent: "#ff5d66" },
-    passes: { code: "AST", label: "Passes décisives", accent: "#63e7ff" },
-    defenses: { code: "DEF", label: "Défenses", accent: "#43f58b" },
-    dribbles: { code: "DRB", label: "Dribbles", accent: "#c879ff" }
+    buts: { code: "GLS", label: "Buts", accent: "var(--blue)", standby: "images/icons/shidou.webp" },
+    passes: { code: "AST", label: "Passes décisives", accent: "var(--blue-2)", standby: "images/icons/hiori.webp" },
+    defenses: { code: "DEF", label: "Défenses", accent: "var(--blue-3)", standby: "images/icons/aiku.webp" },
+    dribbles: { code: "DRB", label: "Dribbles", accent: "var(--blue-2)", standby: "images/icons/bachira.webp" }
 };
+const RECORD_VALUE_STANDBY = "images/icons/reo.webp";
 
 const RECORD_CLUB_COLORS = Object.fromEntries([
     ...(window.NEBULA_DATA?.clubs || []),
@@ -105,9 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? (selectedMatch ? `MATCH ${selectedMatch.id.toUpperCase()}` : "MATCH SANS DONNÉE")
                 : "ARCHIVES ABSOLUES";
         document.getElementById("recordScopeStatus").textContent = scopeLabel;
-        document.getElementById("recordScopeSignal").textContent = recordScope === "all"
-            ? "ALL-TIME // ARCHIVE"
-            : `${recordScope.toUpperCase()} // ${scopeLabel}`;
+        document.getElementById("recordScopeSignal").textContent = `PÉRIMÈTRE // ${scopeLabel}`;
         document.getElementById("recordScopeEyebrow").textContent = recordScope === "all"
             ? "LEADERS ABSOLUS"
             : `LEADERS // ${scopeLabel}`;
@@ -155,6 +156,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function plural(value, singular, pluralForm = `${singular}s`) {
         return `${value} ${value === 1 ? singular : pluralForm}`;
+    }
+
+    // « 12,5 M ¥ » → { figure: "12,5", unit: "M ¥" } : le chiffre s'affiche en
+    // grand, l'unité en petit à côté.
+    function splitFigure(text) {
+        const match = /^(-?[\d\s\u00a0\u202f.,]+?)\s*([^\d\s.,].*)?$/.exec(String(text).trim());
+        return match
+            ? { figure: match[1].trim(), unit: (match[2] || "").trim() }
+            : { figure: String(text), unit: "" };
+    }
+
+    function pad2(value) {
+        return String(value).padStart(2, "0");
+    }
+
+    // Numéro de caméra d'un joueur : sa place dans le registre (CAM 01 = premier).
+    function camNumber(name) {
+        const index = players.findIndex(player => player.name.toLowerCase() === String(name).toLowerCase());
+        return index === -1 ? "--" : pad2(index + 1);
+    }
+
+    function isRetired(name) {
+        return playerProfile(name)?.club === "retraite";
+    }
+
+    // Couleur d'identité d'un club (filet fin) ; les retraités passent en gris archive.
+    function clubAccent(key) {
+        if (key === "retraite" || key === "unknown") return "var(--offline)";
+        return RECORD_CLUB_COLORS[key] || "var(--blue-2)";
+    }
+
+    function escapeAttribute(value) {
+        return String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
     }
 
     function buildPlayerRecords() {
@@ -298,30 +332,41 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("archiveMatches").textContent = String(matches.length).padStart(2, "0");
     document.getElementById("archiveGoals").textContent = String(totalGoals).padStart(2, "0");
     document.getElementById("archivePlayers").textContent = String(playerRecords.length).padStart(2, "0");
-    function leaderCard(record) {
-        const profile = record.name ? playerProfile(record.name) : null;
-        const href = record.name ? playerHref(record.name) : null;
-        const tag = href ? "a" : "article";
-        const hrefAttribute = href ? ` href="${href}"` : "";
-        const avatar = profile?.avatar || "images/logos/nebula.png";
-        const club = record.name
+    // Détenteurs : un flux caméra par record. Sans détenteur, le flux reste en
+    // veille (image de veille grisée + mire) et affiche EN ATTENTE.
+    function leaderCard(record, index) {
+        const holder = Boolean(record.name);
+        const profile = holder ? playerProfile(record.name) : null;
+        const href = holder ? playerHref(record.name) : null;
+        const tag = href ? "a" : "div";
+        const retired = holder && isRetired(record.name);
+        const club = holder
             ? playerClub(record.name)
-            : { key: "unknown", name: record.subtitle || "Aucune donnée" };
-        const status = record.name ? "RECORD ACTIF" : "EN ATTENTE";
+            : { key: "unknown", name: "Aucune donnée" };
+        const image = profile?.avatar || record.standby;
+        const state = !holder
+            ? " is-offline is-standby"
+            : retired
+                ? " is-offline is-retired"
+                : index === 0 ? " is-locked" : "";
+        const status = !holder
+            ? '<span class="rec is-off">EN ATTENTE</span>'
+            : retired
+                ? '<span class="rec is-off">HORS LIGNE</span>'
+                : '<span class="rec">RECORD ACTIF</span>';
+        const { figure, unit } = splitFigure(record.value);
+        const ariaLabel = `${record.label} : ${record.name}, ${record.value}`;
+        const hrefAttribute = href ? ` href="${href}" aria-label="${escapeAttribute(ariaLabel)}"` : "";
 
         return `
-            <${tag} class="record-leader-card" style="--record-accent:${record.accent};"${hrefAttribute}>
-                <div class="leader-card-topline"><span>${record.code}</span><span><i></i> ${status}</span></div>
-                <div class="leader-card-visual">
-                    <img src="${avatar}" alt="${record.name || record.label}" loading="lazy" decoding="async">
-                    <span>${record.watermark}</span>
-                </div>
-                <div class="leader-card-body">
-                    <small>${record.label}</small>
-                    <strong>${record.name || "Non attribué"}</strong>
-                    <span>${club.name}</span>
-                    <div><b>${record.value}</b><i>↗</i></div>
-                </div>
+            <${tag} class="record-leader-card nl-feed${state}" style="--record-accent:${record.accent};"${hrefAttribute}>
+                <img class="nl-feed-img" src="${image}" alt="" loading="lazy" decoding="async">
+                ${holder ? "" : '<span class="leader-card-mire" aria-hidden="true"></span>'}
+                ${href ? '<span class="nl-feed-lock" aria-hidden="true"></span>' : ""}
+                <span class="nl-feed-osd" aria-hidden="true"><span><b>CAM ${pad2(index + 1)}</b> // ${record.watermark}</span>${status}</span>
+                ${holder ? "" : '<span class="leader-card-wait" aria-hidden="true">Signal en attente</span>'}
+                <strong class="nl-feed-figure leader-card-figure">${figure}<small>${unit}</small></strong>
+                <span class="nl-feed-caption"><small>${record.label}</small><b>${holder ? record.name : "Non attribué"}</b><em>${club.name}</em></span>
             </${tag}>
         `;
     }
@@ -333,7 +378,8 @@ document.addEventListener("DOMContentLoaded", () => {
             name: topScorer?.name,
             value: topScorer ? plural(topScorer.buts, "but") : "0 but",
             watermark: "GLS",
-            accent: "#ff5d66"
+            accent: RECORD_CATEGORY_META.buts.accent,
+            standby: RECORD_CATEGORY_META.buts.standby
         },
         {
             code: "AST // 02",
@@ -341,7 +387,8 @@ document.addEventListener("DOMContentLoaded", () => {
             name: passerRanking[0]?.name,
             value: passerRanking[0] ? plural(passerRanking[0].passes, "passe D.", "passes D.") : "0 passe D.",
             watermark: "AST",
-            accent: "#63e7ff"
+            accent: RECORD_CATEGORY_META.passes.accent,
+            standby: RECORD_CATEGORY_META.passes.standby
         },
         {
             code: "DEF // 03",
@@ -349,7 +396,8 @@ document.addEventListener("DOMContentLoaded", () => {
             name: defenderRanking[0]?.name,
             value: defenderRanking[0] ? plural(defenderRanking[0].defenses, "défense") : "0 défense",
             watermark: "DEF",
-            accent: "#43f58b"
+            accent: RECORD_CATEGORY_META.defenses.accent,
+            standby: RECORD_CATEGORY_META.defenses.standby
         },
         {
             code: "DRB // 04",
@@ -357,7 +405,8 @@ document.addEventListener("DOMContentLoaded", () => {
             name: dribblerRanking[0]?.name,
             value: dribblerRanking[0] ? plural(dribblerRanking[0].dribbles, "dribble") : "0 dribble",
             watermark: "DRB",
-            accent: "#c879ff"
+            accent: RECORD_CATEGORY_META.dribbles.accent,
+            standby: RECORD_CATEGORY_META.dribbles.standby
         },
         {
             code: "VAL // 05",
@@ -365,7 +414,8 @@ document.addEventListener("DOMContentLoaded", () => {
             name: mostValuable?.name,
             value: mostValuable ? formatCredits(mostValuable.value) : "0 ¥",
             watermark: "VAL",
-            accent: "#ffd84d"
+            accent: "var(--paper)",
+            standby: RECORD_VALUE_STANDBY
         }
     ];
     highlightGrid.innerHTML = highlights.map(leaderCard).join("");
@@ -374,45 +424,62 @@ document.addEventListener("DOMContentLoaded", () => {
         {
             label: "RECORD DE BUTS",
             name: topScorer?.name || "AUCUN",
-            value: topScorer ? plural(topScorer.buts, "BUT", "BUTS") : "0 BUT",
-            accent: "#ff5d66"
+            value: topScorer ? plural(topScorer.buts, "BUT", "BUTS") : "0 BUT"
         },
         {
             label: "RECORD DE PASSES",
             name: passerRanking[0]?.name || "AUCUN",
-            value: passerRanking[0] ? plural(passerRanking[0].passes, "PASSE D.", "PASSES D.") : "0 PASSE D.",
-            accent: "#63e7ff"
+            value: passerRanking[0] ? plural(passerRanking[0].passes, "PASSE D.", "PASSES D.") : "0 PASSE D."
         },
         {
             label: "RECORD DE DÉFENSES",
             name: defenderRanking[0]?.name || "AUCUN",
-            value: defenderRanking[0] ? plural(defenderRanking[0].defenses, "DÉFENSE", "DÉFENSES") : "0 DÉFENSE",
-            accent: "#43f58b"
+            value: defenderRanking[0] ? plural(defenderRanking[0].defenses, "DÉFENSE", "DÉFENSES") : "0 DÉFENSE"
         },
         {
             label: "RECORD DE DRIBBLES",
             name: dribblerRanking[0]?.name || "AUCUN",
-            value: dribblerRanking[0] ? plural(dribblerRanking[0].dribbles, "DRIBBLE", "DRIBBLES") : "0 DRIBBLE",
-            accent: "#c879ff"
+            value: dribblerRanking[0] ? plural(dribblerRanking[0].dribbles, "DRIBBLE", "DRIBBLES") : "0 DRIBBLE"
         },
         {
             label: "RECORD DE VALEUR",
             name: mostValuable?.name || "AUCUN",
-            value: mostValuable ? formatCredits(mostValuable.value) : "0 ¥",
-            accent: "#ffd84d"
+            value: mostValuable ? formatCredits(mostValuable.value) : "0 ¥"
         }
-    ];
+    ].map((entry, index) => {
+        const highlight = highlights[index];
+        const holder = Boolean(highlight.name);
+        return {
+            ...entry,
+            holder,
+            code: highlight.watermark,
+            accent: highlight.accent,
+            image: (holder && playerProfile(highlight.name)?.avatar) || highlight.standby
+        };
+    });
 
     const signalPanel = document.querySelector(".record-signal");
     const signalReadout = signalPanel?.querySelector(".record-signal-readout");
+    const signalImage = signalPanel?.querySelector("[data-record-signal-img]");
+    const signalCode = signalPanel?.querySelector("[data-record-signal-code]");
+    const signalStatus = signalPanel?.querySelector("[data-record-signal-status]");
+    const signalPips = [...(signalPanel?.querySelectorAll("[data-record-signal-pips] > span") || [])];
     const signalLabel = document.getElementById("recordSignalLabel");
     const signalName = document.getElementById("recordSignalName");
     const signalValue = document.getElementById("recordSignalValue");
     let signalIndex = 0;
     let signalTransitionTimer = null;
 
-    function applySignal(entry) {
+    function applySignal(entry, index) {
         signalPanel?.style.setProperty("--signal-accent", entry.accent);
+        signalPanel?.classList.toggle("is-offline", !entry.holder);
+        if (signalImage && signalImage.getAttribute("src") !== entry.image) signalImage.src = entry.image;
+        if (signalCode) signalCode.textContent = entry.code;
+        if (signalStatus) {
+            signalStatus.textContent = entry.holder ? "RECORD ACTIF" : "EN ATTENTE";
+            signalStatus.classList.toggle("is-off", !entry.holder);
+        }
+        signalPips.forEach((pip, pipIndex) => pip.classList.toggle("is-active", pipIndex === index));
         signalLabel.textContent = entry.label;
         signalName.textContent = entry.name;
         signalValue.textContent = entry.value;
@@ -423,35 +490,44 @@ document.addEventListener("DOMContentLoaded", () => {
         const entry = signalEntries[index];
         if (!entry) return;
         if (immediate) {
-            applySignal(entry);
+            applySignal(entry, index);
             return;
         }
         signalReadout?.classList.add("is-changing");
         window.clearTimeout(signalTransitionTimer);
-        signalTransitionTimer = window.setTimeout(() => applySignal(entry), 220);
+        signalTransitionTimer = window.setTimeout(() => applySignal(entry, index), 220);
     }
 
     showSignal(signalIndex, true);
     if (signalEntries.length > 1) {
         window.setInterval(() => {
+            if (document.hidden) return;
             signalIndex = (signalIndex + 1) % signalEntries.length;
             showSignal(signalIndex);
         }, RECORD_SIGNAL_INTERVAL_MS);
     }
 
+    // Classement des clubs : tableau « régie ». Tant qu'aucun club n'a joué,
+    // le rang reste « -- » (pas de faux premier).
+    const anyClubPlayed = clubRecords.some(record => record.played > 0);
+    const clubArchiveState = document.getElementById("clubArchiveState");
+    if (clubArchiveState) {
+        clubArchiveState.textContent = anyClubPlayed ? "TRI // POINTS" : "EN ATTENTE // 0 MATCH JOUÉ";
+    }
     document.getElementById("clubRecordsBody").innerHTML = clubRecords.map((record, index) => {
         const info = clubInfo(record.key);
-        const accent = RECORD_CLUB_COLORS[record.key] || "#63e7ff";
+        const accent = clubAccent(record.key);
+        const isLeader = anyClubPlayed && index === 0;
         return `
-            <tr style="--club-accent:${accent};">
-                <td><span class="club-record-rank">${String(index + 1).padStart(2, "0")}</span></td>
-                <td><span class="club-record-identity"><img src="${info.logo}" alt="" loading="lazy" decoding="async"><strong>${info.name}</strong></span></td>
-                <td>${record.played}</td>
-                <td><strong>${record.points}</strong></td>
-                <td>${record.wins}–${record.draws}–${record.losses}</td>
-                <td class="${record.diff > 0 ? "positive" : record.diff < 0 ? "negative" : ""}">${record.diff > 0 ? "+" : ""}${record.diff}</td>
-                <td>
-                    <span class="club-winrate"><i style="width:${record.winpct}%"></i></span>
+            <tr class="${isLeader ? "is-leader" : ""}" style="--club:${accent}; --club-accent:${accent};">
+                <td class="nl-num"><span class="club-record-rank">${anyClubPlayed ? pad2(index + 1) : "--"}</span></td>
+                <td class="nl-strong"><span class="club-record-identity"><img src="${info.logo}" alt="" loading="lazy" decoding="async"><strong>${info.name}</strong></span></td>
+                <td class="club-cell-mj" data-label="MJ">${record.played}</td>
+                <td class="is-hl" data-label="Pts"><strong>${record.points}</strong></td>
+                <td class="club-cell-vnd" data-label="V–N–D">${record.wins}–${record.draws}–${record.losses}</td>
+                <td class="club-cell-diff${record.diff > 0 ? " positive" : record.diff < 0 ? " negative" : ""}" data-label="Diff.">${record.diff > 0 ? "+" : ""}${record.diff}</td>
+                <td class="club-winrate-cell" data-label="Victoires">
+                    <span class="club-winrate nl-vu" style="--v:${record.winpct}" role="meter" aria-label="Taux de victoire ${escapeAttribute(info.name)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${record.winpct}"></span>
                     <small>${record.winpct}%</small>
                 </td>
             </tr>
@@ -471,36 +547,46 @@ document.addEventListener("DOMContentLoaded", () => {
                     const club = playerClub(record.name);
                     const href = playerHref(record.name);
                     const tag = href ? "a" : "div";
-                    const hrefAttribute = href ? ` href="${href}"` : "";
+                    const retired = isRetired(record.name);
+                    const ariaLabel = `Position ${pad2(rank)} : ${record.name}, ${record[category]} ${meta.label.toLowerCase()}`;
+                    const hrefAttribute = href ? ` href="${href}" aria-label="${escapeAttribute(ariaLabel)}"` : "";
+                    const state = retired ? " is-offline" : rank === 1 ? " is-locked" : "";
+                    const status = retired
+                        ? '<span class="rec is-off">HORS LIGNE</span>'
+                        : rank === 1 ? '<span class="rec">EN TÊTE</span>' : "";
                     return `
-                        <${tag} class="podium-entry podium-rank-${rank}"${hrefAttribute}>
-                            <span class="podium-crown" aria-hidden="true">♛</span>
-                            <span class="podium-avatar-wrap">
-                                <img src="${playerAvatar(record.name)}" alt="" loading="lazy" decoding="async">
-                                <b class="podium-medal">${String(rank).padStart(2, "0")}</b>
-                            </span>
-                            <span class="podium-player">${record.name}</span>
-                            <small>${club.name}</small>
-                            <strong class="podium-value">${record[category]} <i>${meta.code}</i></strong>
-                            <span class="podium-step"><b>${rank}</b></span>
+                        <${tag} class="podium-entry podium-rank-${rank} nl-feed${state}"${hrefAttribute}>
+                            <img class="nl-feed-img" src="${playerAvatar(record.name)}" alt="" loading="lazy" decoding="async">
+                            ${href ? '<span class="nl-feed-lock" aria-hidden="true"></span>' : ""}
+                            <span class="nl-feed-osd" aria-hidden="true"><span><b>CAM ${camNumber(record.name)}</b> // ${meta.code}</span>${status}</span>
+                            <span class="podium-place" aria-hidden="true"><small>POS</small>${pad2(rank)}</span>
+                            <strong class="nl-feed-figure podium-value">${record[category]}<small>${meta.code}</small></strong>
+                            <span class="nl-feed-caption"><small>${club.name}</small><b>${record.name}</b></span>
                         </${tag}>
                     `;
                 }).join("")}
             </div>
-        ` : `<p>Aucune donnée enregistrée.</p>`;
+        ` : `
+            <div class="nl-nosignal ranking-nosignal">
+                <span class="nl-nosignal-code">SIGNAL 00 // ${meta.code}</span>
+                <strong>Aucun classement</strong>
+                <p>Les ${meta.label.toLowerCase()} apparaîtront ici dès le premier match archivé.</p>
+            </div>
+        `;
 
         document.getElementById("playerRecordList").innerHTML = records.slice(3).map((record, index) => {
             const club = playerClub(record.name);
             const href = playerHref(record.name);
             const tag = href ? "a" : "div";
             const hrefAttribute = href ? ` href="${href}"` : "";
-            const width = record[category] > 0 ? Math.max(3, (record[category] / maximum) * 100) : 0;
+            const width = record[category] > 0 ? Math.max(3, Math.round((record[category] / maximum) * 100)) : 0;
+            const retired = isRetired(record.name);
             return `
-                <${tag} class="player-record-row" style="--category-accent:${meta.accent};"${hrefAttribute}>
-                    <span class="player-record-rank">${String(index + 4).padStart(2, "0")}</span>
-                    <img src="${playerAvatar(record.name)}" alt="" loading="lazy" decoding="async">
-                    <span class="player-record-name"><small>${club.name}</small><strong>${record.name}</strong></span>
-                    <span class="player-record-bar"><i style="width:${width}%"></i></span>
+                <${tag} class="player-record-row${retired ? " is-offline" : ""}" style="--category-accent:${meta.accent}; --club:${clubAccent(club.key)};"${hrefAttribute}>
+                    <span class="player-record-rank">${pad2(index + 4)}</span>
+                    <span class="player-record-thumb"><img src="${playerAvatar(record.name)}" alt="" loading="lazy" decoding="async"></span>
+                    <span class="player-record-name"><small>${retired ? "Hors ligne // " : ""}${club.name}</small><strong>${record.name}</strong></span>
+                    <span class="player-record-bar nl-vu" style="--v:${width}" aria-hidden="true"></span>
                     <span class="player-record-value"><strong>${record[category]}</strong><small>${meta.code}</small></span>
                 </${tag}>
             `;
@@ -530,6 +616,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const playedClubRecords = clubRecords.filter(record => record.played > 0);
     const bestDefense = [...playedClubRecords].sort((a, b) => a.ga - b.ga || b.points - a.points)[0];
     const unbeaten = longestUnbeatenRecord();
+    const hasOffense = Boolean(bestOffense && bestOffense.gf > 0);
+    const hasUnbeaten = unbeaten.value > 0;
 
     const vaultRecords = [
         {
@@ -539,7 +627,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? `${clubInfo(prolificMatch.home).name} ${prolificMatch.scoreHome}–${prolificMatch.scoreAway} ${clubInfo(prolificMatch.away).name}`
                 : "Aucune donnée",
             detail: prolificMatch ? plural(prolificMatch.scoreHome + prolificMatch.scoreAway, "but") : "0 but",
-            season: Number(prolificMatch?.season) || null
+            season: Number(prolificMatch?.season) || null,
+            hasData: Boolean(prolificMatch)
         },
         {
             code: "MAT–02",
@@ -548,63 +637,62 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? `${clubInfo(biggestWin.home).name} ${biggestWin.scoreHome}–${biggestWin.scoreAway} ${clubInfo(biggestWin.away).name}`
                 : "Aucune donnée",
             detail: biggestWin ? `Écart de ${Math.abs(biggestWin.scoreHome - biggestWin.scoreAway)} buts` : "Écart de 0",
-            season: Number(biggestWin?.season) || null
+            season: Number(biggestWin?.season) || null,
+            hasData: Boolean(biggestWin)
         },
         {
             code: "PLR–03",
             label: "But le plus rapide",
             value: fastestGoal?.scorer || "Aucun",
             detail: fastestGoal ? fastestGoal.time : "0 seconde",
-            season: Number(fastestGoal?.season) || null
+            season: Number(fastestGoal?.season) || null,
+            hasData: Boolean(fastestGoal)
         },
         {
             code: "CLB–04",
             label: "Meilleure attaque",
-            value: bestOffense ? clubInfo(bestOffense.key).name : "Aucun",
-            detail: bestOffense ? plural(bestOffense.gf, "but marqué", "buts marqués") : "0 but marqué"
+            value: hasOffense ? clubInfo(bestOffense.key).name : "Aucun",
+            detail: hasOffense ? plural(bestOffense.gf, "but marqué", "buts marqués") : "0 but marqué",
+            hasData: hasOffense
         },
         {
             code: "CLB–05",
             label: "Meilleure défense",
             value: bestDefense ? clubInfo(bestDefense.key).name : "Aucun",
-            detail: bestDefense ? plural(bestDefense.ga, "but encaissé", "buts encaissés") : "0 but encaissé"
+            detail: bestDefense ? plural(bestDefense.ga, "but encaissé", "buts encaissés") : "0 but encaissé",
+            hasData: Boolean(bestDefense)
         },
         {
             code: "CLB–06",
             label: "Série d’invincibilité",
-            value: clubInfo(unbeaten.key).name,
-            detail: plural(unbeaten.value, "match")
-        },
-        {
-            code: "VID–07",
-            label: "Meilleur but",
-            value: "Archive vidéo",
-            detail: "Ouvrir l’enregistrement",
-            href: "Autre/greatest_goal.html"
-        },
-        {
-            code: "VID–08",
-            label: "Pire raté",
-            value: "Archive vidéo",
-            detail: "Ouvrir l’enregistrement",
-            href: "Autre/worst_goal.html"
+            value: hasUnbeaten ? clubInfo(unbeaten.key).name : "Aucun",
+            detail: plural(unbeaten.value, "match"),
+            hasData: hasUnbeaten
         }
     ];
 
     document.getElementById("recordVaultGrid").innerHTML = vaultRecords.map((record, index) => {
-        const tag = record.href ? "a" : "article";
-        const href = record.href ? ` href="${record.href}" target="_blank" rel="noopener"` : "";
-        const archiveIndex = String(index + 1).padStart(2, "0");
+        const archiveIndex = pad2(index + 1);
         const seasonLabel = record.season
-            ? `SAISON ${String(record.season).padStart(2, "0")} · ${archiveIndex}`
-            : archiveIndex;
+            ? `SAISON ${pad2(record.season)} · ${archiveIndex}`
+            : `BANDE ${archiveIndex}`;
+        if (record.href) {
+            return `
+                <a class="vault-record has-link vault-tape nl-feed" href="${record.href}" target="_blank" rel="noopener">
+                    <img class="nl-feed-img" src="${record.image}" alt="" loading="lazy" decoding="async">
+                    <span class="nl-feed-osd" aria-hidden="true"><span><b>${record.code}</b> // ${seasonLabel}</span><span class="vault-tape-state">▶ LECTURE</span></span>
+                    <span class="vault-play" aria-hidden="true"></span>
+                    <span class="nl-feed-caption"><small>${record.value}</small><b>${record.label}</b><em>${record.detail} ↗</em></span>
+                </a>
+            `;
+        }
         return `
-            <${tag} class="vault-record ${record.href ? "has-link" : ""}"${href}>
-                <div><span>${record.code}</span><small>${seasonLabel}</small></div>
+            <article class="vault-record${record.hasData ? "" : " is-empty"}">
+                <div class="vault-record-osd"><span>${record.code}</span><small>${seasonLabel}</small></div>
                 <strong>${record.label}</strong>
-                <p>${record.value}</p>
+                <p>${String(record.value).replace(/(\d+\s*[–-]\s*\d+)/g, '<span class="vault-score">$1</span>')}</p>
                 <span>${record.detail}</span>
-            </${tag}>
+            </article>
         `;
     }).join("");
 

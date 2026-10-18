@@ -1,1407 +1,1497 @@
 /* ==========================================================================
-   NEBULA LEAGUE — PERMANENT RECORD ARCHIVE
+   NEBULA LEAGUE — RECORDS // SALLE DES ARCHIVES
+   Page migrée (body.records-page.nl-migrated) : composants du kit nl-* de
+   theme-monitor.css. Ce fichier est chargé AVANT global-theme.css,
+   responsive.css et theme-monitor.css : chaque sélecteur commence par
+   body.records-page pour l'emporter sur le kit à égalité ; les rares
+   reprises de !important vivent dans la couche nl-force.
+
+   01. Cadre de page + neutralisation de style.css
+   02. Héros : écran multiplex (record en direct) + tableau d'affichage
+   03. Console de périmètre
+   04. CH 01 : mur des détenteurs de records
+   05. CH 02 : tableau « régie » des clubs
+   06. CH 03 : canaux, podium filmé, liste à vumètres
+   07. CH 04 : coffre des records sur bande bleue
+   08. Mouvement réduit
+   09. Responsive
    ========================================================================== */
 
-body.nebula-page.records-page {
-    --record-acid: #adff2f;
-    --record-cyan: #63e7ff;
-    --record-gold: #ffd84d;
-    --record-line: rgba(255, 255, 255, 0.11);
-    --record-line-soft: rgba(255, 255, 255, 0.065);
-    --record-surface: #070a0e;
-    --record-surface-2: #0a0f15;
-    --record-surface-3: #0d131a;
-}
-
-body.nebula-page.records-page::after {
-    position: fixed;
-    z-index: -1;
-    inset: 0;
-    content: "";
-    background:
-        linear-gradient(116deg, transparent 0 69%, rgba(99, 231, 255, 0.025) 69% 70%, transparent 70%),
-        radial-gradient(circle at 11% 34%, rgba(99, 231, 255, 0.045), transparent 25rem);
-    pointer-events: none;
-}
-
-.records-intro {
-    position: relative;
-    display: grid;
-    width: min(1440px, calc(100% - 8vw));
-    min-height: 630px;
-    grid-template-columns: minmax(0, 1.35fr) minmax(360px, 0.65fr);
-    margin: 0 auto;
-    overflow: hidden;
-    border-right: 1px solid var(--record-line-soft);
-    border-bottom: 1px solid var(--record-line);
-    border-left: 1px solid var(--record-line-soft);
-    background:
-        linear-gradient(100deg, rgba(99, 231, 255, 0.035), transparent 42%),
-        var(--record-surface);
-}
-
-.records-intro::before {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 2px;
-    content: "";
-    background: linear-gradient(90deg, var(--record-cyan), var(--record-acid) 58%, var(--record-gold));
-}
-
-.records-intro-copy {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    justify-content: center;
-    padding: 88px clamp(32px, 6vw, 96px) 70px;
-}
-
-.records-kicker {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin: 0 0 28px;
-    color: #74808a;
-    font-family: "JetBrains Mono", var(--mono);
-    font-size: 0.66rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-}
-
-.records-kicker::after {
-    width: 72px;
-    height: 1px;
-    content: "";
-    background: var(--record-line);
-}
-
-.records-kicker span {
-    color: var(--record-cyan);
-}
-
-body.nebula-page.records-page .records-intro h1 {
-    margin: 0;
-    color: #f4f7f9;
-    font-family: var(--display);
-    font-size: clamp(3.7rem, 7vw, 7.4rem);
-    font-weight: 900;
-    letter-spacing: -0.075em;
-    line-height: 0.88;
-}
-
-.records-intro h1 em {
-    color: transparent;
-    font-style: normal;
-    -webkit-text-stroke: 1px rgba(244, 247, 249, 0.48);
-}
-
-.records-intro-text {
-    max-width: 690px;
-    margin: 38px 0 0;
-    padding-left: 18px;
-    border-left: 2px solid var(--record-cyan);
-    color: #9ba5ad;
-    font-size: clamp(0.9rem, 1.15vw, 1.05rem);
-    line-height: 1.75;
-}
-
-.records-intro-stats {
-    display: grid;
-    max-width: 750px;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin-top: 54px;
-    border-top: 1px solid var(--record-line);
-    border-bottom: 1px solid var(--record-line);
-}
-
-.records-intro-stats>div {
-    display: flex;
-    min-width: 0;
-    min-height: 100px;
-    align-items: center;
-    gap: 15px;
-    padding: 14px 21px;
-    border-right: 1px solid var(--record-line);
-}
-
-.records-intro-stats>div:last-child {
-    border-right: 0;
-}
-
-.records-intro-stats strong {
-    color: #f4f7f9;
-    font-family: var(--display);
-    font-size: clamp(1.8rem, 3vw, 2.9rem);
-    line-height: 1;
-    white-space: nowrap;
-}
-
-.records-intro-stats span {
-    max-width: 95px;
-    color: #68737c;
-    font-family: "JetBrains Mono", var(--mono);
-    font-size: 0.54rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    line-height: 1.5;
-    text-transform: uppercase;
-}
-
-.record-signal {
-    --signal-accent: var(--record-acid);
-    position: relative;
-    display: flex;
-    min-width: 0;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    border-left: 1px solid var(--record-line);
-    background:
-        linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px),
-        radial-gradient(circle, rgba(99, 231, 255, 0.075), transparent 58%);
-    background-size: 42px 42px, 42px 42px, auto;
-}
-
-.record-signal-topline,
-.record-signal-footer {
-    position: absolute;
-    right: 0;
-    left: 0;
-    z-index: 4;
-    display: flex;
-    min-height: 45px;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 18px;
-    color: #647079;
-    font-family: "JetBrains Mono", var(--mono);
-    font-size: 0.55rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-}
-
-.record-signal-topline {
-    top: 0;
-    border-bottom: 1px solid var(--record-line);
-}
-
-.record-signal-footer {
-    bottom: 0;
-    border-top: 1px solid var(--record-line);
-}
-
-.record-signal-topline>span:last-child {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    color: var(--record-acid);
-}
-
-.record-signal-topline i,
-.archive-topline i,
-.leader-card-topline i {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--record-acid);
-    box-shadow: 0 0 8px var(--record-acid);
-}
-
-.record-target {
-    position: absolute;
-    width: min(31vw, 430px);
-    aspect-ratio: 1;
-    border: 1px solid rgba(99, 231, 255, 0.2);
-    border-radius: 50%;
-    animation: archiveTarget 26s linear infinite;
-}
-
-.record-target::before,
-.record-target::after {
-    position: absolute;
-    content: "";
-    border: 1px solid rgba(173, 255, 47, 0.13);
-    border-radius: 50%;
-}
-
-.record-target::before {
-    inset: 18%;
-}
-
-.record-target::after {
-    inset: 36%;
-    background: rgba(5, 7, 10, 0.88);
-}
-
-.record-target i {
-    position: absolute;
-    z-index: 2;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--record-cyan);
-    box-shadow: 0 0 16px var(--record-cyan);
-}
-
-.record-target i:nth-child(1) {
-    top: 7%;
-    left: 29%;
-}
-
-.record-target i:nth-child(2) {
-    top: 52%;
-    right: -4px;
-    background: var(--record-acid);
-    box-shadow: 0 0 16px var(--record-acid);
-}
-
-.record-target i:nth-child(3) {
-    bottom: 12%;
-    left: 18%;
-    background: var(--record-gold);
-    box-shadow: 0 0 16px var(--record-gold);
-}
-
-.record-signal-readout {
-    position: relative;
-    z-index: 3;
-    width: min(280px, 74%);
-    padding: 29px 24px;
-    border: 1px solid color-mix(in srgb, var(--signal-accent), transparent 58%);
-    background: rgba(5, 7, 10, 0.91);
-    text-align: center;
-    transition:
-        border-color 220ms ease,
-        opacity 220ms ease,
-        transform 220ms ease;
-}
-
-.record-signal-readout.is-changing {
-    opacity: 0.2;
-    transform: translateY(7px);
-}
-
-.record-signal-readout small,
-.record-signal-readout span {
-    display: block;
-    color: #6c7680;
-    font-family: "JetBrains Mono", var(--mono);
-    font-size: 0.55rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-}
-
-.record-signal-readout strong {
-    display: block;
-    margin: 14px 0 11px;
-    overflow: hidden;
-    color: #f3f5f7;
-    font-family: var(--display);
-    font-size: clamp(1.2rem, 2.3vw, 2rem);
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-}
-
-.record-signal-readout span {
-    color: var(--signal-accent);
-}
-
-@keyframes archiveTarget {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-body.nebula-page.records-page .records-archive {
-    display: grid !important;
-    width: min(1440px, calc(100% - 8vw)) !important;
-    gap: 32px;
-    margin: 0 auto !important;
-    padding: 11vh 0 120px !important;
-}
-
-.record-scope-console {
-    display: grid;
-    grid-template-columns: minmax(190px, 0.8fr) minmax(420px, 1.7fr) minmax(210px, 0.8fr);
-    margin-bottom: 20px;
-    border: 1px solid var(--record-line);
-    background: var(--record-surface);
-}
-
-.record-scope-copy {
-    display: grid;
-    align-content: center;
-    gap: 7px;
-    min-height: 76px;
-    padding: 16px 22px;
-    border-right: 1px solid var(--record-line);
-}
-
-.record-scope-copy small,
-.record-scope-select>span {
-    color: #70808c;
-    font-family: var(--mono);
-    font-size: 0.52rem;
-    font-weight: 700;
-    letter-spacing: 0.09em;
-}
-
-.record-scope-copy strong {
-    color: var(--record-cyan);
-    font-family: var(--display);
-    font-size: 0.8rem;
-}
-
-.record-scope-tabs {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1px;
-    background: var(--record-line);
-}
-
-body.nebula-page.records-page .record-scope-tabs button {
-    min-width: 0 !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: var(--record-surface-2) !important;
-    box-shadow: none !important;
-    color: #7b8790 !important;
-    font-family: var(--mono) !important;
-    font-size: 0.58rem !important;
-}
-
-body.nebula-page.records-page .record-scope-tabs button:hover,
-body.nebula-page.records-page .record-scope-tabs button.active {
-    background: rgba(99, 231, 255, 0.1) !important;
-    box-shadow: inset 0 -2px 0 var(--record-cyan) !important;
-    color: var(--record-cyan) !important;
-    transform: none !important;
-}
-
-.record-scope-select {
-    display: none;
-    min-width: 0;
-    align-content: center;
-    gap: 7px;
-    padding: 10px 18px;
-    border-left: 1px solid var(--record-line);
-}
-
-.record-scope-select.is-visible {
-    display: grid;
-}
-
-.record-scope-select select {
-    width: 100%;
-    min-width: 0;
-    height: 38px;
-    padding: 0 10px;
-    border: 1px solid var(--record-line);
-    border-radius: 0;
-    outline: 0;
-    background: #070b10;
-    color: #edf2f5;
-    font-family: var(--mono);
-    font-size: 0.57rem;
-}
-
-.record-holders,
-.club-archive,
-.individual-archive,
-.record-vault {
-    border: 1px solid var(--record-line);
-    background: var(--record-surface);
-}
-
-.records-section-heading {
-    display: grid;
-    min-height: 108px;
-    grid-template-columns: 104px minmax(0, 1fr) minmax(290px, 0.58fr);
-    align-items: center;
-    border-bottom: 1px solid var(--record-line);
-}
-
-.records-section-index {
-    display: grid;
-    height: 100%;
-    place-items: center;
-    border-right: 1px solid var(--record-line);
-    color: #303943;
-    font-family: var(--display);
-    font-size: 2rem;
-    font-weight: 800;
-}
-
-.records-section-heading>div {
-    padding: 22px 28px;
-}
-
-.records-section-heading small {
-    display: block;
-    margin-bottom: 7px;
-    color: var(--record-cyan);
-    font-family: "JetBrains Mono", var(--mono);
-    font-size: 0.56rem;
-    font-weight: 700;
-    letter-spacing: 0.11em;
-}
-
-body.nebula-page.records-page .records-section-heading h2 {
-    margin: 0;
-    color: #f2f5f7;
-    font-size: clamp(1.35rem, 2.4vw, 2.25rem);
-    letter-spacing: -0.045em;
-}
-
-.records-section-heading>p {
-    align-self: stretch;
-    display: flex;
-    align-items: center;
-    margin: 0;
-    padding: 22px 30px;
-    border-left: 1px solid var(--record-line);
-    color: #7d8790;
-    font-size: 0.77rem;
-    line-height: 1.6;
-}
-
-.record-highlight-grid {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 1px;
-    background: var(--record-line);
-}
-
-body.nebula-page.records-page .record-leader-card {
-    --record-accent: var(--record-cyan);
-    position: relative;
-    display: grid;
-    min-width: 0;
-    grid-template-rows: auto 210px auto;
-    overflow: hidden;
-    background: var(--record-surface-2);
-    color: #edf1f3;
-}
-
-body.nebula-page.records-page .record-leader-card::before {
-    position: absolute;
-    z-index: 5;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 2px;
-    content: "";
-    background: var(--record-accent);
-    opacity: 0.6;
-    transform: scaleX(0.3);
-    transform-origin: left;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-body.nebula-page.records-page .record-leader-card:hover::before {
-    opacity: 1;
-    transform: scaleX(1);
-}
-
-.leader-card-topline {
-    display: flex;
-    min-height: 42px;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 14px;
-    border-bottom: 1px solid var(--record-line);
-    color: #5d6872;
-    font-family: "JetBrains Mono", var(--mono);
-    font-size: 0.5rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-}
-
-.leader-card-topline>span:last-child {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    color: var(--record-accent);
-}
-
-.leader-card-topline i {
-    background: var(--record-accent);
-    box-shadow: 0 0 8px var(--record-accent);
-}
-
-.leader-card-visual {
-    position: relative;
-    overflow: hidden;
-    background: #090d12;
-}
-
-body.nebula-page.records-page .leader-card-visual img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover;
-    object-position: center 25%;
-    filter: saturate(0.68) contrast(1.07);
-    transition: filter 0.4s ease, transform 0.45s ease;
-}
-
-.record-leader-card:hover .leader-card-visual img {
-    filter: saturate(1) contrast(1.04);
-    transform: scale(1.035);
-}
-
-.leader-card-visual::after {
-    position: absolute;
-    inset: 0;
-    content: "";
-    background:
-        linear-gradient(180deg, transparent 35%, #0a0f15 100%),
-        linear-gradient(90deg, color-mix(in srgb, var(--record-accent), transparent 85%), transparent 52%);
-}
-
-.leader-card-visual>span {
-    position: absolute;
-    z-index: 2;
-    right: 8px;
-    bottom: -11px;
-    color: rgba(255, 255, 255, 0.09);
-    font-family: var(--display);
-    font-size: 4.8rem;
-    font-weight: 900;
-    letter-spacing: -0.09em;
-}
-
-.leader-card-body {
-    display: grid;
-    min-width: 0;
-    padding: 18px 18px 0;
-}
-
-.leader-card-body>small {
-    color: var(--record-accent);
-    font-family: "JetBrains Mono", var(--mono);
-    font-size: 0.53rem;
-    font-weight: 700;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-}
-
-.leader-card-body>strong {
-    margin-top: 8px;
-    overflow: hidden;
-    color: #f2f5f7;
-    font-family: var(--display);
-    font-size: 1rem;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    white-space: nowrap;
-}
-
-.leader-card-body>span {
-    margin-top: 6px;
-    color: #66717a;
-    font-size: 0.67rem;
-}
-
-.leader-card-body>div {
-    display: flex;
-    min-height: 58px;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-top: 16px;
-    border-top: 1px solid var(--record-line);
-}
-
-.leader-card-body b {
-    color: #dfe4e7;
-    font-family: "JetBrains Mono", var(--mono);
-    font-size: 0.66rem;
-}
-
-.leader-card-body i {
-    color: var(--record-accent);
-    font-size: 1rem;
-    font-style: normal;
-}
-
-.archive-topline {
-    display: flex;
-    min-height: 46px;
-    align-items: center;
-    justify-content: space-between;
-    gap: 18px;
-    padding: 0 17px;
-    border-bottom: 1px solid var(--record-line);
-    color: #657079;
-    font-family: "JetBrains Mono", var(--mono);
-    font-size: 0.55rem;
-    font-weight: 700;
-    letter-spacing: 0.09em;
-}
-
-.archive-topline>span:first-child {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--record-acid);
-}
+@layer nl-force;
 
-.club-table-scroll {
-    overflow-x: auto;
-}
-
-.club-record-table {
-    width: 100%;
-    min-width: 900px;
-    border-collapse: collapse;
-}
-
-body.nebula-page.records-page .club-record-table th,
-body.nebula-page.records-page .club-record-table td {
-    height: 76px;
-    padding: 12px 18px;
-    border-right: 1px solid var(--record-line);
-    border-bottom: 1px solid var(--record-line);
-    background: transparent;
-    color: #8b959e;
-    font-family: "JetBrains Mono", var(--mono);
-    font-size: 0.66rem;
-    text-align: center;
-    white-space: nowrap;
-}
+/* -------------------- 01. Cadre de page -------------------- */
 
-body.nebula-page.records-page .club-record-table th:last-child,
-body.nebula-page.records-page .club-record-table td:last-child {
-    border-right: 0;
-}
-
-body.nebula-page.records-page .club-record-table thead th {
-    height: 55px;
-    color: #65717a;
-    font-size: 0.52rem;
-    letter-spacing: 0.09em;
-}
-
-body.nebula-page.records-page .club-record-table tbody tr {
-    position: relative;
-    transition: background 0.2s ease;
-}
-
-body.nebula-page.records-page .club-record-table tbody tr:hover {
-    background: color-mix(in srgb, var(--club-accent), transparent 95%);
-}
-
-body.nebula-page.records-page .club-record-table td:nth-child(2),
-body.nebula-page.records-page .club-record-table th:nth-child(2) {
-    min-width: 220px;
-    text-align: left;
-}
-
-.club-record-rank {
-    color: #38434d;
-    font-family: var(--display);
-    font-size: 1rem;
-}
-
-.club-record-identity {
-    display: inline-flex;
-    align-items: center;
-    gap: 13px;
-}
-
-body.nebula-page.records-page .club-record-identity img {
-    width: 38px !important;
-    height: 38px !important;
-    object-fit: contain;
-}
-
-.club-record-identity strong {
-    color: #e9edef;
-    font-family: var(--display);
-    font-size: 0.7rem;
-}
-
-.club-record-table td>strong {
-    color: #f1f4f6;
-    font-family: var(--display);
-    font-size: 0.78rem;
-}
-
-body.nebula-page.records-page .club-record-table tbody td:nth-child(3),
-body.nebula-page.records-page .club-record-table tbody td:nth-child(4),
-body.nebula-page.records-page .club-record-table tbody td:nth-child(5),
-body.nebula-page.records-page .club-record-table tbody td:nth-child(6),
-body.nebula-page.records-page .club-record-table tbody td:nth-child(4)>strong {
-    font-family: var(--display);
-    font-size: 0.78rem;
-    font-weight: 700;
-}
-
-.club-record-table .positive {
-    color: var(--record-acid);
-}
-
-.club-record-table .negative {
-    color: #ff5d66;
-}
-
-.club-winrate {
-    position: relative;
-    display: inline-block;
-    width: 82px;
-    height: 4px;
-    margin-right: 9px;
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.07);
-    vertical-align: middle;
-}
-
-.club-winrate i {
-    position: absolute;
-    inset: 0 auto 0 0;
-    background: var(--club-accent);
-    box-shadow: 0 0 8px var(--club-accent);
-}
-
-.club-record-table td>small {
-    color: #77818a;
-    font-family: "JetBrains Mono", var(--mono);
-    font-size: 0.56rem;
-}
-
-.record-category-tabs {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1px;
-    padding: 1px 0;
-    background: var(--record-line);
-}
-
-body.nebula-page.records-page .record-category-tabs button {
-    min-width: 0 !important;
-    min-height: 66px;
-    padding: 0 16px !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: var(--record-surface-2) !important;
-    box-shadow: none !important;
-    color: #717c85 !important;
-    font-family: "JetBrains Mono", var(--mono) !important;
-    font-size: 0.58rem !important;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-}
-
-body.nebula-page.records-page .record-category-tabs button:hover {
-    background: rgba(99, 231, 255, 0.07) !important;
-    box-shadow: inset 0 -2px 0 var(--record-cyan) !important;
-    color: var(--record-cyan) !important;
-    transform: none !important;
-}
-
-body.nebula-page.records-page .record-category-tabs button.active {
-    background: rgba(157, 255, 29, 0.16) !important;
-    box-shadow:
-        inset 0 0 0 1px var(--record-acid),
-        inset 0 -2px 0 var(--record-acid) !important;
-    color: var(--record-acid) !important;
-    transform: none !important;
-}
-
-body.nebula-page.records-page .record-category-tabs button.active:hover {
-    background: rgba(157, 255, 29, 0.2) !important;
-}
+body.records-page .records-archive {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(72px, 8vw, 112px);
+  padding-top: clamp(28px, 3vw, 44px);
+}
+
+/* style.css (feuille historique) : pied de page gris centré, lignes paires
+   teintées. On rend la main au kit. */
+body.records-page .nl-footer {
+  background: none;
+  text-align: left;
+}
+
+body.records-page .nl-table {
+  margin: 0;
+}
+
+body.records-page .nl-table tr {
+  background: transparent;
+}
+
+/* -------------------- 02. Héros -------------------- */
+
+body.records-page .records-intro {
+  min-height: 0;
+  background:
+    radial-gradient(60% 70% at 82% 34%, rgba(31, 91, 255, 0.22), transparent 66%),
+    radial-gradient(50% 60% at 0% 100%, rgba(31, 91, 255, 0.1), transparent 70%),
+    linear-gradient(180deg, var(--screen), var(--ink) 92%);
+}
+
+body.records-page .records-hero-grid {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: stretch;
+  width: var(--page);
+  margin-inline: auto;
+  padding-block: clamp(36px, 4.4vw, 60px) clamp(28px, 3vw, 40px);
+}
+
+body.records-page .records-intro-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  container-type: inline-size;
+}
+
+/* « NE S'OUBLIENT PAS » mesure 9 em : la taille suit la largeur de la
+   colonne (unité cqi) pour que la ligne en accent tienne d'un seul tenant. */
+body.records-page .records-title {
+  font-size: clamp(1.9rem, 10.8cqi, 6.4rem);
+}
+
+body.records-page .records-title em {
+  display: block;
+  font-style: italic;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+/* Écran multiplex : le record présenté tourne toutes les 2 s (stats.js) */
+body.records-page .record-signal {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-height: clamp(360px, 30vw, 430px);
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-mon);
+  background: var(--bezel);
+  box-shadow:
+    0 0 0 3px var(--bezel),
+    0 0 0 4px rgba(77, 128, 255, 0.16),
+    0 30px 80px rgba(0, 0, 0, 0.6),
+    0 0 90px rgba(31, 91, 255, 0.2);
+}
+
+body.records-page .record-signal-topline {
+  background: rgba(1, 4, 12, 0.92);
+}
+
+body.records-page .record-signal-status {
+  font-size: var(--fs-micro);
+}
+
+body.records-page .record-signal-screen {
+  position: relative;
+  isolation: isolate;
+  min-height: 0;
+  overflow: hidden;
+}
+
+body.records-page .record-signal-img {
+  position: absolute;
+  z-index: -3;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 26%;
+  filter: grayscale(0.2) contrast(1.12) brightness(0.82) saturate(0.9);
+  transform: scale(1.04);
+  transition: filter 300ms ease;
+}
+
+/* Teinte moniteur + vignettage, puis grain + lignes de balayage */
+body.records-page .record-signal-screen::before {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(180deg, rgba(2, 6, 17, 0.5) 0%, transparent 24%, transparent 46%, rgba(2, 6, 17, 0.94) 100%),
+    radial-gradient(120% 95% at 50% 40%, transparent 48%, rgba(2, 6, 17, 0.62)),
+    linear-gradient(180deg, rgba(31, 91, 255, 0.26), rgba(11, 42, 143, 0.34));
+  pointer-events: none;
+}
+
+body.records-page .record-signal-screen::after {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  content: "";
+  background: var(--noise), var(--scanlines-strong);
+  background-size: 180px 180px, auto;
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+body.records-page .record-signal-mire {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background:
+    var(--mire) top / 100% 72% no-repeat,
+    var(--mire-low) bottom / 100% 28% no-repeat;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+/* Aucun détenteur : image de veille éteinte + mire */
+body.records-page .record-signal.is-offline .record-signal-img {
+  filter: grayscale(1) contrast(1.2) brightness(0.4);
+}
+
+body.records-page .record-signal.is-offline .record-signal-mire {
+  opacity: 0.16;
+}
+
+body.records-page .record-signal-lock {
+  top: 42%;
+  width: 30%;
+  opacity: 0.85;
+  transform: translate(-50%, -50%);
+}
+
+body.records-page .record-signal.is-offline .record-signal-lock {
+  opacity: 0.35;
+}
+
+body.records-page .record-signal-code {
+  position: absolute;
+  z-index: 4;
+  top: 14px;
+  left: 14px;
+  padding: 6px 10px 5px;
+  background: var(--blue);
+  color: #fff;
+  font-family: var(--display);
+  font-size: 22px;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  box-shadow: 0 0 30px rgba(31, 91, 255, 0.5);
+}
+
+body.records-page .record-signal.is-offline .record-signal-code {
+  background: var(--surface-3);
+  box-shadow: none;
+}
+
+body.records-page .record-signal-tc {
+  position: absolute;
+  z-index: 4;
+  top: 16px;
+  right: 14px;
+  color: rgba(227, 235, 255, 0.78);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+  white-space: nowrap;
+}
+
+/* Bandeau « lower third » du record présenté */
+body.records-page .record-signal-readout {
+  position: absolute;
+  z-index: 4;
+  right: 14px;
+  bottom: 16px;
+  left: 0;
+  display: grid;
+  justify-items: start;
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+body.records-page .record-signal-readout.is-changing {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+body.records-page .record-signal-readout small {
+  padding: 6px 12px;
+  background: var(--ink);
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+  line-height: 1.2;
+}
+
+body.records-page .record-signal-readout strong {
+  max-width: 100%;
+  padding: 8px 18px 7px 12px;
+  overflow: hidden;
+  background: var(--blue);
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(1.7rem, 2.8vw, 2.7rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+body.records-page .record-signal.is-offline .record-signal-readout strong {
+  background: var(--surface-3);
+  color: #dbe3f8;
+}
+
+body.records-page .record-signal-readout span {
+  padding: 6px 12px 7px;
+  background: rgba(2, 6, 17, 0.88);
+  color: #fff;
+  font-family: var(--display);
+  font-size: 20px;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+/* Sélecteur de canal du multiplex (le record à l'antenne est en bleu) */
+body.records-page .record-signal-pips {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--seam);
+  padding-top: var(--seam);
+  background: var(--bezel);
+}
+
+body.records-page .record-signal-pips span {
+  display: grid;
+  min-height: 34px;
+  place-items: center;
+  background: var(--scanlines), var(--surface);
+  color: var(--dim);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+  transition: background 200ms ease, color 200ms ease;
+}
+
+body.records-page .record-signal-pips span.is-active {
+  background: var(--scanlines), var(--blue);
+  color: #fff;
+}
+
+/* Tableau d'affichage : trois compteurs géants joints */
+body.records-page .records-intro-stats {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--seam);
+  width: var(--page);
+  margin: 0 auto clamp(32px, 4vw, 52px);
+}
+
+body.records-page .records-counter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 10px 16px;
+  min-height: 150px;
+  padding: 14px 18px 16px;
+  border-top: 3px solid var(--blue);
+  background:
+    var(--scanlines),
+    linear-gradient(180deg, rgba(31, 91, 255, 0.14), transparent 72%),
+    var(--screen);
+}
+
+body.records-page .records-counter > span {
+  grid-column: 1 / -1;
+  align-self: start;
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+body.records-page .records-counter > span i {
+  color: var(--dim);
+  font-style: normal;
+}
+
+body.records-page .records-counter strong {
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(3.4rem, 7vw, 7rem);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.78;
+  text-shadow: var(--fringe), 0 0 34px rgba(31, 91, 255, 0.45);
+  white-space: nowrap;
+}
+
+body.records-page .records-counter small {
+  max-width: 180px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: right;
+}
+
+body.records-page .records-counter.is-solid {
+  border-top-color: #fff;
+  background: var(--scanlines), linear-gradient(160deg, #2a66ff, var(--blue) 50%, #0d33b5);
+}
+
+body.records-page .records-counter.is-solid > span,
+body.records-page .records-counter.is-solid > span i,
+body.records-page .records-counter.is-solid small {
+  color: rgba(255, 255, 255, 0.86);
+}
+
+body.records-page .records-counter.is-solid strong {
+  text-shadow: 0 8px 30px rgba(2, 10, 50, 0.4);
+}
+
+/* -------------------- 03. Console de périmètre -------------------- */
+
+body.records-page .record-scope-body {
+  display: grid;
+  grid-auto-columns: minmax(200px, 0.9fr);
+  grid-auto-flow: column;
+  grid-template-columns: minmax(220px, 0.9fr) minmax(320px, 1.3fr);
+  align-items: end;
+  gap: 14px 22px;
+  padding: 16px 18px 18px;
+}
+
+body.records-page .record-scope-copy {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding-bottom: 4px;
+}
+
+body.records-page .record-scope-copy small {
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
+
+body.records-page .record-scope-copy strong {
+  overflow: hidden;
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(1.3rem, 1.9vw, 1.7rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+body.records-page .record-scope-tabs {
+  flex-wrap: nowrap;
+}
+
+body.records-page .record-scope-tabs .nl-key {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 42px;
+  white-space: nowrap;
+}
+
+/* Les sélecteurs n'apparaissent que pour leur périmètre (stats.js → .is-visible) */
+body.records-page .record-scope-select {
+  display: none;
+}
+
+body.records-page .record-scope-select.is-visible {
+  display: grid;
+}
+
+/* -------------------- 04. CH 01 : détenteurs -------------------- */
+
+body.records-page .record-highlight-grid {
+  grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(220px, auto));
+}
+
+body.records-page .record-leader-card {
+  min-height: 220px;
+  aspect-ratio: auto;
+}
+
+body.records-page .record-leader-card:first-child {
+  grid-row: span 2;
+}
+
+body.records-page .record-leader-card .nl-feed-img {
+  --feed-pos: 50% 24%;
+}
+
+body.records-page .record-leader-card.is-standby .nl-feed-img {
+  filter: grayscale(1) contrast(1.2) brightness(0.36);
+}
+
+body.records-page .leader-card-mire {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: var(--mire);
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+/* Étiquette centrale « SIGNAL EN ATTENTE » : sur l'écran principal seulement
+   (les petits écrans l'indiquent dans leur bandeau OSD) */
+body.records-page .leader-card-wait {
+  display: none;
+  position: absolute;
+  z-index: 3;
+  top: 42%;
+  left: 50%;
+  padding: 7px 12px;
+  border: 1px solid var(--line-strong);
+  background: rgba(2, 6, 17, 0.9);
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(0.95rem, 1.2vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+body.records-page .leader-card-figure {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+body.records-page .leader-card-figure small,
+body.records-page .podium-value small {
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-shadow: none;
+  text-transform: uppercase;
+}
+
+body.records-page .record-leader-card .nl-feed-caption {
+  max-width: calc(100% - 110px);
+}
+
+body.records-page .record-leader-card .nl-feed-caption em {
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* L'écran principal du mur (meilleur buteur) : plus grand, chiffre géant */
+body.records-page .record-leader-card:first-child .leader-card-figure {
+  font-size: clamp(3.4rem, 6.4vw, 6.6rem);
+}
+
+body.records-page .record-leader-card:first-child .nl-feed-caption b {
+  font-size: clamp(1.4rem, 2.4vw, 2.4rem);
+}
+
+body.records-page .record-leader-card:first-child .leader-card-wait {
+  display: block;
+  font-size: clamp(1.2rem, 1.8vw, 1.7rem);
+}
+
+/* -------------------- 05. CH 02 : clubs -------------------- */
+
+body.records-page .club-table-shell {
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-mon);
+  background: var(--screen);
+  box-shadow: 0 0 0 3px var(--bezel), 0 30px 70px rgba(0, 0, 0, 0.5);
+}
+
+body.records-page .archive-topline {
+  background: rgba(1, 4, 12, 0.9);
+}
+
+body.records-page .club-table-scroll {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+body.records-page .club-record-table td {
+  height: 70px;
+}
+
+body.records-page .club-record-table th:first-child,
+body.records-page .club-record-table td:first-child {
+  width: 96px;
+  padding-left: 22px;
+}
+
+body.records-page .club-record-rank {
+  color: var(--blue-3);
+  font-family: var(--display);
+  font-size: 34px;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+body.records-page .club-record-table tr.is-leader .club-record-rank {
+  color: #fff;
+  text-shadow: var(--fringe), 0 0 24px rgba(31, 91, 255, 0.6);
+}
+
+body.records-page .club-record-identity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+body.records-page .club-record-identity img {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+}
+
+body.records-page .club-record-identity strong {
+  white-space: nowrap;
+}
+
+body.records-page .club-record-table td.is-hl {
+  width: 110px;
+  text-align: left;
+}
+
+body.records-page .club-record-table td.is-hl strong {
+  font-size: 24px;
+}
+
+body.records-page .club-record-table td.positive {
+  color: var(--blue-3);
+  font-weight: 600;
+}
+
+body.records-page .club-record-table td.negative {
+  color: var(--offline);
+}
+
+body.records-page .club-winrate-cell {
+  width: 32%;
+  min-width: 220px;
+}
+
+body.records-page .club-winrate-cell .club-winrate {
+  display: inline-block;
+  width: calc(100% - 60px);
+  vertical-align: middle;
+}
+
+body.records-page .club-winrate-cell small {
+  display: inline-block;
+  width: 48px;
+  margin-left: 8px;
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  text-align: right;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* -------------------- 06. CH 03 : classements joueurs -------------------- */
+
+body.records-page .record-category-tabs {
+  margin-bottom: var(--sp-4);
+}
+
+body.records-page .record-category-tab {
+  min-width: 0;
+}
+
+body.records-page .player-ranking-shell {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+/* Podium filmé : 2 — 1 — 3, le premier plus haut */
+body.records-page .ranking-podium {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: end;
+  gap: var(--seam);
+  padding: var(--seam);
+  border: 1px solid var(--line-strong);
+  background: var(--bezel);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+}
+
+body.records-page .podium-entry {
+  min-height: 300px;
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+}
 
-.player-ranking-shell {
-    display: grid;
-    grid-template-columns: 1fr;
-    min-height: 520px;
-}
-
-.ranking-summary {
-    min-width: 0;
-    padding: 34px clamp(18px, 5vw, 74px) 0;
-    border-bottom: 1px solid var(--record-line);
-    background:
-        linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px),
-        radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--category-accent, var(--record-cyan)), transparent 91%), transparent 48%),
-        var(--record-surface-2);
-    background-size: 36px 36px, 36px 36px, auto, auto;
-    text-align: center;
-}
-
-.ranking-podium {
-    display: grid;
-    width: min(900px, 100%);
-    min-height: 390px;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    align-items: end;
-    gap: clamp(8px, 2vw, 24px);
-    margin: 0 auto;
-}
-
-.podium-entry {
-    --podium-color: #a96f42;
-    --podium-glow: rgba(169, 111, 66, 0.24);
-    display: grid;
-    min-width: 0;
-    justify-items: center;
-    color: #eef2f4;
-    text-decoration: none;
-    transition: filter 0.2s ease, transform 0.2s ease;
-}
-
-.podium-entry:hover {
-    filter: brightness(1.14);
-}
-
-.podium-rank-1 {
-    --podium-color: #ffd84d;
-    --podium-glow: rgba(255, 216, 77, 0.28);
-    grid-column: 2;
-    grid-row: 1;
-}
-
-.podium-rank-2 {
-    --podium-color: #b9c4ce;
-    --podium-glow: rgba(185, 196, 206, 0.2);
-    grid-column: 1;
-    grid-row: 1;
-}
-
-.podium-rank-3 {
-    --podium-color: #c37a45;
-    --podium-glow: rgba(195, 122, 69, 0.2);
-    grid-column: 3;
-    grid-row: 1;
-}
-
-.podium-crown {
-    height: 34px;
-    color: transparent;
-    font-size: 2rem;
-    line-height: 1;
-}
-
-.podium-rank-1 .podium-crown {
-    color: var(--podium-color);
-    filter: drop-shadow(0 0 10px rgba(255, 216, 77, 0.55));
-}
-
-.podium-avatar-wrap {
-    position: relative;
-    display: block;
-    width: 104px;
-    height: 104px;
-    border: 1px solid var(--podium-color);
-    background: #080b0f;
-    box-shadow: 0 0 26px var(--podium-glow);
-}
-
-.podium-rank-1 .podium-avatar-wrap {
-    width: 128px;
-    height: 128px;
-    border-width: 2px;
-}
-
-body.nebula-page.records-page .podium-avatar-wrap img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover;
-}
-
-.podium-medal {
-    position: absolute;
-    right: -10px;
-    bottom: -10px;
-    display: grid;
-    width: 34px;
-    height: 34px;
-    place-items: center;
-    border: 1px solid var(--podium-color);
-    background: #0a0e13;
-    color: var(--podium-color);
-    font-family: var(--display);
-    font-size: 0.76rem;
-    box-shadow: 0 0 14px var(--podium-glow);
-}
-
-.podium-player {
-    max-width: 100%;
-    margin-top: 18px;
-    overflow: hidden;
-    color: #f2f5f7;
-    font-family: var(--display);
-    font-size: 1rem;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    white-space: nowrap;
-}
-
-.podium-rank-1 .podium-player {
-    font-size: 1.25rem;
-}
-
-.podium-entry > small {
-    max-width: 100%;
-    margin-top: 6px;
-    overflow: hidden;
-    color: #69747d;
-    font-family: "JetBrains Mono", var(--mono);
-    font-size: 0.5rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    white-space: nowrap;
+body.records-page .podium-entry .nl-feed-img {
+  --feed-pos: 50% 24%;
 }
 
-.podium-value {
-    margin: 12px 0 16px;
-    color: var(--podium-color);
-    font-family: var(--display);
-    font-size: 1.25rem;
-    text-shadow: 0 0 12px var(--podium-glow);
-}
-
-.podium-value i {
-    font-family: "JetBrains Mono", var(--mono);
-    font-size: 0.48rem;
-    font-style: normal;
-}
-
-.podium-step {
-    position: relative;
-    display: grid;
-    width: 100%;
-    height: 72px;
-    place-items: center;
-    overflow: hidden;
-    border: 1px solid color-mix(in srgb, var(--podium-color), transparent 50%);
-    border-bottom: 0;
-    background:
-        linear-gradient(180deg, color-mix(in srgb, var(--podium-color), transparent 78%), transparent),
-        #0d1218;
-    box-shadow: inset 0 2px 0 color-mix(in srgb, var(--podium-color), transparent 30%);
-}
-
-.podium-step::after {
-    position: absolute;
-    inset: 0;
-    content: "";
-    background: linear-gradient(110deg, transparent 32%, rgba(255, 255, 255, 0.08) 50%, transparent 68%);
-}
-
-.podium-step b {
-    color: color-mix(in srgb, var(--podium-color), #fff 12%);
-    font-family: var(--display);
-    font-size: 2.5rem;
-    opacity: 0.75;
-}
-
-.podium-rank-1 .podium-step {
-    height: 112px;
-}
+body.records-page .podium-rank-1 {
+  order: 2;
+  min-height: 390px;
+}
+
+body.records-page .podium-rank-2 {
+  order: 1;
+  min-height: 330px;
+}
+
+body.records-page .podium-rank-3 {
+  order: 3;
+}
+
+body.records-page .podium-place {
+  position: absolute;
+  z-index: 4;
+  top: 40px;
+  left: 14px;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 4px;
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(3rem, 5vw, 5rem);
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 0.8;
+  text-shadow: var(--fringe), 0 0 30px rgba(31, 91, 255, 0.55);
+}
+
+body.records-page .podium-place small {
+  margin-top: 0.1em;
+  color: var(--blue-2);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+  text-shadow: none;
+}
+
+body.records-page .podium-rank-2 .podium-place,
+body.records-page .podium-rank-3 .podium-place {
+  color: var(--blue-3);
+  font-size: clamp(2.4rem, 3.8vw, 3.8rem);
+}
+
+body.records-page .podium-value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+body.records-page .podium-rank-1 .podium-value {
+  font-size: clamp(3rem, 5vw, 5rem);
+}
+
+body.records-page .podium-entry .nl-feed-caption {
+  max-width: calc(100% - 100px);
+}
+
+body.records-page .ranking-nosignal {
+  min-height: 320px;
+}
+
+/* Liste à vumètres (4e et suivants) */
+body.records-page .player-record-list {
+  display: grid;
+  gap: var(--seam);
+  padding: var(--seam);
+  border: 1px solid var(--line);
+  background: var(--bezel);
+}
+
+body.records-page .player-record-list:empty {
+  display: none;
+}
+
+body.records-page .player-record-row {
+  display: grid;
+  grid-template-columns: 70px 92px minmax(0, 1fr) minmax(140px, 1.5fr) 110px;
+  align-items: center;
+  gap: 18px;
+  min-height: 66px;
+  padding-right: 20px;
+  background: var(--scanlines), var(--screen);
+  box-shadow: inset 4px 0 0 var(--club, var(--blue-2));
+  color: var(--paper);
+  transition: background 160ms ease;
+}
+
+body.records-page a.player-record-row:hover,
+body.records-page a.player-record-row:focus-visible {
+  background: var(--scanlines), var(--surface-2);
+}
+
+body.records-page .player-record-rank {
+  color: var(--blue-3);
+  font-family: var(--display);
+  font-size: 28px;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  text-align: center;
+}
+
+body.records-page .player-record-thumb {
+  position: relative;
+  display: block;
+  height: 66px;
+  overflow: hidden;
+  background: var(--bezel);
+}
+
+body.records-page .player-record-thumb::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: var(--scanlines-strong), linear-gradient(180deg, rgba(31, 91, 255, 0.2), rgba(11, 42, 143, 0.3));
+}
+
+body.records-page .player-record-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 28%;
+  filter: grayscale(0.3) contrast(1.1) brightness(0.85);
+}
+
+body.records-page .player-record-name {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+body.records-page .player-record-name small {
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--track-micro);
+  text-transform: uppercase;
+}
 
-.podium-rank-1 .podium-step b {
-    font-size: 3.4rem;
-}
-
-.podium-rank-3 .podium-step {
-    height: 58px;
+body.records-page .player-record-name strong {
+  overflow: hidden;
+  color: #fff;
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-.player-record-list {
-    display: grid;
-    align-content: start;
-    min-width: 0;
+body.records-page .player-record-value {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 6px;
 }
 
-body.nebula-page.records-page .player-record-row {
-    --category-accent: var(--record-cyan);
-    display: grid;
-    min-height: 86px;
-    grid-template-columns: 58px 48px minmax(150px, 0.8fr) minmax(150px, 1fr) 78px;
-    align-items: center;
-    gap: 14px;
-    padding: 11px 16px;
-    border-bottom: 1px solid var(--record-line);
-    background: var(--record-surface);
-    transition: background 0.2s ease;
-}
-
-body.nebula-page.records-page .player-record-row:hover {
-    background: color-mix(in srgb, var(--category-accent), var(--record-surface-2) 95%);
-}
-
-.player-record-rank {
-    color: #37424c;
-    font-family: var(--display);
-    font-size: 1rem;
-    text-align: center;
-}
-
-body.nebula-page.records-page .player-record-row>img {
-    width: 44px !important;
-    height: 52px !important;
-    border: 1px solid color-mix(in srgb, var(--category-accent), transparent 55%);
-    object-fit: cover;
-}
-
-.player-record-name {
-    display: grid;
-    min-width: 0;
-    gap: 5px;
-}
-
-.player-record-name small {
-    overflow: hidden;
-    color: #647079;
-    font-family: "JetBrains Mono", var(--mono);
-    font-size: 0.49rem;
-    font-weight: 700;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    white-space: nowrap;
-}
-
-.player-record-name strong {
-    overflow: hidden;
-    color: #e8ecee;
-    font-family: var(--display);
-    font-size: 0.7rem;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
-    white-space: nowrap;
-}
-
-.player-record-bar {
-    position: relative;
-    height: 4px;
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.07);
+body.records-page .player-record-value strong {
+  color: #fff;
+  font-family: var(--display);
+  font-size: 28px;
+  font-style: italic;
+  font-weight: 700;
 }
 
-.player-record-bar i {
-    position: absolute;
-    inset: 0 auto 0 0;
-    background: var(--category-accent);
-    box-shadow: 0 0 8px var(--category-accent);
+body.records-page .player-record-value small {
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
 }
 
-.player-record-value {
-    display: flex;
-    align-items: baseline;
-    justify-content: flex-end;
-    gap: 7px;
+body.records-page .player-record-row.is-offline {
+  box-shadow: inset 4px 0 0 var(--offline);
 }
 
-.player-record-value strong {
-    color: #f1f4f6;
-    font-family: var(--display);
-    font-size: 1rem;
+body.records-page .player-record-row.is-offline :is(.player-record-rank, .player-record-name small, .player-record-value small) {
+  color: var(--offline);
 }
 
-.player-record-value small {
-    color: var(--category-accent);
-    font-family: "JetBrains Mono", var(--mono);
-    font-size: 0.48rem;
-    font-weight: 700;
+body.records-page .player-record-row.is-offline .player-record-thumb img {
+  filter: grayscale(1) brightness(0.6);
 }
 
-.record-vault-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1px;
-    background: var(--record-line);
+/* -------------------- 07. CH 04 : coffre sur bande bleue -------------------- */
+
+body.records-page .record-vault {
+  position: relative;
+  isolation: isolate;
+  width: 100vw;
+  max-width: none;
+  margin-inline: calc(50% - 50vw);
+  padding-bottom: clamp(48px, 6vw, 88px);
+  background:
+    var(--scanlines),
+    radial-gradient(60% 120% at 88% 10%, rgba(141, 176, 255, 0.4), transparent 60%),
+    linear-gradient(118deg, #2a66ff 0%, #1f5bff 34%, #0d33b5 72%, #0a2585 100%);
+  color: #fff;
+}
+
+body.records-page .record-vault :focus-visible {
+  outline-color: #fff;
+}
+
+body.records-page .record-vault-inner {
+  width: var(--page);
+  margin-inline: auto;
+}
+
+body.records-page .record-vault .nl-section-head--band {
+  width: auto;
+  margin-inline: 0;
+  padding: clamp(40px, 5vw, 72px) 0 var(--sp-5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  background: none;
+}
+
+body.records-page .record-vault-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--seam);
+  padding: var(--seam);
+  background: var(--bezel);
+  box-shadow: 0 30px 80px rgba(0, 10, 50, 0.5);
+}
+
+body.records-page article.vault-record {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: 10px;
+  min-height: 220px;
+  padding: 0 18px 18px;
+  background:
+    var(--scanlines),
+    radial-gradient(90% 70% at 100% 0%, rgba(31, 91, 255, 0.16), transparent 70%),
+    linear-gradient(180deg, #06122d, #030a1c);
+}
+
+body.records-page .vault-record-osd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 36px;
+  margin: 0 -18px 4px;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--line);
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+}
+
+body.records-page .vault-record-osd span {
+  color: #fff;
+}
+
+body.records-page .vault-record-osd small {
+  color: var(--dim);
+  font-size: var(--fs-micro);
+}
+
+body.records-page article.vault-record > strong {
+  color: var(--blue-3);
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+}
+
+body.records-page article.vault-record > p {
+  margin: 0;
+  color: #fff;
+  font-family: var(--display);
+  font-size: clamp(1.25rem, 1.7vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+body.records-page article.vault-record > span {
+  justify-self: start;
+  padding: 5px 9px;
+  border: 1px solid var(--line-strong);
+  background: var(--blue-soft);
+  color: #dfe8ff;
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* Archive vide : la valeur passe en gris, l'étiquette en pointillés */
+body.records-page article.vault-record.is-empty > p {
+  color: var(--dim);
+}
+
+body.records-page article.vault-record.is-empty > span {
+  border-style: dashed;
+  border-color: var(--line);
+  background: transparent;
+  color: var(--muted);
+}
+
+/* Bandes vidéo : flux avec bouton lecture */
+body.records-page .vault-tape {
+  min-height: 220px;
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+}
+
+body.records-page .vault-tape .nl-feed-img {
+  --feed-pos: 50% 30%;
+}
+
+body.records-page .vault-play {
+  position: absolute;
+  z-index: 3;
+  top: 44%;
+  left: 50%;
+  width: 58px;
+  height: 58px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  background: rgba(2, 6, 17, 0.72);
+  box-shadow: 0 0 0 6px rgba(31, 91, 255, 0.25), 0 10px 30px rgba(0, 0, 0, 0.5);
+  transform: translate(-50%, -50%);
+  transition: background 160ms ease, transform 200ms ease;
+}
+
+body.records-page .vault-play::before {
+  position: absolute;
+  top: 50%;
+  left: 54%;
+  width: 18px;
+  height: 20px;
+  content: "";
+  background: #fff;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  transform: translate(-50%, -50%);
 }
 
-.vault-record {
-    position: relative;
-    display: grid;
-    min-width: 0;
-    min-height: 210px;
-    align-content: space-between;
-    gap: 13px;
-    padding: 22px;
-    overflow: hidden;
-    background:
-        linear-gradient(135deg, rgba(99, 231, 255, 0.025), transparent 52%),
-        var(--record-surface-2);
+body.records-page .vault-tape:hover .vault-play,
+body.records-page .vault-tape:focus-visible .vault-play {
+  background: var(--blue);
+  transform: translate(-50%, -50%) scale(1.06);
 }
 
-.vault-record::after {
-    position: absolute;
-    right: -35px;
-    bottom: -45px;
-    width: 110px;
-    height: 110px;
-    content: "";
-    border: 1px solid rgba(99, 231, 255, 0.08);
-    border-radius: 50%;
+body.records-page .vault-tape .nl-feed-caption em {
+  font-family: var(--mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.04em;
 }
 
-.vault-record>div {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: #606b75;
-    font-family: "JetBrains Mono", var(--mono);
-    font-size: 0.62rem;
-    font-weight: 700;
-}
-
-.vault-record>strong {
-    color: #e7ebed;
-    font-family: var(--display);
-    font-size: 0.94rem;
-    line-height: 1.35;
-    text-transform: uppercase;
-}
-
-.vault-record>p {
-    margin: 0;
-    color: #98a1a9;
-    font-size: 0.9rem;
-    line-height: 1.5;
-}
-
-.vault-record>span {
-    color: var(--record-cyan);
-    font-family: "JetBrains Mono", var(--mono);
-    font-size: 0.68rem;
-    font-weight: 700;
-}
-
-.vault-record.has-link {
-    box-shadow: inset 0 -2px 0 var(--record-acid);
-}
-
-.vault-record.has-link>span {
-    color: var(--record-acid);
-}
-
-body.nebula-page.records-page .vault-record:hover {
-    background:
-        linear-gradient(135deg, rgba(99, 231, 255, 0.065), transparent 55%),
-        var(--record-surface-3);
-}
-
-@media (max-width: 1180px) {
-    .records-intro {
-        grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
-    }
-
-    .record-highlight-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    body.nebula-page.records-page .record-leader-card {
-        grid-template-rows: auto 260px auto;
-    }
-
-    .record-vault-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 900px) {
-    .records-intro {
-        width: calc(100% - 32px);
-        grid-template-columns: 1fr;
-    }
-
-    .records-intro-copy {
-        padding: 76px 28px 46px;
-    }
-
-    body.nebula-page.records-page .records-intro h1 {
-        font-size: clamp(3rem, 12vw, 5rem);
-    }
-
-    .record-signal {
-        min-height: 460px;
-        border-top: 1px solid var(--record-line);
-        border-left: 0;
-    }
-
-    .record-target {
-        width: min(72vw, 380px);
-    }
-
-    body.nebula-page.records-page .records-archive {
-        width: calc(100% - 32px) !important;
-        padding-top: 72px !important;
-    }
-
-    .record-scope-console {
-        grid-template-columns: 1fr;
-    }
-
-    .record-scope-copy,
-    .record-scope-select {
-        border-right: 0;
-        border-bottom: 1px solid var(--record-line);
-        border-left: 0;
-    }
-
-    .records-section-heading {
-        grid-template-columns: 78px 1fr;
-    }
-
-    .records-section-heading>p {
-        grid-column: 1 / -1;
-        padding: 16px 22px;
-        border-top: 1px solid var(--record-line);
-        border-left: 0;
-    }
-
-    .player-ranking-shell {
-        grid-template-columns: 1fr;
-    }
-
-    .ranking-summary {
-        min-height: 410px;
-        border-right: 0;
-        border-bottom: 1px solid var(--record-line);
-    }
-}
-
-@media (max-width: 620px) {
-    .records-intro {
-        width: calc(100% - 20px);
-    }
-
-    .records-intro-copy {
-        padding: 66px 20px 38px;
-    }
-
-    .records-intro-stats {
-        grid-template-columns: 1fr;
-    }
-
-    .records-intro-stats>div {
-        min-height: 76px;
-        border-right: 0;
-        border-bottom: 1px solid var(--record-line);
-    }
-
-    .records-intro-stats>div:last-child {
-        border-bottom: 0;
-    }
-
-    body.nebula-page.records-page .records-archive {
-        width: calc(100% - 20px) !important;
-    }
-
-    .records-section-heading {
-        grid-template-columns: 62px 1fr;
-    }
-
-    .records-section-heading>div {
-        padding: 18px;
-    }
-
-    .record-highlight-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .record-scope-tabs {
-        grid-template-columns: 1fr;
-    }
-
-    body.nebula-page.records-page .record-scope-tabs button {
-        min-height: 48px !important;
-    }
-
-    body.nebula-page.records-page .record-leader-card {
-        grid-template-rows: auto 300px auto;
-    }
-
-    .record-category-tabs {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .ranking-summary {
-        min-height: 0;
-        padding: 24px 8px 0;
-    }
-
-    .ranking-podium {
-        min-height: 310px;
-        gap: 4px;
-    }
-
-    .podium-avatar-wrap {
-        width: 72px;
-        height: 72px;
-    }
-
-    .podium-rank-1 .podium-avatar-wrap {
-        width: 90px;
-        height: 90px;
-    }
-
-    .podium-crown {
-        height: 27px;
-        font-size: 1.55rem;
-    }
-
-    .podium-player,
-    .podium-rank-1 .podium-player {
-        font-size: 0.7rem;
-    }
-
-    .podium-entry > small {
-        font-size: 0.4rem;
-    }
-
-    .podium-value {
-        margin: 9px 0 12px;
-        font-size: 0.88rem;
-    }
-
-    .podium-step {
-        height: 52px;
-    }
-
-    .podium-rank-1 .podium-step {
-        height: 78px;
-    }
-
-    .podium-rank-3 .podium-step {
-        height: 42px;
-    }
-
-    .podium-step b,
-    .podium-rank-1 .podium-step b {
-        font-size: 2rem;
-    }
-
-    body.nebula-page.records-page .player-record-row {
-        grid-template-columns: 42px 44px minmax(0, 1fr) 62px;
-        min-height: 78px;
-        gap: 9px;
-        padding: 9px;
-    }
-
-    .player-record-bar {
-        display: none;
-    }
-
-    .record-vault-grid {
-        grid-template-columns: 1fr;
-    }
+/* Un score ne se coupe jamais entre deux lignes */
+body.records-page .vault-score {
+  white-space: nowrap;
 }
+
+/* Bande prête : pastille bleue, le rouge reste au REC */
+body.records-page .vault-tape-state {
+  padding: 2px 6px;
+  background: var(--blue);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: var(--track-micro);
+}
+
+body.records-page .vault-tape:hover .vault-tape-state,
+body.records-page .vault-tape:focus-visible .vault-tape-state {
+  background: #fff;
+  color: var(--blue);
+}
+
+/* -------------------- 08. Mouvement réduit -------------------- */
 
 @media (prefers-reduced-motion: reduce) {
-    .record-target {
-        animation: none;
-    }
+  body.records-page :is(.record-signal-img, .record-signal-mire, .record-signal-readout, .record-signal-pips span, .player-record-row, .vault-play) {
+    transition: none;
+  }
+}
+
+/* -------------------- 09. Responsive -------------------- */
+
+@media (max-width: 1180px) {
+  body.records-page .record-scope-body {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.records-page .record-scope-copy {
+    grid-column: 1 / -1;
+  }
+
+  body.records-page .record-vault-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.records-page article.vault-record {
+    min-height: 200px;
+  }
+}
+
+@media (max-width: 960px) {
+  /* Bandeau du héros : cinq infos ne tiennent plus, on garde l'essentiel */
+  body.records-page .records-intro > .osd .jp,
+  body.records-page .records-intro > .osd > span:nth-child(3) {
+    display: none;
+  }
+
+  body.records-page .records-hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body.records-page .record-signal {
+    min-height: 380px;
+  }
+
+  body.records-page .player-record-row {
+    grid-template-columns: 56px 72px minmax(0, 1fr) minmax(100px, 1fr) 84px;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 860px) {
+  body.records-page .record-highlight-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+  }
+
+  body.records-page .record-leader-card:first-child {
+    grid-row: auto;
+    grid-column: 1 / -1;
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 680px) {
+  body.records-page .records-hero-grid {
+    padding-block: 28px 24px;
+  }
+
+  body.records-page .record-signal {
+    min-height: 340px;
+  }
+
+  body.records-page .record-signal-tc {
+    display: none;
+  }
+
+  body.records-page .record-signal-readout strong {
+    font-size: 1.6rem;
+  }
+
+  body.records-page .record-signal-readout span {
+    font-size: 17px;
+  }
+
+  body.records-page .records-intro-stats {
+    margin-bottom: 28px;
+  }
+
+  body.records-page .records-counter {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    min-height: 0;
+    padding: 12px 10px 14px;
+  }
+
+  body.records-page .records-counter > span {
+    min-height: 2.6em;
+  }
+
+  body.records-page .records-counter > span i,
+  body.records-page .records-counter small {
+    display: none;
+  }
+
+  body.records-page .records-counter strong {
+    font-size: clamp(2.8rem, 15vw, 3.6rem);
+  }
+
+  /* responsive.css passe ces barres en flex défilant : on garde le kit */
+  body.records-page .record-scope-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body.records-page .record-scope-tabs {
+    display: flex;
+    overflow: visible;
+  }
+
+  body.records-page .record-scope-tabs .nl-key {
+    min-height: 48px;
+    padding: 4px 6px;
+    font-size: 13px;
+    line-height: 1.15;
+    text-align: center;
+    white-space: normal;
+  }
+
+  body.records-page .record-scope-select {
+    min-width: 0;
+    flex: none;
+  }
+
+  body.records-page .record-category-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: row;
+    overflow: visible;
+  }
+
+  body.records-page .record-category-tab {
+    min-width: 0;
+    flex: none;
+    gap: 8px;
+    padding: 0 10px;
+    font-size: 14px;
+  }
+
+  body.records-page .record-category-tab::after {
+    display: none;
+  }
+
+  body.records-page .record-highlight-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.records-page .record-leader-card {
+    min-height: 210px;
+    aspect-ratio: auto;
+  }
+
+  body.records-page .record-leader-card:first-child {
+    min-height: 280px;
+  }
+
+  body.records-page .record-leader-card .nl-feed-caption {
+    max-width: calc(100% - 8px);
+    bottom: 54px;
+  }
+
+  body.records-page .record-leader-card .nl-feed-caption em {
+    display: none;
+  }
+
+  /* Petits flux : l'étiquette d'état ne tient pas à côté du numéro de caméra */
+  body.records-page .record-leader-card:not(:first-child) .nl-feed-osd .rec {
+    display: none;
+  }
+
+  body.records-page .record-leader-card:first-child .nl-feed-caption {
+    bottom: 12px;
+    max-width: calc(100% - 120px);
+  }
+
+  body.records-page .leader-card-figure {
+    font-size: 2.2rem;
+  }
+
+  body.records-page .leader-card-wait {
+    top: 38%;
+    font-size: 13px;
+  }
+
+  body.records-page .ranking-podium {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.records-page .podium-entry,
+  body.records-page .podium-rank-2 {
+    min-height: 230px;
+  }
+
+  body.records-page .podium-rank-1 {
+    order: 0;
+    grid-column: 1 / -1;
+    min-height: 300px;
+  }
+
+  body.records-page .podium-rank-2 {
+    order: 1;
+  }
+
+  body.records-page .podium-entry .nl-feed-caption {
+    max-width: calc(100% - 8px);
+    bottom: 54px;
+  }
+
+  body.records-page .podium-rank-1 .nl-feed-caption {
+    bottom: 12px;
+    max-width: calc(100% - 110px);
+  }
+
+  body.records-page .player-record-row {
+    grid-template-columns: 40px 56px minmax(0, 1fr) auto;
+    gap: 6px 12px;
+    padding: 10px 12px 12px 0;
+  }
+
+  body.records-page .player-record-thumb {
+    height: 48px;
+  }
+
+  body.records-page .player-record-bar {
+    grid-column: 2 / -1;
+    grid-row: 2;
+    height: 10px;
+  }
+
+  body.records-page .player-record-rank {
+    font-size: 22px;
+  }
+
+  body.records-page .player-record-value strong {
+    font-size: 22px;
+  }
+
+  /* Tableau des clubs : chaque ligne devient une fiche régie (rang en
+     marge, club + points, puis MJ / V–N–D / Diff., puis le vumètre). */
+  body.records-page .club-table-scroll {
+    overflow: visible;
+  }
+
+  body.records-page .club-record-table,
+  body.records-page .club-record-table tbody {
+    display: block;
+    min-width: 0;
+  }
+
+  body.records-page .club-record-table thead {
+    display: none;
+  }
+
+  body.records-page .club-record-table tr {
+    display: grid;
+    grid-template-columns: 50px repeat(3, minmax(0, 1fr));
+    align-items: center;
+    padding: 12px 14px 14px 0;
+    border-bottom: 1px solid var(--line-soft);
+    box-shadow: inset 4px 0 0 var(--club, transparent);
+  }
+
+  body.records-page .club-record-table tr:last-child {
+    border-bottom: 0;
+  }
+
+  body.records-page .club-record-table tbody tr > :first-child {
+    box-shadow: none;
+  }
+
+  body.records-page .club-record-table td,
+  body.records-page .club-record-table td:first-child {
+    width: auto;
+    min-width: 0;
+    height: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow-wrap: normal;
+  }
+
+  body.records-page .club-record-table td:first-child {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    align-self: start;
+    padding: 4px 0 0 14px;
+  }
+
+  body.records-page .club-record-rank {
+    font-size: 26px;
+    white-space: nowrap;
+  }
+
+  body.records-page .club-record-table td:nth-child(2) {
+    grid-column: 2 / span 2;
+    grid-row: 1;
+  }
+
+  body.records-page .club-record-identity {
+    gap: 10px;
+  }
+
+  body.records-page .club-record-identity img {
+    width: 32px;
+    height: 32px;
+  }
+
+  body.records-page .club-record-identity strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.records-page .club-record-table td.is-hl {
+    display: flex;
+    grid-column: 4;
+    grid-row: 1;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 6px;
+    width: auto;
+    background: transparent;
+  }
+
+  body.records-page .club-record-table td.is-hl strong {
+    font-size: 26px;
+  }
+
+  body.records-page .club-cell-mj,
+  body.records-page .club-cell-vnd,
+  body.records-page .club-cell-diff {
+    display: grid;
+    gap: 3px;
+    grid-row: 2;
+    margin-top: 10px;
+    font-family: var(--mono);
+    font-size: var(--fs-data);
+  }
+
+  body.records-page .club-cell-mj {
+    grid-column: 2;
+  }
+
+  body.records-page .club-cell-vnd {
+    grid-column: 3;
+  }
+
+  body.records-page .club-cell-diff {
+    grid-column: 4;
+    text-align: right;
+  }
+
+  body.records-page .club-record-table td[data-label]::before {
+    content: attr(data-label);
+    color: var(--dim);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: var(--track-micro);
+    text-transform: uppercase;
+  }
+
+  body.records-page .club-record-table td.is-hl::before {
+    order: -1;
+    color: var(--blue-3);
+  }
+
+  body.records-page .club-record-table td.club-winrate-cell::before {
+    display: none;
+  }
+
+  body.records-page .club-winrate-cell {
+    display: flex;
+    grid-column: 2 / -1;
+    grid-row: 3;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  body.records-page .club-winrate-cell .club-winrate {
+    flex: 1;
+    width: auto;
+  }
+
+  body.records-page .club-winrate-cell small {
+    width: auto;
+    margin: 0;
+  }
+
+  body.records-page article.vault-record {
+    min-height: 0;
+  }
+
+  body.records-page .vault-tape {
+    min-height: 200px;
+  }
+}
+
+@media (max-width: 520px) {
+  body.records-page .record-vault-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body.records-page article.vault-record {
+    gap: 8px;
+  }
 }

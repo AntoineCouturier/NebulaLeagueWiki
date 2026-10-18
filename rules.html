@@ -23,19 +23,15 @@
     <!-- meta:end -->
     <title>Nebula League — Protocole de Compétition</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
     <link rel="stylesheet" href="CSS/rules.css">
     <link rel="stylesheet" href="CSS/hamburger.css">
     <link rel="stylesheet" href="CSS/global-theme.css">
     <link rel="stylesheet" href="CSS/responsive.css">
+    <link rel="stylesheet" href="CSS/theme-monitor.css">
     <script src="JavaScript/reveal.js"></script>
 </head>
 
-<body class="nebula-page rules-page">
+<body class="nebula-page rules-page nl-migrated">
     <div class="rules-progress" id="rulesProgress" aria-hidden="true"></div>
 
     <header class="site-header" id="top">
@@ -65,212 +61,288 @@
         </div>
     </header>
 
-    <section class="rules-intro">
-        <div class="rules-intro-copy">
-            <p class="rules-kicker"><span>NL–09</span> COMPETITION PROTOCOL</p>
-            <h1>NOS REGLES<br><em>DE JEU</em></h1>
-            <p class="rules-intro-text">Un cadre simple pour garantir des matchs rapides, collectifs et agréables.
-                La compétition compte, mais le plaisir de jouer reste prioritaire.</p>
-
-            <div class="rules-intro-stats" aria-label="Résumé du règlement">
-                <div><strong>12</strong><span>Minutes par match</span></div>
-                <div><strong>3–5</strong><span>Joueurs par équipe</span></div>
-                <div><strong id="nclQualifiedStat">04</strong><span>Équipes qualifiées en NCL</span></div>
-            </div>
+    <!-- 01. Salle d'arbitrage : le chrono officiel sur l'écran maître -->
+    <section class="rules-intro nl-hero rules-hero" aria-labelledby="rules-title">
+        <div class="osd">
+            <span class="rec">REC</span>
+            <span>CAM 07 <b>//</b> SALLE D’ARBITRAGE</span>
+            <span class="osd-hide-sm">PROTOCOLE — <b>SAISON 01</b></span>
+            <span class="jp osd-hide-sm">ルール // 記録</span>
+            <span class="osd-hide-sm">ARBITRAGE VIDÉO · SIGNAL STABLE</span>
         </div>
 
-        <aside class="match-protocol">
-            <div class="protocol-topline"><span>MATCH PROTOCOL</span><span><i></i> VALIDÉ</span></div>
-            <div class="protocol-clock" aria-hidden="true">
-                <span class="clock-ring"></span>
-                <span class="clock-ring clock-ring-inner"></span>
-                <strong>12:00</strong>
-                <small>DURÉE TOTALE</small>
+        <div class="rules-hero-pitch" aria-hidden="true"><i></i></div>
+
+        <div class="nl-hero-inner rules-hero-inner">
+            <div class="rules-intro-copy">
+                <div class="rules-intro-head">
+                    <p class="nl-kicker"><span class="nl-ch">CH 07</span> Règles // Protocole de compétition</p>
+                    <h1 id="rules-title" class="nl-headline rules-title"><span>Nos règles</span> <em>de jeu</em></h1>
+                </div>
+
+                <div class="rules-intro-side">
+                    <p class="nl-lead">Un cadre simple pour garantir des matchs <b>rapides, collectifs et agréables</b>. La
+                        compétition compte, mais le plaisir de jouer reste prioritaire.</p>
+
+                    <div class="rules-intro-stats" aria-label="Résumé du règlement">
+                        <div class="rules-readout rules-readout--solid"><span>Minutes par match</span><strong>12</strong></div>
+                        <div class="rules-readout"><span>Joueurs par équipe</span><strong>3–5</strong></div>
+                        <div class="rules-readout"><span>Équipes qualifiées en NCL</span><strong id="nclQualifiedStat">04</strong></div>
+                    </div>
+
+                    <div class="nl-hero-actions">
+                        <a class="nl-btn" href="#format">Lire le protocole <span>↓</span></a>
+                        <a class="nl-btn nl-btn-ghost" href="fixtures.html">Voir le calendrier <span>→</span></a>
+                    </div>
+                </div>
             </div>
-            <div class="protocol-phases">
-                <div><span>PHASE 01</span><strong>06:00</strong><small>PREMIÈRE MI-TEMPS</small></div>
-                <div><span>PHASE 02</span><strong>06:00</strong><small>SECONDE MI-TEMPS</small></div>
-            </div>
-        </aside>
+
+            <!-- Mur des chronos : MT 01 + MT 02 = temps réglementaire -->
+            <aside class="match-protocol" aria-label="Chronomètre officiel : 12 minutes en deux périodes de 6 minutes">
+                <div class="protocol-topline osd">
+                    <span><b>CAM 00</b> // CHRONO OFFICIEL</span>
+                    <span class="osd-hide-sm">MUR DES CHRONOS — <b>3 ÉCRANS</b></span>
+                    <span class="protocol-valid"><i></i> VALIDÉ</span>
+                </div>
+                <div class="protocol-wall">
+                    <div class="protocol-phase protocol-phase--first">
+                        <span>MT 01</span><strong>06:00</strong><small>Première mi-temps</small>
+                    </div>
+                    <div class="protocol-switch" aria-hidden="true"><b>⇄</b><small>Côtés</small></div>
+                    <div class="protocol-phase protocol-phase--second">
+                        <span>MT 02</span><strong>06:00</strong><small>Seconde mi-temps</small>
+                    </div>
+                    <div class="protocol-equals" aria-hidden="true"><b>=</b></div>
+                    <div class="protocol-screen">
+                        <p class="protocol-label">Temps réglementaire</p>
+                        <strong class="protocol-time" aria-hidden="true">12<span>:</span>00</strong>
+                        <p class="protocol-sub">Durée totale // sans arrêt de jeu</p>
+                    </div>
+                </div>
+                <div class="protocol-foot">
+                    <span>BUT EN OR // FINALE NCL</span>
+                    <span class="osd-hide-sm">CHANGEMENT DE CÔTÉ À 06:00</span>
+                    <span class="nl-timecode">TC 00:12:00:00</span>
+                </div>
+            </aside>
+        </div>
     </section>
 
     <main class="rules-manual">
-        <aside class="rules-index">
-            <div class="rules-index-topline"><span>DOCUMENT // S01</span><span>04 SECTIONS</span></div>
-            <div class="rules-index-title">
-                <small>ACCÈS RAPIDE</small>
-                <strong>INDEX DU PROTOCOLE</strong>
-            </div>
-            <nav aria-label="Sommaire du règlement">
-                <a class="active" href="#format" data-rule-link="format"><span>01</span>
-                    <div><strong>FORMAT</strong><small>Durée et effectif</small></div>
-                </a>
-                <a href="#fairplay" data-rule-link="fairplay"><span>02</span>
-                    <div><strong>FAIR-PLAY</strong><small>Restrictions de jeu</small></div>
-                </a>
-                <a href="#ncl" data-rule-link="ncl"><span>03</span>
-                    <div><strong>NCL</strong><small>Qualification et phases</small></div>
-                </a>
-                <a href="#reference" data-rule-link="reference"><span>04</span>
-                    <div><strong>RÉFÉRENCE</strong><small>Résumé opérationnel</small></div>
-                </a>
-            </nav>
-            <div class="rules-index-status"><i></i>
-                <div><small>STATUT DU DOCUMENT</small><strong>ACTIF // SAISON 01</strong></div>
+        <!-- Sélecteur de canaux collant : sommaire du protocole -->
+        <aside class="rules-index" aria-label="Index du protocole">
+            <div class="rules-index-inner">
+                <p class="rules-index-topline"><span class="rec">REC</span> <b>Document // S01</b> <span class="rules-index-count">04 sections</span></p>
+                <nav class="rules-channels" aria-label="Sommaire du règlement">
+                    <a class="nl-channel active" href="#format" data-rule-link="format"><span class="nl-channel-num">CH 01</span>
+                        <span class="rules-channel-label"><strong>Format</strong><small>Durée et effectif</small></span>
+                    </a>
+                    <a class="nl-channel" href="#fairplay" data-rule-link="fairplay"><span class="nl-channel-num">CH 02</span>
+                        <span class="rules-channel-label"><strong>Fair-play</strong><small>Restrictions de jeu</small></span>
+                    </a>
+                    <a class="nl-channel" href="#ncl" data-rule-link="ncl"><span class="nl-channel-num">CH 03</span>
+                        <span class="rules-channel-label"><strong>NCL</strong><small>Qualification et phases</small></span>
+                    </a>
+                    <a class="nl-channel" href="#reference" data-rule-link="reference"><span class="nl-channel-num">CH 04</span>
+                        <span class="rules-channel-label"><strong>Référence</strong><small>Résumé opérationnel</small></span>
+                    </a>
+                </nav>
             </div>
         </aside>
 
         <div class="rules-content">
-            <section class="manual-section" id="format" data-rule-section>
-                <div class="manual-heading">
-                    <span>01</span>
-                    <div><small>CADRE DE RENCONTRE</small>
-                        <h2>FORMAT DU MATCH</h2>
+            <!-- CH 01 : format -->
+            <section class="manual-section" id="format" data-rule-section aria-labelledby="format-title">
+                <div class="manual-heading nl-section-head">
+                    <div class="nl-chno" aria-hidden="true"><small>CH</small><b>01</b></div>
+                    <div>
+                        <p class="nl-kicker">Cadre de rencontre // Piste chrono</p>
+                        <h2 id="format-title" class="nl-section-title">Format <em>du match</em></h2>
                     </div>
-                    <p>Deux périodes identiques, un effectif réduit et aucune interruption superflue.</p>
+                    <p class="nl-section-note">Deux périodes identiques, un effectif réduit et aucune interruption superflue.</p>
                 </div>
 
                 <div class="match-format-grid">
-                    <article class="timeline-card">
-                        <div class="rule-card-topline"><span>TIMELINE // REGULATION</span><span>12 MIN</span></div>
+                    <article class="timeline-card" aria-label="Chronologie d'un match de 12 minutes">
+                        <div class="rule-card-topline osd">
+                            <span><b>PISTE 01</b> // CHRONO RÉGLEMENTAIRE</span>
+                            <span>12 MIN</span>
+                        </div>
                         <div class="match-timeline">
-                            <div class="timeline-half first">
-                                <span>01</span>
-                                <div><small>PREMIÈRE MI-TEMPS</small><strong>06:00</strong></div>
+                            <ol class="timeline-ruler" aria-hidden="true">
+                                <li>00</li><li>01</li><li>02</li><li>03</li><li>04</li><li>05</li><li>06</li>
+                                <li>07</li><li>08</li><li>09</li><li>10</li><li>11</li><li>12</li>
+                            </ol>
+                            <div class="timeline-track">
+                                <div class="timeline-half first">
+                                    <span>MT 01</span>
+                                    <div><small>Première mi-temps</small><strong>06:00</strong></div>
+                                </div>
+                                <div class="timeline-switch"><i></i><span>Changement de côté</span></div>
+                                <div class="timeline-half second">
+                                    <span>MT 02</span>
+                                    <div><small>Seconde mi-temps</small><strong>06:00</strong></div>
+                                </div>
                             </div>
-                            <div class="timeline-switch"><i></i><span>CHANGEMENT DE CÔTÉ</span></div>
-                            <div class="timeline-half second">
-                                <span>02</span>
-                                <div><small>SECONDE MI-TEMPS</small><strong>06:00</strong></div>
+                            <div class="timeline-goldengoal">
+                                <span class="nl-tag nl-tag--ncl">Finale NCL</span>
+                                <p>En cas d’égalité après 12 minutes, la finale continue jusqu’au <b>but en or</b>.</p>
                             </div>
                         </div>
                     </article>
 
-                    <article class="squad-card">
-                        <div class="rule-card-topline"><span>SQUAD // FIELD LIMIT</span><span>3–5</span></div>
+                    <article class="squad-card" aria-label="Effectif : trois à cinq joueurs">
+                        <div class="rule-card-topline osd">
+                            <span><b>CAM 01–05</b> // EFFECTIF SUR LE TERRAIN</span>
+                            <span>3–5</span>
+                        </div>
                         <div class="squad-slots">
-                            <div class="squad-slot required"><span>01</span><small>REQUIS</small></div>
-                            <div class="squad-slot required"><span>02</span><small>REQUIS</small></div>
-                            <div class="squad-slot required"><span>03</span><small>REQUIS</small></div>
-                            <div class="squad-slot optional"><span>04</span><small>OPTIONNEL</small></div>
-                            <div class="squad-slot optional"><span>05</span><small>OPTIONNEL</small></div>
+                            <div class="squad-slot required"><span>01</span><small>Requis</small></div>
+                            <div class="squad-slot required"><span>02</span><small>Requis</small></div>
+                            <div class="squad-slot required"><span>03</span><small>Requis</small></div>
+                            <div class="squad-slot optional"><span>04</span><small>Optionnel</small></div>
+                            <div class="squad-slot optional"><span>05</span><small>Optionnel</small></div>
                         </div>
                         <p>Chaque équipe aligne entre <strong>trois et cinq joueurs</strong>. Les trois premiers sont
                             requis ; les quatrième et cinquième emplacements restent optionnels.</p>
+                        <div class="squad-legend" aria-hidden="true">
+                            <span><i></i> Requis</span>
+                            <span><i></i> Optionnel</span>
+                            <span class="squad-legend-tc">MIN 03 // MAX 05</span>
+                        </div>
                     </article>
                 </div>
             </section>
 
-            <section class="manual-section" id="fairplay" data-rule-section>
-                <div class="manual-heading">
-                    <span>02</span>
-                    <div><small>INTÉGRITÉ DU JEU</small>
-                        <h2>PROTOCOLE FAIR-PLAY</h2>
+            <!-- CH 02 : fair-play — trois ralentis d'arbitrage vidéo -->
+            <section class="manual-section rules-fairplay" id="fairplay" data-rule-section aria-labelledby="fairplay-title">
+                <div class="manual-heading nl-section-head nl-section-head--band">
+                    <div class="nl-chno" aria-hidden="true"><small>CH</small><b>02</b></div>
+                    <div>
+                        <p class="nl-kicker">Intégrité du jeu // Arbitrage vidéo</p>
+                        <h2 id="fairplay-title" class="nl-section-title">Protocole <em>fair-play</em></h2>
                     </div>
-                    <p>Trois comportements nuisent directement au rythme du match et sont donc interdits.</p>
+                    <p class="nl-section-note">Trois comportements nuisent directement au rythme du match et sont donc interdits. Chaque
+                        incident est revu au ralenti.</p>
                 </div>
 
                 <div class="restriction-grid">
-                    <article class="restriction-card">
-                        <div class="restriction-code"><span>R–01</span><strong>ANTI-JEU</strong></div>
-                        <div class="anti-play-diagram" aria-hidden="true">
-                            <svg class="rule-scene rule-scene-antiplay" viewBox="0 0 200 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
-                                <path class="rs-faint" d="M100 8v104M8 60h184" />
-                                <circle class="rs-faint" cx="100" cy="60" r="18" />
-                                <g class="rs-ult">
-                                    <circle class="rs-aura rs-aura-1" cx="62" cy="60" r="12" />
-                                    <circle class="rs-aura rs-aura-2" cx="62" cy="60" r="12" />
-                                    <circle class="rs-player rs-acid" cx="62" cy="60" r="7" />
-                                    <text class="rs-text rs-acid" x="62" y="40" text-anchor="middle">ULT</text>
-                                </g>
-                                <path class="rs-arrow-flee" d="M104 60h56m-6-5 6 5-6 5" />
-                                <g class="rs-runner"><circle class="rs-player" cx="96" cy="60" r="7" /><circle class="rs-ball" cx="104" cy="66" r="3" /></g>
-                                <g class="rs-stamp">
-                                    <path class="rs-danger" d="M118 44l28 32m0-32-28 32" />
-                                    <text class="rs-text rs-danger" x="132" y="96" text-anchor="middle">INTERDIT</text>
-                                </g>
-                            </svg>
+                    <article class="restriction-card" aria-labelledby="r01-title">
+                        <div class="restriction-screen">
+                            <span class="restriction-osd"><span><b>CAM R–01</b> // RALENTI</span><span class="rec">REPLAY</span></span>
+                            <span class="restriction-tc" aria-hidden="true">×0.5 · 00:04:12</span>
+                            <div class="anti-play-diagram" aria-hidden="true">
+                                <svg class="rule-scene rule-scene-antiplay" viewBox="0 0 200 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+                                    <path class="rs-faint" d="M100 8v104M8 60h184" />
+                                    <circle class="rs-faint" cx="100" cy="60" r="18" />
+                                    <g class="rs-ult">
+                                        <circle class="rs-aura rs-aura-1" cx="62" cy="60" r="12" />
+                                        <circle class="rs-aura rs-aura-2" cx="62" cy="60" r="12" />
+                                        <circle class="rs-player rs-acid" cx="62" cy="60" r="7" />
+                                        <text class="rs-text rs-acid" x="62" y="40" text-anchor="middle">ULT</text>
+                                    </g>
+                                    <path class="rs-arrow-flee" d="M104 60h56m-6-5 6 5-6 5" />
+                                    <g class="rs-runner"><circle class="rs-player" cx="96" cy="60" r="7" /><circle class="rs-ball" cx="104" cy="66" r="3" /></g>
+                                    <g class="rs-stamp">
+                                        <path class="rs-danger" d="M118 44l28 32m0-32-28 32" />
+                                        <text class="rs-text rs-danger" x="132" y="96" text-anchor="middle">INTERDIT</text>
+                                    </g>
+                                </svg>
+                            </div>
+                            <span class="restriction-code"><small>R–01 // Incident</small><strong id="r01-title">Anti-jeu</strong></span>
                         </div>
-                        <p>Ne vous éloignez pas volontairement d’un joueur uniquement parce qu’il utilise son ultime.
-                        </p>
-                        <div class="restriction-verdict"><span>NIVEAU</span><strong>COMPORTEMENT INTERDIT</strong></div>
+                        <p>Ne vous éloignez pas volontairement d’un joueur uniquement parce qu’il utilise son ultime.</p>
+                        <div class="restriction-verdict is-alert"><span>Niveau</span><strong>Comportement interdit</strong></div>
                     </article>
 
-                    <article class="restriction-card critical">
-                        <div class="restriction-code"><span>R–02</span><strong>HORS-JEU</strong></div>
-                        <div class="offside-diagram" aria-hidden="true">
-                            <svg class="rule-scene rule-scene-offside" viewBox="0 0 200 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
-                                <path class="rs-line" d="M8 112h184" />
-                                <path class="rs-line" d="M150 112V40h42M164 112V70h28" />
-                                <path class="rs-goal" d="M184 52h8v40h-8" />
-                                <path class="rs-offside-line" d="M124 10v102" />
-                                <text class="rs-text" x="124" y="8" text-anchor="middle">DERNIER DÉFENSEUR</text>
-                                <circle class="rs-player" cx="124" cy="56" r="7" />
-                                <circle class="rs-player" cx="44" cy="84" r="7" />
-                                <circle class="rs-player rs-danger rs-offside-player" cx="168" cy="44" r="7" />
-                                <path class="rs-pass" d="M50 80 160 48" />
-                                <circle class="rs-ball rs-pass-ball" cx="50" cy="80" r="3" />
-                                <g class="rs-flag"><path class="rs-danger" d="M140 112V78" /><path class="rs-danger rs-fill" d="M140 78h14l-4 5 4 5h-14z" /></g>
-                                <text class="rs-text rs-danger rs-verdict" x="100" y="104" text-anchor="middle">BUT REFUSÉ</text>
-                            </svg>
+                    <article class="restriction-card critical" aria-labelledby="r02-title">
+                        <div class="restriction-screen">
+                            <span class="restriction-osd"><span><b>CAM R–02</b> // RALENTI</span><span class="rec">REPLAY</span></span>
+                            <span class="restriction-tc" aria-hidden="true">×0.5 · 00:07:48</span>
+                            <div class="offside-diagram" aria-hidden="true">
+                                <svg class="rule-scene rule-scene-offside" viewBox="0 0 200 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+                                    <path class="rs-line" d="M8 112h184" />
+                                    <path class="rs-line" d="M150 112V40h42M164 112V70h28" />
+                                    <path class="rs-goal" d="M184 52h8v40h-8" />
+                                    <path class="rs-offside-line" d="M124 10v102" />
+                                    <text class="rs-text" x="124" y="8" text-anchor="middle">DERNIER DÉFENSEUR</text>
+                                    <circle class="rs-player" cx="124" cy="56" r="7" />
+                                    <circle class="rs-player rs-danger rs-attacker" cx="44" cy="84" r="7" />
+                                    <circle class="rs-player rs-danger rs-offside-player" cx="168" cy="44" r="7" />
+                                    <path class="rs-pass" d="M50 80 160 48" />
+                                    <circle class="rs-ball rs-pass-ball" cx="50" cy="80" r="3" />
+                                    <g class="rs-flag"><path class="rs-danger" d="M140 112V78" /><path class="rs-danger rs-fill" d="M140 78h14l-4 5 4 5h-14z" /></g>
+                                    <text class="rs-text rs-danger rs-verdict" x="100" y="104" text-anchor="middle">BUT REFUSÉ</text>
+                                </svg>
+                            </div>
+                            <span class="restriction-code"><small>R–02 // Incident</small><strong id="r02-title">Hors-jeu</strong></span>
                         </div>
                         <p>Attendre devant les cages pour recevoir la balle et marquer déclenche la règle de hors-jeu
                             simplifiée.</p>
-                        <div class="restriction-verdict"><span>DÉCISION</span><strong>BUT NON COMPTABILISÉ</strong>
-                        </div>
+                        <div class="restriction-verdict is-alert"><span>Décision</span><strong>But non comptabilisé</strong></div>
                     </article>
 
-                    <article class="restriction-card">
-                        <div class="restriction-code"><span>R–03</span><strong>BALL HOG</strong></div>
-                        <div class="possession-diagram" aria-hidden="true">
-                            <svg class="rule-scene rule-scene-ballhog" viewBox="0 0 200 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
-                                <path class="rs-line" d="M8 8h184v104H8z" />
-                                <path class="rs-faint" d="M8 76h40v36" />
-                                <path class="rs-loop" d="M40 92a14 14 0 1 0 0.1 0" />
-                                <g class="rs-hog"><circle class="rs-player rs-acid" cx="40" cy="78" r="7" /><circle class="rs-ball" cx="47" cy="84" r="3" /></g>
-                                <circle class="rs-player rs-danger" cx="72" cy="72" r="7" />
-                                <circle class="rs-player rs-danger" cx="70" cy="100" r="7" />
-                                <circle class="rs-player rs-danger" cx="44" cy="52" r="7" />
-                                <path class="rs-option rs-option-1" d="M50 74 130 40" />
-                                <path class="rs-option rs-option-2" d="M50 80 150 86" />
-                                <circle class="rs-player rs-open rs-open-1" cx="138" cy="36" r="7" />
-                                <circle class="rs-player rs-open rs-open-2" cx="158" cy="88" r="7" />
-                                <text class="rs-text" x="138" y="22" text-anchor="middle">LIBRE</text>
-                                <text class="rs-text" x="158" y="108" text-anchor="middle">LIBRE</text>
-                                <text class="rs-text rs-acid" x="100" y="20" text-anchor="middle">⟳ 00:42</text>
-                            </svg>
+                    <article class="restriction-card" aria-labelledby="r03-title">
+                        <div class="restriction-screen">
+                            <span class="restriction-osd"><span><b>CAM R–03</b> // RALENTI</span><span class="rec">REPLAY</span></span>
+                            <span class="restriction-tc" aria-hidden="true">×0.5 · 00:10:26</span>
+                            <div class="possession-diagram" aria-hidden="true">
+                                <svg class="rule-scene rule-scene-ballhog" viewBox="0 0 200 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+                                    <path class="rs-line" d="M8 8h184v104H8z" />
+                                    <path class="rs-faint" d="M8 76h40v36" />
+                                    <path class="rs-loop" d="M40 92a14 14 0 1 0 0.1 0" />
+                                    <g class="rs-hog"><circle class="rs-player rs-acid" cx="40" cy="78" r="7" /><circle class="rs-ball" cx="47" cy="84" r="3" /></g>
+                                    <circle class="rs-player rs-opp" cx="72" cy="72" r="7" />
+                                    <circle class="rs-player rs-opp" cx="70" cy="100" r="7" />
+                                    <circle class="rs-player rs-opp" cx="44" cy="52" r="7" />
+                                    <path class="rs-option rs-option-1" d="M50 74 130 40" />
+                                    <path class="rs-option rs-option-2" d="M50 80 150 86" />
+                                    <circle class="rs-player rs-open rs-open-1" cx="138" cy="36" r="7" />
+                                    <circle class="rs-player rs-open rs-open-2" cx="158" cy="88" r="7" />
+                                    <text class="rs-text" x="138" y="22" text-anchor="middle">LIBRE</text>
+                                    <text class="rs-text" x="158" y="108" text-anchor="middle">LIBRE</text>
+                                    <text class="rs-text rs-acid" x="40" y="28" text-anchor="middle">⟳ 00:42</text>
+                                </svg>
+                            </div>
+                            <span class="restriction-code"><small>R–03 // Incident</small><strong id="r03-title">Ball hog</strong></span>
                         </div>
                         <p>Ne campez pas avec la balle pour préserver un résultat. Continuez à construire et à chercher
                             le but.</p>
-                        <div class="restriction-verdict"><span>PRINCIPE</span><strong>LE JEU DOIT CONTINUER</strong>
-                        </div>
+                        <div class="restriction-verdict"><span>Principe</span><strong>Le jeu doit continuer</strong></div>
                     </article>
                 </div>
             </section>
 
-            <section class="manual-section" id="ncl" data-rule-section>
-                <div class="manual-heading">
-                    <span>03</span>
-                    <div><small>NEBULA CHAMPIONS LEAGUE</small>
-                        <h2>PARCOURS NCL</h2>
+            <!-- CH 03 : parcours NCL -->
+            <section class="manual-section" id="ncl" data-rule-section aria-labelledby="ncl-title">
+                <div class="manual-heading nl-section-head">
+                    <div class="nl-chno" aria-hidden="true"><small>CH</small><b>03</b></div>
+                    <div>
+                        <p class="nl-kicker">Nebula Champions League // Phase finale</p>
+                        <h2 id="ncl-title" class="nl-section-title">Parcours <em>NCL</em></h2>
                     </div>
-                    <p id="nclFormatDescription">Les quatre meilleures équipes de Ligue accèdent au tournoi final.</p>
+                    <p class="nl-section-note" id="nclFormatDescription">Les quatre meilleures équipes de Ligue accèdent au tournoi final.</p>
                 </div>
 
                 <div class="qualification-strip">
-                    <div><small>CLASSEMENT LIGUE</small><strong id="nclQualificationLabel">TOP 04</strong></div>
-                    <span class="qualification-arrow">→</span>
-                    <div><small>ACCÈS VALIDÉ</small><strong id="nclOpeningRoundLabel">DEMI-FINALES</strong></div>
-                    <span class="qualification-arrow">→</span>
-                    <div><small>OBJECTIF FINAL</small><strong>TROPHÉE NCL</strong></div>
+                    <div class="qualification-step is-first"><small>01 // Classement ligue</small><strong id="nclQualificationLabel">TOP 04</strong></div>
+                    <span class="qualification-arrow" aria-hidden="true">▸▸▸</span>
+                    <div class="qualification-step"><small>02 // Accès validé</small><strong id="nclOpeningRoundLabel">DEMI-FINALES</strong></div>
+                    <span class="qualification-arrow" aria-hidden="true">▸▸▸</span>
+                    <div class="qualification-step is-final"><small>03 // Objectif final</small><strong>TROPHÉE NCL</strong></div>
                 </div>
 
                 <div class="ncl-bracket">
+                    <div class="bracket-osd osd">
+                        <span><b>CAM 12</b> // TABLEAU FINAL</span>
+                        <span class="osd-hide-sm">ÉLIMINATION DIRECTE</span>
+                        <span class="rec is-off">EN ATTENTE</span>
+                    </div>
                     <div class="rules-bracket-main">
                         <div class="bracket-stage semi-stage" id="rulesNclOpeningStage">
                             <span class="bracket-stage-label">01 // DEMI-FINALES</span>
-                            <div class="bracket-match"><small>MATCH A</small><strong>DEMI-FINALE A</strong></div>
-                            <div class="bracket-match"><small>MATCH B</small><strong>DEMI-FINALE B</strong></div>
+                            <div class="bracket-match"><small>MATCH A // 1er contre 4e</small><strong>DEMI-FINALE A</strong></div>
+                            <div class="bracket-match"><small>MATCH B // 2e contre 3e</small><strong>DEMI-FINALE B</strong></div>
                         </div>
 
                         <div class="bracket-connector" aria-hidden="true">
@@ -299,39 +371,76 @@
                 </div>
             </section>
 
-            <section class="manual-section" id="reference" data-rule-section>
-                <div class="manual-heading">
-                    <span>04</span>
-                    <div><small>CONSULTATION IMMÉDIATE</small>
-                        <h2>RÉFÉRENCE RAPIDE</h2>
+            <!-- CH 04 : référence rapide -->
+            <section class="manual-section" id="reference" data-rule-section aria-labelledby="reference-title">
+                <div class="manual-heading nl-section-head">
+                    <div class="nl-chno" aria-hidden="true"><small>CH</small><b>04</b></div>
+                    <div>
+                        <p class="nl-kicker">Consultation immédiate // Fiche régie</p>
+                        <h2 id="reference-title" class="nl-section-title">Référence <em>rapide</em></h2>
                     </div>
-                    <p>L’essentiel du règlement condensé avant de lancer une rencontre.</p>
+                    <p class="nl-section-note">L’essentiel du règlement condensé avant de lancer une rencontre.</p>
                 </div>
 
-                <div class="quick-reference">
-                    <div class="reference-row"><span>FMT–01</span><strong>DURÉE</strong>
-                        <p>12 minutes — deux périodes de 6 minutes</p>
-                    </div>
-                    <div class="reference-row"><span>SQD–02</span><strong>EFFECTIF</strong>
-                        <p>3 à 5 joueurs par équipe</p>
-                    </div>
-                    <div class="reference-row"><span>NCL–03</span><strong>ÉGALITÉ EN FINALE</strong>
-                        <p>But en or après les 12 minutes réglementaires</p>
-                    </div>
-                    <div class="reference-row"><span>FLP–04</span><strong>INTERDITS</strong>
-                        <p>Anti-jeu, hors-jeu simplifié et conservation abusive</p>
-                    </div>
-                </div>
-
-                <div class="rules-doctrine">
-                    <span>PRINCIPE CENTRAL</span>
-                    <blockquote>Jouez pour gagner, mais jamais au détriment du rythme, du collectif ou du plaisir des
-                        autres joueurs.</blockquote>
-                    <small>NEBULA LEAGUE // COMPETITION PROTOCOL</small>
+                <div class="quick-reference nl-table-wrap">
+                    <table class="nl-table reference-table">
+                        <thead>
+                            <tr><th scope="col">Code</th><th scope="col">Règle</th><th scope="col" class="is-hl">Valeur</th><th scope="col">Détail</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr class="reference-row"><td class="nl-num">FMT–01</td><td class="nl-strong">Durée</td><td class="is-hl">12:00</td><td>12 minutes — deux périodes de 6 minutes</td></tr>
+                            <tr class="reference-row"><td class="nl-num">SQD–02</td><td class="nl-strong">Effectif</td><td class="is-hl">3–5</td><td>3 à 5 joueurs par équipe</td></tr>
+                            <tr class="reference-row"><td class="nl-num">NCL–03</td><td class="nl-strong">Égalité en finale</td><td class="is-hl">OR</td><td>But en or après les 12 minutes réglementaires</td></tr>
+                            <tr class="reference-row is-alert"><td class="nl-num">FLP–04</td><td class="nl-strong">Interdits</td><td class="is-hl">×3</td><td>Anti-jeu, hors-jeu simplifié et conservation abusive</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
         </div>
     </main>
+
+    <!-- Principe central : bande bleue de fin de transmission -->
+    <section class="rules-doctrine nl-band" aria-labelledby="doctrine-title">
+        <span class="rules-doctrine-jp" aria-hidden="true">ルール</span>
+        <div class="rules-doctrine-inner">
+            <p class="rules-doctrine-osd"><span class="rec">REC</span> CAM 13 // PRINCIPE CENTRAL — FIN DU PROTOCOLE</p>
+            <h2 id="doctrine-title" class="nl-sr">Principe central</h2>
+            <blockquote>Jouez pour gagner, <em>mais jamais</em> au détriment du rythme, du collectif ou du plaisir des
+                autres joueurs.</blockquote>
+            <small>NEBULA LEAGUE // PROTOCOLE DE COMPÉTITION</small>
+            <div class="nl-hero-actions">
+                <a class="nl-btn nl-btn-light" href="matchs.html">Voir les matchs <span>→</span></a>
+                <a class="nl-btn nl-btn-ghost rules-doctrine-ghost" href="#top">Retour en haut <span>↑</span></a>
+            </div>
+        </div>
+        <div class="rules-doctrine-time" aria-hidden="true">12:00</div>
+    </section>
+
+    <footer class="nl-footer">
+        <div class="nl-footer-main">
+            <a class="footer-brand" href="index.html">
+                <span class="brand-mark"><span></span></span>
+                <strong>NEBULA LEAGUE</strong>
+            </a>
+            <p>Ligue privée Azure Latch. Toutes les rencontres sont enregistrées, chaque statistique est archivée.</p>
+        </div>
+        <nav class="nl-footer-links" aria-label="Accès rapides">
+            <p>Accès rapides</p>
+            <a href="matchs.html">Matchs</a>
+            <a href="fixtures.html">Calendrier</a>
+            <a href="saison.html">Saisons</a>
+            <a href="club.html">Clubs</a>
+            <a href="players.html">Joueurs</a>
+            <a href="stats.html">Records</a>
+        </nav>
+        <div class="nl-footer-osd">
+            <span class="rec">REC</span>
+            <span>NL-CTRL // FIN DU FLUX</span>
+            <span class="jp">ルール</span>
+            <span>© NEBULA LEAGUE</span>
+            <a href="#top">Retour en haut ↑</a>
+        </div>
+    </footer>
 
     <script src="JavaScript/nebula-data.js"></script>
     <script src="JavaScript/rules.js"></script>

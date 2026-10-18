@@ -1,1741 +1,1812 @@
 /* ==========================================================================
-   CLUB.CSS — Nebula League, concept "Écran de Sélection d'Équipe"
+   NEBULA LEAGUE — CLUBS // MULTIVUE DE LA SALLE DE CONTRÔLE
+   Page migrée (body.club-page.nl-migrated) : kit nl-* de theme-monitor.css.
+   Ce fichier est chargé AVANT global-theme.css, responsive.css et
+   theme-monitor.css : chaque sélecteur commence par body.club-page pour
+   l'emporter sur le kit à égalité.
+
+   Concept : une régie multivue. L'écran PROGRAMME (vue aérienne de la
+   formation du club à l'antenne) domine le héros ; dessous, un écran de
+   PRÉVISUALISATION par club (les zones A à E, + zones libres en mire).
+   Cliquer une zone la passe à l'antenne : formation, dossier, leaders et
+   historique se rechargent (JavaScript/club.js).
+
+   01. Couleurs de club (accents fins uniquement)
+   02. Héros multivue : texte, relevés, écran programme
+   03. Vue aérienne : terrain + postes (flux portrait / mire)
+   04. Écrans de prévisualisation (sélecteur de club)
+   05. Dossier de zone (CH 01)
+   06. Leaders historiques : mur bleu (CH 02)
+   07. Historique : relevés, bandes de saison, forme (CH 03)
+   08. Mouvement réduit
+   09. Responsive
    ========================================================================== */
 
+@layer nl-force;
+
+/* -------------------- 01. Couleurs de club -------------------- */
+/* Identité des clubs : uniquement en filets, points et soulignés (jamais en
+   fond de panneau). Les écrans reçoivent aussi --club-color en ligne depuis
+   NEBULA_DATA.clubs[].color. */
 :root {
-    --bastard-color: #ff0000;
-    --pxg-color: #3b5bff;
-    --ubers-color: #2bff00;
-    --barcha-color: #ffdd00;
-    --manshine-color: #00c8ff;
+    --bastard-color: #ff323c;
+    --pxg-color: #2877ff;
+    --ubers-color: #21ff3f;
+    --barcha-color: #ffd84d;
+    --manshine-color: #2fe0ff;
 }
 
-/* -------------------- Reset -------------------- */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Inter', 'Arial', sans-serif;
-    background: #000;
-    color: #dddddd;
+body.club-page .bastard { --club-accent: var(--bastard-color); }
+body.club-page .pxg { --club-accent: var(--pxg-color); }
+body.club-page .ubers { --club-accent: var(--ubers-color); }
+body.club-page .barcha { --club-accent: var(--barcha-color); }
+body.club-page .manshine { --club-accent: var(--manshine-color); }
+
+/* -------------------- 02. Héros multivue -------------------- */
+
+body.club-page .club-hero {
+    min-height: 0;
+    padding-bottom: clamp(28px, 3vw, 44px);
+    background:
+        radial-gradient(70% 80% at 78% 30%, rgba(31, 91, 255, 0.2), transparent 64%),
+        radial-gradient(50% 60% at 0% 100%, rgba(31, 91, 255, 0.1), transparent 70%),
+        var(--screen);
 }
 
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image:
-        radial-gradient(2px 2px at 20px 30px, #eee, transparent),
-        radial-gradient(2px 2px at 40px 70px, #fff, transparent),
-        radial-gradient(1px 1px at 90px 40px, #ddd, transparent),
-        radial-gradient(1px 1px at 130px 80px, #fff, transparent),
-        radial-gradient(2px 2px at 160px 120px, #eee, transparent),
-        radial-gradient(1px 1px at 200px 160px, #fff, transparent),
-        radial-gradient(3px 3px at 240px 200px, rgba(180, 28, 255, 0.5), transparent),
-        radial-gradient(2px 2px at 280px 240px, rgba(100, 0, 255, 0.4), transparent);
-    background-repeat: repeat;
-    background-size: 300px 300px;
-    z-index: -1;
-    opacity: 0.4;
-}
-
-/* -------- Header / Navbar (identique au reste du site) -------- */
-header {
-    background: rgba(10, 10, 10, 0.75);
-    padding: 15px 20px;
-    border-bottom: 2px solid #6f00ff;
-    top: 0;
-    z-index: 1000;
-    backdrop-filter: blur(6px);
-    box-shadow: 0 0 10px #6f00ff80;
-    text-align: center;
-}
-
-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 15px 0 0 0;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-nav ul li a {
-    text-decoration: none;
-    padding: 6px 14px;
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: 8px;
-    color: #e6e6e6;
-    font-weight: bold;
-    transition: 0.25s;
-    border: 1px solid transparent;
-}
-
-nav ul li a:hover,
-nav ul li a.active {
-    background: linear-gradient(135deg, #a600ff, #b41ce6);
-    border-color: #b41ce6;
-    color: white;
-    box-shadow: 0 0 10px #b41ce6;
-}
-
-/* -------------------- Couleurs des liens joueurs par club -------------------- */
-.bastard { color: rgb(200, 0, 0); text-decoration: none; }
-.bastard:hover { color: rgb(255, 0, 0); text-shadow: 0 0 4px #ff0000, 0 0 8px #a00000, 0 0 12px #650000; }
-
-.pxg { color: rgb(0, 0, 200); text-decoration: none; }
-.pxg:hover { color: rgb(0, 0, 255); text-shadow: 0 0 4px #001aff, 0 0 8px #0008a0, 0 0 12px #000265; }
-
-.ubers { color: rgb(0, 200, 0); text-decoration: none; }
-.ubers:hover { color: rgb(0, 255, 0); text-shadow: 0 0 4px #26ff00, 0 0 8px #1ba000, 0 0 12px #0d6500; }
-
-.barcha { color: rgb(200, 200, 0); text-decoration: none; }
-.barcha:hover { color: rgb(255, 255, 0); text-shadow: 0 0 4px #ffdd00, 0 0 8px #a08d00, 0 0 12px #656300; }
-
-.manshine { color: rgb(0, 100, 200); text-decoration: none; }
-.manshine:hover { color: rgb(0, 155, 255); text-shadow: 0 0 4px #0088ff, 0 0 8px #005da0, 0 0 12px #003865; }
-
-/* ==========================================================================
-   HERO
-   ========================================================================== */
-
-@keyframes clubsHeroPulse {
-    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.5; }
-    50% { transform: translateX(-50%) scale(1.1); opacity: 0.85; }
-}
-
-@keyframes clubsShimmer {
-    0% { background-position: 0% center; }
-    100% { background-position: 200% center; }
-}
-
-/* ==========================================================================
-   GRILLE DE CARTES CLUB
-   ========================================================================== */
-
-@keyframes clubCardIn {
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* -------------------- Mini-terrain (carte) -------------------- */
-.club-pitch {
-    position: relative;
-    width: 100%;
-    border-radius: 12px;
-    overflow: hidden;
-    background: radial-gradient(ellipse at 50% 0%, rgba(0, 90, 40, 0.55), rgba(0, 40, 20, 0.75));
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.club-pitch-mini {
-    aspect-ratio: 4 / 3;
-}
-
-.club-pitch-big {
-    aspect-ratio: 4 / 3;
-    max-width: 420px;
-    margin: 0 auto;
-}
-
-.pitch-lines {
+body.club-page .club-hero::before {
     position: absolute;
-    inset: 8%;
-    border: 1px dashed rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
+    z-index: 0;
+    inset: 0;
+    content: "";
+    background:
+        linear-gradient(rgba(77, 128, 255, 0.06) 1px, transparent 1px) 0 0 / 100% 48px,
+        linear-gradient(90deg, rgba(77, 128, 255, 0.06) 1px, transparent 1px) 0 0 / 48px 100%;
+    -webkit-mask-image: linear-gradient(90deg, #000, transparent 55%);
+    mask-image: linear-gradient(90deg, #000, transparent 55%);
+    pointer-events: none;
 }
 
-.pitch-lines::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.15);
+body.club-page .club-hero-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: stretch;
+    gap: clamp(24px, 3.4vw, 56px);
+    padding-block: clamp(28px, 2.6vw, 40px) clamp(20px, 2vw, 28px);
 }
 
-.pitch-slot {
-    position: absolute;
-    transform: translate(-50%, -50%);
+body.club-page .club-intro-copy {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 4px;
-}
-
-.pitch-dot {
-    --slot-color: #b41cff;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.62rem;
-    font-weight: 800;
-    color: #060008;
-    background: var(--slot-color);
-    box-shadow: 0 0 10px var(--slot-color);
+    min-width: 0;
 }
 
-.pitch-slot.vacant .pitch-dot {
-    background: rgba(255, 255, 255, 0.08);
-    color: #999;
-    box-shadow: none;
-    border: 1px dashed rgba(255, 255, 255, 0.3);
+body.club-page .club-intro-title {
+    margin-top: 22px;
+    font-size: clamp(3rem, 5.9vw, 6.2rem);
+    line-height: 0.86;
 }
 
-.pitch-slot-big .pitch-dot {
-    width: 42px;
-    height: 42px;
-    font-size: 0.72rem;
-}
-
-.pitch-player-name {
-    font-size: 0.78rem;
-    font-weight: 700;
-    white-space: nowrap;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
-}
-
-.pitch-vacant {
-    color: #888;
-    font-style: italic;
-    font-weight: 400;
-}
-
-/* -------------------- Stats rapides (carte) -------------------- */
-
-/* ==========================================================================
-   MODAL FICHE CLUB
-   ========================================================================== */
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.popup-box {
-    background: rgba(10, 10, 10, 0.96);
-    border-radius: 20px;
-    padding: 28px;
-    width: 92%;
-    max-width: 780px;
-    max-height: 88vh;
-    overflow-y: auto;
-    position: relative;
-    border: 2px solid #b41cff;
-    box-shadow: 0 0 35px rgba(180, 28, 255, 0.5);
-}
-
-.close-btn {
+body.club-page .club-intro-title > span {
     display: block;
-    margin: 22px auto 0;
-    padding: 9px 22px;
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid #b41ce6;
-    border-radius: 8px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+    white-space: nowrap;
 }
 
-.close-btn:hover {
-    background: linear-gradient(135deg, #a600ff, #b41ce6);
-    box-shadow: 0 0 10px #b41ce6;
-}
-
-/* -------------------- Effectif (réutilisé dans le modal) -------------------- */
-.roster-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.roster-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 7px 10px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 8px;
-    transition: background 0.2s ease;
-}
-
-.roster-row:hover {
-    background: rgba(255, 255, 255, 0.07);
-}
-
-.roster-row a {
-    font-weight: bold;
-}
-
-.role-badge {
-    flex-shrink: 0;
-    width: 34px;
-    text-align: center;
-    font-size: 0.7rem;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    padding: 3px 0;
-    border-radius: 6px;
-    color: #0a0a0a;
-}
-
-.role-badge.role-cf { background: #ff0000; }
-.role-badge.role-lw { background: #0066ff; }
-.role-badge.role-rw { background: #ffd51a; }
-.role-badge.role-cm { background: #5cff6a; }
-
-.empty-slot {
+body.club-page .club-intro-title em {
     font-style: italic;
-    color: #8a8a8a;
-    font-size: 0.9rem;
+    letter-spacing: -0.03em;
 }
 
-/* ==========================================================================
-   RESPONSIVE
-   ========================================================================== */
-
-/* -------------------- Scrollbar -------------------- */
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+body.club-page .club-intro-copy .nl-lead {
+    max-width: 520px;
 }
 
-::-webkit-scrollbar-track {
-    background: #1a1a1a;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #444;
-    border-radius: 6px;
-    border: 2px solid #1a1a1a;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #666;
-}
-
-* {
-    scrollbar-width: thin;
-    scrollbar-color: #444 #1a1a1a;
-}
-
-/* ==========================================================================
-   CLUB NETWORK REDESIGN
-   ========================================================================== */
-body.nebula-page.club-page {
-    --club-ink: #05070a;
-    --club-surface: #090d12;
-    --club-surface-2: #0d131a;
-    --club-line: rgba(255, 255, 255, 0.12);
-    --club-muted: #87919b;
-}
-
-.club-intro {
-    position: relative;
+/* Relevés : trois cartouches, le premier en bleu plein */
+body.club-page .club-intro-stats {
     display: grid;
-    width: min(1440px, calc(100% - 8vw));
-    min-height: calc(100vh - 88px);
-    grid-template-columns: minmax(0, 1.4fr) minmax(290px, 0.6fr);
-    align-items: center;
-    margin: 0 auto;
-    padding: 8vh 0 14vh;
-    overflow: hidden;
-    border-bottom: 1px solid var(--club-line);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--seam);
+    margin-top: clamp(26px, 3vw, 40px);
+    padding: var(--seam);
+    border: 1px solid var(--line);
+    background: var(--bezel);
 }
 
-.club-intro::after {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 2px;
-    content: "";
-    background: linear-gradient(90deg, var(--acid), transparent 26%, var(--cyan), transparent 74%);
-    opacity: 0.72;
-}
-
-.club-intro-copy {
-    position: relative;
-    z-index: 2;
-    max-width: 900px;
-}
-
-.club-kicker {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin: 0 0 23px;
-    color: #89939e;
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-}
-
-.club-kicker span {
-    color: var(--acid);
-}
-
-.club-kicker::after {
-    width: 60px;
-    height: 1px;
-    content: "";
-    background: currentColor;
-}
-
-.club-intro-title {
-    max-width: 1000px;
-    margin: 0;
-    color: #f4f7f9;
-    font-family: var(--display);
-    font-size: clamp(4.5rem, 9.5vw, 9.8rem);
-    font-weight: 900;
-    letter-spacing: -0.08em;
-    line-height: 0.78;
-    text-transform: uppercase;
-}
-
-.club-intro-title em {
-    color: transparent;
-    font-style: normal;
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.68);
-}
-
-.club-intro-text {
-    max-width: 620px;
-    margin: 38px 0 0;
-    padding-left: 19px;
-    border-left: 2px solid var(--acid);
-    color: #a3acb5;
-    font-size: clamp(0.88rem, 1.1vw, 1.05rem);
-    line-height: 1.75;
-}
-
-.club-intro-stats {
-    position: absolute;
-    z-index: 3;
-    right: 0;
-    bottom: 33px;
-    left: 0;
-    display: flex;
-    gap: clamp(28px, 5vw, 80px);
-}
-
-.club-intro-stats>div {
+body.club-page .club-readout {
     display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: end;
-    gap: 4px 12px;
-}
-
-.club-intro-stats strong {
-    grid-row: span 2;
-    font-family: var(--display);
-    font-size: clamp(2.1rem, 4vw, 4rem);
-    letter-spacing: -0.08em;
-    line-height: 0.78;
-}
-
-.club-intro-stats span {
-    max-width: 90px;
-    color: #707a84;
-    font-family: var(--mono);
-    font-size: 0.64rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    line-height: 1.4;
-    text-transform: uppercase;
-}
-
-.club-intro-orbit {
-    position: relative;
-    z-index: 1;
-    justify-self: center;
-    width: min(34vw, 480px);
-    aspect-ratio: 1;
-    border: 1px solid rgba(99, 231, 255, 0.18);
-    border-radius: 50%;
-    box-shadow:
-        0 0 0 55px rgba(99, 231, 255, 0.025),
-        0 0 0 110px rgba(99, 231, 255, 0.014);
-}
-
-.club-intro-orbit::before,
-.club-intro-orbit::after {
-    position: absolute;
-    content: "";
-    border: 1px solid rgba(173, 255, 47, 0.2);
-    border-radius: 50%;
-}
-
-.club-intro-orbit::before {
-    inset: 18%;
-}
-
-.club-intro-orbit::after {
-    top: 50%;
-    right: -12%;
-    left: -12%;
-    height: 1px;
-    border-width: 1px 0 0;
-    border-radius: 0;
-}
-
-.club-intro-orbit>span {
-    position: absolute;
-    top: 19%;
-    left: 50%;
-    color: #52606b;
-    font-family: var(--mono);
-    font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    transform: translateX(-50%);
-    white-space: nowrap;
-}
-
-.club-intro-orbit>i {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: var(--acid);
-    box-shadow: 0 0 24px var(--acid);
-    transform: translate(-50%, -50%);
-}
-
-body.nebula-page.club-page .club-command {
-    display: grid;
-    width: min(1440px, calc(100% - 8vw)) !important;
-    margin: 0 auto !important;
-    padding: 12vh 0 110px;
-    gap: 28px;
-}
-
-.club-selector {
-    border: 1px solid var(--club-line);
-    background: var(--club-surface);
-}
-
-.club-section-heading {
-    display: grid;
-    min-height: 105px;
-    grid-template-columns: 102px minmax(0, 1fr) minmax(260px, 0.55fr);
-    align-items: center;
-    border-bottom: 1px solid var(--club-line);
-}
-
-.club-section-number {
-    display: grid;
-    height: 100%;
-    place-items: center;
-    border-right: 1px solid var(--club-line);
-    color: #333b44;
-    font-family: var(--display);
-    font-size: 2.25rem;
-    letter-spacing: -0.08em;
-}
-
-.club-section-heading>div {
-    padding: 0 27px;
-}
-
-.club-section-heading small {
-    color: var(--acid);
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-}
-
-.club-section-heading h2 {
-    margin: 7px 0 0;
-    color: #f1f4f6;
-    font-family: var(--display);
-    font-size: clamp(1.45rem, 2.5vw, 2.45rem);
-    letter-spacing: -0.045em;
-    line-height: 1;
-}
-
-.club-section-heading>p {
-    margin: 0;
-    padding: 0 27px;
-    border-left: 1px solid var(--club-line);
-    color: #78828c;
-    font-family: var(--mono);
-    font-size: 0.66rem;
-    font-weight: 700;
-    line-height: 1.65;
-    text-transform: uppercase;
-}
-
-.club-tabs {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 1px;
-    border-bottom: 1px solid var(--club-line);
-    background: var(--club-line);
-}
-
-body.nebula-page.club-page .club-tab {
-    --club-color: var(--cyan);
-    position: relative;
-    display: grid;
-    min-width: 0;
-    min-height: 89px;
-    grid-template-columns: auto 42px minmax(0, 1fr);
-    align-items: center;
+    align-content: space-between;
     gap: 12px;
-    padding: 13px 16px !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: var(--club-surface) !important;
-    color: #8a949e !important;
-    text-align: left;
+    min-height: 104px;
+    padding: 12px 14px 14px;
+    border-top: 3px solid var(--blue);
+    background: var(--scanlines), linear-gradient(180deg, rgba(31, 91, 255, 0.12), transparent 70%), var(--screen);
 }
 
-body.nebula-page.club-page .club-tab::after {
-    position: absolute;
-    right: 15px;
-    bottom: 0;
-    left: 15px;
-    height: 2px;
-    content: "";
-    background: var(--club-color);
-    opacity: 0;
-    box-shadow: 0 0 12px var(--club-color);
-}
-
-body.nebula-page.club-page .club-tab:hover,
-body.nebula-page.club-page .club-tab.active {
-    background:
-        linear-gradient(135deg, color-mix(in srgb, var(--club-color), transparent 92%), transparent),
-        var(--club-surface-2) !important;
-    color: #fff !important;
-    transform: none !important;
-}
-
-body.nebula-page.club-page .club-tab.active::after {
-    opacity: 1;
-}
-
-.club-tab>span {
-    color: #3c444d;
-    font-family: var(--display);
-    font-size: 0.88rem;
-}
-
-.club-tab.active>span {
-    color: var(--club-color);
-}
-
-.club-tab img {
-    width: 42px;
-    height: 42px;
-    object-fit: contain;
-    filter: grayscale(0.4);
-}
-
-.club-tab.active img {
-    filter: none drop-shadow(0 0 10px color-mix(in srgb, var(--club-color), transparent 45%));
-}
-
-.club-tab>div {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.club-tab strong {
-    overflow: hidden;
-    font-family: var(--display);
-    font-size: 0.72rem;
-    text-overflow: ellipsis;
+body.club-page .club-readout span {
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-weight: 500;
+    letter-spacing: var(--track-micro);
+    line-height: 1.3;
     text-transform: uppercase;
+}
+
+body.club-page .club-readout strong {
+    color: #fff;
+    font-family: var(--display);
+    font-size: clamp(2.4rem, 3.6vw, 3.6rem);
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.8;
+    text-shadow: var(--fringe);
+}
+
+body.club-page .club-readout--solid {
+    border-top-color: #fff;
+    background: var(--scanlines), var(--blue);
+}
+
+body.club-page .club-readout--solid span {
+    color: rgba(255, 255, 255, 0.86);
+}
+
+/* Écran programme (le moniteur principal de la régie) */
+body.club-page .club-program {
+    position: relative;
+    min-width: 0;
+}
+
+body.club-page .club-stage-field {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 460px;
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-mon);
+    background: var(--bezel);
+    box-shadow:
+        0 0 0 3px var(--bezel),
+        0 0 0 4px rgba(77, 128, 255, 0.14),
+        0 30px 70px rgba(0, 0, 0, 0.55),
+        0 0 80px rgba(31, 91, 255, 0.16);
+}
+
+/* Filet couleur du club en tête d'écran */
+body.club-page .club-stage-field::before {
+    position: absolute;
+    z-index: 7;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 3px;
+    content: "";
+    background: var(--club-color, var(--blue));
+}
+
+body.club-page .stage-field-topline {
+    flex: none;
+    background: rgba(1, 4, 12, 0.88);
+}
+
+body.club-page .stage-field-screen {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    background:
+        radial-gradient(80% 70% at 50% 45%, rgba(31, 91, 255, 0.2), transparent 70%),
+        repeating-linear-gradient(180deg, rgba(141, 176, 255, 0.045) 0 9.09%, transparent 9.09% 18.18%),
+        linear-gradient(180deg, #051233, #030a1e);
+}
+
+/* Lignes de balayage, vignettage et balayage CRT de l'écran programme */
+body.club-page .stage-field-screen::before {
+    position: absolute;
+    z-index: 4;
+    inset: 0;
+    content: "";
+    background:
+        var(--glare),
+        radial-gradient(120% 100% at 50% 50%, transparent 55%, rgba(1, 4, 12, 0.7)),
+        var(--scanlines);
+    pointer-events: none;
+}
+
+body.club-page .stage-field-screen::after {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 22%;
+    content: "";
+    background: linear-gradient(180deg, transparent, rgba(141, 176, 255, 0.07) 70%, rgba(141, 176, 255, 0.16));
+    animation: club-crt-sweep 7s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes club-crt-sweep {
+    from {
+        transform: translateY(-100%);
+    }
+
+    to {
+        transform: translateY(480%);
+    }
+}
+
+body.club-page .stage-field-crest {
+    position: absolute;
+    z-index: 0;
+    top: 50%;
+    right: -4%;
+    width: auto;
+    height: 86%;
+    object-fit: contain;
+    opacity: 0.1;
+    filter: grayscale(1) brightness(1.6);
+    transform: translateY(-50%) rotate(-8deg);
+    pointer-events: none;
+}
+
+/* Rail de gauche de l'écran programme : compteur de postes */
+body.club-page .stage-field-count {
+    position: absolute;
+    z-index: 6;
+    top: 18px;
+    left: 18px;
+    display: grid;
+    width: 96px;
+    color: var(--muted);
+    font-family: var(--display);
+    font-size: 22px;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 0.9;
+}
+
+body.club-page .stage-field-count > span {
     white-space: nowrap;
 }
 
-.club-tab small {
-    color: #626c76;
-    font-family: var(--mono);
-    font-size: 0.58rem;
-    font-weight: 700;
+body.club-page .stage-field-count b {
+    display: inline;
+    color: #fff;
+    font-size: clamp(3rem, 4.4vw, 4.4rem);
+    letter-spacing: -0.04em;
+    line-height: 0.8;
+    text-shadow: var(--fringe), 0 0 30px rgba(31, 91, 255, 0.6);
 }
 
-.club-stage {
+body.club-page .stage-field-count small {
+    margin-top: 8px;
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: var(--track-micro);
+    text-transform: uppercase;
+}
+
+/* Vumètre vertical : un segment par poste, plein = occupé */
+body.club-page .stage-field-meter {
+    position: absolute;
+    z-index: 6;
+    top: 150px;
+    bottom: 96px;
+    left: 18px;
+    width: 26px;
+    background: repeating-linear-gradient(0deg, rgba(141, 176, 255, 0.16) 0 calc(100% / var(--total) - 4px), transparent calc(100% / var(--total) - 4px) calc(100% / var(--total)));
+}
+
+body.club-page .stage-field-meter::before {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: calc(100% * var(--filled) / var(--total));
+    content: "";
+    background: linear-gradient(0deg, var(--blue), var(--blue-3));
+    -webkit-mask-image: repeating-linear-gradient(0deg, #000 0 calc(100% / var(--filled) - 4px), transparent calc(100% / var(--filled) - 4px) calc(100% / var(--filled)));
+    mask-image: repeating-linear-gradient(0deg, #000 0 calc(100% / var(--filled) - 4px), transparent calc(100% / var(--filled) - 4px) calc(100% / var(--filled)));
+    filter: drop-shadow(0 0 6px rgba(61, 123, 255, 0.6));
+}
+
+body.club-page .stage-field-zone {
+    position: absolute;
+    z-index: 6;
+    bottom: 14px;
+    left: 18px;
     display: grid;
-    grid-template-columns: minmax(0, 1.42fr) minmax(350px, 0.58fr);
-    min-height: 690px;
-}
-
-.club-stage-field {
-    --club-color: var(--cyan);
-    position: relative;
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    padding: 22px;
-    border-right: 1px solid var(--club-line);
-    background:
-        radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--club-color), transparent 94%), transparent 45%),
-        #070a0e;
-}
-
-.stage-field-topline,
-.stage-field-footer,
-.stage-dossier-topline {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: #6e7882;
-    font-family: var(--mono);
-    font-size: 0.63rem;
+    color: #fff;
+    font-family: var(--display);
+    font-size: 4rem;
+    font-style: italic;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: -0.04em;
+    line-height: 0.8;
+    text-shadow: var(--fringe);
 }
 
-.stage-field-topline {
-    min-height: 35px;
-    padding: 0 3px 14px;
+body.club-page .stage-field-zone small {
+    margin-bottom: 6px;
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: var(--track-micro);
+    text-transform: uppercase;
 }
 
-.stage-field-footer {
-    min-height: 40px;
-    justify-content: flex-start;
-    gap: 24px;
-    padding: 14px 3px 0;
+body.club-page .stage-field-footer {
+    position: relative;
+    z-index: 6;
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 22px;
+    min-height: 38px;
+    padding: 8px 16px;
+    border-top: 1px solid var(--line);
+    background: rgba(1, 4, 12, 0.88);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+    text-transform: uppercase;
 }
 
-.stage-field-footer span {
+body.club-page .stage-field-footer span {
     display: inline-flex;
     align-items: center;
     gap: 8px;
 }
 
-.stage-field-footer i {
-    width: 7px;
-    height: 7px;
-    border: 1px solid #68727c;
-    transform: rotate(45deg);
+body.club-page .stage-field-footer i {
+    width: 12px;
+    height: 12px;
+    border: 1px solid #fff;
+    background: var(--blue);
 }
 
-.stage-field-footer span:first-child i {
-    border-color: var(--club-color);
-    background: var(--club-color);
-    box-shadow: 0 0 8px var(--club-color);
+body.club-page .stage-field-footer span:nth-child(2) i {
+    border: 1px dashed var(--offline);
+    background: var(--mire);
+    opacity: 0.7;
 }
 
-body.nebula-page.club-page .club-pitch {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    border: 1px solid rgba(180, 255, 203, 0.22);
-    border-radius: 0;
-    background:
-        linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-        radial-gradient(ellipse at 50% 35%, rgba(18, 98, 58, 0.46), rgba(3, 30, 19, 0.9));
-    background-size: 36px 36px, 36px 36px, auto;
+body.club-page .stage-field-footer .stage-field-tc {
+    margin-left: auto;
+    color: var(--dim);
 }
 
-body.nebula-page.club-page .club-pitch-big {
-    width: 100%;
-    max-width: none;
-    flex: 1;
-    aspect-ratio: auto;
-    margin: 0;
-}
+/* -------------------- 03. Vue aérienne -------------------- */
 
-body.nebula-page.club-page .club-pitch::before,
-body.nebula-page.club-page .club-pitch::after {
+body.club-page .club-pitch {
     position: absolute;
-    z-index: 1;
-    left: 50%;
-    width: 26%;
-    height: 10%;
-    content: "";
-    border: 1px solid rgba(214, 255, 225, 0.18);
-    transform: translateX(-50%);
+    z-index: 2;
+    inset: 0 0 0 130px;
+    border-left: 1px solid var(--line);
 }
 
-body.nebula-page.club-page .club-pitch::before {
+body.club-page .pitch-lines {
+    position: absolute;
+    inset: 7% 6%;
+    border: 1px solid rgba(141, 176, 255, 0.34);
+    background: linear-gradient(rgba(141, 176, 255, 0.34), rgba(141, 176, 255, 0.34)) 50% 50% / 100% 1px no-repeat;
+}
+
+/* Rond central */
+body.club-page .pitch-lines::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 19%;
+    aspect-ratio: 1;
+    content: "";
+    border: 1px solid rgba(141, 176, 255, 0.34);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Surfaces de réparation (haut + bas) */
+body.club-page .pitch-lines::after,
+body.club-page .pitch-lines i {
+    position: absolute;
+    left: 31%;
+    width: 38%;
+    height: 15%;
+    content: "";
+    border: 1px solid rgba(141, 176, 255, 0.34);
+}
+
+body.club-page .pitch-lines::after {
     top: -1px;
     border-top: 0;
 }
 
-body.nebula-page.club-page .club-pitch::after {
+body.club-page .pitch-lines i {
     bottom: -1px;
     border-bottom: 0;
 }
 
-body.nebula-page.club-page .pitch-lines {
-    inset: 5%;
-    border: 1px solid rgba(214, 255, 225, 0.2);
-    border-radius: 0;
-}
-
-body.nebula-page.club-page .pitch-lines::before {
-    background: rgba(214, 255, 225, 0.17);
-}
-
-body.nebula-page.club-page .pitch-lines::after {
+body.club-page .pitch-slot {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 16%;
-    aspect-ratio: 1;
-    content: "";
-    border: 1px solid rgba(214, 255, 225, 0.2);
-    border-radius: 50%;
+    z-index: 3;
+    display: grid;
+    justify-items: center;
+    gap: 0;
+    width: max-content;
+    max-width: 150px;
+    color: #fff;
     transform: translate(-50%, -50%);
 }
 
-body.nebula-page.club-page .pitch-slot {
-    z-index: 3;
-    gap: 7px;
-}
-
-body.nebula-page.club-page .pitch-dot {
+body.club-page .pitch-dot {
     position: relative;
     display: block;
-    width: 34px;
-    height: 34px;
-    border: 1px solid color-mix(in srgb, var(--slot-color), white 15%);
-    border-radius: 0;
-    background: color-mix(in srgb, var(--slot-color), #07100b 22%);
-    color: #07100b;
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    line-height: 34px;
-    text-align: center;
-    transform: rotate(45deg);
+    width: clamp(64px, 6.4vw, 92px);
+    aspect-ratio: 1;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 2px;
+    background: var(--bezel);
+    box-shadow:
+        inset 0 -3px 0 var(--slot-color, var(--blue)),
+        0 0 0 3px rgba(1, 4, 12, 0.85),
+        0 12px 30px rgba(0, 0, 0, 0.55);
 }
 
-body.nebula-page.club-page .pitch-dot>span {
-    display: grid;
+body.club-page .pitch-dot img {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
-    place-items: center;
-    line-height: 1;
-    transform: rotate(-45deg);
+    object-fit: cover;
+    object-position: 50% 24%;
+    filter: grayscale(0.25) contrast(1.1) brightness(0.86);
+    transition: filter 220ms ease, transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-body.nebula-page.club-page .pitch-dot::before {
+body.club-page .pitch-dot::after {
     position: absolute;
-    inset: -6px;
+    z-index: 1;
+    inset: 0;
     content: "";
-    border: 1px solid color-mix(in srgb, var(--slot-color), transparent 72%);
+    background:
+        var(--scanlines-strong),
+        linear-gradient(180deg, rgba(31, 91, 255, 0.2), transparent 50%, rgba(2, 6, 17, 0.55));
+    pointer-events: none;
 }
 
-body.nebula-page.club-page .pitch-slot.vacant .pitch-dot {
-    border: 1px dashed rgba(255, 255, 255, 0.3);
-    background: rgba(255, 255, 255, 0.035);
-    color: #77818b;
-    box-shadow: none;
-}
-
-body.nebula-page.club-page .pitch-slot-big {
-    gap: 15px;
-}
-
-body.nebula-page.club-page .pitch-slot-big .pitch-dot {
-    width: 47px;
-    height: 47px;
-    font-size: 1.08rem;
-    font-weight: 900;
-    line-height: 47px;
-}
-
-body.nebula-page.club-page .pitch-player-name {
-    padding: 5px 9px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(3, 10, 7, 0.82);
-    color: #e8edef;
+/* Étiquette de poste incrustée en haut à gauche du flux */
+body.club-page .pitch-dot > span {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    padding: 4px 6px;
+    background: var(--blue);
+    color: #fff;
     font-family: var(--mono);
-    font-size: 0.68rem;
-    text-shadow: none;
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1;
+}
+
+body.club-page .pitch-player-name {
+    position: relative;
+    z-index: 2;
+    margin-top: -2px;
+    max-width: 100%;
+    padding: 6px 10px 5px;
+    overflow: hidden;
+    background: var(--blue);
+    color: #fff;
+    font-family: var(--display);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+}
+
+body.club-page a.pitch-slot:hover .pitch-dot,
+body.club-page a.pitch-slot:focus-visible .pitch-dot {
+    border-color: #fff;
+    box-shadow:
+        inset 0 -3px 0 var(--slot-color, var(--blue)),
+        0 0 0 3px var(--blue-2),
+        0 0 34px rgba(31, 91, 255, 0.6);
+}
+
+body.club-page a.pitch-slot:hover .pitch-dot img,
+body.club-page a.pitch-slot:focus-visible .pitch-dot img {
+    filter: none;
+    transform: scale(1.06);
+}
+
+body.club-page a.pitch-slot:hover .pitch-player-name,
+body.club-page a.pitch-slot:focus-visible .pitch-player-name {
+    background: #fff;
+    color: var(--blue-deep);
+}
+
+body.club-page a.pitch-slot:focus-visible {
+    outline: none;
+}
+
+/* Poste vacant : une mire éteinte */
+body.club-page .pitch-slot.vacant .pitch-dot {
+    border: 1px dashed rgba(141, 176, 255, 0.5);
+    background:
+        var(--mire) top / 100% 70% no-repeat,
+        var(--mire-low) bottom / 100% 30% no-repeat;
+    box-shadow: 0 0 0 3px rgba(1, 4, 12, 0.85);
+    filter: saturate(0.5);
+    opacity: 0.6;
+}
+
+body.club-page .pitch-slot.vacant .pitch-dot > span {
+    background: var(--ink);
+    color: var(--muted);
+}
+
+body.club-page .pitch-vacant {
+    background: rgba(2, 6, 17, 0.9);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-weight: 500;
+    letter-spacing: var(--track-micro);
+    border: 1px dashed var(--line-strong);
+}
+
+/* -------------------- 04. Écrans de prévisualisation -------------------- */
+
+body.club-page .club-preview {
+    position: relative;
+    z-index: 4;
+    width: var(--page);
+    margin-inline: auto;
+}
+
+body.club-page .club-preview-label {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin: 0 0 12px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--track-micro);
     text-transform: uppercase;
 }
 
-body.nebula-page.club-page .pitch-player-name:hover {
-    border-color: var(--slot-color, var(--club-color));
-    color: #fff;
-    text-shadow: none;
+body.club-page .club-preview-label b {
+    color: var(--blue-2);
 }
 
-body.nebula-page.club-page .pitch-vacant {
-    color: #78818a;
-    font-style: normal;
+body.club-page .club-tabs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: var(--seam);
+    padding: var(--seam);
+    overflow: visible;
+    border: 1px solid var(--line-strong);
+    background: var(--bezel);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
 }
 
-.club-stage-dossier {
-    --club-color: var(--cyan);
+body.club-page .nl-zone {
+    position: relative;
+    isolation: isolate;
+    display: block;
+    width: 100%;
     min-width: 0;
+    height: clamp(136px, 10.4vw, 156px);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
     background:
-        linear-gradient(145deg, color-mix(in srgb, var(--club-color), transparent 95%), transparent 42%),
-        var(--club-surface);
+        radial-gradient(60% 70% at 50% 46%, color-mix(in srgb, var(--club-color, var(--blue)) 26%, transparent), transparent 72%),
+        linear-gradient(180deg, #071431, #030a1d);
+    box-shadow: inset 0 -3px 0 var(--club-color, var(--line));
+    color: #fff;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: box-shadow 180ms ease, filter 180ms ease;
 }
 
-.stage-dossier-topline {
-    min-height: 46px;
-    padding: 0 17px;
-    border-bottom: 1px solid var(--club-line);
+body.club-page .nl-zone::after {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    content: "";
+    background:
+        var(--scanlines-strong),
+        linear-gradient(180deg, rgba(2, 6, 17, 0.55), transparent 32%, transparent 58%, rgba(2, 6, 17, 0.85));
+    opacity: 0.85;
+    pointer-events: none;
 }
 
-.stage-sync {
+body.club-page .zone-osd {
+    position: absolute;
+    z-index: 4;
+    top: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 9px 10px;
+    color: #dfe7ff;
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+body.club-page .zone-osd b {
+    color: #fff;
+    font-weight: 600;
+}
+
+body.club-page .zone-osd .rec {
+    font-size: var(--fs-micro);
+}
+
+body.club-page .zone-crest {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    width: 54%;
+    height: 64%;
+    place-items: center;
+    transform: translate(-50%, -60%);
+}
+
+body.club-page .zone-crest img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: grayscale(0.7) brightness(0.62) contrast(1.1) drop-shadow(0 8px 18px rgba(0, 0, 0, 0.6));
+    transition: filter 220ms ease, transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body.club-page .zone-caption {
+    position: absolute;
+    z-index: 4;
+    bottom: 12px;
+    left: 0;
+    display: grid;
+    justify-items: start;
+    max-width: calc(100% - 44px);
+}
+
+body.club-page .zone-caption small {
+    padding: 4px 8px;
+    background: var(--ink);
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-weight: 500;
+    letter-spacing: var(--track-micro);
+    line-height: 1.15;
+    text-transform: uppercase;
+}
+
+body.club-page .zone-caption strong {
+    max-width: 100%;
+    padding: 6px 10px 5px 8px;
+    overflow: hidden;
+    background: var(--surface-3);
+    color: #dbe3f8;
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+body.club-page .zone-count {
+    position: absolute;
+    z-index: 4;
+    right: 10px;
+    bottom: 8px;
+    color: rgba(255, 255, 255, 0.75);
+    font-family: var(--display);
+    font-size: clamp(2rem, 2.8vw, 2.8rem);
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.85;
+    text-shadow: var(--fringe);
+}
+
+body.club-page .nl-zone .nl-feed-lock {
+    z-index: 3;
+    top: 42%;
+    width: 30%;
+}
+
+body.club-page button.nl-zone:hover .zone-crest img,
+body.club-page button.nl-zone:focus-visible .zone-crest img {
+    filter: grayscale(0) brightness(0.95) drop-shadow(0 8px 18px rgba(0, 0, 0, 0.6));
+    transform: scale(1.05);
+}
+
+body.club-page button.nl-zone:hover,
+body.club-page button.nl-zone:focus-visible {
+    box-shadow: inset 0 -3px 0 var(--club-color, var(--line)), inset 0 0 0 1px var(--blue-2);
+}
+
+body.club-page button.nl-zone:focus-visible {
+    outline: 2px solid var(--blue-3);
+    outline-offset: -4px;
+}
+
+/* Écran à l'antenne */
+body.club-page .nl-zone.active {
+    box-shadow:
+        inset 0 -3px 0 var(--club-color, var(--blue)),
+        inset 0 0 0 2px var(--blue-2),
+        0 0 40px rgba(31, 91, 255, 0.45);
+}
+
+body.club-page .nl-zone.active .zone-crest img {
+    filter: grayscale(0) brightness(1) drop-shadow(0 10px 24px rgba(0, 0, 0, 0.6));
+}
+
+body.club-page .nl-zone.active .nl-feed-lock {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+body.club-page .nl-zone.active .zone-caption strong {
+    background: var(--blue);
+    color: #fff;
+}
+
+body.club-page .nl-zone.active .zone-count {
+    color: #fff;
+}
+
+/* Zone libre : mire de test, non cliquable */
+body.club-page .club-tab-empty {
+    cursor: default;
+    background: var(--bezel);
+    box-shadow: inset 0 -3px 0 var(--line);
+}
+
+body.club-page .club-tab-empty .nl-feed-mire {
+    opacity: 0.4;
+}
+
+body.club-page .club-tab-empty .nl-feed-mire::after {
+    font-size: 13px;
+}
+
+body.club-page .club-tab-empty .zone-caption strong {
+    background: var(--surface-3);
+    color: var(--offline);
+}
+
+/* -------------------- 05. Dossier de zone (CH 01) -------------------- */
+
+body.club-page .club-command {
+    padding-top: clamp(56px, 7vw, 104px);
+}
+
+body.club-page .club-command > section + section {
+    margin-top: clamp(72px, 8vw, 112px);
+}
+
+body.club-page .club-stage-dossier {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-mon);
+    background:
+        radial-gradient(60% 80% at 100% 0%, rgba(31, 91, 255, 0.12), transparent 60%),
+        var(--screen);
+    box-shadow: 0 0 0 3px var(--bezel), 0 30px 70px rgba(0, 0, 0, 0.45);
+}
+
+body.club-page .stage-dossier-topline {
+    background: rgba(1, 4, 12, 0.72);
+}
+
+body.club-page .stage-sync {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: var(--club-color);
+    color: var(--blue-3);
 }
 
-.stage-sync i {
-    width: 6px;
-    height: 6px;
+body.club-page .stage-sync i {
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: var(--club-color);
-    box-shadow: 0 0 10px var(--club-color);
+    background: var(--blue-2);
+    box-shadow: 0 0 10px var(--blue-2);
 }
 
-.stage-club-identity {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 28px 25px;
-    border-bottom: 1px solid var(--club-line);
-}
-
-.stage-club-identity img {
-    width: 72px;
-    height: 72px;
-    object-fit: contain;
-    filter: drop-shadow(0 0 15px color-mix(in srgb, var(--club-color), transparent 50%));
-}
-
-.stage-club-identity>div {
-    min-width: 0;
-}
-
-.stage-club-identity small,
-.stage-roster>small {
-    color: var(--club-color);
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.11em;
-}
-
-.stage-club-identity h3 {
-    margin: 7px 0 0;
-    color: #f3f6f8;
-    font-family: var(--display);
-    font-size: clamp(1.75rem, 3vw, 2.8rem);
-    letter-spacing: -0.06em;
-    line-height: 0.9;
-    text-transform: uppercase;
-}
-
-.club-stage-dossier>blockquote {
-    margin: 0;
-    padding: 23px 25px;
-    border: 0;
-    border-bottom: 1px solid var(--club-line);
-    color: #a0a9b2;
-    font-size: 0.82rem;
-    font-style: normal;
-    line-height: 1.7;
-}
-
-.stage-data-grid {
+body.club-page .stage-dossier-body {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1px;
-    border-bottom: 1px solid var(--club-line);
-    background: var(--club-line);
+    grid-template-columns: minmax(240px, 0.75fr) minmax(0, 2fr);
+    border-bottom: 1px solid var(--line);
 }
 
-.stage-data-grid>div {
+/* Emblème filmé (flux verrouillé) */
+body.club-page .stage-club-crest {
+    aspect-ratio: auto;
+    min-height: 340px;
+    border: 0;
+    border-right: 1px solid var(--line);
+    border-radius: 0;
+    background:
+        radial-gradient(55% 55% at 50% 48%, color-mix(in srgb, var(--club-color, var(--blue)) 30%, transparent), transparent 72%),
+        repeating-linear-gradient(180deg, rgba(141, 176, 255, 0.04) 0 12.5%, transparent 12.5% 25%),
+        linear-gradient(180deg, #071431, #02081a);
+}
+
+body.club-page .stage-club-crest .stage-crest-img {
+    top: 16%;
+    left: 18%;
+    width: 64%;
+    height: 66%;
+    max-width: none;
+    object-fit: contain;
+    object-position: 50% 50%;
+    filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.6));
+    transform: none;
+}
+
+body.club-page .stage-club-crest .nl-feed-lock {
+    top: 50%;
+    width: auto;
+    height: 74%;
+}
+
+body.club-page .stage-crest-zone {
+    position: absolute;
+    z-index: 4;
+    right: 14px;
+    bottom: 6px;
+    color: #fff;
+    font-family: var(--display);
+    font-size: clamp(3.4rem, 5vw, 5rem);
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.85;
+    text-shadow: var(--fringe), 0 0 30px rgba(31, 91, 255, 0.6);
+}
+
+body.club-page .stage-club-identity {
     display: flex;
-    min-width: 0;
-    min-height: 95px;
     flex-direction: column;
     justify-content: center;
-    gap: 9px;
-    padding: 17px 20px;
-    background: var(--club-surface);
-}
-
-.stage-data-grid small {
-    color: #68727c;
-    font-family: var(--mono);
-    font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 0.09em;
-}
-
-.stage-data-grid strong {
-    max-width: 100%;
     min-width: 0;
-    color: #f1f4f6;
+    padding: clamp(24px, 3.4vw, 52px) clamp(20px, 3.4vw, 52px);
+}
+
+body.club-page .stage-club-identity h3 {
+    margin: 16px 0 0;
+    color: #fff;
     font-family: var(--display);
-    font-size: 1.65rem;
-    letter-spacing: -0.06em;
-    line-height: 0.8;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-size: clamp(2.4rem, 5.6vw, 5.8rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 0.86;
+    text-shadow: var(--fringe);
+    text-transform: uppercase;
+    overflow-wrap: normal;
+    text-wrap: balance;
 }
 
-.stage-data-grid .stage-value strong {
-    font-size: clamp(1.08rem, 1.7vw, 1.5rem);
-    letter-spacing: -0.045em;
+body.club-page .stage-club-identity blockquote {
+    max-width: 720px;
+    margin: 24px 0 0;
+    padding: 14px 18px 16px;
+    border-left: 3px solid var(--club-color, var(--blue));
+    background: rgba(1, 4, 12, 0.6);
+    color: #d6e0fa;
+    font-size: 17px;
+    line-height: 1.6;
 }
 
-.stage-data-grid strong>span {
-    margin-left: 3px;
-    color: var(--club-color);
+body.club-page .stage-club-identity blockquote small {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--blue-3);
     font-family: var(--mono);
-    font-size: 0.86rem;
-    font-weight: 900;
-    line-height: 1;
-    vertical-align: 0.08em;
-}
-
-.stage-roster {
-    padding: 23px 25px;
-}
-
-body.nebula-page.club-page .roster-list {
-    margin-top: 13px;
-    gap: 1px;
-    background: var(--club-line);
-}
-
-body.nebula-page.club-page .roster-row {
-    min-height: 43px;
-    padding: 8px 10px;
-    border-radius: 0;
-    background: var(--club-surface);
-}
-
-body.nebula-page.club-page .roster-row:hover {
-    background: var(--club-surface-2);
-}
-
-body.nebula-page.club-page .role-badge {
-    width: 38px;
-    padding: 5px 0;
-    border: 1px solid var(--club-line);
-    border-radius: 0;
-    background: transparent;
-    color: #9aa4ad;
-    font-family: var(--mono);
-    font-size: 0.62rem;
-}
-
-body.nebula-page.club-page .roster-row a {
-    color: #e5eaed;
-    font-family: var(--display);
-    font-size: 0.7rem;
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
     text-transform: uppercase;
 }
 
-body.nebula-page.club-page .empty-slot {
-    color: #68727c;
-    font-family: var(--mono);
-    font-size: 0.67rem;
-    font-style: normal;
-    text-transform: uppercase;
-}
-
-.stage-actions {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1px;
-    border-top: 1px solid var(--club-line);
-    background: var(--club-line);
-}
-
-.stage-actions>a {
+body.club-page .stage-actions {
     display: flex;
-    min-height: 58px;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 17px !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: var(--club-surface) !important;
-    color: #aab2b9 !important;
-    font-family: var(--mono) !important;
-    font-size: 0.62rem !important;
-    font-weight: 700;
-    letter-spacing: 0.07em;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 26px;
 }
 
-.stage-actions>a:hover {
-    background: color-mix(in srgb, var(--club-color), #fff 14%) !important;
-    color: #05070a !important;
-    transform: none !important;
+body.club-page .stage-data-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding: var(--seam);
+    background: var(--bezel);
 }
 
-body.nebula-page.club-page .club-modal-box {
-    width: min(1080px, 94vw);
-    max-width: 1080px;
-    max-height: 92vh;
-    padding: 0 !important;
-    overflow-y: auto;
-    border: 1px solid color-mix(in srgb, var(--club-color), transparent 40%) !important;
-    border-top: 2px solid var(--club-color) !important;
-    border-radius: 0 !important;
-    background:
-        linear-gradient(145deg, color-mix(in srgb, var(--club-color), transparent 95%), transparent 40%),
-        var(--club-surface) !important;
-    box-shadow: 0 35px 110px rgba(0, 0, 0, 0.72) !important;
+body.club-page .stage-data-grid .nl-stat {
+    min-height: 140px;
 }
 
-body.nebula-page.club-page .close-btn {
-    display: flex;
-    width: calc(100% - 54px);
-    min-height: 47px;
-    align-items: center;
-    justify-content: center;
-    margin: 0 27px 27px;
-    padding: 0 !important;
-    border: 1px solid var(--club-color) !important;
-    border-radius: 0 !important;
-    background: color-mix(in srgb, var(--club-color), transparent 91%) !important;
-    color: var(--club-color) !important;
-    font-family: var(--mono) !important;
-    font-size: 0.65rem !important;
-    letter-spacing: 0.1em;
+body.club-page .stage-data-grid .nl-vu {
+    margin-top: 2px;
 }
 
-body.nebula-page.club-page .close-btn:hover {
-    background: var(--club-color) !important;
-    color: #05070a !important;
-    transform: none !important;
+body.club-page .stage-data-grid .nl-stat--solid .nl-vu {
+    background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.22) 0 9px, transparent 9px 12px);
 }
 
-.club-alltime {
-    border: 1px solid var(--club-line);
-    background: var(--club-surface);
+body.club-page .stage-data-grid .nl-stat--solid .nl-vu::before {
+    background: #fff;
+    filter: none;
 }
 
-.club-alltime-stage {
-    --club-color: var(--cyan);
-    background:
-        linear-gradient(135deg, color-mix(in srgb, var(--club-color), transparent 97%), transparent 48%),
-        var(--club-surface);
-}
-
-.club-alltime-grid {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 1px;
-    background: var(--club-line);
-}
-
-.club-alltime-card {
-    --leader-color: var(--cyan);
-    position: relative;
-    display: grid;
-    min-width: 0;
-    min-height: 235px;
-    grid-template-rows: auto 1fr auto;
-    gap: 20px;
-    padding: 19px;
-    overflow: hidden;
-    background:
-        linear-gradient(145deg, color-mix(in srgb, var(--leader-color), transparent 94%), transparent 56%),
-        var(--club-surface-2);
-}
-
-.club-alltime-card::before {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 2px;
-    content: "";
-    background: var(--leader-color);
-    box-shadow: 0 0 12px color-mix(in srgb, var(--leader-color), transparent 35%);
-}
-
-.club-alltime-card::after {
-    position: absolute;
-    right: -38px;
-    bottom: -58px;
-    width: 150px;
-    height: 150px;
-    content: "";
-    border: 1px solid color-mix(in srgb, var(--leader-color), transparent 86%);
-    border-radius: 50%;
-}
-
-.club-alltime-topline,
-.club-alltime-value {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.club-alltime-topline {
-    color: #65737e;
-    font-family: var(--mono);
-    font-size: 0.52rem;
+body.club-page .stage-value .nl-stat-value small {
+    font-family: var(--display);
+    font-size: 0.5em;
     font-weight: 700;
 }
 
-.club-alltime-topline>span {
-    color: var(--leader-color);
+body.club-page .stage-roster {
+    padding: clamp(20px, 2.6vw, 34px);
 }
 
-.club-alltime-player {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    min-width: 0;
-    grid-template-columns: 64px minmax(0, 1fr);
+body.club-page .stage-roster-head {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 14px;
-}
-
-.club-alltime-player>img {
-    width: 64px;
-    height: 64px;
-    border: 1px solid color-mix(in srgb, var(--leader-color), transparent 55%);
-    object-fit: cover;
-    filter: saturate(0.82);
-}
-
-.club-alltime-player>div {
-    display: grid;
-    min-width: 0;
-    gap: 7px;
-}
-
-.club-alltime-player small,
-.club-alltime-player span,
-.club-alltime-value span {
-    color: #75838e;
-    font-family: var(--mono);
-    font-size: 0.47rem;
+    gap: 8px 12px;
+    margin: 0 0 14px;
+    color: #fff;
+    font-family: var(--display);
+    font-size: 18px;
     font-weight: 700;
     letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 
-.club-alltime-player a,
-.club-alltime-player strong {
-    overflow: hidden;
-    color: #f2f5f7;
+body.club-page .stage-roster-head b {
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-label);
+    font-weight: 500;
+}
+
+body.club-page .roster-wrap {
+    box-shadow: none;
+}
+
+body.club-page .roster-list a {
+    color: #fff;
+    box-shadow: inset 0 -2px 0 transparent;
+    transition: box-shadow 160ms ease, color 160ms ease;
+}
+
+body.club-page .roster-list a:hover,
+body.club-page .roster-list a:focus-visible {
+    color: #fff;
+    box-shadow: inset 0 -2px 0 var(--club-accent, var(--blue-2));
+}
+
+body.club-page .roster-list .is-hl {
+    width: 90px;
+}
+
+body.club-page .roster-rank .nl-rank--sm {
+    font-size: 1.6rem;
+}
+
+body.club-page td.roster-value {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--fs-label);
+    letter-spacing: 0.04em;
+}
+
+body.club-page .roster-row.is-vacant td {
+    background: repeating-linear-gradient(135deg, rgba(141, 176, 255, 0.05) 0 6px, transparent 6px 12px);
+}
+
+body.club-page .roster-row.is-vacant .nl-tag--pos {
+    color: var(--muted);
+    border-style: dashed;
+    box-shadow: none;
+}
+
+body.club-page .roster-vacant {
+    color: var(--offline);
+}
+
+body.club-page .roster-vacant .empty-slot {
+    margin-right: 14px;
+    color: var(--offline);
     font-family: var(--display);
-    font-size: 0.92rem;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+body.club-page .roster-vacant small {
+    color: var(--dim);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+}
+
+/* -------------------- 06. Leaders historiques (CH 02) -------------------- */
+
+body.club-page .club-alltime {
+    padding-block: clamp(64px, 8vw, 112px);
+}
+
+body.club-page .club-alltime-jp {
+    position: absolute;
+    z-index: -1;
+    top: clamp(24px, 3vw, 48px);
+    right: var(--gutter);
+    color: rgba(2, 6, 17, 0.16);
+    font-family: var(--jp);
+    font-size: clamp(7rem, 15vw, 15rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    pointer-events: none;
+}
+
+body.club-page .club-alltime-inner {
+    position: relative;
+    width: var(--page);
+    margin-inline: auto;
+}
+
+/* En-tête posé sur la bande bleue */
+body.club-page .nl-section-head--flat {
+    border-bottom-color: rgba(255, 255, 255, 0.32);
+}
+
+body.club-page .nl-section-head--flat::after {
+    background: repeating-linear-gradient(90deg, #fff 0 14px, transparent 14px 18px);
+}
+
+body.club-page .nl-section-head--flat .nl-chno {
+    background: var(--ink);
+    box-shadow: none;
+}
+
+body.club-page .nl-section-head--flat .nl-kicker,
+body.club-page .nl-section-head--flat .nl-section-note {
+    color: rgba(255, 255, 255, 0.86);
+}
+
+body.club-page .nl-section-head--flat .nl-section-title em {
+    color: var(--ink);
+    font-style: italic;
+}
+
+body.club-page .club-alltime-grid {
+    --wall-cols: 5;
+    border-color: rgba(2, 6, 17, 0.6);
+}
+
+body.club-page .club-alltime-card {
+    aspect-ratio: 4 / 5;
+}
+
+body.club-page .club-alltime-card .nl-feed-figure {
+    top: 42px;
+    right: auto;
+    bottom: auto;
+    left: 12px;
+    font-size: clamp(2.6rem, 3.6vw, 3.6rem);
+}
+
+body.club-page .club-alltime-card .nl-feed-figure small {
+    margin-left: 6px;
+    padding: 3px 6px;
+    background: rgba(2, 6, 17, 0.72);
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: var(--track-micro);
+    text-shadow: none;
+}
+
+body.club-page .club-alltime-card .nl-feed-mire::after {
+    top: 52%;
+}
+
+/* Cinq caméras, cinq cadrages : quand un même joueur mène plusieurs
+   catégories, le mur ne répète pas la même image */
+body.club-page .club-alltime-card:nth-child(2) {
+    --feed-zoom: 1.45;
+    --feed-pos: 30% 20%;
+}
+
+body.club-page .club-alltime-card:nth-child(3) {
+    --feed-zoom: 1.2;
+    --feed-pos: 72% 40%;
+}
+
+body.club-page .club-alltime-card:nth-child(4) {
+    --feed-zoom: 1.8;
+    --feed-pos: 50% 28%;
+}
+
+body.club-page .club-alltime-card:nth-child(5) {
+    --feed-zoom: 1.12;
+    --feed-pos: 40% 70%;
+}
+
+body.club-page .club-alltime-card .nl-feed-caption b a {
+    color: inherit;
+}
+
+body.club-page .club-alltime-card .nl-feed-caption em {
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+    text-transform: uppercase;
+}
+
+/* -------------------- 07. Historique (CH 03) -------------------- */
+
+body.club-page .club-history-summary {
+    grid-template-columns: minmax(0, 1.7fr) repeat(3, minmax(0, 1fr));
+    padding: var(--seam);
+    border: 1px solid var(--line-strong);
+    background: var(--bezel);
+}
+
+body.club-page .club-history-club .nl-stat-value {
+    overflow: hidden;
+    font-size: clamp(1.8rem, 3vw, 3rem);
+    font-style: normal;
+    line-height: 0.95;
     text-overflow: ellipsis;
     text-transform: uppercase;
-    white-space: nowrap;
 }
 
-.club-alltime-player a:hover {
-    color: var(--leader-color);
+body.club-page .club-history-summary .nl-stat:not(.club-history-club) .nl-stat-value {
+    font-style: italic;
 }
 
-.club-alltime-value {
-    padding-top: 15px;
-    border-top: 1px solid var(--club-line);
-}
-
-.club-alltime-value strong {
-    color: var(--leader-color);
-    font-family: var(--display);
-    font-size: 1.55rem;
-    line-height: 1;
-}
-
-.club-alltime-value span {
-    color: var(--leader-color);
-}
-
-.club-history {
-    margin-top: 20px;
-    border: 1px solid var(--club-line);
-    background: var(--club-surface);
-}
-
-.club-history-stage {
-    --club-color: var(--cyan);
-    background:
-        linear-gradient(135deg, color-mix(in srgb, var(--club-color), transparent 97%), transparent 45%),
-        var(--club-surface);
-}
-
-.club-history-summary {
+body.club-page .club-history-grid {
     display: grid;
-    grid-template-columns: 1.3fr repeat(3, 1fr);
-    gap: 1px;
-    border-bottom: 1px solid var(--club-line);
-    background: var(--club-line);
+    grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
+    gap: clamp(20px, 2.4vw, 32px);
+    margin-top: clamp(20px, 2.4vw, 32px);
 }
 
-.club-history-summary>div {
+body.club-page .club-season-list {
     display: grid;
-    min-height: 88px;
-    align-content: center;
-    gap: 9px;
-    padding: 18px 22px;
-    background: var(--club-surface-2);
+    gap: var(--seam);
+    align-content: start;
 }
 
-.club-history-summary small,
-.club-season-card small,
-.club-recent-panel small {
-    color: #73818c;
-    font-family: var(--mono);
-    font-size: 0.5rem;
-    font-weight: 700;
-    letter-spacing: 0.09em;
-}
-
-.club-history-summary strong {
+/* Bande de saison : bloc canal bleu + relevés */
+body.club-page .club-season-card {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr) minmax(0, 1.3fr);
+    grid-template-rows: auto auto;
     overflow: hidden;
-    color: #f0f4f6;
-    font-family: var(--display);
-    font-size: clamp(0.9rem, 1.6vw, 1.2rem);
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-mon);
+    background: var(--scanlines), var(--screen);
+    box-shadow: 0 0 0 3px var(--bezel);
 }
 
-.club-history-summary>div:first-child strong,
-.club-history-summary>div:last-child strong {
-    color: var(--club-color);
-}
-
-.club-history-grid {
+body.club-page .club-season-topline {
     display: grid;
-    grid-template-columns: minmax(0, 1.55fr) minmax(310px, 0.65fr);
-}
-
-.club-season-list {
-    display: grid;
-    gap: 1px;
-    border-right: 1px solid var(--club-line);
-    background: var(--club-line);
-}
-
-.club-season-card {
-    display: grid;
-    grid-template-columns: 105px minmax(190px, 0.7fr) minmax(300px, 1.1fr) minmax(340px, 1.25fr);
-    min-height: 158px;
-    background: var(--club-surface);
-}
-
-.club-season-topline,
-.club-season-rank,
-.club-season-data,
-.club-season-leaders {
-    padding: 20px;
-    border-right: 1px solid var(--club-line);
-}
-
-.club-season-topline {
-    display: grid;
+    grid-row: 1 / span 2;
     align-content: space-between;
-    border-left: 2px solid var(--club-color);
+    justify-items: start;
+    gap: 10px;
+    padding: 14px;
+    background: var(--scanlines), linear-gradient(180deg, var(--blue-2), var(--blue));
 }
 
-.club-season-topline>span {
-    color: var(--club-color);
+body.club-page .club-season-topline small {
+    color: rgba(255, 255, 255, 0.86);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-weight: 600;
+    letter-spacing: var(--track-micro);
+    text-transform: uppercase;
+}
+
+body.club-page .club-season-topline b {
+    color: #fff;
     font-family: var(--display);
-    font-size: 1.5rem;
+    font-size: clamp(3.4rem, 5vw, 5rem);
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 0.8;
+    text-shadow: var(--fringe);
 }
 
-.club-season-topline small {
-    color: var(--club-color);
+body.club-page .club-season-topline .nl-tag {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: var(--ink);
+    color: #fff;
 }
 
-.club-season-rank {
+body.club-page .club-season-rank {
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: 10px;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--line);
+}
+
+body.club-page :is(.club-season-rank, .club-season-data, .club-season-leaders) small {
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    font-weight: 500;
+    letter-spacing: var(--track-micro);
+    text-transform: uppercase;
+}
+
+body.club-page .club-season-rank > span:last-child {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--fs-label);
+    letter-spacing: 0.04em;
+}
+
+body.club-page .club-season-data {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-bottom: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+}
+
+body.club-page .club-season-data > div,
+body.club-page .club-season-leaders > div {
     display: grid;
     align-content: center;
     gap: 8px;
+    padding: 16px 18px;
 }
 
-.club-season-rank strong {
-    color: #f1f5f7;
+body.club-page .club-season-data > div + div {
+    border-left: 1px solid var(--line-soft);
+}
+
+body.club-page .club-season-data strong {
+    color: #fff;
     font-family: var(--display);
-    font-size: 2rem;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.05;
 }
 
-.club-season-rank>span {
-    color: #89959e;
-    font-family: var(--mono);
-    font-size: 0.56rem;
+body.club-page .club-season-data .is-ncl-champion strong {
+    color: var(--blue-2);
 }
 
-.club-season-data {
+body.club-page .club-season-leaders {
     display: grid;
-    grid-template-columns: 0.65fr 0.65fr 1.7fr;
-    gap: 1px;
-    padding: 0;
-    background: var(--club-line);
-}
-
-.club-season-data>div {
-    display: grid;
-    align-content: center;
-    gap: 10px;
-    padding: 15px;
-    background: var(--club-surface-2);
-}
-
-.club-season-data strong {
-    color: #e8edf0;
-    font-family: var(--display);
-    font-size: 0.74rem;
-}
-
-.club-season-data>div.is-ncl-champion strong {
-    color: transparent;
-    background: linear-gradient(90deg,
-            #9b6800 0%,
-            #f6bf32 24%,
-            #fff4b0 47%,
-            #ffd85e 61%,
-            #9b6800 100%);
-    background-size: 220% 100%;
-    background-clip: text;
-    -webkit-background-clip: text;
-    filter: drop-shadow(0 0 4px rgba(255, 201, 65, 0.42));
-    animation: club-ncl-champion-glimmer 2.7s linear infinite;
-}
-
-@keyframes club-ncl-champion-glimmer {
-    from {
-        background-position: 110% 50%;
-    }
-
-    to {
-        background-position: -110% 50%;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .club-season-data>div.is-ncl-champion strong {
-        animation: none;
-        background-position: 50% 50%;
-    }
-}
-
-.club-season-leaders {
-    display: grid;
+    grid-column: 2 / -1;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1px;
-    padding: 0;
-    border-right: 0;
-    background: var(--club-line);
 }
 
-.club-season-leaders>div {
-    display: grid;
-    align-content: center;
-    gap: 9px;
-    padding: 18px;
-    background: var(--club-surface);
+body.club-page .club-season-leaders > div {
+    grid-template-columns: minmax(0, 1fr) auto;
 }
 
-.club-season-leaders strong,
-.club-season-leaders strong a {
-    overflow: hidden;
-    color: #f1f5f7;
+body.club-page .club-season-leaders > div + div {
+    border-left: 1px solid var(--line-soft);
+}
+
+body.club-page .club-season-leaders small {
+    grid-column: 1 / -1;
+}
+
+body.club-page .club-season-leaders strong {
+    color: #fff;
     font-family: var(--display);
-    font-size: 0.76rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
-.club-season-leaders strong a:hover {
-    color: var(--club-color);
+body.club-page .club-season-leaders strong a {
+    color: #fff;
 }
 
-.club-season-leaders span {
-    color: var(--club-color);
+body.club-page .club-season-leaders span {
+    color: var(--blue-3);
     font-family: var(--mono);
-    font-size: 0.6rem;
+    font-size: var(--fs-label);
 }
 
-.club-recent-panel {
-    min-width: 0;
-    background: var(--club-surface-2);
+/* Forme du club */
+body.club-page .club-recent-panel {
+    display: flex;
+    flex-direction: column;
 }
 
-.club-recent-heading {
+body.club-page .club-recent-heading {
+    position: relative;
+    z-index: 2;
     display: grid;
-    min-height: 76px;
-    align-content: center;
-    gap: 7px;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--club-line);
+    gap: 6px;
+    padding: 18px 18px 14px;
 }
 
-.club-recent-heading strong {
-    color: var(--club-color);
+body.club-page .club-recent-heading small {
+    color: var(--blue-3);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+    text-transform: uppercase;
+}
+
+body.club-page .club-recent-heading strong {
+    color: #fff;
     font-family: var(--display);
-    font-size: 0.85rem;
+    font-size: clamp(1.4rem, 2vw, 1.9rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
 }
 
-.club-recent-panel ul {
+body.club-page .club-recent-panel ul {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    gap: var(--seam);
     margin: 0;
-    padding: 0;
+    padding: 0 18px 18px;
     list-style: none;
 }
 
-.club-history-match {
+body.club-page .club-history-match {
     display: grid;
-    min-height: 76px;
-    grid-template-columns: 36px minmax(0, 1fr) auto;
+    grid-template-columns: 40px minmax(0, 1fr) auto;
     align-items: center;
-    gap: 14px;
-    padding: 12px 18px;
-    border-bottom: 1px solid var(--club-line);
+    gap: 12px;
+    min-height: 56px;
+    padding: 0 14px 0 0;
+    background: rgba(1, 4, 12, 0.6);
+    box-shadow: inset 3px 0 0 var(--club, var(--line));
 }
 
-.club-history-match>span {
+body.club-page .club-history-match > span {
     display: grid;
-    width: 32px;
-    height: 32px;
+    height: 100%;
     place-items: center;
-    border: 1px solid currentColor;
-    color: var(--club-color);
+    background: var(--surface-3);
+    color: #fff;
     font-family: var(--display);
-    font-size: 0.65rem;
+    font-size: 18px;
+    font-weight: 700;
 }
 
-.club-history-match.result-v>span {
-    color: #adff2f;
+body.club-page .club-history-match.result-v > span {
+    background: var(--blue);
 }
 
-.club-history-match.result-d>span {
-    color: #ff5d66;
+body.club-page .club-history-match.result-d > span {
+    background: transparent;
+    color: var(--offline);
+    box-shadow: inset 0 0 0 1px var(--line-strong);
 }
 
-.club-history-match.result-n>span {
-    color: #ffd84d;
-}
-
-.club-history-match>div {
+body.club-page .club-history-match div {
     display: grid;
+    gap: 4px;
     min-width: 0;
-    gap: 6px;
 }
 
-.club-history-match strong {
+body.club-page .club-history-match small {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--fs-micro);
+    letter-spacing: var(--track-micro);
+}
+
+body.club-page .club-history-match strong {
     overflow: hidden;
-    color: #e7ecef;
+    color: #fff;
     font-family: var(--display);
-    font-size: 0.69rem;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
     text-overflow: ellipsis;
+    text-transform: uppercase;
     white-space: nowrap;
 }
 
-.club-history-match>b {
-    color: #f4f7f9;
+body.club-page .club-history-match b {
+    color: #fff;
     font-family: var(--display);
-    font-size: 0.82rem;
+    font-size: 22px;
+    font-style: italic;
+    font-weight: 700;
 }
 
-.club-history-empty {
-    display: grid;
-    min-height: 150px;
-    place-items: center;
-    padding: 24px;
-    color: #64717b;
-    font-family: var(--mono);
-    font-size: 0.58rem;
-    letter-spacing: 0.08em;
+body.club-page .club-recent-panel .nl-nosignal {
+    flex: 1;
+    min-height: 220px;
+    margin: 0 18px 18px;
 }
 
-@media (max-width: 1120px) {
-    .club-intro {
-        min-height: 820px;
+/* -------------------- 08. Mouvement réduit -------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    body.club-page .stage-field-screen::after {
+        display: none;
+        animation: none;
     }
 
-    .club-intro-orbit {
-        width: min(38vw, 390px);
+    body.club-page :is(.pitch-dot img, .zone-crest img) {
+        transition: none;
+    }
+}
+
+/* -------------------- 09. Responsive -------------------- */
+
+@media (max-width: 1180px) {
+    body.club-page .club-hero-inner {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
     }
 
-    .club-tabs {
+    body.club-page .club-tabs {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    .club-alltime-grid {
+    /* Bandeau OSD du héros : on garde caméra + multivue */
+    body.club-page .club-hero > .osd > span:nth-child(n + 4) {
+        display: none;
+    }
+
+    body.club-page .club-history-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* Mur des leaders sur tablette : 2 grands écrans puis 3 (jamais de trou) */
+@media (min-width: 681px) and (max-width: 1180px) {
+    body.club-page .club-alltime-grid {
+        --wall-cols: 6;
+    }
+
+    body.club-page .club-alltime-grid > .club-alltime-card {
+        grid-column: span 2;
+    }
+
+    body.club-page .club-alltime-grid > .club-alltime-card:nth-child(-n + 2) {
+        grid-column: span 3;
+        aspect-ratio: 16 / 10;
+    }
+}
+
+@media (max-width: 960px) {
+    body.club-page .club-hero-inner {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    body.club-page .club-intro-title {
+        font-size: clamp(2.5rem, 13.6vw, 6.2rem);
+    }
+
+    body.club-page .club-stage-field {
+        min-height: 480px;
+    }
+
+    body.club-page .stage-dossier-body {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    body.club-page .stage-club-crest {
+        min-height: 260px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+    }
+
+    body.club-page .stage-data-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    body.club-page .club-history-summary {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    .club-stage {
-        grid-template-columns: 1fr;
-    }
-
-    .club-history-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .club-season-list {
-        border-right: 0;
-        border-bottom: 1px solid var(--club-line);
-    }
-
-    .club-season-card {
-        grid-template-columns: 90px minmax(160px, 0.7fr) minmax(270px, 1.1fr) minmax(300px, 1.2fr);
-    }
-
-    .club-stage-field {
-        min-height: 610px;
-        border-right: 0;
-        border-bottom: 1px solid var(--club-line);
-    }
-
-}
-
-@media (max-width: 760px) {
-    .club-intro {
-        width: calc(100% - 36px);
-        min-height: 800px;
-        grid-template-columns: 1fr;
-        align-content: start;
-        padding-top: 70px;
-    }
-
-    .club-intro-title {
-        font-size: clamp(3.8rem, 17vw, 6.3rem);
-    }
-
-    .club-intro-orbit {
-        position: absolute;
-        right: -10%;
-        bottom: 130px;
-        width: 350px;
-        opacity: 0.45;
-    }
-
-    .club-intro-stats {
-        gap: 18px;
-    }
-
-    .club-intro-stats>div {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 7px;
-    }
-
-    .club-intro-stats span {
-        font-size: 0.56rem;
-    }
-
-    body.nebula-page.club-page .club-command {
-        width: calc(100% - 36px) !important;
-        padding-top: 80px;
-    }
-
-    .club-section-heading {
-        grid-template-columns: 70px 1fr;
-    }
-
-    .club-section-heading>div {
-        padding: 20px;
-    }
-
-    .club-section-heading>p {
+    body.club-page .club-history-club {
         grid-column: 1 / -1;
-        padding: 16px 20px;
-        border-top: 1px solid var(--club-line);
-        border-left: 0;
-    }
-
-    .club-tabs {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .club-alltime-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .club-history-summary {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .club-season-card {
-        grid-template-columns: 74px minmax(0, 1fr);
-    }
-
-    .club-season-data,
-    .club-season-leaders {
-        grid-column: 1 / -1;
-        border-top: 1px solid var(--club-line);
-    }
-
-    .club-season-topline,
-    .club-season-rank {
-        min-height: 125px;
-    }
-
-    .club-stage-field {
-        min-height: 500px;
-        padding: 14px;
     }
 }
 
-@media (max-width: 500px) {
-    .club-intro {
-        min-height: 760px;
+@media (max-width: 680px) {
+    body.club-page .club-hero-inner {
+        gap: 24px;
+        padding-block: 28px 18px;
     }
 
-    .club-alltime-grid {
-        grid-template-columns: 1fr;
+    body.club-page .club-intro-title {
+        margin-top: 16px;
     }
 
-    .club-intro-text {
-        font-size: 0.82rem;
+    body.club-page .club-intro-stats .club-readout {
+        min-height: 88px;
+        padding: 10px;
     }
 
-    .club-intro-stats strong {
-        font-size: 2rem;
+    body.club-page .club-readout strong {
+        font-size: 2.3rem;
     }
 
-    .club-tabs {
-        grid-template-columns: 1fr;
-    }
-
-    body.nebula-page.club-page .club-tab {
-        min-height: 72px;
-    }
-
-    .club-stage-field {
+    body.club-page .club-stage-field {
         min-height: 420px;
     }
 
-    .stage-data-grid,
-    .stage-actions {
-        grid-template-columns: 1fr;
+    body.club-page .club-pitch {
+        inset: 52px 0 0;
+        border-top: 1px solid var(--line);
+        border-left: 0;
     }
 
-    body.nebula-page.club-page .pitch-player-name {
-        max-width: 86px;
-        overflow: hidden;
-        text-overflow: ellipsis;
+    body.club-page .stage-field-count {
+        top: 10px;
+        left: 12px;
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        width: auto;
+        font-size: 18px;
+    }
+
+    body.club-page .stage-field-count b {
+        font-size: 2.2rem;
+    }
+
+    body.club-page .stage-field-count small {
+        margin: 0;
+    }
+
+    body.club-page :is(.stage-field-meter, .stage-field-zone) {
+        display: none;
+    }
+
+    body.club-page .stage-field-footer .stage-field-tc {
+        display: none;
+    }
+
+    body.club-page .pitch-lines {
+        inset: 6% 4%;
+    }
+
+    body.club-page .pitch-dot {
+        width: 58px;
+    }
+
+    body.club-page .pitch-player-name {
+        padding: 5px 7px 4px;
+        font-size: 12px;
+    }
+
+    body.club-page .pitch-vacant {
+        font-size: var(--fs-micro);
+        letter-spacing: 0.02em;
+    }
+
+    body.club-page .club-tabs {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    body.club-page .nl-zone {
+        height: 150px;
+        min-height: 0;
+    }
+
+    body.club-page .zone-osd {
+        padding: 8px;
+    }
+
+    body.club-page .zone-osd :is(.zone-osd-zone, .zone-state) {
+        display: none;
+    }
+
+    body.club-page .zone-crest {
+        width: 64%;
+        height: 46%;
+        transform: translate(-50%, -84%);
+    }
+
+    body.club-page .nl-zone .nl-feed-lock {
+        top: 34%;
+        width: 44%;
+    }
+
+    body.club-page .zone-caption {
+        bottom: 8px;
+        max-width: calc(100% - 8px);
+    }
+
+    body.club-page .zone-caption small {
+        padding: 3px 6px;
+    }
+
+    body.club-page .zone-caption strong {
+        padding: 5px 6px 4px;
+        font-size: 12px;
+        line-height: 1.1;
+        white-space: normal;
+    }
+
+    body.club-page .club-tab-empty .nl-feed-mire::after {
+        top: 36%;
+        padding: 4px 6px;
+        font-size: 11px;
+        letter-spacing: 0.02em;
+    }
+
+    body.club-page .club-alltime-card:not(:first-child) .feed-state {
+        display: none;
+    }
+
+    body.club-page .zone-count {
+        display: none;
+    }
+
+    body.club-page .stage-club-crest {
+        min-height: 220px;
+    }
+
+    body.club-page .stage-actions .nl-btn {
+        flex: 1 1 100%;
+    }
+
+    body.club-page .stage-data-grid .nl-stat {
+        min-height: 118px;
+    }
+
+    body.club-page .stage-data-grid .nl-stat-value {
+        font-size: 2.6rem;
+    }
+
+    body.club-page .roster-list {
+        min-width: 0;
+    }
+
+    body.club-page .roster-list :is(th, td) {
+        padding: 0 8px;
+    }
+
+    body.club-page .roster-list .roster-value {
+        display: none;
+    }
+
+    body.club-page .roster-list .is-hl {
+        width: auto;
+    }
+
+    body.club-page .roster-rank .nl-rank--sm {
+        font-size: 1.3rem;
+    }
+
+    body.club-page .roster-vacant small {
+        display: block;
+        margin-top: 2px;
+    }
+
+    body.club-page .club-alltime-grid {
+        --wall-cols-sm: 2;
+    }
+
+    body.club-page .club-alltime-grid > .club-alltime-card:first-child {
+        grid-column: 1 / -1;
+        aspect-ratio: 16 / 9;
+    }
+
+    body.club-page .club-alltime-card .nl-feed-figure {
+        top: 36px;
+        font-size: 2.4rem;
+    }
+
+    body.club-page .club-alltime-card .nl-feed-mire::after {
+        font-size: 12px;
+    }
+
+    body.club-page .club-history-summary .nl-stat {
+        min-height: 104px;
+        padding: 10px;
+    }
+
+    body.club-page .club-history-summary .nl-stat-value {
+        font-size: 2.2rem;
+    }
+
+    body.club-page .club-history-club .nl-stat-value {
+        font-size: 1.8rem;
+    }
+
+    body.club-page .club-season-card {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    body.club-page .club-season-topline {
+        grid-row: auto;
+        grid-template-columns: auto auto minmax(0, 1fr);
+        align-items: end;
+    }
+
+    body.club-page .club-season-topline .nl-tag {
+        justify-self: end;
+    }
+
+    body.club-page .club-season-data {
+        border-left: 0;
+    }
+
+    body.club-page .club-season-leaders {
+        grid-column: auto;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    body.club-page .club-season-leaders > div + div {
+        border-top: 1px solid var(--line-soft);
+        border-left: 0;
+    }
+
+    body.club-page .club-season-data > div,
+    body.club-page .club-season-leaders > div {
+        padding: 12px 14px;
+    }
+
+    body.club-page .club-season-data strong {
+        font-size: 17px;
     }
 }

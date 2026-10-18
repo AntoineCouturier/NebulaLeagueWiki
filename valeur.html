@@ -29,15 +29,15 @@
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="CSS/style.css">
     <link rel="stylesheet" href="CSS/valeur.css">
     <link rel="stylesheet" href="CSS/hamburger.css">
     <link rel="stylesheet" href="CSS/global-theme.css">
     <link rel="stylesheet" href="CSS/responsive.css">
+    <link rel="stylesheet" href="CSS/theme-monitor.css">
     <script src="JavaScript/reveal.js"></script>
 </head>
 
-<body class="nebula-page value-page">
+<body class="nebula-page value-page nl-migrated">
 
     <header class="site-header" id="top">
         <a class="brand" href="#top" aria-label="Nebula League, retour en haut">
@@ -66,105 +66,154 @@
         </div>
     </header>
 
-    <section class="market-intro">
-        <div class="market-intro-copy">
-            <p class="market-kicker"><span>NL–08</span> NEBULA MARKET EXCHANGE</p>
-            <h1>VOS PERFS<br><em>DEVIENNENT VALEURS</em></h1>
-            <p class="market-intro-text">Chaque action en match augmente votre cotation. Plus l’enjeu est élevé, plus
-                le marché récompense votre impact.</p>
+    <!-- 01. Écran maître : le mur des cotations (flux générés par valeur.js) -->
+    <section class="market-intro nl-hero nl-hero--wall" aria-labelledby="market-title">
+        <div class="osd">
+            <span class="rec">REC</span>
+            <span>CAM 04 <b>//</b> BOURSE DES EGO</span>
+            <span class="osd-hide-sm">COTATION — <b>SAISON 01</b></span>
+            <span class="jp osd-hide-sm">エゴ // ランキング</span>
+            <span class="osd-hide-sm">INDEX // S01 · SYNC 100%</span>
+        </div>
+
+        <div class="nl-hero-wall market-wall" data-market-wall aria-hidden="true"></div>
+
+        <div class="nl-hero-inner market-hero-inner">
+            <p class="nl-kicker"><span class="nl-ch">CH 04</span> Effectifs // Marché des ego</p>
+            <h1 id="market-title" class="nl-headline market-title">Vos perfs <em>deviennent valeurs</em></h1>
+            <p class="nl-lead">Chaque action en match augmente votre cotation. Plus l’enjeu est élevé, plus le marché
+                récompense votre <b>impact</b>.</p>
 
             <div class="market-stats" aria-label="État du marché">
-                <div><strong id="marketTotal">0 ¥</strong><span>Capitalisation totale</span></div>
-                <div><strong id="valuedProfiles">00</strong><span>Profils cotés</span></div>
+                <div class="market-stat is-solid">
+                    <span>Capitalisation totale</span>
+                    <strong id="marketTotal">0 ¥</strong>
+                </div>
+                <div class="market-stat">
+                    <span>Profils cotés</span>
+                    <strong id="valuedProfiles">00</strong>
+                </div>
             </div>
         </div>
 
-        <aside class="market-signal">
-            <div class="market-signal-topline"><span>MARKET SIGNAL</span><span><i></i> LIVE</span></div>
-            <div class="market-rings" aria-hidden="true"><i></i><i></i><i></i></div>
-            <div class="market-leader-readout">
-                <small>PLUS FORTE COTATION</small>
-                <strong id="marketLeaderName">—</strong>
-                <span id="marketLeaderValue">0 ¥</span>
-            </div>
-            <div class="market-signal-footer"><span>INDEX // S01</span><span>SYNC 100%</span></div>
+        <aside class="market-signal" aria-label="Plus forte cotation">
+            <span class="market-signal-osd"><b>CAM 04-A</b> // COTE MAXIMALE <i class="rec" data-market-signal-rec>DIRECT</i></span>
+            <strong id="marketLeaderName">—</strong>
+            <span id="marketLeaderValue">0 ¥</span>
         </aside>
+
+        <div class="market-ticker" aria-hidden="true">
+            <span class="market-ticker-label">COTES // EN CONTINU</span>
+            <div class="market-ticker-window">
+                <div class="market-ticker-track" data-market-ticker></div>
+            </div>
+        </div>
     </section>
 
     <main class="market-page">
-        <section class="market-board">
-            <div class="market-section-heading">
-                <span class="market-section-index">01</span>
-                <div><small>COTATIONS ENREGISTRÉES</small>
-                    <h2>TABLEAU DU MARCHÉ</h2>
+        <!-- CH 01 : tableau des cotes -->
+        <section class="market-board" aria-labelledby="board-title">
+            <div class="nl-section-head">
+                <div class="nl-chno" aria-hidden="true"><small>CH</small><b>01</b></div>
+                <div>
+                    <p class="nl-kicker">Cotations enregistrées</p>
+                    <h2 id="board-title" class="nl-section-title">Tableau <em>du marché</em></h2>
                 </div>
-                <p>Classement actualisé automatiquement depuis les valeurs renseignées sur les joueurs.</p>
+                <p class="nl-section-note">Classement actualisé automatiquement depuis les valeurs renseignées sur les
+                    joueurs.</p>
             </div>
-            <div class="market-board-topline">
-                <span><i></i> FLUX DE VALEURS ACTIF</span>
-                <span id="marketProfileCount">00 PROFILS</span>
+
+            <div class="market-board-screen">
+                <div class="osd market-board-topline">
+                    <span class="rec">DIRECT</span>
+                    <span><b>CAM 04-B</b> // FLUX DE VALEURS</span>
+                    <span id="marketProfileCount">00 PROFILS</span>
+                </div>
+                <div class="market-board-head" aria-hidden="true">
+                    <span>Pos.</span><span>Flux</span><span>Sujet</span><span>Part de la cote max.</span><span>Cote</span>
+                </div>
+                <div class="market-ranking" id="marketRanking"></div>
             </div>
-            <div class="market-ranking" id="marketRanking"></div>
         </section>
 
-        <section class="value-protocol">
-            <div class="market-section-heading">
-                <span class="market-section-index">02</span>
-                <div><small>RÈGLES DE CONVERSION</small>
-                    <h2>PROTOCOLE DES GAINS</h2>
+        <!-- CH 02 : protocole des gains, sur bande bleue -->
+        <section class="value-protocol" aria-labelledby="protocol-title">
+            <div class="nl-section-head nl-section-head--band">
+                <div class="nl-chno" aria-hidden="true"><small>CH</small><b>02</b></div>
+                <div>
+                    <p class="nl-kicker">Règles de conversion</p>
+                    <h2 id="protocol-title" class="nl-section-title">Protocole <em>des gains</em></h2>
                 </div>
-                <p>Le taux du match multiplie chaque action. La victoire conserve son gain fixe par palier.</p>
+                <p class="nl-section-note">Le taux du match multiplie chaque action. La victoire conserve son gain fixe
+                    par palier.</p>
             </div>
 
             <div class="protocol-intro">
                 <article>
-                    <span>PRINCIPE // 01</span>
-                    <h3>L’IMPACT EST MESURÉ</h3>
-                    <p>Buts, passes décisives, défenses, dribbles et MVP sont convertis en crédits de marché.</p>
+                    <span class="protocol-no" aria-hidden="true">01</span>
+                    <div>
+                        <small>Principe</small>
+                        <h3>L’impact est mesuré</h3>
+                        <p>Buts, passes décisives, défenses, dribbles et MVP sont convertis en crédits de marché.</p>
+                    </div>
                 </article>
                 <article>
-                    <span>STATUT // 02</span>
-                    <h3>UNE COTATION DE PRESTIGE</h3>
-                    <p>La valeur représente actuellement la réputation sportive. Elle ne constitue pas encore une
-                        monnaie d’échange entre clubs.</p>
+                    <span class="protocol-no" aria-hidden="true">02</span>
+                    <div>
+                        <small>Statut</small>
+                        <h3>Une cotation de prestige</h3>
+                        <p>La valeur représente actuellement la réputation sportive. Elle ne constitue pas encore une
+                            monnaie d’échange entre clubs.</p>
+                    </div>
                 </article>
             </div>
 
-            <div class="tier-selector" id="tierSelector" aria-label="Sélectionner un palier de match"></div>
+            <div class="tier-selector nl-channels" id="tierSelector" role="group"
+                aria-label="Sélectionner un palier de match"></div>
 
             <div class="ledger-shell">
-                <div class="ledger-topline"><span>GAIN LEDGER // SAISON 01</span><span id="activeTierLabel">AMICAL
-                        ×0.5</span></div>
-                <div class="ledger-scroll">
-                    <table class="value-ledger" id="ledgerTable">
+                <div class="osd ledger-topline">
+                    <span><b>CAM 04-C</b> // GRILLE DES GAINS · SAISON 01</span>
+                    <span class="ledger-active">PALIER ACTIF <b id="activeTierLabel">AMICAL ×0.5</b></span>
+                </div>
+                <div class="ledger-scroll nl-table-wrap">
+                    <table class="value-ledger nl-table" id="ledgerTable">
                         <thead id="ledgerHead"></thead>
                         <tbody id="ledgerBody"></tbody>
                     </table>
                 </div>
-                <div class="bonus-grid" id="bonusGrid"></div>
+            </div>
+
+            <div class="bonus-block">
+                <p class="bonus-title"><span class="nl-ch">CH 02-B</span> Récompenses de saison // gain fixe</p>
+                <div class="bonus-grid nl-stats" id="bonusGrid"></div>
             </div>
         </section>
 
-        <section class="value-simulator">
-            <div class="market-section-heading">
-                <span class="market-section-index">03</span>
-                <div><small>PROJECTION PERSONNELLE</small>
-                    <h2>SIMULATEUR DE VALEUR</h2>
+        <!-- CH 03 : simulateur -->
+        <section class="value-simulator" aria-labelledby="sim-title">
+            <div class="nl-section-head">
+                <div class="nl-chno" aria-hidden="true"><small>CH</small><b>03</b></div>
+                <div>
+                    <p class="nl-kicker">Projection personnelle</p>
+                    <h2 id="sim-title" class="nl-section-title">Simulateur <em>de valeur</em></h2>
                 </div>
-                <p>Modifiez vos statistiques : le résultat et le détail du calcul sont actualisés instantanément.</p>
+                <p class="nl-section-note">Modifiez vos statistiques : le résultat et le détail du calcul sont actualisés
+                    instantanément.</p>
             </div>
 
             <div class="simulator-shell">
-                <div class="simulator-topline">
-                    <span>VALUE_ENGINE.EXE</span>
-                    <span class="engine-status"><i></i> READY</span>
-                </div>
+                <form class="simulator-controls nl-console" id="valueSimulator" onsubmit="return false">
+                    <div class="nl-console-head simulator-topline">
+                        <span class="nl-ch">CH 03-A</span>
+                        <h3>Console de projection</h3>
+                        <span class="engine-status nl-tag">PRÊT</span>
+                    </div>
 
-                <div class="simulator-layout">
-                    <form class="simulator-controls" id="valueSimulator" onsubmit="return false">
-                        <div class="simulator-field simulator-field-wide">
-                            <label for="typeMatch">TYPE DE MATCH</label>
-                            <select id="typeMatch">
+                    <div class="simulator-grid">
+                        <div class="simulator-field simulator-field-wide nl-field">
+                            <label class="nl-field-label" for="typeMatch">Type de match</label>
+                            <select id="typeMatch" class="nl-input">
                                 <option value="0.5">Match Amical — ×0.5</option>
                                 <option value="1">Match de Ligue — ×1</option>
                                 <option value="2">Match de NCL — ×2</option>
@@ -173,95 +222,130 @@
                             </select>
                         </div>
 
-                        <div class="simulator-field">
-                            <label for="victoire">VICTOIRE ?</label>
-                            <select id="victoire">
+                        <div class="simulator-field nl-field">
+                            <label class="nl-field-label" for="victoire">Victoire ?</label>
+                            <select id="victoire" class="nl-input">
                                 <option value="loss">Non</option>
                                 <option value="draw">Égalité</option>
                                 <option value="win">Oui</option>
                             </select>
                         </div>
 
-                        <div class="simulator-field">
-                            <label for="mvp">MVP</label>
-                            <select id="mvp">
+                        <div class="simulator-field nl-field">
+                            <label class="nl-field-label" for="mvp">MVP</label>
+                            <select id="mvp" class="nl-input">
                                 <option value="0">Non</option>
                                 <option value="1">Oui</option>
                             </select>
                         </div>
 
-                        <div class="simulator-field">
-                            <label for="buts">BUTS</label>
+                        <div class="simulator-field nl-field">
+                            <label class="nl-field-label" for="buts">Buts</label>
                             <div class="value-stepper">
-                                <button type="button" class="stepper-btn stepper-minus" data-target="buts"
+                                <button type="button" class="stepper-btn stepper-minus nl-key" data-target="buts"
                                     aria-label="Retirer un but">−</button>
-                                <input type="number" id="buts" value="0" min="0" inputmode="numeric">
-                                <button type="button" class="stepper-btn stepper-plus" data-target="buts"
+                                <input type="number" id="buts" class="nl-input" value="0" min="0" inputmode="numeric">
+                                <button type="button" class="stepper-btn stepper-plus nl-key" data-target="buts"
                                     aria-label="Ajouter un but">+</button>
                             </div>
                         </div>
 
-                        <div class="simulator-field">
-                            <label for="passes">PASSES DÉCISIVES</label>
+                        <div class="simulator-field nl-field">
+                            <label class="nl-field-label" for="passes">Passes décisives</label>
                             <div class="value-stepper">
-                                <button type="button" class="stepper-btn stepper-minus" data-target="passes"
+                                <button type="button" class="stepper-btn stepper-minus nl-key" data-target="passes"
                                     aria-label="Retirer une passe décisive">−</button>
-                                <input type="number" id="passes" value="0" min="0" inputmode="numeric">
-                                <button type="button" class="stepper-btn stepper-plus" data-target="passes"
+                                <input type="number" id="passes" class="nl-input" value="0" min="0" inputmode="numeric">
+                                <button type="button" class="stepper-btn stepper-plus nl-key" data-target="passes"
                                     aria-label="Ajouter une passe décisive">+</button>
                             </div>
                         </div>
 
-                        <div class="simulator-field">
-                            <label for="def">DÉFENSES</label>
+                        <div class="simulator-field nl-field">
+                            <label class="nl-field-label" for="def">Défenses</label>
                             <div class="value-stepper">
-                                <button type="button" class="stepper-btn stepper-minus" data-target="def"
+                                <button type="button" class="stepper-btn stepper-minus nl-key" data-target="def"
                                     aria-label="Retirer une défense">−</button>
-                                <input type="number" id="def" value="0" min="0" inputmode="numeric">
-                                <button type="button" class="stepper-btn stepper-plus" data-target="def"
+                                <input type="number" id="def" class="nl-input" value="0" min="0" inputmode="numeric">
+                                <button type="button" class="stepper-btn stepper-plus nl-key" data-target="def"
                                     aria-label="Ajouter une défense">+</button>
                             </div>
                         </div>
 
-                        <div class="simulator-field">
-                            <label for="dribbles">DRIBBLES</label>
+                        <div class="simulator-field nl-field">
+                            <label class="nl-field-label" for="dribbles">Dribbles</label>
                             <div class="value-stepper">
-                                <button type="button" class="stepper-btn stepper-minus" data-target="dribbles"
+                                <button type="button" class="stepper-btn stepper-minus nl-key" data-target="dribbles"
                                     aria-label="Retirer un dribble">−</button>
-                                <input type="number" id="dribbles" value="0" min="0" inputmode="numeric">
-                                <button type="button" class="stepper-btn stepper-plus" data-target="dribbles"
+                                <input type="number" id="dribbles" class="nl-input" value="0" min="0" inputmode="numeric">
+                                <button type="button" class="stepper-btn stepper-plus nl-key" data-target="dribbles"
                                     aria-label="Ajouter un dribble">+</button>
                             </div>
                         </div>
 
-                        <button type="button" class="simulator-reset" id="resetSimulator">RÉINITIALISER</button>
-                    </form>
-
-                    <div class="simulator-output">
-                        <div class="value-meter">
-                            <div class="value-meter-head"><span>TAUX SÉLECTIONNÉ</span><strong
-                                    id="meterRate">×0.5</strong></div>
-                            <div class="value-meter-track">
-                                <div class="value-meter-fill" id="meterFill"></div>
-                                <div class="value-meter-dot" id="meterDot"></div>
-                            </div>
-                            <div class="value-meter-labels">
-                                <span>×0.5</span><span>×1</span><span>×2</span><span>×3</span><span>×4</span>
-                            </div>
-                        </div>
-
-                        <div class="value-result">
-                            <small>VALEUR ESTIMÉE</small>
-                            <strong id="resultValeur">0 ¥</strong>
-                            <span>PROJECTION APRÈS MATCH</span>
-                        </div>
-
-                        <div class="calculation-breakdown" id="calculationBreakdown"></div>
+                        <button type="button" class="simulator-reset nl-btn nl-btn-ghost nl-btn-sm"
+                            id="resetSimulator">Réinitialiser</button>
                     </div>
+
+                    <p class="simulator-formula"><span class="nl-ch">FORMULE</span> <span>Valeur = Σ (quantité × gain de
+                        l’action × taux du palier) + gain fixe du résultat</span></p>
+                </form>
+
+                <div class="simulator-output">
+                    <div class="osd simulator-output-osd">
+                        <span><b>CAM 04-D</b><span class="osd-hide-xs"> // PROJECTION APRÈS MATCH</span></span>
+                        <span class="rec">DIRECT</span>
+                    </div>
+
+                    <div class="value-result" aria-live="polite">
+                        <small>Valeur estimée</small>
+                        <strong id="resultValeur">0 ¥</strong>
+                        <span class="value-result-trend" data-value-trend>VARIATION // STABLE</span>
+                    </div>
+
+                    <div class="value-meter">
+                        <div class="value-meter-head"><span>Taux sélectionné</span><strong id="meterRate">×0.5</strong>
+                        </div>
+                        <div class="value-meter-track">
+                            <div class="value-meter-fill" id="meterFill"></div>
+                            <div class="value-meter-dot" id="meterDot"></div>
+                        </div>
+                        <div class="value-meter-labels">
+                            <span>×0.5</span><span>×1</span><span>×2</span><span>×3</span><span>×4</span>
+                        </div>
+                    </div>
+
+                    <div class="calculation-breakdown" id="calculationBreakdown"></div>
                 </div>
             </div>
         </section>
     </main>
+
+    <footer class="nl-footer">
+        <div class="nl-footer-main">
+            <a class="footer-brand" href="index.html">
+                <span class="brand-mark"><span></span></span>
+                <strong>NEBULA LEAGUE</strong>
+            </a>
+            <p>Ligue privée Azure Latch. Toutes les rencontres sont enregistrées, chaque statistique est archivée.</p>
+        </div>
+        <nav class="nl-footer-links" aria-label="Accès rapides">
+            <p>Accès rapides</p>
+            <a href="players.html">Joueurs</a>
+            <a href="club.html">Clubs</a>
+            <a href="stats.html">Records</a>
+            <a href="progression.html">Progression</a>
+            <a href="matchs.html">Matchs</a>
+            <a href="rules.html">Règles</a>
+        </nav>
+        <div class="nl-footer-osd">
+            <span class="rec">REC</span>
+            <span>NL-CTRL // FIN DU FLUX</span>
+            <span class="jp">エゴ</span>
+            <span>© NEBULA LEAGUE</span>
+            <a href="#top">Retour en haut ↑</a>
+        </div>
+    </footer>
 
     <script src="JavaScript/nebula-data.js"></script>
     <script src="JavaScript/players.js"></script>

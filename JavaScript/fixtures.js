@@ -2,7 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const page = document.querySelector(".fixtures-page");
     if (!page) return;
 
-    const MATCH_FIXTURES = window.NEBULA_DATA?.fixtures || [];
+    const DATA = window.NEBULA_DATA || {};
+    const MATCH_FIXTURES = DATA.fixtures || [];
 
     window.NEBULA_FIXTURES = MATCH_FIXTURES;
 
@@ -19,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ncl: "NCL",
         amical: "AMICAL"
     };
+    const WEEKDAYS_SHORT = ["DIM", "LUN", "MAR", "MER", "JEU", "VEN", "SAM"];
 
     const dom = {
         heroStats: document.getElementById("scheduleHeroStats"),
@@ -130,6 +132,25 @@ document.addEventListener("DOMContentLoaded", () => {
         return isNclFinal(match) ? "FINALE NCL" : CATEGORY_LABELS[match.category];
     }
 
+    function isUnknownTeam(name) {
+        return !name || name === "???";
+    }
+
+    function teamLabel(name) {
+        return isUnknownTeam(name) ? "À déterminer" : name;
+    }
+
+    function clubColor(key) {
+        const color = key ? DATA.getClub?.(key)?.color : null;
+        return color || "var(--offline)";
+    }
+
+    function categoryTag(match) {
+        const category = visualCategory(match);
+        const kit = category === "finale" ? "ncl" : category;
+        return `<span class="fixture-category-tag nl-tag nl-tag--${kit} ${categoryClass(match)}">${categoryLabel(match)}</span>`;
+    }
+
     function getBaseFilteredFixtures() {
         return sortedFixtures.filter(match => {
             const categoryMatches = categoryFilter === "all" || match.category === categoryFilter;
@@ -162,52 +183,65 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderHero() {
         const clubs = new Set(
-            MATCH_FIXTURES.flatMap(match => [match.homeTeam, match.awayTeam]).filter(team => team !== "???")
+            MATCH_FIXTURES.flatMap(match => [match.homeTeam, match.awayTeam]).filter(team => !isUnknownTeam(team))
         );
         const activeMonths = new Set(upcomingFixtures.map(match => monthKey(match.date)));
+        const pad = value => String(value).padStart(2, "0");
 
         dom.heroStats.innerHTML = `
-            <div><strong>${String(upcomingFixtures.length).padStart(2, "0")}</strong><span>RENCONTRES<br>À VENIR</span></div>
-            <div><strong>${String(clubs.size).padStart(2, "0")}</strong><span>CLUBS<br>ENGAGÉS</span></div>
-            <div><strong>${String(activeMonths.size).padStart(2, "0")}</strong><span>MOIS<br>ACTIFS</span></div>
+            <div class="nl-stat nl-stat--solid"><span class="nl-stat-label">Rencontres à venir</span><strong class="nl-stat-value">${pad(upcomingFixtures.length)}</strong><span class="nl-stat-note">Sur ${pad(MATCH_FIXTURES.length)} programmées</span></div>
+            <div class="nl-stat"><span class="nl-stat-label">Clubs engagés</span><strong class="nl-stat-value">${pad(clubs.size)}</strong><span class="nl-stat-note">Ligue et NCL</span></div>
+            <div class="nl-stat"><span class="nl-stat-label">Mois actifs</span><strong class="nl-stat-value">${pad(activeMonths.size)}</strong><span class="nl-stat-note">Fenêtres ouvertes</span></div>
         `;
 
         if (!nextFixture) {
             dom.nextMatch.innerHTML = `
-                <p class="next-fixture-index">PROCHAINE TRANSMISSION</p>
-                <h2>CALENDRIER<br>EN ATTENTE</h2>
+                <div class="next-fixture-empty nl-nosignal">
+                    <span class="nl-nosignal-code">SIGNAL 00</span>
+                    <strong>Calendrier en attente</strong>
+                    <p>Aucune rencontre n’est programmée pour le moment. La prochaine diffusion apparaîtra sur cet écran.</p>
+                </div>
             `;
             return;
         }
 
+        const date = parseDate(nextFixture.date);
         dom.nextMatch.innerHTML = `
             <div class="next-fixture-topline">
-                <span>PROCHAINE TRANSMISSION</span>
-                <b class="${categoryClass(nextFixture)}">${categoryLabel(nextFixture)}</b>
+                <span><b>CAM 10-A</b> // PROCHAINE DIFFUSION</span>
+                ${categoryTag(nextFixture)}
             </div>
-            <p class="next-fixture-stage">${escapeHtml(nextFixture.stage)}</p>
             <div class="next-fixture-matchup">
-                ${teamIdentity(nextFixture.homeTeam, nextFixture.homeLogo)}
+                ${teamIdentity(nextFixture.homeTeam, nextFixture.homeLogo, nextFixture.home, "A", "Domicile")}
                 <div class="next-fixture-kickoff">
-                    <small>${formatShortDate(nextFixture.date)}</small>
+                    <p class="next-fixture-stage">${escapeHtml(nextFixture.stage)}</p>
+                    <em>VS</em>
+                    <small>${WEEKDAYS_SHORT[date.getDay()]} ${formatShortDate(nextFixture.date)}</small>
                     <strong>${escapeHtml(nextFixture.time)}</strong>
                     <span>COUP D’ENVOI</span>
                 </div>
-                ${teamIdentity(nextFixture.awayTeam, nextFixture.awayLogo)}
+                ${teamIdentity(nextFixture.awayTeam, nextFixture.awayLogo, nextFixture.away, "B", "Extérieur")}
             </div>
-            <div class="next-fixture-countdown" id="nextFixtureCountdown">
-                <span>CALCUL DE LA SYNCHRONISATION…</span>
+            <div class="next-fixture-bar">
+                <div class="next-fixture-countdown" id="nextFixtureCountdown">
+                    <span>CALCUL DE LA SYNCHRONISATION…</span>
+                </div>
+                <button class="fixture-control-button next-fixture-open nl-btn" type="button"
+                    data-open-fixture="${escapeHtml(nextFixture.id)}">Ouvrir le dossier <span>↗</span></button>
             </div>
-            <button class="fixture-control-button next-fixture-open" type="button"
-                data-open-fixture="${escapeHtml(nextFixture.id)}">OUVRIR LE DOSSIER <span>↗</span></button>
         `;
     }
 
-    function teamIdentity(name, logo) {
+    function teamIdentity(name, logo, key, cam, side, className = "next-team", archived = false) {
+        const unknown = isUnknownTeam(name);
         return `
-            <div class="next-team">
-                <img src="${escapeHtml(logo)}" alt="">
-                <strong>${escapeHtml(name)}</strong>
+            <div class="${className} nl-feed${unknown ? " is-offline" : ""}" style="--club:${clubColor(key)}">
+                <img class="nl-feed-img team-feed-backdrop" src="${escapeHtml(logo)}" alt="">
+                <img class="team-feed-crest" src="${escapeHtml(logo)}" alt="">
+                <span class="nl-feed-osd"><span><b>CAM ${cam}</b><span class="team-feed-side"> // ${side.toUpperCase()}</span></span>${unknown
+                    ? '<span class="rec is-off">HORS LIGNE</span>'
+                    : archived ? '<span class="rec is-off">ARCHIVE</span>' : '<span class="rec">REC</span>'}</span>
+                <span class="nl-feed-caption"><small>${side}</small><b>${escapeHtml(teamLabel(name))}</b></span>
             </div>
         `;
     }
@@ -225,7 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const minutes = Math.floor((remaining % 3600000) / 60000);
 
             target.innerHTML = `
-                <span>OUVERTURE DANS</span>
+                <span class="next-fixture-countdown-label">Ouverture dans</span>
                 <strong>${String(days).padStart(2, "0")}<small>J</small></strong>
                 <strong>${String(hours).padStart(2, "0")}<small>H</small></strong>
                 <strong>${String(minutes).padStart(2, "0")}<small>M</small></strong>
@@ -246,7 +280,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return `
                 <button class="fixture-control-button season-month${active ? " is-current" : ""}" type="button"
                     data-month-key="${key}" aria-pressed="${active}">
-                    <span>${String(index + 1).padStart(2, "0")}</span>
+                    <span>CH ${String(index + 1).padStart(2, "0")}</span>
                     <strong>${MONTHS[month - 1]}</strong>
                     <small>${year} // ${String(count).padStart(2, "0")} MATCHS</small>
                 </button>
@@ -337,13 +371,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!fixtures.length) {
             dom.cards.innerHTML = `
-                <div class="fixture-empty-state">
-                    <span>00</span>
-                    <div>
-                        <strong>AUCUNE TRANSMISSION</strong>
-                        <p>Aucune rencontre ne correspond à cette date et aux filtres actifs.</p>
-                    </div>
-                    <button class="fixture-control-button" type="button" data-clear-fixture-filters>RÉINITIALISER ↺</button>
+                <div class="fixture-empty-state nl-nosignal">
+                    <span class="nl-nosignal-code">SIGNAL 00</span>
+                    <strong>Aucune transmission</strong>
+                    <p>Aucune rencontre ne correspond à cette date et aux filtres actifs.</p>
+                    <button class="fixture-control-button nl-btn nl-btn-sm" type="button" data-clear-fixture-filters>Réinitialiser <span>↺</span></button>
                 </div>
             `;
             return;
@@ -355,51 +387,53 @@ document.addEventListener("DOMContentLoaded", () => {
     function fixtureCard(match, index) {
         const date = parseDate(match.date);
         const isFinished = match.status === "finished";
+        const homeName = teamLabel(match.homeTeam);
+        const awayName = teamLabel(match.awayTeam);
         const centerValue = isFinished
-            ? `<strong>${match.scoreHome}<i>—</i>${match.scoreAway}</strong><small>TERMINÉ</small>`
+            ? `<strong class="is-score">${match.scoreHome}<i>–</i>${match.scoreAway}</strong><small>TERMINÉ</small>`
             : `<strong>${escapeHtml(match.time)}</strong><small>HEURE LOCALE</small>`;
 
         return `
-            <article class="fixture-card ${categoryClass(match)}">
+            <article class="fixture-card ${categoryClass(match)}${isFinished ? " is-finished" : ""}"
+                style="--home:${clubColor(match.home)};--away:${clubColor(match.away)}">
                 <div class="fixture-card-rail">
-                    <span>${String(index + 1).padStart(2, "0")}</span>
+                    <span>PRG ${String(index + 1).padStart(2, "0")}</span>
                     <b>${String(date.getDate()).padStart(2, "0")}</b>
-                    <small>${MONTHS_SHORT[date.getMonth()]}</small>
+                    <small>${WEEKDAYS_SHORT[date.getDay()]} · ${MONTHS_SHORT[date.getMonth()]}</small>
                 </div>
                 <div class="fixture-card-main">
-                    <header class="fixture-card-meta">
-                        <span class="fixture-category-tag ${categoryClass(match)}">
-                            ${categoryLabel(match)}
-                        </span>
-                        <span>${escapeHtml(match.stage)}</span>
+                    <div class="fixture-card-meta">
+                        ${categoryTag(match)}
+                        <span class="fixture-card-stage">${escapeHtml(match.stage)}</span>
                         <time datetime="${escapeHtml(match.date)}T${escapeHtml(match.time)}">
                             ${formatLongDate(match.date).toUpperCase()}
                         </time>
-                    </header>
+                    </div>
                     <div class="fixture-versus">
-                        <div class="fixture-team is-home">
+                        <div class="fixture-team is-home${isUnknownTeam(match.homeTeam) ? " is-unknown" : ""}">
                             <div>
                                 <small>DOMICILE</small>
-                                <strong>${escapeHtml(match.homeTeam)}</strong>
+                                <strong>${escapeHtml(homeName)}</strong>
                             </div>
-                            <img src="${escapeHtml(match.homeLogo)}" alt="Logo ${escapeHtml(match.homeTeam)}">
+                            <img src="${escapeHtml(match.homeLogo)}" alt="Logo ${escapeHtml(homeName)}">
                         </div>
                         <div class="fixture-kickoff">
                             ${centerValue}
                         </div>
-                        <div class="fixture-team is-away">
-                            <img src="${escapeHtml(match.awayLogo)}" alt="Logo ${escapeHtml(match.awayTeam)}">
+                        <div class="fixture-team is-away${isUnknownTeam(match.awayTeam) ? " is-unknown" : ""}">
+                            <img src="${escapeHtml(match.awayLogo)}" alt="Logo ${escapeHtml(awayName)}">
                             <div>
                                 <small>EXTÉRIEUR</small>
-                                <strong>${escapeHtml(match.awayTeam)}</strong>
+                                <strong>${escapeHtml(awayName)}</strong>
                             </div>
                         </div>
                     </div>
-                    <footer class="fixture-card-footer">
-                        <span>${escapeHtml(match.competitionLabel)}</span>
-                        <button class="fixture-control-button fixture-open-button" type="button"
-                            data-open-fixture="${escapeHtml(match.id)}">DOSSIER MATCH <b>↗</b></button>
-                    </footer>
+                </div>
+                <div class="fixture-card-footer">
+                    <span>${escapeHtml(match.competitionLabel)}</span>
+                    <button class="fixture-control-button fixture-open-button" type="button"
+                        data-open-fixture="${escapeHtml(match.id)}"
+                        aria-label="Ouvrir le dossier : ${escapeHtml(homeName)} contre ${escapeHtml(awayName)}">Dossier <b>↗</b></button>
                 </div>
             </article>
         `;
@@ -423,23 +457,26 @@ document.addEventListener("DOMContentLoaded", () => {
                     ? "OUVERTURE DE SAISON"
                     : "CHAMPIONNAT RÉGULIER";
 
+            const pad = value => String(value).padStart(2, "0");
+
             return `
-                <button class="fixture-control-button fixture-milestone" type="button" data-month-key="${key}">
-                    <span class="milestone-index">${String(index + 1).padStart(2, "0")}</span>
-                    <div class="milestone-copy">
-                        <small>${date.getFullYear()} // FENÊTRE ${String(index + 1).padStart(2, "0")}</small>
-                        <h3>${MONTHS[date.getMonth()]}</h3>
-                        <p>${phase}</p>
-                    </div>
-                    <div class="milestone-volume">
-                        <strong>${String(matches.length).padStart(2, "0")}</strong>
+                <button class="fixture-control-button fixture-milestone" type="button" data-month-key="${key}"
+                    style="--ligue:${leagueCount};--ncl:${nclCount};--total:${Math.max(matches.length, 1)}">
+                    <span class="milestone-index"><b>CAM ${pad(index + 1)}</b> // FENÊTRE ${pad(index + 1)}</span>
+                    <span class="milestone-copy">
+                        <small>${date.getFullYear()} // ${phase}</small>
+                        <strong class="milestone-month">${MONTHS[date.getMonth()]}</strong>
+                    </span>
+                    <span class="milestone-volume">
+                        <strong>${pad(matches.length)}</strong>
                         <span>RENCONTRES</span>
-                    </div>
-                    <div class="milestone-breakdown">
-                        <span><i class="is-ligue"></i>${String(leagueCount).padStart(2, "0")} LIGUE</span>
-                        <span><i class="is-ncl"></i>${String(nclCount).padStart(2, "0")} NCL</span>
-                    </div>
-                    <b class="milestone-arrow">↗</b>
+                    </span>
+                    <span class="milestone-meter" aria-hidden="true"><i class="is-ligue"></i><i class="is-ncl"></i></span>
+                    <span class="milestone-breakdown">
+                        <span><i class="is-ligue"></i>${pad(leagueCount)} LIGUE</span>
+                        <span><i class="is-ncl"></i>${pad(nclCount)} NCL</span>
+                    </span>
+                    <b class="milestone-arrow" aria-hidden="true">↗</b>
                 </button>
             `;
         }).join("");
@@ -455,24 +492,16 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="fixture-modal-summary ${categoryClass(match)}">
                 <div class="fixture-modal-date">
                     <span>${formatShortDate(match.date)}</span>
-                    <strong>${isFinished ? "RÉSULTAT FINAL" : match.time}</strong>
-                    <small>${match.competitionLabel}</small>
+                    <strong>${isFinished ? "RÉSULTAT FINAL" : escapeHtml(match.time)}</strong>
+                    <small>${escapeHtml(match.competitionLabel)}</small>
                 </div>
                 <div class="fixture-modal-versus">
-                    <div>
-                        <img src="${escapeHtml(match.homeLogo)}" alt="">
-                        <small>DOMICILE</small>
-                        <strong>${escapeHtml(match.homeTeam)}</strong>
-                    </div>
-                    <p>
-                        <strong>${isFinished ? `${match.scoreHome} — ${match.scoreAway}` : "VS"}</strong>
+                    ${teamIdentity(match.homeTeam, match.homeLogo, match.home, "A", "Domicile", "fixture-modal-team", isFinished)}
+                    <p class="fixture-modal-center">
+                        <strong>${isFinished ? `${match.scoreHome}–${match.scoreAway}` : "VS"}</strong>
                         <span>${isFinished ? "ARCHIVE VALIDÉE" : "RENCONTRE PROGRAMMÉE"}</span>
                     </p>
-                    <div>
-                        <img src="${escapeHtml(match.awayLogo)}" alt="">
-                        <small>EXTÉRIEUR</small>
-                        <strong>${escapeHtml(match.awayTeam)}</strong>
-                    </div>
+                    ${teamIdentity(match.awayTeam, match.awayLogo, match.away, "B", "Extérieur", "fixture-modal-team", isFinished)}
                 </div>
             </div>
             <div class="fixture-modal-grid">

@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const goalEvents = document.getElementById("goalEvents");
     const output = document.getElementById("matchOutput");
     const copyButton = document.getElementById("copyOutput");
+    const codeScreen = output ? output.closest(".admin-code-screen") : null;
     const feedback = document.getElementById("adminFeedback");
     const backupCount = document.getElementById("adminBackupCount");
     const restoreBackupButton = document.getElementById("restoreBackup");
@@ -105,18 +106,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderGoals() {
         if (!goals.length) {
-            goalEvents.innerHTML = `<div class="goal-empty">AUCUN BUT ENREGISTRÉ — LE SCORE RESTE À 00–00</div>`;
+            goalEvents.innerHTML = `
+                <div class="goal-empty nl-nosignal">
+                    <span class="nl-nosignal-code">SIGNAL 00</span>
+                    <strong>Aucun but enregistré</strong>
+                    <p>Le score reste à 00–00. Ajoute un but domicile ou extérieur pour ouvrir la chronologie.</p>
+                </div>`;
         } else {
-            goalEvents.innerHTML = goals.map((goal, index) => {
+            // Domicile en bleu signal, extérieur en bleu clair (jetons de theme-monitor.css)
+            goalEvents.innerHTML = `
+                <div class="goal-head" aria-hidden="true"><span>But</span><span>Temps</span><span>Buteur</span><span>Passeur</span></div>` + goals.map((goal, index) => {
                 const teamKey = goal.side === "home" ? homeClub.value : awayClub.value;
-                const accent = goal.side === "home" ? "#ff5368" : "#52dcff";
+                const accent = goal.side === "home" ? "var(--blue-2)" : "var(--blue-3)";
                 return `
-                    <div class="goal-row" style="--goal-accent:${accent}" data-goal-index="${index}">
-                        <span class="goal-side">${goal.side === "home" ? "DOM." : "EXT."} ${String(index + 1).padStart(2, "0")}</span>
-                        <input data-goal-field="time" value="${escapeHtml(goal.time)}" placeholder="2'10&quot;" aria-label="Temps du but">
-                        <select data-goal-field="scorer" aria-label="Buteur">${playerOptions(teamKey, goal.scorer)}</select>
-                        <select data-goal-field="assist" aria-label="Passeur">${playerOptions(teamKey, goal.assist, true)}</select>
-                        <button class="goal-remove" type="button" data-remove-goal="${index}" aria-label="Supprimer ce but">×</button>
+                    <div class="goal-row goal-row-${goal.side}" style="--goal-accent:${accent}" data-goal-index="${index}">
+                        <span class="goal-side">${goal.side === "home" ? "DOM." : "EXT."} <b>${String(index + 1).padStart(2, "0")}</b></span>
+                        <input class="nl-input" data-goal-field="time" value="${escapeHtml(goal.time)}" placeholder="2'10&quot;" aria-label="Temps du but">
+                        <select class="nl-input" data-goal-field="scorer" aria-label="Buteur">${playerOptions(teamKey, goal.scorer)}</select>
+                        <select class="nl-input" data-goal-field="assist" aria-label="Passeur">${playerOptions(teamKey, goal.assist, true)}</select>
+                        <button class="nl-key goal-remove" type="button" data-remove-goal="${index}" aria-label="Supprimer ce but">×</button>
                     </div>`;
             }).join("");
         }
@@ -137,21 +145,43 @@ document.addEventListener("DOMContentLoaded", () => {
         ]));
     }
 
+    // Affiche du match : logo, nom et couleur du club sur la caméra de chaque camp
+    function syncClubFeed(side, clubKey) {
+        const club = clubs.find(item => item.key === clubKey);
+        const accent = club?.color || "var(--blue-2)";
+        const team = document.querySelector(`[data-club-team="${side}"]`);
+        if (team) {
+            const logo = team.querySelector("[data-club-logo]");
+            const name = team.querySelector("[data-club-name]");
+            if (logo && club?.logo) logo.src = club.logo;
+            if (name) name.textContent = club?.name || "À déterminer";
+            team.style.setProperty("--club", accent);
+        }
+        document.getElementById(`${side}Notes`)?.closest(".notes-team")?.style.setProperty("--club", accent);
+    }
+
     function renderNotes(side, restored = {}) {
         const clubKey = side === "home" ? homeClub.value : awayClub.value;
         const roster = clubPlayers(clubKey);
         const host = document.getElementById(`${side}Notes`);
         document.getElementById(`${side}NotesName`).textContent = clubName(clubKey);
+        syncClubFeed(side, clubKey);
         host.innerHTML = roster.length ? roster.map(player => {
             const values = restored[player.name] || {};
             return `
                 <div class="note-row" data-note-player="${escapeHtml(player.name)}">
+                    <img class="note-avatar" src="${escapeHtml(player.avatar || "")}" alt="">
                     <strong>${escapeHtml(player.name)}</strong>
-                    <input data-note-field="note" type="number" min="0" max="10" step="0.1" value="${escapeHtml(values.note || "")}" placeholder="—" aria-label="Note de ${escapeHtml(player.name)}">
-                    <input data-note-field="defenses" type="number" min="0" step="1" value="${escapeHtml(values.defenses || "")}" placeholder="—" aria-label="Défenses de ${escapeHtml(player.name)}">
-                    <input data-note-field="dribbles" type="number" min="0" step="1" value="${escapeHtml(values.dribbles || "")}" placeholder="—" aria-label="Dribbles de ${escapeHtml(player.name)}">
+                    <input class="nl-input" data-note-field="note" type="number" min="0" max="10" step="0.1" value="${escapeHtml(values.note || "")}" placeholder="—" aria-label="Note de ${escapeHtml(player.name)}">
+                    <input class="nl-input" data-note-field="defenses" type="number" min="0" step="1" value="${escapeHtml(values.defenses || "")}" placeholder="—" aria-label="Défenses de ${escapeHtml(player.name)}">
+                    <input class="nl-input" data-note-field="dribbles" type="number" min="0" step="1" value="${escapeHtml(values.dribbles || "")}" placeholder="—" aria-label="Dribbles de ${escapeHtml(player.name)}">
                 </div>`;
-        }).join("") : `<div class="notes-empty">AUCUN JOUEUR DANS CE CLUB</div>`;
+        }).join("") : `
+            <div class="notes-empty nl-nosignal">
+                <span class="nl-nosignal-code">SIGNAL 00</span>
+                <strong>Effectif vide</strong>
+                <p>Aucun joueur n’est enregistré dans ce club.</p>
+            </div>`;
     }
 
     function refreshTeams() {
@@ -275,6 +305,10 @@ document.addEventListener("DOMContentLoaded", () => {
     renderNotes("home");
     renderNotes("away");
     document.getElementById("adminDataSummary").textContent = `${String(clubs.length).padStart(2, "0")} CLUBS / ${String(players.length).padStart(2, "0")} JOUEURS / ${String(matches.length).padStart(2, "0")} MATCHS`;
+    const registryCounts = { clubs: clubs.length, players: players.length, matches: matches.length };
+    document.querySelectorAll("[data-admin-count]").forEach(node => {
+        node.textContent = String(registryCounts[node.dataset.adminCount] ?? 0).padStart(2, "0");
+    });
 
     try {
         restoreDraft(JSON.parse(localStorage.getItem(draftKey)));
@@ -320,6 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const match = buildMatchObject();
         output.textContent = `${JSON.stringify(match, null, 4)},`;
+        if (codeScreen) codeScreen.classList.add("is-live");
         copyButton.disabled = false;
         setFeedback("success", "MATCH VALIDÉ", `${clubName(match.home)} ${match.scoreHome}–${match.scoreAway} ${clubName(match.away)} est prêt à être ajouté au tableau matches.`);
     });
@@ -349,6 +384,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderNotes("home");
         renderNotes("away");
         output.textContent = "// Le match généré apparaîtra ici.";
+        if (codeScreen) codeScreen.classList.remove("is-live");
         copyButton.disabled = true;
         setFeedback("", "EN ATTENTE", "Le formulaire a été réinitialisé.");
     });

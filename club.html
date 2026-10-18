@@ -23,20 +23,15 @@
     <!-- meta:end -->
     <title>Nebula League - Clubs</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
     <link rel="stylesheet" href="CSS/club.css">
     <link rel="stylesheet" href="CSS/hamburger.css">
     <link rel="stylesheet" href="CSS/global-theme.css">
     <link rel="stylesheet" href="CSS/responsive.css">
+    <link rel="stylesheet" href="CSS/theme-monitor.css">
     <script src="JavaScript/reveal.js"></script>
 </head>
 
-<body class="nebula-page club-page">
+<body class="nebula-page club-page nl-migrated">
 
     <header class="site-header" id="top">
         <a class="brand" href="#top" aria-label="Nebula League, retour en haut">
@@ -65,60 +60,113 @@
         </div>
     </header>
 
-    <section class="club-intro">
-        <div class="club-intro-copy">
-            <p class="club-kicker"><span>NL–02</span> RÉSEAU TACTIQUE</p>
-            <h1 class="club-intro-title">CHOISISSEZ<br>VOTRE <em>CLUB</em></h1>
-            <p class="club-intro-text">Cinq identités, cinq philosophies. Analysez les formations, repérez les postes
-                vacants et ouvrez le dossier complet de chaque club de la Nebula League.</p>
+    <!-- 01. Multivue : écran programme (formation du club actif) + écrans de prévisualisation (un par club) -->
+    <section class="club-intro nl-hero club-hero" aria-labelledby="club-title">
+        <div class="osd">
+            <span class="rec">REC</span>
+            <span>CAM 03 <b>//</b> RÉSEAU DES CLUBS</span>
+            <span class="osd-hide-sm">MULTIVUE — <b>PROGRAMME + PRÉVISUALISATION</b></span>
+            <span class="jp osd-hide-sm">クラブ監視中</span>
+            <span class="osd-hide-sm">FORMATION 3–2 · SIGNAL STABLE</span>
         </div>
-        <div class="club-intro-stats" aria-label="État du réseau des clubs">
-            <div><strong id="clubCount">00</strong><span>Clubs connectés</span></div>
-            <div><strong id="registeredCount">00</strong><span>Joueurs enregistrés</span></div>
-            <div><strong id="openSlotCount">00</strong><span>Postes disponibles</span></div>
+
+        <div class="nl-hero-inner club-hero-inner">
+            <div class="club-intro-copy">
+                <p class="nl-kicker"><span class="nl-ch">CH 03-C</span> Effectifs // Réseau tactique</p>
+                <h1 id="club-title" class="nl-headline club-intro-title"><span>Choisissez</span> <span>votre <em>club</em></span></h1>
+                <p class="nl-lead">Cinq identités, cinq philosophies. Passez un club <b>à l’antenne</b> pour charger sa
+                    formation, repérez les postes vacants et ouvrez son dossier complet.</p>
+
+                <div class="club-intro-stats" aria-label="État du réseau des clubs">
+                    <div class="club-readout club-readout--solid"><span>Clubs connectés</span><strong id="clubCount">00</strong></div>
+                    <div class="club-readout"><span>Joueurs enregistrés</span><strong id="registeredCount">00</strong></div>
+                    <div class="club-readout"><span>Postes disponibles</span><strong id="openSlotCount">00</strong></div>
+                </div>
+            </div>
+
+            <div class="club-program" aria-label="Écran programme : formation du club sélectionné">
+                <div class="club-stage-field" id="clubStageField"></div>
+            </div>
         </div>
-        <div class="club-intro-orbit" aria-hidden="true"><span>CLUB NETWORK</span><i></i></div>
+
+        <div class="club-preview">
+            <p class="club-preview-label"><span class="nl-ch">PRV</span> Prévisualisation <b>//</b> passez une zone à l’antenne</p>
+            <div class="club-tabs" id="clubTabs" role="group" aria-label="Sélectionner un club"></div>
+        </div>
     </section>
 
     <main class="club-command">
-        <section class="club-selector">
-            <div class="club-section-heading">
-                <span class="club-section-number">01</span>
-                <div><small>SÉLECTION ACTIVE</small>
-                    <h2>CENTRE TACTIQUE</h2>
+        <!-- 02. Dossier de la zone à l'antenne -->
+        <section class="club-selector" aria-labelledby="dossier-title">
+            <div class="nl-section-head">
+                <div class="nl-chno" aria-hidden="true"><small>CH</small><b>01</b></div>
+                <div>
+                    <p class="nl-kicker">Sélection active // Dossier de zone</p>
+                    <h2 id="dossier-title" class="nl-section-title">Centre <em>tactique</em></h2>
                 </div>
-                <p>Sélectionnez un club pour charger sa formation et ses données.</p>
+                <p class="nl-section-note">Identité, effectif et valeur du club à l’antenne. Chaque poste est relié au
+                    dossier du joueur qui l’occupe.</p>
             </div>
-            <div class="club-tabs" id="clubTabs" aria-label="Sélectionner un club"></div>
-            <div class="club-stage">
-                <div class="club-stage-field" id="clubStageField"></div>
-                <aside class="club-stage-dossier" id="clubStageDossier" aria-live="polite"></aside>
+            <aside class="club-stage-dossier" id="clubStageDossier" aria-live="polite"></aside>
+        </section>
+
+        <!-- 03. Leaders historiques : le mur bleu -->
+        <section class="club-alltime nl-band nl-bleed" aria-labelledby="alltime-title">
+            <span class="club-alltime-jp" aria-hidden="true">クラブ</span>
+            <div class="club-alltime-inner">
+                <div class="nl-section-head nl-section-head--flat">
+                    <div class="nl-chno" aria-hidden="true"><small>CH</small><b>02</b></div>
+                    <div>
+                        <p class="nl-kicker">Archives individuelles // Cinq caméras</p>
+                        <h2 id="alltime-title" class="nl-section-title">Leaders <em>historiques</em></h2>
+                    </div>
+                    <p class="nl-section-note">Les cinq références absolues du club, recalculées depuis l’intégralité des
+                        matchs archivés.</p>
+                </div>
+                <div class="club-alltime-stage" id="clubAllTimeStage" aria-live="polite"></div>
             </div>
         </section>
 
-        <section class="club-alltime">
-            <div class="club-section-heading">
-                <span class="club-section-number">02</span>
-                <div><small>ARCHIVES INDIVIDUELLES</small>
-                    <h2>LEADERS HISTORIQUES</h2>
+        <!-- 04. Historique : relevés, bandes de saison, forme -->
+        <section class="club-history" aria-labelledby="history-title">
+            <div class="nl-section-head">
+                <div class="nl-chno" aria-hidden="true"><small>CH</small><b>03</b></div>
+                <div>
+                    <p class="nl-kicker">Archives automatiques // Bandes de saison</p>
+                    <h2 id="history-title" class="nl-section-title">Historique <em>du club</em></h2>
                 </div>
-                <p>Les cinq références absolues du club sont recalculées depuis l’intégralité des matchs archivés.</p>
-            </div>
-            <div class="club-alltime-stage" id="clubAllTimeStage" aria-live="polite"></div>
-        </section>
-
-        <section class="club-history">
-            <div class="club-section-heading">
-                <span class="club-section-number">03</span>
-                <div><small>ARCHIVES AUTOMATIQUES</small>
-                    <h2>HISTORIQUE DU CLUB</h2>
-                </div>
-                <p>Classements, parcours NCL et leaders sont reconstruits depuis les matchs de chaque saison.</p>
+                <p class="nl-section-note">Classements, parcours NCL et leaders sont reconstruits depuis les matchs de
+                    chaque saison.</p>
             </div>
             <div class="club-history-stage" id="clubHistoryStage" aria-live="polite"></div>
         </section>
-
     </main>
+
+    <footer class="nl-footer">
+        <div class="nl-footer-main">
+            <a class="footer-brand" href="index.html">
+                <span class="brand-mark"><span></span></span>
+                <strong>NEBULA LEAGUE</strong>
+            </a>
+            <p>Ligue privée Azure Latch. Toutes les rencontres sont enregistrées, chaque statistique est archivée.</p>
+        </div>
+        <nav class="nl-footer-links" aria-label="Accès rapides">
+            <p>Accès rapides</p>
+            <a href="players.html">Joueurs</a>
+            <a href="valeur.html">Valeurs</a>
+            <a href="saison.html">Saisons</a>
+            <a href="matchs.html">Matchs</a>
+            <a href="headtohead.html">Face à face</a>
+            <a href="rules.html">Règles</a>
+        </nav>
+        <div class="nl-footer-osd">
+            <span class="rec">REC</span>
+            <span>NL-CTRL // FIN DU FLUX</span>
+            <span class="jp">クラブ監視中</span>
+            <span>© NEBULA LEAGUE</span>
+            <a href="#top">Retour en haut ↑</a>
+        </div>
+    </footer>
 
 <script src="JavaScript/nebula-data.js"></script>
 <script src="JavaScript/players.js"></script>
