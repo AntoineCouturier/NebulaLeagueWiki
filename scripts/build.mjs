@@ -3,9 +3,9 @@ import { resolve, dirname } from 'node:path';
 import { loadLeagueData, listPages, applyMetaBlock, readText } from './site-meta.mjs';
 import { generateSocialAssets } from './social-assets.mjs';
 import { renderPlayerPage } from './player-pages.mjs';
-// Les fiches Joueurs/<dossier>/<prénom>.html ne sont plus dans le dépôt : elles
+// Les fiches Joueurs/<dossier>/<prénom>.html ne sont pas dans le dépôt : elles
 // sont créées ici, dans dist/, pour chaque joueur de nebula-data.js. Une vieille
-// copie locale éventuelle n'est donc jamais publiée.
+// copie locale éventuelle, ou le modèle Joueurs/modele/, n'est jamais publiée.
 const isGeneratedProfile = path => /Joueurs[/\\](?!demo[/\\])[^/\\]+[/\\][^/\\]+\.html$/.test(path);
 const outputDirectory = resolve('dist');
 // La fiche de démonstration (Joueurs/demo) n'est publiée qu'avec pnpm dev.
@@ -19,9 +19,15 @@ for (const entry of await readdir(outputDirectory)) {
 }
 // Publish the original pages directly, without React or database imports.
 for (const dir of ['CSS', 'JavaScript', 'images', 'Joueurs']) {
-  await cp(dir, `dist/${dir}`, { recursive: true, filter: path => !/[/\\](auth|manager)\.css$/.test(path) && (includeDemo || !/Joueurs[/\\]demo/.test(path)) && !isGeneratedProfile(path) });
+  await cp(dir, `dist/${dir}`, { recursive: true, filter: path => !/[/\\](auth|manager)\.css$/.test(path) && (includeDemo || !/Joueurs[/\\]demo/.test(path)) && !/Joueurs[/\\]modele/.test(path) && !isGeneratedProfile(path) });
 }
 for (const file of await readdir('.')) if (file.endsWith('.html') && file !== 'compte.html') await cp(file, `dist/${file}`);
+// Le site publié a ses fiches générées : les liens y mènent directement (voir
+// generatedProfiles dans nebula-data.js ; sans build, ils mènent au modèle).
+const dataFile = 'dist/JavaScript/nebula-data.js';
+const dataSource = await readFile(dataFile, 'utf8');
+if (!dataSource.includes('const generatedProfiles = false;')) throw Error('Drapeau generatedProfiles introuvable dans nebula-data.js.');
+await writeFile(dataFile, dataSource.replace('const generatedProfiles = false;', 'const generatedProfiles = true;'));
 // The same local registry controls both player pages and permitted avatar IDs.
 const data = await loadLeagueData();
 const ids = [...new Set(data.players.map(player=>player.discordId).filter(id=>/^\d{17,20}$/.test(id)))];
@@ -35,7 +41,7 @@ for (const page of await listPages(data)) {
   const html = await readText(page.file);
   if (applyMetaBlock(page, html, data) !== html) stalePages.push(page.file);
 }
-// Une fiche par joueur, depuis scripts/templates/joueur.html : ajouter un
+// Une fiche par joueur, depuis Joueurs/modele/joueur.html : ajouter un
 // joueur dans nebula-data.js suffit, l'URL Joueurs/<folder>/<prénom> reste la même.
 for (const player of data.players) {
   const target = resolve(outputDirectory, player.profilePath);

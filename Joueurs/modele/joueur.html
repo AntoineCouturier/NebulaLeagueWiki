@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {{meta}}
+    <!-- {{meta}} -->
     <title>Carte Joueur - {{name}}</title>
     <link rel="stylesheet" href="../player-card.css">
     <link rel="stylesheet" href="../../CSS/title-art.css">
@@ -17,8 +17,10 @@
     <script src="../../JavaScript/reveal.js"></script>
 </head>
 
-<!-- Fiche générée au build depuis scripts/templates/joueur.html et
-     JavaScript/nebula-data.js (une par joueur, aucune fiche à créer à la main). -->
+<!-- Modèle unique des fiches joueurs. Au build, une fiche par joueur de
+     JavaScript/nebula-data.js est générée depuis ce fichier (aucune fiche à
+     créer à la main). Ouvert directement depuis les fichiers, il est rempli
+     dans le navigateur par JavaScript/player-profile.js. -->
 <body class="nebula-page nl-migrated">
 
     <header class="site-header" id="top">
@@ -144,6 +146,7 @@
         </div>
     </footer>
     <script src="../../JavaScript/nebula-data.js"></script>
+    <script src="../../JavaScript/player-profile.js"></script>
     <script src="../../JavaScript/title-art.js"></script>
     <script src="../player-card.js"></script>
     <script src="../../JavaScript/hamburger.js"></script>
