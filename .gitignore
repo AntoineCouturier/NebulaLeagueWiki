@@ -12,6 +12,7 @@ dist/
 # Configuration locale du lanceur Claude (chemin de node propre à chaque PC)
 .claude/launch.json
 
-# Fiches joueurs : générées dans dist/ au build depuis scripts/templates/joueur.html
+# Fiches joueurs : générées dans dist/ au build depuis Joueurs/modele/joueur.html
 Joueurs/*/*.html
 !Joueurs/demo/*.html
+!Joueurs/modele/*.html

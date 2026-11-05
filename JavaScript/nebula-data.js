@@ -41,6 +41,10 @@
 
     const assetUrl = path => new URL(path, projectRoot).href;
     const pageUrl = path => new URL(path, projectRoot).href;
+    // Les fiches Joueurs/<folder>/<prénom>.html n'existent qu'après le build
+    // (pnpm dev, déploiement), qui passe ce drapeau à true. Site ouvert depuis
+    // les fichiers : les liens mènent au modèle Joueurs/modele/joueur.html.
+    const generatedProfiles = false;
 
     /* ----------------------------------------------------------------------
        02. CLUBS
@@ -312,7 +316,9 @@
             clubName: club?.name || player.club,
             avatar: assetUrl(player.avatarPath),
             profilePath,
-            href: pageUrl(profilePath)
+            href: generatedProfiles
+                ? pageUrl(profilePath)
+                : pageUrl(`Joueurs/modele/joueur.html?joueur=${encodeURIComponent(`${player.folder}/${player.name.toLowerCase()}`)}`)
         };
     });
 

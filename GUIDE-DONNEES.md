@@ -53,9 +53,14 @@ progression :
 C'est tout : il n'y a plus de fiche HTML à créer. Au build (`pnpm dev` en local,
 `pnpm.cmd run deploy` pour la mise en ligne), une fiche
 `Joueurs/<folder>/<prénom>.html` est générée pour chaque joueur depuis le modèle
-unique `scripts/templates/joueur.html`, avec l'aperçu affiché quand on partage
+unique `Joueurs/modele/joueur.html`, avec l'aperçu affiché quand on partage
 le lien sur Discord. Pour changer toutes les fiches, modifiez le modèle ; pour
-un joueur, modifiez ses données. Après un transfert (changement de `folder`),
+un joueur, modifiez ses données.
+
+Si vous ouvrez le site directement depuis les fichiers (double-clic sur un
+`.html`, sans build), les liens vers les joueurs ouvrent ce modèle
+(`Joueurs/modele/joueur.html?joueur=bm/antoine`), rempli dans le navigateur
+avec les mêmes données : la fiche est identique. Après un transfert (changement de `folder`),
 la fiche change d'adresse toute seule et l'ancienne disparaît.
 
 Pour attribuer un titre manuel, ajoutez-le au joueur :

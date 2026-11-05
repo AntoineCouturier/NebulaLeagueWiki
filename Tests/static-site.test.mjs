@@ -5,7 +5,7 @@ import worker from '../worker/index.mjs';
 import ids from '../worker/player-ids.json' with {type:'json'};
 test('published pages are original HTML and the registry works without React or D1',()=>{
   for(const path of ['index.html','players.html','admin.html'])assert.equal(readFileSync('dist/'+path,'utf8'),readFileSync(path,'utf8'));
-  assert.equal(readFileSync('dist/JavaScript/nebula-data.js','utf8'),readFileSync('JavaScript/nebula-data.js','utf8'));
+  assert.equal(readFileSync('dist/JavaScript/nebula-data.js','utf8'),readFileSync('JavaScript/nebula-data.js','utf8').replace('const generatedProfiles = false;','const generatedProfiles = true;'));
   assert.equal(existsSync('dist/assets/app.js'),false);
   assert.equal(existsSync('dist/compte.html'),false);
   assert.equal(ids.length,11);
@@ -22,6 +22,7 @@ test('every player gets a generated profile page at its usual URL',async()=>{
   }
   assert.equal(existsSync('Joueurs/bm/antoine.html'),false);
   assert.equal(existsSync('dist/Joueurs/demo'),false);
+  assert.equal(existsSync('dist/Joueurs/modele'),false);
 });
 test('only avatars remain accessible and the token stays server side',async()=>{
   const original=globalThis.fetch;let count=0;
