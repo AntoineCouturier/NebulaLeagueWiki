@@ -1,6 +1,7 @@
 // Met à jour les balises de partage (aperçus Discord, favicon, manifest) dans
 // le <head> de toutes les pages. Usage : pnpm meta
-// À relancer après avoir ajouté une page ou un joueur, ou modifié une note.
+// À relancer après avoir ajouté une page. Les fiches joueurs, générées au
+// build, ont toujours des balises à jour.
 import { writeFile } from 'node:fs/promises';
 import { loadLeagueData, listPages, applyMetaBlock, readText } from './site-meta.mjs';
 
@@ -12,7 +13,7 @@ for (const page of await listPages(data)) {
   if (next !== html) {
     await writeFile(page.file, next);
     updated++;
-    console.log(`Balises mises à jour : ${page.file}${page.player ? ` (joueur ${page.player.name})` : ''}`);
+    console.log(`Balises mises à jour : ${page.file}`);
   }
 }
 console.log(updated ? `${updated} pages mises à jour.` : 'Toutes les pages sont déjà à jour.');

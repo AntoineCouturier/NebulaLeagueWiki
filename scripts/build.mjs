@@ -3,6 +3,10 @@ import { resolve, dirname } from 'node:path';
 import { loadLeagueData, listPages, applyMetaBlock, readText } from './site-meta.mjs';
 import { generateSocialAssets } from './social-assets.mjs';
 import { renderPlayerPage } from './player-pages.mjs';
+// Les fiches Joueurs/<dossier>/<prénom>.html ne sont plus dans le dépôt : elles
+// sont créées ici, dans dist/, pour chaque joueur de nebula-data.js. Une vieille
+// copie locale éventuelle n'est donc jamais publiée.
+const isGeneratedProfile = path => /Joueurs[/\\](?!demo[/\\])[^/\\]+[/\\][^/\\]+\.html$/.test(path);
 const outputDirectory = resolve('dist');
 // La fiche de démonstration (Joueurs/demo) n'est publiée qu'avec pnpm dev.
 const includeDemo = process.argv.includes('--dev');
@@ -15,7 +19,7 @@ for (const entry of await readdir(outputDirectory)) {
 }
 // Publish the original pages directly, without React or database imports.
 for (const dir of ['CSS', 'JavaScript', 'images', 'Joueurs']) {
-  await cp(dir, `dist/${dir}`, { recursive: true, filter: path => !/[/\\](auth|manager)\.css$/.test(path) && (includeDemo || !/Joueurs[/\\]demo/.test(path)) });
+  await cp(dir, `dist/${dir}`, { recursive: true, filter: path => !/[/\\](auth|manager)\.css$/.test(path) && (includeDemo || !/Joueurs[/\\]demo/.test(path)) && !isGeneratedProfile(path) });
 }
 for (const file of await readdir('.')) if (file.endsWith('.html') && file !== 'compte.html') await cp(file, `dist/${file}`);
 // The same local registry controls both player pages and permitted avatar IDs.
@@ -31,12 +35,13 @@ for (const page of await listPages(data)) {
   const html = await readText(page.file);
   if (applyMetaBlock(page, html, data) !== html) stalePages.push(page.file);
 }
-// Les fiches joueurs sont générées depuis scripts/templates/joueur.html.
-const stalePlayers = [];
+// Une fiche par joueur, depuis scripts/templates/joueur.html : ajouter un
+// joueur dans nebula-data.js suffit, l'URL Joueurs/<folder>/<prénom> reste la même.
 for (const player of data.players) {
-  const current = await readText(player.profilePath).catch(() => null);
-  if (current !== await renderPlayerPage(player, data)) stalePlayers.push(player.profilePath);
+  const target = resolve(outputDirectory, player.profilePath);
+  if (!target.startsWith(outputDirectory)) throw Error(`Fiche hors du dossier de compilation : ${player.profilePath}`);
+  await mkdir(dirname(target), { recursive: true });
+  await writeFile(target, await renderPlayerPage(player, data));
 }
-console.log(`Site HTML/CSS/JS prêt. Avatars Discord : ${ids.length} joueurs. Aperçus : ${previews} fiches.`);
-if (stalePlayers.length) console.warn(`⚠ Fiches joueurs à régénérer (lancez pnpm joueurs) : ${stalePlayers.join(', ')}`);
-else if (stalePages.length) console.warn(`⚠ Balises de partage à mettre à jour (lancez pnpm meta) : ${stalePages.join(', ')}`);
+console.log(`Site HTML/CSS/JS prêt. Fiches joueurs : ${data.players.length}. Avatars Discord : ${ids.length} joueurs. Aperçus : ${previews} fiches.`);
+if (stalePages.length) console.warn(`⚠ Balises de partage à mettre à jour (lancez pnpm meta) : ${stalePages.join(', ')}`);

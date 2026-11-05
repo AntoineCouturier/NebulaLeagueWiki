@@ -50,24 +50,19 @@ progression :
 - `Extra Riche` à partir de 500 000 000 ¥ ;
 - `Milliardaire` à partir de 1 000 000 000 ¥.
 
-Lancez ensuite :
-
-```
-pnpm joueurs
-```
-
-La commande crée ou met à jour la fiche `Joueurs/<folder>/<prénom>.html` depuis
-le modèle unique `scripts/templates/joueur.html`, avec l'aperçu affiché quand
-on partage le lien sur Discord. Ne modifiez pas les fiches à la main : changez
-le modèle (pour toutes les fiches) ou les données (pour un joueur), puis
-relancez la commande. Après un transfert (changement de `folder`), l'ancienne
-fiche est supprimée automatiquement.
+C'est tout : il n'y a plus de fiche HTML à créer. Au build (`pnpm dev` en local,
+`pnpm.cmd run deploy` pour la mise en ligne), une fiche
+`Joueurs/<folder>/<prénom>.html` est générée pour chaque joueur depuis le modèle
+unique `scripts/templates/joueur.html`, avec l'aperçu affiché quand on partage
+le lien sur Discord. Pour changer toutes les fiches, modifiez le modèle ; pour
+un joueur, modifiez ses données. Après un transfert (changement de `folder`),
+la fiche change d'adresse toute seule et l'ancienne disparaît.
 
 Pour attribuer un titre manuel, ajoutez-le au joueur :
 `titles: ["Nom du titre"]`.
 
 La carte image de l'aperçu (portrait, club, note globale) est générée à chaque
-build. Si une fiche n'est plus à jour, le build l'indique.
+build, comme les fiches.
 
 ### Ajouter une image
 
