@@ -1,7 +1,6 @@
 // Outils partagés par build.mjs et meta.mjs : chargement des données de la
 // ligue et balises <head> de partage (Open Graph, favicon, manifest).
 import { readFile, readdir } from 'node:fs/promises';
-import { join } from 'node:path';
 import vm from 'node:vm';
 
 export const SITE_URL = 'https://nebula-league.nightmarefoxy26.workers.dev';
@@ -50,17 +49,11 @@ export const playerSlug = player => `${player.folder}-${player.name.toLowerCase(
 const escapeAttr = text => String(text).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 const cleanPath = file => '/' + file.replace(/\\/g, '/').replace(/(^|\/)index\.html$/, '$1').replace(/\.html$/, '');
 
-// Toutes les pages HTML publiées, avec le joueur associé pour les fiches.
-export async function listPages(data) {
+// Pages HTML du dépôt dont les balises sont tenues à jour par pnpm meta. Les
+// fiches joueurs n'en font pas partie : build.mjs les génère avec leurs balises.
+export async function listPages() {
   const pages = (await readdir('.')).filter(file => file.endsWith('.html') && file !== 'compte.html');
-  for (const dir of (await readdir('Joueurs', { withFileTypes: true }))
-    .filter(entry => entry.isDirectory() && entry.name !== 'demo').map(entry => join('Joueurs', entry.name))) {
-    for (const file of await readdir(dir)) if (file.endsWith('.html')) pages.push(join(dir, file).replace(/\\/g, '/'));
-  }
-  return pages.map(file => ({
-    file,
-    player: data.players.find(player => player.profilePath === file) || null
-  }));
+  return pages.map(file => ({ file, player: null }));
 }
 
 function readExisting(html) {

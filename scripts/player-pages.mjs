@@ -1,9 +1,7 @@
 // Rendu des fiches joueurs depuis scripts/templates/joueur.html et les
-// données de nebula-data.js. Partagé par players.mjs (écriture) et build.mjs
-// (vérification).
+// données de nebula-data.js. Appelé par build.mjs, qui écrit une fiche par
+// joueur dans dist/ (aussi pour pnpm dev).
 import { renderMetaBlock, readText } from './site-meta.mjs';
-
-export const GENERATED_MARKER = 'Fiche générée par `pnpm joueurs`';
 
 const STAT_ROWS = [
   ['defense', '🛡️ Defense'],
