@@ -43,6 +43,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const playedCount = (data.matches || []).filter(match =>
         Number.isFinite(Number(match.scoreHome)) && Number.isFinite(Number(match.scoreAway))).length;
 
+    // ---------- Carte « Joueurs » : 8 joueurs tirés au hasard ----------
+    // Les images du HTML servent de secours si les données manquent.
+    const rosterGrid = document.querySelector('[data-feed="roster"]');
+    const rosterPool = (data.players || []).filter(player => player.avatar);
+    if (rosterGrid && rosterPool.length) {
+        const shuffled = [...rosterPool];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        rosterGrid.innerHTML = shuffled.slice(0, 8).map(player => `<img class="nl-feed-img${player.club === "retraite" ? " is-retired" : ""}" src="${escapeHtml(player.avatar)}" alt="" loading="lazy" decoding="async">`).join("");
+    }
+
     // ---------- 00. Mur de surveillance du héros (décoratif) ----------
     // Un flux caméra par joueur, la cible n°1 verrouillée au centre du mur,
     // complété par des personnages pour remplir la grille.

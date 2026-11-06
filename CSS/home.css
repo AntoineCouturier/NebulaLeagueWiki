@@ -738,6 +738,30 @@ body.home-page .home-portals .portal-mosaic .nl-feed-img:nth-of-type(4) {
   left: 50%;
 }
 
+/* Roster : 8 joueurs tirés au hasard, grille 4 × 2 */
+body.home-page .home-portals .portal-roster-grid {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 1.5px;
+  background: var(--bezel);
+}
+
+body.home-page .home-portals .portal-roster-grid .nl-feed-img {
+  position: relative;
+  inset: auto;
+  min-width: 0;
+  min-height: 0;
+  --feed-pos: 50% 28%;
+}
+
+body.home-page .home-portals .portal-roster-grid .nl-feed-img.is-retired {
+  filter: grayscale(1) contrast(1.05) brightness(0.55);
+}
+
 /* -------------------- 06. Bande finale -------------------- */
 
 body.home-page .home-final {
